@@ -6,8 +6,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
 
-    "interactive-doc": "pnpm --filter \"./apps/interactive-doc\"",
-    "start-interactive-doc": "pnpm interactive-doc dev",
+    "start-ui-actors-stateless": "pnpm --filter \"./apps/ui-actors-stateless\" dev",
 
     "packages": "pnpm --filter=./packages/** -r",
     "build": "pnpm packages -- build",
