@@ -3,20 +3,12 @@ import React from "react"
 import { createActorContext } from "@xstate/react"
 import { createMachine, assign } from "xstate"
 import { SYSTEM_ACTOR_ID } from './constants'
-import {
-  appModelMachine,
-  graphModelMachine,
-  graphGridMachine,
-
-} from "./machines"
+import { exampleMachine } from "./machines"
 
 
 export const rootMachine = createMachine({
   entry: assign({
-    app: ({ spawn }) => spawn(appModelMachine, { systemId: SYSTEM_ACTOR_ID.APP_MODEL }),
-    graph: ({ spawn }) => spawn(graphModelMachine, { systemId: SYSTEM_ACTOR_ID.GRAPH_MODEL }),
-
-    graphGrid: ({ spawn }) => spawn(graphGridMachine, { systemId: SYSTEM_ACTOR_ID.GRAPH_GRID }),
+    example: ({ spawn }) => spawn(exampleMachine, { systemId: SYSTEM_ACTOR_ID.EXAMPLE }),
   }),
 })
 

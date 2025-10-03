@@ -1,3 +1,4 @@
+import { RootActorProvider } from "#actors/provider"
 import { Provider as ChakraProvider } from "./provider"
 import { Suspense } from "react"
 
@@ -10,7 +11,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Suspense>
+          <RootActorProvider>
             <ChakraProvider>{children}</ChakraProvider>
+          </RootActorProvider>
         </Suspense>
       </body>
     </html>

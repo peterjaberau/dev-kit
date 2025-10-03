@@ -1,3 +1,5 @@
+import { randomId } from "#utils"
+
 export const config : any = {
   layout: {
     constants: {
@@ -39,6 +41,31 @@ export const config : any = {
       colorTheme: "paper",
       size: 7,
     },
+  },
+  appModel: {
+    panX: 380,
+    panY: 130,
+    zoom: 0.7,
+    spectrumColorTheme: "dark",
+    isDragging: false,
+    fullscreenMode: false,
+    hoverNodeId: "",
+    setFilters: ["spectrum", "light", "desktop"],
+    listOfComponents: [],
+    selectedTokens: [],
+    selectionAncestorNodes: [],
+    selectionDescendentNodes: [],
+    selectionDescendentIntersectNodes: [],
+    componentDescendentNodes: [],
+    selectedComponents: [],
+    hoverUpstreamNodes: [],
+  },
+  graphModel: {
+    width: 0,
+    height: 0,
+    topologyKey: randomId(),
+    nodes: {},
+    adjacencyList: {},
   }
 }
 
