@@ -26,6 +26,13 @@
       "@/*": ["./*"],
       "~/*": ["./public/*"],
 
+      "#/*": ["./src/*"],
+      "#": ["./src"],
+
+      "#apps/*": ["./src/apps/*"],
+      "#apps": ["./src/apps"],
+
+
       "#actors/*": ["./src/actors/*"],
       "#actors": ["./src/actors/"],
 
@@ -38,8 +45,11 @@
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
 
-      "#apps/*": ["./src/apps/*"],
-      "#apps": ["./src/apps"]
+      "#models/*": ["./src/models/*"],
+      "#models": ["./src/models"],
+
+      "#utils/*": ["./src/utils/*"],
+      "#utils": ["./src/utils"]
     }
   },
   "include": [
