@@ -26,6 +26,9 @@
       "@/*": ["./*"],
       "~/*": ["./public/*"],
 
+      "#store/*": ["./src/store/*"],
+      "#store": ["./src/store/"],
+
       "#actors/*": ["./src/actors/*"],
       "#actors": ["./src/actors/"],
 

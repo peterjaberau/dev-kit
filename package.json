@@ -7,6 +7,7 @@
     "build-storybook": "storybook build",
 
     "start-ui-actors-stateless": "pnpm --filter \"./apps/ui-actors-stateless\" dev",
+    "start-tokens-visualizer": "pnpm --filter \"./apps/tokens-visualizer\" dev",
 
     "packages": "pnpm --filter=./packages/** -r",
     "build": "pnpm packages -- build",
