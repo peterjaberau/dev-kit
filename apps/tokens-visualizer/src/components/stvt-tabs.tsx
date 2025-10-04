@@ -15,10 +15,9 @@ import {
   List,
   ListItem,
   useTheme,
-  ThemingProps,
   Icon,
 } from '@chakra-ui/react';
-import { CloseIcon } from '@chakra-ui/icons';
+import { LuX as CloseIcon } from 'react-icons/lu';
 
 // --- Placeholder/Mock Data and Types ---
 // NOTE: Replace these with your actual imports and types.
@@ -28,12 +27,10 @@ type StringMatchDictionaryItem = {
   type: 'component' | 'token' | 'orphan-category';
 };
 
-// Colors from original LitElement CSS
 const COLOR_ORPHAN_CATEGORY_NODE = 'rgb(0, 140, 186)';
 const COLOR_COMPONENT_NODE = 'rgb(208, 208, 208)';
 const COLOR_TOKEN_NODE = 'rgb(211, 65, 213)';
 
-// Define the props for the React component
 interface StvtTabsProps {
   dictionary: StringMatchDictionaryItem[];
   selectedTokens: string[];
@@ -42,8 +39,7 @@ interface StvtTabsProps {
   onCloseAllTabs: () => void;
 }
 
-// --- Icon Mapping Helper ---
-// Helper component to render the type icon with the correct color
+
 const TypeIcon: React.FC<{ type: string }> = ({ type }) => {
   let color = 'gray.700';
   let iconUrl = ''; // Placeholder for custom SVGs

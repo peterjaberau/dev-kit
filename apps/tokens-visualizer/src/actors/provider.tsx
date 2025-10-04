@@ -4,19 +4,26 @@ import { createActorContext } from "@xstate/react"
 import { createMachine, assign } from "xstate"
 import { SYSTEM_ACTOR_ID } from './constants'
 import {
-  appModelMachine,
-  graphModelMachine,
-  graphGridMachine,
+  dataSourceMachine,
+  searchMachine,
+  // appModelMachine,
+  // graphModelMachine,
+  // graphGridMachine,
 
 } from "./machines"
 
 
 export const rootMachine = createMachine({
   entry: assign({
-    app: ({ spawn }) => spawn(appModelMachine, { systemId: SYSTEM_ACTOR_ID.APP_MODEL }),
-    graph: ({ spawn }) => spawn(graphModelMachine, { systemId: SYSTEM_ACTOR_ID.GRAPH_MODEL }),
+    search: ({ spawn }) => spawn(searchMachine, { systemId: SYSTEM_ACTOR_ID.SEARCH }),
 
-    graphGrid: ({ spawn }) => spawn(graphGridMachine, { systemId: SYSTEM_ACTOR_ID.GRAPH_GRID }),
+    // dataSource: ({ spawn }) => spawn(dataSourceMachine, { systemId: SYSTEM_ACTOR_ID.DATASOURCE }),
+
+
+    // app: ({ spawn }) => spawn(appModelMachine, { systemId: SYSTEM_ACTOR_ID.APP_MODEL }),
+    // graph: ({ spawn }) => spawn(graphModelMachine, { systemId: SYSTEM_ACTOR_ID.GRAPH_MODEL }),
+    //
+    // graphGrid: ({ spawn }) => spawn(graphGridMachine, { systemId: SYSTEM_ACTOR_ID.GRAPH_GRID }),
   }),
 })
 

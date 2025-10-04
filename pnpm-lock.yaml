@@ -316,6 +316,15 @@ importers:
       '@dev-kit/components':
         specifier: workspace:*
         version: link:../../packages/ui-kit/components
+      '@szhsin/react-autocomplete':
+        specifier: ^1.2.0
+        version: 1.2.0(react@19.2.0)
+      '@tanstack/react-virtual':
+        specifier: ^3.13.12
+        version: 3.13.12(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       next:
         specifier: ^15.5.4
         version: 15.5.4(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -329,6 +338,9 @@ importers:
         specifier: ^19.2.0
         version: 19.2.0(react@19.2.0)
     devDependencies:
+      '@choc-ui/chakra-autocomplete':
+        specifier: ^6.2.0
+        version: 6.2.0(@chakra-ui/react@3.27.0(@emotion/react@11.14.0(@types/react@19.2.0)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@emotion/react@11.14.0(@types/react@19.2.0)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.19
@@ -630,6 +642,14 @@ packages:
       '@emotion/react': '>=11'
       react: '>=18'
       react-dom: '>=18'
+
+  '@choc-ui/chakra-autocomplete@6.2.0':
+    resolution: {integrity: sha512-uWtQuiDTj5rl6rzQMSRrYGLP3zqBONfjJsU6GIyO1bn6iRGhV/l6M9PB/kOgDf4a/Pm83/JRGotggarQm8qiNw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@chakra-ui/react': ^3.2.2
+      '@emotion/react': ^11.13.5
+      react: '>=18.2.0'
 
   '@csstools/color-helpers@5.1.0':
     resolution: {integrity: sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==}
@@ -1547,6 +1567,11 @@ packages:
 
   '@swc/helpers@0.5.17':
     resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
+
+  '@szhsin/react-autocomplete@1.2.0':
+    resolution: {integrity: sha512-GCY3pVzppsRxN47bkPsCudxlKKQ6LRnNNVSV9A4s2R6vPLciTnQn21VnQKgYgB+2icdJ+oEXBTFLClUZ80zUFQ==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18 || ^19
 
   '@tanstack/react-table@8.21.3':
     resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
@@ -4288,6 +4313,11 @@ packages:
       '@types/react': '>=18'
       react: '>=18'
 
+  react-nanny@2.15.0:
+    resolution: {integrity: sha512-fn6tAnJ+UEdD0pq5YytlZJb5XmjVcvXoxq3i2r1o/BavgipwRWsw7oOXNJ8bJd33iedlkNyAQMXVC6qTl0Hv4A==}
+    peerDependencies:
+      react: '>=16.0.0'
+
   react-payment-inputs@1.2.0:
     resolution: {integrity: sha512-mo69K9W8c8uj+VnqM+pVBYTo8uRav+QEtGX82P7VxLLU8YQJ37gb863zEKP2977XwRcv4ZCRFKpPwPasFvBAeA==}
     peerDependencies:
@@ -5561,6 +5591,17 @@ snapshots:
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
 
+  '@choc-ui/chakra-autocomplete@6.2.0(@chakra-ui/react@3.27.0(@emotion/react@11.14.0(@types/react@19.2.0)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@emotion/react@11.14.0(@types/react@19.2.0)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      '@chakra-ui/react': 3.27.0(@emotion/react@11.14.0(@types/react@19.2.0)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@emotion/react': 11.14.0(@types/react@19.2.0)(react@19.2.0)
+      next-themes: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react: 19.2.0
+      react-icons: 5.5.0(react@19.2.0)
+      react-nanny: 2.15.0(react@19.2.0)
+    transitivePeerDependencies:
+      - react-dom
+
   '@csstools/color-helpers@5.1.0': {}
 
   '@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)':
@@ -6356,6 +6397,10 @@ snapshots:
   '@swc/helpers@0.5.17':
     dependencies:
       tslib: 2.8.1
+
+  '@szhsin/react-autocomplete@1.2.0(react@19.2.0)':
+    dependencies:
+      react: 19.2.0
 
   '@tanstack/react-table@8.21.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
@@ -9685,6 +9730,10 @@ snapshots:
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
+
+  react-nanny@2.15.0(react@19.2.0):
+    dependencies:
+      react: 19.2.0
 
   react-payment-inputs@1.2.0(react@19.2.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0)):
     dependencies:

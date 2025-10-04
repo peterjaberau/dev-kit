@@ -1,35 +1,63 @@
+import { useSelector } from '@xstate/react'
 import { useActors } from "./hooks/useActors"
+
 
 export const rootActorSelector = () => {
   const { rootActorRef: rootRef } = useActors()
-  const rootState = rootRef?.getSnapshot()
+  const rootState = useSelector(rootRef, (s) => s)
   const rootContext = rootState?.context
 
-  const { graphGridContext } = graphGridSelector()
+
+
+  const { searchContext } = searchSelector()
+
+
 
   return {
     rootRef,
     rootState,
     rootContext,
 
-    graphGridContext,
+    searchContext,
   }
 }
 
+export const searchSelector = () => {
+  const { searchActorRef: searchRef } = useActors()
+  const searchState: any = useSelector(searchRef, (s) => s)
+  const searchContext = searchState?.context
+  const sendToSearch = searchRef?.send
 
-export const graphGridSelector = () => {
-  const { graphGridActorRef: graphGridRef } = useActors()
-  const graphGridState = graphGridRef?.getSnapshot()
-  const graphGridContext = graphGridState?.context
+  const collection = searchContext?.collection
+
+  const searchResults = searchContext?.searchResults
+  const searchQuery = searchContext?.searchQuery
+  const targetIndex = searchContext?.targetIndex
+
+  const isReady = searchState.matches('ready')
+  const stateValue = searchState.value
+  const dictionary = searchContext.dictionary
+
+
+
+  const updateSearch = (searchQuery: any, searchResults: any) => sendToSearch({ type: 'search.changed', payload: { searchQuery, searchResults } })
+
+
 
   return {
-    graphGridRef,
-    graphGridState,
-    graphGridContext,
+    searchRef,
+    searchState,
+    searchContext,
 
-    isReady: graphGridState?.matches("ready"),
-    colorThemeObj: graphGridContext?.colorThemeObj,
-    gridStylesObj: graphGridContext?.gridStylesObj,
-    props: graphGridContext?.props,
+    sendToSearch,
+    updateSearch,
+
+    isReady,
+    stateValue,
+    dictionary,
+    collection,
+    searchResults,
+    searchQuery,
+    targetIndex,
   }
 }
