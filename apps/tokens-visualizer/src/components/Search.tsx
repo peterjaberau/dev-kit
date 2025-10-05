@@ -1,15 +1,15 @@
 "use client"
-import { Box, Combobox, Icon, Input, InputGroup, Portal, useFilter, useListCollection } from "@chakra-ui/react"
+import { chakra, Combobox, Icon, Input, InputGroup, Portal, useFilter, useListCollection } from "@chakra-ui/react"
 import { LuSearch } from "react-icons/lu"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { useRef } from "react"
 import { flushSync } from "react-dom"
 import React from "react"
-import _ from 'lodash'
+import _ from "lodash"
 import { searchSelector } from "../actors/selectors"
 
 export const Search = (props: any) => {
-  const { dictionary, searchQuery, isReady, updateSearch } = searchSelector()
+  const { dictionary, searchQuery, selected, isReady, updateSearch, updateSelected } = searchSelector()
 
   const contentRef = useRef<HTMLDivElement | null>(null)
 
@@ -27,7 +27,6 @@ export const Search = (props: any) => {
     scrollPaddingEnd: 32,
   })
   const handleScrollToIndexFn = (details: { index: number }) => {
-
     flushSync(() => {
       virtualizer.scrollToIndex(details.index, {
         align: "center",
@@ -35,34 +34,41 @@ export const Search = (props: any) => {
       })
     })
   }
-  const handleInputChange = (details: any) => {
 
+  /** { details: inputValue: '', ... } */
+  const handleInputValueChange = (details: any) => {
     if (details.inputValue.length === 0) {
       return
     }
-
     const filteredItems: any = _.filter(dictionary, (item: any) =>
-      _.includes(_.toLower(item.value), _.toLower(details.inputValue))
+      _.includes(_.toLower(item.value), _.toLower(details.inputValue)),
     )
     set(filteredItems)
     updateSearch(details.inputValue, filteredItems)
   }
 
+  /** { details: value: '', ... } */
+  const handleValueChange = (details: any) => {
+    console.log("---selected---", details)
+    updateSelected(details.value)
+  }
 
   return (
     <>
       {isReady && (
         <Combobox.Root
+          value={selected}
+          inputValue={searchQuery}
+          onValueChange={handleValueChange}
+          onInputValueChange={handleInputValueChange}
           lazyMount={false}
-          openOnClick={true}
-          // openOnKeyPress={true}
+          multiple={true}
+          openOnKeyPress={true}
           skipAnimationOnMount={true}
-          // closeOnSelect={true}
-          inputBehavior={'autocomplete'}
+          closeOnSelect={false}
+          inputBehavior={"autocomplete"}
           collection={collection}
-          onInputValueChange={handleInputChange}
           scrollToIndexFn={handleScrollToIndexFn}
-          width="320px"
         >
           <Combobox.Control>
             <Combobox.Input placeholder="Type to search" />
@@ -74,7 +80,7 @@ export const Search = (props: any) => {
           <Portal>
             <Combobox.Positioner>
               <Combobox.Content ref={contentRef}>
-                <div
+                <chakra.div
                   style={{
                     height: `${virtualizer.getTotalSize()}px`,
                     width: "100%",
@@ -87,7 +93,7 @@ export const Search = (props: any) => {
                       <Combobox.Item
                         key={item.value}
                         item={item}
-                        style={{
+                        css={{
                           position: "absolute",
                           top: 0,
                           left: 0,
@@ -104,7 +110,7 @@ export const Search = (props: any) => {
                       </Combobox.Item>
                     )
                   })}
-                </div>
+                </chakra.div>
               </Combobox.Content>
             </Combobox.Positioner>
           </Portal>

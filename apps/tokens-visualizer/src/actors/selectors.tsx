@@ -29,18 +29,23 @@ export const searchSelector = () => {
   const sendToSearch = searchRef?.send
 
   const collection = searchContext?.collection
-
+  const dictionary = searchContext.dictionary
   const searchResults = searchContext?.searchResults
   const searchQuery = searchContext?.searchQuery
+
+  const selected = searchContext?.selected
   const targetIndex = searchContext?.targetIndex
 
   const isReady = searchState.matches('ready')
   const stateValue = searchState.value
-  const dictionary = searchContext.dictionary
+
+  const hasSearchQuery= searchQuery.length > 0
+  const searchCount = hasSearchQuery ? searchResults.length : dictionary.length
 
 
 
-  const updateSearch = (searchQuery: any, searchResults: any) => sendToSearch({ type: 'search.changed', payload: { searchQuery, searchResults } })
+  const updateSearch = (searchQuery: any, searchResults: any) => sendToSearch({ type: 'input.changed', payload: { searchQuery, searchResults } })
+  const updateSelected = (selected: any) => sendToSearch({ type: 'value.changed', payload: { selected } })
 
 
 
@@ -51,6 +56,7 @@ export const searchSelector = () => {
 
     sendToSearch,
     updateSearch,
+    updateSelected,
 
     isReady,
     stateValue,
@@ -58,6 +64,8 @@ export const searchSelector = () => {
     collection,
     searchResults,
     searchQuery,
+    searchCount,
+    selected,
     targetIndex,
   }
 }

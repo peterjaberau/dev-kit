@@ -1,37 +1,47 @@
 "use client"
-import { Container, SimpleGrid, HStack, Stack, Button, Text, GridItem, DataList } from '@chakra-ui/react'
+import {
+  Container,
+  For,
+  Center,
+  SimpleGrid,
+  HStack,
+  Stack,
+  Button,
+  Text,
+  GridItem,
+  DataList,
+  Card,
+  Tag,
+  Badge,
+} from "@chakra-ui/react"
 import { Search } from "#components/Search"
-import { searchSelector } from '#actors/selectors'
+import { searchSelector } from "#actors/selectors"
+import { SearchPanel } from './components'
 
 export default function Page() {
-
-  const { searchQuery, searchResults } = searchSelector()
+  const { searchQuery, searchResults, searchCount, selected } = searchSelector()
 
   return (
-    <Container>
-     <SimpleGrid columns={2}>
-       <GridItem>
-         <Search />
-       </GridItem>
+    <Container fluid css={{ h: "100vh", p: 8 }}>
+      <Stack css={{ h: "full" }}>
+        <SimpleGrid columns={4} gap={4}>
+          <SearchPanel />
 
-       <GridItem>
-           <Stack gap="4">
-             <DataList.Root size="sm">
-               <DataList.Item>
-                 <DataList.ItemLabel>searchQuery</DataList.ItemLabel>
-                 <DataList.ItemValue>{searchQuery}</DataList.ItemValue>
-               </DataList.Item>
-             </DataList.Root>
-             <DataList.Root size="md">
-               <DataList.Item>
-                 <DataList.ItemLabel>searchResults Count</DataList.ItemLabel>
-                 <DataList.ItemValue>{searchResults.length}</DataList.ItemValue>
-               </DataList.Item>
-             </DataList.Root>
-           </Stack>
-       </GridItem>
+          <Card.Root css={{ boxShadow: "sm", borderRadius: "md" }}>
+            <Card.Header>
+              <Card.Title>title</Card.Title>
+              <Card.Description>description </Card.Description>
+            </Card.Header>
 
-     </SimpleGrid>
+            <Card.Body>
+              <Stack gap="4">
+
+                test
+              </Stack>
+            </Card.Body>
+          </Card.Root>
+        </SimpleGrid>
+      </Stack>
     </Container>
   )
 }

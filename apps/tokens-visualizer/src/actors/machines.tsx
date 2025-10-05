@@ -271,6 +271,9 @@ export const graphModelMachine = setup({
   },
 })
 
+
+
+
 export const searchMachine = setup({
   actions: {
     setDictionary: assign(({ context, event }) => {
@@ -284,6 +287,12 @@ export const searchMachine = setup({
         searchResults: event.payload.searchResults,
       }
     }),
+    updateSelected: assign(({ context, event }) => {
+      return {
+        ...context,
+        selected: event.payload.selected,
+      }
+    }),
   },
 
   actors: {
@@ -295,11 +304,7 @@ export const searchMachine = setup({
   initial: "loading",
   context: ({ input }) => {
     return {
-      collection: [],
-      dictionary: [],
-      searchResults: [],
-      searchQuery: "",
-      targetIndex: 0,
+      ...config.search,
       ...input,
     }
   },
@@ -321,8 +326,11 @@ export const searchMachine = setup({
 
     ready: {
       on: {
-        "search.changed": {
+        "input.changed": {
           actions: ["updateSearch"],
+        },
+        "value.changed": {
+          actions: ["updateSelected"],
         },
       },
     },

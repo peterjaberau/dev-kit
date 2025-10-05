@@ -66,6 +66,16 @@ export const config : any = {
     topologyKey: randomId(),
     nodes: {},
     adjacencyList: {},
+  },
+
+
+  search: {
+    collection: [],
+    dictionary: [],
+    searchResults: [],
+    searchQuery: "",
+    targetIndex: 0,
+    selected:[],
   }
 }
 
