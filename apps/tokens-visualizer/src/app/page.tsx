@@ -25,7 +25,7 @@ import { SearchPanel } from "./components"
 import { DocPreview } from "#components/common/doc-preview"
 import { useState, forwardRef, cloneElement, isValidElement, ReactNode, ReactElement, Children } from "react"
 import { UIDebugger } from '#components/common/ui-debugger'
-
+import { TokenGraphExample } from '#components/examples/TokenGraphExample'
 
 type DebuggerContainerProps = {
   uiDebugger?: boolean;
@@ -186,6 +186,8 @@ export default function Page() {
             <ScrollArea.Viewport>
               <ScrollArea.Content asChild>
                   <Stack gap={4} css={{ p: 4 }} >
+
+                    <TokenGraphExample />
 
 
 

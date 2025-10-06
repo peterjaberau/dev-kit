@@ -1,0 +1,381 @@
+{
+  "dictionary": [
+    {
+      "value": "default-font-family",
+      "type": "token",
+      "metadata": ""
+    },
+    {
+      "value": "letter-spacing",
+      "type": "token",
+      "metadata": "0em"
+    },
+    {
+      "value": "text-align-start",
+      "type": "token",
+      "metadata": "start"
+    },
+    {
+      "value": "text-align-center",
+      "type": "token",
+      "metadata": "center"
+    },
+    {
+      "value": "text-align-end",
+      "type": "token",
+      "metadata": "end"
+    },
+    {
+      "value": "sans-serif-font-family",
+      "type": "token",
+      "metadata": "Adobe Clean"
+    },
+    {
+      "value": "serif-font-family",
+      "type": "token",
+      "metadata": "Adobe Clean Serif"
+    },
+    {
+      "value": "notice-color-600",
+      "type": "token",
+      "metadata": ""
+    },
+    {
+      "value": "notice-color-700",
+      "type": "token",
+      "metadata": ""
+    },
+    {
+      "value": "notice-color-800",
+      "type": "token",
+      "metadata": ""
+    },
+    {
+      "value": "notice-color-900",
+      "type": "token",
+      "metadata": ""
+    },
+    {
+      "value": "accordion",
+      "type": "component",
+      "metadata": ""
+    },
+    {
+      "value": "accordion-top-to-text-compact-small",
+      "type": "token",
+      "metadata": "2px"
+    },
+    {
+      "value": "accordion-top-to-text-regular-small",
+      "type": "token",
+      "metadata": ""
+    },
+    {
+      "value": "accordion-small-top-to-text-spacious",
+      "type": "token",
+      "metadata": ""
+    }
+  ],
+  "nodes": {
+    "accordion": {
+      "type": "component",
+      "id": "accordion",
+      "x": 0,
+      "y": 0
+    },
+    "checkbox": {
+      "type": "component",
+      "id": "checkbox",
+      "x": 0,
+      "y": 378
+    },
+    "tab-item": {
+      "type": "component",
+      "id": "tab-item",
+      "x": 0,
+      "y": 1782
+    },
+    "default-font-family": {
+      "type": "token",
+      "id": "default-font-family",
+      "x": 0,
+      "y": 0
+    },
+    "letter-spacing": {
+      "type": "token",
+      "id": "letter-spacing",
+      "x": 0,
+      "y": 0,
+      "value": "0em"
+    },
+    "text-align-start": {
+      "type": "token",
+      "id": "text-align-start",
+      "x": 0,
+      "y": 0,
+      "value": "start"
+    },
+    "text-align-center": {
+      "type": "token",
+      "id": "text-align-center",
+      "x": 0,
+      "y": 0,
+      "value": "center"
+    },
+    "text-align-end": {
+      "type": "token",
+      "id": "text-align-end",
+      "x": 0,
+      "y": 0,
+      "value": "end"
+    },
+    "sans-serif-font-family": {
+      "type": "token",
+      "id": "sans-serif-font-family",
+      "x": 0,
+      "y": 0,
+      "value": "Adobe Clean"
+    },
+    "serif-font-family": {
+      "type": "token",
+      "id": "serif-font-family",
+      "x": 0,
+      "y": 0,
+      "value": "Adobe Clean Serif"
+    },
+    "cjk-font-family": {
+      "type": "token",
+      "id": "cjk-font-family",
+      "x": 0,
+      "y": 0,
+      "value": "Adobe Clean Han"
+    },
+    "accent-color-900": {
+      "type": "token",
+      "id": "accent-color-900",
+      "x": 0,
+      "y": 0
+    },
+    "accent-color-1000": {
+      "type": "token",
+      "id": "accent-color-1000",
+      "x": 0,
+      "y": 0
+    },
+    "accent-color-1100": {
+      "type": "token",
+      "id": "accent-color-1100",
+      "x": 0,
+      "y": 0
+    },
+    "accent-color-1200": {
+      "type": "token",
+      "id": "accent-color-1200",
+      "x": 0,
+      "y": 0
+    },
+    "accent-color-1300": {
+      "type": "token",
+      "id": "accent-color-1300",
+      "x": 0,
+      "y": 0
+    },
+    "accent-color-1400": {
+      "type": "token",
+      "id": "accent-color-1400",
+      "x": 0,
+      "y": 0
+    },
+    "notice-color-300": {
+      "type": "token",
+      "id": "notice-color-300",
+      "x": 0,
+      "y": 0
+    },
+    "notice-color-400": {
+      "type": "token",
+      "id": "notice-color-400",
+      "x": 0,
+      "y": 0
+    },
+    "notice-color-500": {
+      "type": "token",
+      "id": "notice-color-500",
+      "x": 0,
+      "y": 0
+    },
+    "notice-color-600": {
+      "type": "token",
+      "id": "notice-color-600",
+      "x": 0,
+      "y": 0
+    },
+    "notice-color-700": {
+      "type": "token",
+      "id": "notice-color-700",
+      "x": 0,
+      "y": 0
+    },
+    "accordion-content-area-edge-to-content-small": {
+      "type": "token",
+      "id": "accordion-content-area-edge-to-content-small",
+      "x": 0,
+      "y": 0
+    },
+    "accordion-content-area-edge-to-content-medium": {
+      "type": "token",
+      "id": "accordion-content-area-edge-to-content-medium",
+      "x": 0,
+      "y": 0
+    },
+    "accordion-content-area-edge-to-content-large": {
+      "type": "token",
+      "id": "accordion-content-area-edge-to-content-large",
+      "x": 0,
+      "y": 0
+    }
+  },
+  "adjacencyList": {
+    "default-font-family": [
+      "sans-serif-font-family"
+    ],
+    "cjk-letter-spacing": [
+      "letter-spacing"
+    ],
+    "heading": [
+      "heading-sans-serif-font-family",
+      "heading-serif-font-family",
+      "heading-cjk-font-family",
+      "heading-sans-serif-light-font-weight",
+      "heading-sans-serif-light-font-style"
+    ],
+    "action-button": [
+      "action-button-edge-to-hold-icon-extra-small",
+      "action-button-edge-to-hold-icon-small",
+      "action-button-edge-to-hold-icon-medium",
+      "action-button-edge-to-hold-icon-large",
+      "action-button-edge-to-hold-icon-extra-large"
+    ]
+  },
+
+  "graphNodeTypeLookup": {
+    "default-font-family": "token",
+    "letter-spacing": "token",
+    "text-align-start": "token",
+    "medium-font-weight": "token",
+    "bold-font-weight": "token",
+    "extra-bold-font-weight": "token",
+    "black-font-weight": "token",
+    "italic-font-style": "token",
+    "default-font-style": "token",
+    "font-size-25": "token",
+    "font-size-50": "token",
+    "font-size-75": "token",
+    "magenta-*": "orphan-category",
+    "pink-*": "orphan-category",
+    "turquoise-*": "orphan-category",
+    "brown-*": "orphan-category",
+    "silver-*": "orphan-category",
+    "cinnamon-*": "orphan-category",
+    "body": "component",
+    "switch": "component",
+    "field-label": "component"
+  },
+
+  "graphModel": {
+    "width": 2600,
+    "height": 3537,
+    "maxWidth": 2600,
+    "maxHeight": 3537,
+    "topologyKey": "9ct89",
+    "nodes": {},
+    "adjacencyList": {},
+    "orphanNodes": [],
+    "nodesToLayout": [],
+    "columnNodeAssignments": [
+      [
+        "accordion",
+        "action-bar"
+      ],
+      [
+        "accordion-bottom-to-text-compact-extra-large",
+        "accordion-bottom-to-text-compact-large"
+      ],
+      [
+        "accent-visual-color",
+        "component-height-300"
+      ],
+      [
+        "accent-color-800"
+      ],
+      [
+        "blue-800"
+      ]
+    ]
+  },
+
+  "appModel": {
+    "panX": 663.1976744186047,
+    "panY": 137.35360465116278,
+    "zoom": 0.18511627906976744,
+    "spectrumColorTheme": "dark",
+    "isDragging": false,
+    "fullscreenMode": false,
+    "hoverNodeId": "",
+    "setFilters": ["spectrum", "light", "wireframe"],
+    "listOfComponents": [
+      "heading",
+      "body",
+      "detail",
+      "code",
+      "checkbox",
+      "switch",
+      "radio-button",
+      "field-label"
+    ],
+    "selectionDescendentNodes": [
+      "accordion-focus-indicator-gap",
+      "alert-banner-top-to-text",
+      "checkbox-top-to-control-large",
+      "accent-color-800",
+      "accent-color-400",
+      "accordion",
+      "checkbox"
+    ],
+    "selectedTokens": [
+      "accordion-focus-indicator-gap",
+      "alert-banner-top-to-text",
+      "checkbox-top-to-control-large",
+      "accent-color-800",
+      "accent-color-400"
+    ],
+    "selectionAncestorNodes": [
+      "accordion-focus-indicator-gap",
+      "alert-banner-top-to-text",
+      "checkbox-top-to-control-large",
+      "accent-color-800",
+      "accent-color-400",
+      "accordion",
+      "alert-banner",
+      "alert-banner-to-top-text",
+      "checkbox",
+      "accent-visual-color",
+      "accent-*",
+      "drop-zone-background-color",
+      "drop-zone",
+      "drop-*"
+    ],
+    "selectionDescendentIntersectNodes": [
+      "accordion-focus-indicator-gap",
+      "alert-banner-top-to-text",
+      "checkbox-top-to-control-large",
+      "accent-color-800",
+      "accent-color-400",
+      "accordion",
+      "checkbox"
+    ],
+    "componentDescendentNodes": [],
+    "selectedComponents": ["accordion", "checkbox", "tab-item", "side-navigation"],
+    "hoverUpstreamNodes": []
+  }
+}

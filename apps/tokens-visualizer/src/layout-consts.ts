@@ -29,3 +29,8 @@ export const CATEGORIZED_TOKEN_FILTER_LABELS: { [category: string]: string } = {
   color: "Color Theme",
   scale: "Scale",
 };
+
+export enum WORKERS_ENUM {
+  GRAPH_LAYOUT = "graph-layout.worker.ts",
+  STRING_MATCH = "string-match.worker.ts",
+}

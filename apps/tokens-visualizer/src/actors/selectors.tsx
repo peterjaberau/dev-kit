@@ -8,7 +8,6 @@ export const rootActorSelector = () => {
   const rootContext = rootState?.context
 
 
-
   const { searchContext } = searchSelector()
 
 

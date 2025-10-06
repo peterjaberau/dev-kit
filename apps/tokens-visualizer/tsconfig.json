@@ -29,9 +29,20 @@
       "#/*": ["./src/*"],
       "#": ["./src"],
 
-      "#apps/*": ["./src/apps/*"],
-      "#apps": ["./src/apps"],
+      "#app/*": ["./src/app/*"],
+      "#app": ["./src/app"],
 
+      "#data/*": ["./src/data/*"],
+      "#data": ["./src/data"],
+
+      "#shared/*": ["./src/shared/*"],
+      "#shared": ["./src/shared"],
+
+      "#workers/*": ["./src/workers/*"],
+      "#workers": ["./src/workers"],
+
+      "#controllers/*": ["./src/controllers/*"],
+      "#controllers": ["./src/controllers"],
 
       "#actors/*": ["./src/actors/*"],
       "#actors": ["./src/actors/"],
@@ -53,6 +64,7 @@
     }
   },
   "include": [
+    "global.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",

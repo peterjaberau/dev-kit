@@ -1,5 +1,4 @@
 
-
 import { randomId } from "#utils";
 
 export type GraphNodeId = string;
@@ -31,9 +30,6 @@ export interface GraphState {
   adjacencyList: { [GraphNodeId: string]: GraphNodeId[] };
 }
 
-// export const DEFAULT_GRAPH_STATE = {
-
-// };
 
 export class GraphModel {
   static readonly DEFAULT_STATE: GraphState = {

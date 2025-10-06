@@ -6,3 +6,11 @@ declare module "react" {
     [key: `--${string}`]: string | number
   }
 }
+
+
+declare module '*.worker.ts' {
+  const WorkerFactory: {
+    new (): Worker;
+  };
+  export default WorkerFactory;
+}

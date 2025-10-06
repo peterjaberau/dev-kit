@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useEffect,
   useMemo,
   useCallback,
   useRef,
@@ -11,31 +10,19 @@ import {
   List,
   ListItem,
   Text,
-  useTheme,
-  Button,
-  Flex,
-  useColorModeValue,
 } from '@chakra-ui/react';
-import { CopyIcon } from '@chakra-ui/icons';
+import {LuCopy as CopyIcon } from 'react-icons/lu'
 
-// --- Constants (Preserved) ---
-// NOTE: Replace these with your actual imports from "../layout-consts"
-const GRAPH_NODE_WIDTH = 200;
-const GRAPH_NODE_VALUE_HEIGHT = 18;
-const GRAPH_NODE_VALUE_MARGIN = 2;
-const GRAPH_NODE_VALUES_PADDING = 10;
+import {
+  GRAPH_NODE_WIDTH, GRAPH_NODE_VALUE_HEIGHT, GRAPH_NODE_VALUE_MARGIN, GRAPH_NODE_VALUES_PADDING,
+  ValuePathSplitter,
+  ValuesListSplitter
+} from './constants'
 
-// NOTE: Replace these with your actual imports from "../models/graph-model"
-const ValuePathSplitter = '::';
-const ValuesListSplitter = '|';
 
-// --- Types ---
 type ValueTuple = [value: string, path: string];
 type GraphNodeType = 'token' | 'component' | 'orphan-category' | string;
 
-// --- Custom Gesture Hook Abstraction (Replaces Lit's Gesture system) ---
-// This hook simulates the event handling needed for drag, click, and single/double click.
-// NOTE: A full implementation of the Gesture class is highly complex and omitted for brevity.
 const useGestureHandlers = (
   id: string,
   targetRef: React.RefObject<HTMLElement>,
@@ -43,7 +30,6 @@ const useGestureHandlers = (
 ) => {
   const isValidDragRef = useRef(false);
 
-  // Placeholder for pointerdown to initiate drag/click logic
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       onEvent('node-pointerdown', { id, data: { x: e.clientX, y: e.clientY } });
@@ -112,7 +98,7 @@ export const TokenGraphNode: React.FC<TokenGraphNodeProps> = ({
                                                                 hoverUpstream = false,
                                                                 onNodeEvent,
                                                               }) => {
-  const theme = useTheme();
+
   const gestureTargetRef = useRef<HTMLDivElement>(null);
   const [pointerOverDepth, setPointerOverDepth] = useState(0);
 

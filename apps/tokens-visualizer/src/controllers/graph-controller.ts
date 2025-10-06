@@ -1,177 +1,145 @@
+import { StringMatchDictionaryItem } from "#workers/string-match.worker"
 
-import GraphLayoutWorker from "../workers/graph-layout?worker";
+import { WORKERS_ENUM } from "#/layout-consts"
 
-import { GraphModel, GraphState, GraphNodeId } from "../models/graph-model";
+import { GraphModel, GraphState, GraphNodeId } from "#models/graph-model"
 
-import { AppModel, AppState } from "../models/app-model";
+import { AppModel, AppState } from "#models/app-model"
 
-import { GraphDataSource } from "./graph-data-source";
+import { GraphDataSource } from "./graph-data-source"
 
-import { StringMatchDictionaryItem } from "../workers/string-match";
+export type NewGraphStateCallbackFn = (state: GraphState, listOfComponents: string[]) => void
 
-export type NewGraphStateCallbackFn = (
-  state: GraphState,
-  listOfComponents: string[],
-) => void;
+export type NewDictionaryCallbackFn = (dictionary: StringMatchDictionaryItem[]) => void
 
-export type NewDictionaryCallbackFn = (
-  dictionary: StringMatchDictionaryItem[],
-) => void;
-
-// type GraphTraversalNodeTuple = [id:GraphNodeId,distance:number];
-
-type KeyValueObject = { [key: string]: any };
+type KeyValueObject = { [key: string]: any }
 
 interface RawJsonSets {
-  [setEnumVal: string]: RawJsonItem;
+  [setEnumVal: string]: RawJsonItem
 }
-
-// type FoundSetsTraversalItem = {
-//   path: string[],
-//   sets: RawJsonSets
-// };
-
-// type FoundValuesItem = {
-//   path: string[],
-//   value: string
-// };
 
 interface RawJsonItem {
-  component?: string;
-  value?: string;
-  sets?: RawJsonSets;
+  component?: string
+  value?: string
+  sets?: RawJsonSets
 }
 
-// interface RawJsonData {
-//   [tokenIdentifier: string] : RawJsonItem
-// };
-
-// import {
-//   GRAPH_ROW_MARGIN,
-//   GRAPH_COLUMN_WIDTH,
-//   GRAPH_NODE_VALUE_HEIGHT,
-//   GRAPH_NODE_VALUE_MARGIN,
-//   GRAPH_NODE_VALUES_PADDING
-// } from '../layout-consts'
+const workerRelativePath: any = "../workers/"
 
 export class GraphController {
-  graphDataSource: GraphDataSource;
+  graphDataSource: GraphDataSource
 
-  completeGraphModel: GraphModel;
+  completeGraphModel: GraphModel
 
-  displayGraphModel: GraphModel;
+  displayGraphModel: GraphModel
 
-  baseDisplayGraphModel: GraphModel;
+  baseDisplayGraphModel: GraphModel
 
-  appState: AppState;
+  appState: AppState
 
-  newGraphStateCallbacks: NewGraphStateCallbackFn[] = [];
+  newGraphStateCallbacks: NewGraphStateCallbackFn[] = []
 
-  newDictionaryCallbacks: NewDictionaryCallbackFn[] = [];
+  newDictionaryCallbacks: NewDictionaryCallbackFn[] = []
 
-  selectedComponent: string = "slider";
+  selectedComponent: string = "slider"
 
-  listOfComponents: string[] = [];
+  listOfComponents: string[] = []
 
-  listOfOrphanNodes: string[] = [];
+  listOfOrphanNodes: string[] = []
 
-  graphLayoutWorker: Worker;
+  graphLayoutWorker: Worker
 
   constructor() {
-    this.graphDataSource = new GraphDataSource();
-    this.graphLayoutWorker = new GraphLayoutWorker();
-    this.graphLayoutWorker.onmessage = this.recieveNewGraphLayout.bind(this);
-    this.completeGraphModel = new GraphModel();
-    this.displayGraphModel = new GraphModel();
-    this.baseDisplayGraphModel = new GraphModel();
-    this.appState = JSON.parse(JSON.stringify(AppModel.DEFAULT_STATE));
+    this.graphDataSource = new GraphDataSource()
+    // this.graphLayoutWorker = new GraphLayoutWorker()
+    this.graphLayoutWorker = new Worker(new URL(workerRelativePath + WORKERS_ENUM.GRAPH_LAYOUT, import.meta.url), {
+      type: "module",
+    })
+    this.graphLayoutWorker.onmessage = this.recieveNewGraphLayout.bind(this)
+    this.completeGraphModel = new GraphModel()
+    this.displayGraphModel = new GraphModel()
+    this.baseDisplayGraphModel = new GraphModel()
+    this.appState = JSON.parse(JSON.stringify(AppModel.DEFAULT_STATE))
   }
 
   getNodeType(id: GraphNodeId) {
-    const { type }: any = this.completeGraphModel._state.nodes[id];
-    return type;
+    const { type }: any = this.completeGraphModel._state.nodes[id]
+    return type
   }
 
   getDownstreamGraphFrom(...nodes: GraphNodeId[]): GraphModel {
-    const results = new GraphModel();
+    const results = new GraphModel()
 
-    const nodesToAdd: string[] = [...nodes];
+    const nodesToAdd: string[] = [...nodes]
 
-    const completeGraph = this.completeGraphModel.state;
+    const completeGraph = this.completeGraphModel.state
 
     while (nodesToAdd.length > 0) {
-      const id = nodesToAdd.shift() as string;
-      const node = completeGraph.nodes[id];
+      const id = nodesToAdd.shift() as string
+      const node = completeGraph.nodes[id]
       if (!node) {
-        continue;
+        continue
       }
-      const adjacencies = completeGraph.adjacencyList[id] || [];
-      nodesToAdd.push(...adjacencies);
-      results._state.nodes[id] = node;
+      const adjacencies = completeGraph.adjacencyList[id] || []
+      nodesToAdd.push(...adjacencies)
+      results._state.nodes[id] = node
       if (adjacencies.length > 0) {
-        results._state.adjacencyList[id] = adjacencies;
+        results._state.adjacencyList[id] = adjacencies
       }
     }
 
-    return results;
+    return results
   }
 
-  getUpstreamGraphFrom(
-    nodes: GraphNodeId[],
-    sourceGraph: GraphModel = this.completeGraphModel,
-  ): GraphModel {
-    const results = new GraphModel();
-    const nodesToAdd: string[] = [...nodes];
-    const sourceState = sourceGraph.state;
+  getUpstreamGraphFrom(nodes: GraphNodeId[], sourceGraph: GraphModel = this.completeGraphModel): GraphModel {
+    const results = new GraphModel()
+    const nodesToAdd: string[] = [...nodes]
+    const sourceState = sourceGraph.state
 
     while (nodesToAdd.length > 0) {
-      const id = nodesToAdd.shift() as string;
-      const node = sourceState.nodes[id];
+      const id = nodesToAdd.shift() as string
+      const node = sourceState.nodes[id]
       if (!node) {
-        continue;
+        continue
       }
-      results._state.nodes[id] = node;
+      results._state.nodes[id] = node
       // step through ALL adjacencies looking for parents
       // adding them to the result nodes the FIRST time we find
       // them and adding the unique adjacency EACH time we
       // find them
       for (const fromId in sourceState.adjacencyList) {
-        const toIds: any = sourceState.adjacencyList[fromId];
+        const toIds: any = sourceState.adjacencyList[fromId]
         if (toIds.indexOf(id) >= 0) {
           if (!results.hasNode(fromId)) {
-            nodesToAdd.push(fromId);
+            nodesToAdd.push(fromId)
           }
-          results.createAdjacency(fromId, id);
+          results.createAdjacency(fromId, id)
         }
       }
     }
 
-    results.dirtyState();
+    results.dirtyState()
 
-    return results;
+    return results
   }
 
   getAncestorNodes(...nodeIds: string[]) {
-    const graphModel = this.getUpstreamGraphFrom(nodeIds);
-    return Object.keys(graphModel._state.nodes);
+    const graphModel = this.getUpstreamGraphFrom(nodeIds)
+    return Object.keys(graphModel._state.nodes)
   }
 
   getDescendentNodes(...nodeIds: string[]) {
-    const graphModel = this.getDownstreamGraphFrom(...nodeIds);
-    return Object.keys(graphModel._state.nodes);
+    const graphModel = this.getDownstreamGraphFrom(...nodeIds)
+    return Object.keys(graphModel._state.nodes)
   }
 
   getDescendentIntersectNodes(...nodeIds: string[]): string[] {
-    const arrayOfArraysOfNodeids = nodeIds.map((id) =>
-      Object.keys(this.getDownstreamGraphFrom(id)._state.nodes),
-    );
+    const arrayOfArraysOfNodeids = nodeIds.map((id) => Object.keys(this.getDownstreamGraphFrom(id)._state.nodes))
     if (arrayOfArraysOfNodeids.length <= 1) {
-      return [];
+      return []
     }
-    const result = arrayOfArraysOfNodeids.reduce((a, b) =>
-      a.filter((c) => b.includes(c)),
-    );
-    return result;
+    const result = arrayOfArraysOfNodeids.reduce((a, b) => a.filter((c) => b.includes(c)))
+    return result
   }
 
   // Following the functional signature of the
@@ -182,164 +150,151 @@ export class GraphController {
   //
   assignGraphs(target: GraphModel, ...sources: GraphModel[]): GraphModel {
     sources.forEach((sourceGraph) => {
-      Object.assign(target._state.nodes, sourceGraph._state.nodes);
-      Object.entries(sourceGraph._state.adjacencyList).forEach(
-        ([fromId, sourceAdjacencies]) => {
-          const targetAdjacencies = target._state.adjacencyList[fromId];
-          if (!targetAdjacencies) {
-            target._state.adjacencyList[fromId] = sourceAdjacencies;
-          } else {
-            // const union = [...new Set([...array1, ...array2])]
-            target._state.adjacencyList[fromId] = [
-              ...new Set([...targetAdjacencies, ...sourceAdjacencies]),
-            ];
-          }
-        },
-      );
-    });
+      Object.assign(target._state.nodes, sourceGraph._state.nodes)
+      Object.entries(sourceGraph._state.adjacencyList).forEach(([fromId, sourceAdjacencies]) => {
+        const targetAdjacencies = target._state.adjacencyList[fromId]
+        if (!targetAdjacencies) {
+          target._state.adjacencyList[fromId] = sourceAdjacencies
+        } else {
+          // const union = [...new Set([...array1, ...array2])]
+          target._state.adjacencyList[fromId] = [...new Set([...targetAdjacencies, ...sourceAdjacencies])]
+        }
+      })
+    })
 
-    target.dirtyState();
+    target.dirtyState()
 
-    return target;
+    return target
   }
 
   async hydrateFromJson() {
-    const filters = this.appState.setFilters;
+    const filters = this.appState.setFilters
 
-    this.completeGraphModel =
-      await this.graphDataSource.getFilteredGraphModel(filters);
+    this.completeGraphModel = await this.graphDataSource.getFilteredGraphModel(filters)
 
-    this.listOfComponents = await this.graphDataSource.getAllComponentNames();
+    this.listOfComponents = await this.graphDataSource.getAllComponentNames()
 
     // console.info(this.completeGraphModel.orphanNodes());
 
     // what is the subgraph that should ALWAYS be displayed?
     // ie.. the default state of the displayed graph when nothing is selected
     this.baseDisplayGraphModel = this.completeGraphModel.filter((node) => {
-      const isComponent = node.type === "component";
-      const isOrphanCategory = node.type === "orphan-category";
-      return isComponent || isOrphanCategory;
-    });
+      const isComponent = node.type === "component"
+      const isOrphanCategory = node.type === "orphan-category"
+      return isComponent || isOrphanCategory
+    })
 
-    this.updateDisplayGraph();
-    this.emitNewDictionary();
-    this.requestGraphLayout(this.displayGraphModel);
+    this.updateDisplayGraph()
+    this.emitNewDictionary()
+    this.requestGraphLayout(this.displayGraphModel)
   }
 
   emitNewGraphState() {
-    const newState = this.displayGraphModel.state;
-    this.newGraphStateCallbacks.forEach((cb) =>
-      cb(newState, [...this.listOfComponents]),
-    );
+    const newState = this.displayGraphModel.state
+    this.newGraphStateCallbacks.forEach((cb) => cb(newState, [...this.listOfComponents]))
   }
 
   emitNewDictionary() {
-    const allIds = Object.keys(this.completeGraphModel._state.nodes);
+    const allIds = Object.keys(this.completeGraphModel._state.nodes)
     const newDictionary = allIds.map((id) => {
-      const node: any = this.completeGraphModel._state.nodes[id];
+      const node: any = this.completeGraphModel._state.nodes[id]
       return {
         value: id,
         type: node.type,
         metadata: node.value || "",
-      };
-    });
-    this.newDictionaryCallbacks.forEach((cb) => cb(newDictionary));
+      }
+    })
+    this.newDictionaryCallbacks.forEach((cb) => cb(newDictionary))
   }
 
   // used to subscribe to new graph states...
   onNewGraphState(cb: NewGraphStateCallbackFn) {
-    this.newGraphStateCallbacks.push(cb);
+    this.newGraphStateCallbacks.push(cb)
   }
 
   // used to subscribe to new dictionary states...
   onDictionaryAvailable(cb: NewDictionaryCallbackFn) {
-    this.newDictionaryCallbacks.push(cb);
+    this.newDictionaryCallbacks.push(cb)
   }
 
   async doSomeMutation() {
     // edit the model as much as we like...
     // then
-    this.emitNewGraphState();
+    this.emitNewGraphState()
   }
 
   updateDisplayGraph() {
-    const encodedComponents = this.appState.selectedComponents.join(",");
-    const componentIds =
-      encodedComponents === "ALL"
-        ? [...this.listOfComponents]
-        : this.appState.selectedComponents;
+    const encodedComponents = this.appState.selectedComponents.join(",")
+    const componentIds = encodedComponents === "ALL" ? [...this.listOfComponents] : this.appState.selectedComponents
 
-    const selectedTokens = this.appState.selectedTokens;
-    const componentsDescendents = this.getDownstreamGraphFrom(...componentIds);
-    const tokenAncestors = this.getUpstreamGraphFrom(selectedTokens);
-    const tokenDescendents = this.getDownstreamGraphFrom(...selectedTokens);
+    const selectedTokens = this.appState.selectedTokens
+    const componentsDescendents = this.getDownstreamGraphFrom(...componentIds)
+    const tokenAncestors = this.getUpstreamGraphFrom(selectedTokens)
+    const tokenDescendents = this.getDownstreamGraphFrom(...selectedTokens)
 
     this.displayGraphModel = this.assignGraphs(
       componentsDescendents,
       tokenAncestors,
       tokenDescendents,
       this.baseDisplayGraphModel,
-    );
+    )
   }
 
   async setAppState(newAppState: AppState) {
-    let refreshDisplayGraph = false;
-    let refreshSetFilters = false;
+    let refreshDisplayGraph = false
+    let refreshSetFilters = false
 
-    const priorSetFilters = this.appState.setFilters.join(",");
-    const newSetFilters = newAppState.setFilters.join(",");
-    const priorEncodedComponents = this.appState.selectedComponents.join(",");
-    const newEncodedComponents = newAppState.selectedComponents.join(",");
-    const priorEncodedTokens = this.appState.selectedTokens.join(",");
-    const newEncodedTokens = newAppState.selectedTokens.join(",");
+    const priorSetFilters = this.appState.setFilters.join(",")
+    const newSetFilters = newAppState.setFilters.join(",")
+    const priorEncodedComponents = this.appState.selectedComponents.join(",")
+    const newEncodedComponents = newAppState.selectedComponents.join(",")
+    const priorEncodedTokens = this.appState.selectedTokens.join(",")
+    const newEncodedTokens = newAppState.selectedTokens.join(",")
 
-    if (
-      priorEncodedComponents !== newEncodedComponents ||
-      priorEncodedTokens !== newEncodedTokens
-    ) {
-      refreshDisplayGraph = true;
+    if (priorEncodedComponents !== newEncodedComponents || priorEncodedTokens !== newEncodedTokens) {
+      refreshDisplayGraph = true
     }
 
     if (priorSetFilters !== newSetFilters) {
-      refreshSetFilters = true;
+      refreshSetFilters = true
     }
 
-    this.appState = newAppState;
+    this.appState = newAppState
 
     if (refreshSetFilters) {
-      await this.hydrateFromJson();
+      await this.hydrateFromJson()
     } else if (refreshDisplayGraph) {
-      this.updateDisplayGraph();
-      this.requestGraphLayout(this.displayGraphModel);
+      this.updateDisplayGraph()
+      this.requestGraphLayout(this.displayGraphModel)
     }
   }
 
   recieveNewGraphLayout(event: any) {
-    this.displayGraphModel.state = event.data;
-    this.emitNewGraphState();
+    this.displayGraphModel.state = event.data
+    this.emitNewGraphState()
   }
 
   requestGraphLayout(graphModel: GraphModel) {
-    this.graphLayoutWorker.postMessage(graphModel._state);
+    this.graphLayoutWorker.postMessage(graphModel._state)
   }
 
   handleEvent(eventName: string, eventDetail: KeyValueObject) {
     switch (eventName) {
       case "node-dragmove":
-        const zoom = this.appState.zoom;
-        const node: any = this.displayGraphModel._state.nodes[eventDetail.id];
-        const { deltaX, deltaY } = eventDetail.data;
-        node.x = node.x + deltaX / zoom;
-        node.y = node.y + deltaY / zoom;
-        this.displayGraphModel._state.nodes[eventDetail.id] = node;
-        this.displayGraphModel.dirtyState();
-        break;
+        const zoom = this.appState.zoom
+        const node: any = this.displayGraphModel._state.nodes[eventDetail.id]
+        const { deltaX, deltaY } = eventDetail.data
+        node.x = node.x + deltaX / zoom
+        node.y = node.y + deltaY / zoom
+        this.displayGraphModel._state.nodes[eventDetail.id] = node
+        this.displayGraphModel.dirtyState()
+        break
       default:
-        break;
+        break
     }
 
-    this.emitNewGraphState();
+    this.emitNewGraphState()
   }
 }
 
-export default GraphController;
+export default GraphController

@@ -4818,7 +4818,7 @@ const appModel = {
     hoverNodeId: "",
     setFilters: ["spectrum", "light", "wireframe"],
     listOfComponents: graphDataSource.listOfComponents,
-    selectedTokens: [
+    "selectedTokens": [
       "accordion-focus-indicator-gap",
       "alert-banner-top-to-text",
       "checkbox-top-to-control-large",

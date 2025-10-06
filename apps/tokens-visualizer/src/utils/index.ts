@@ -1,4 +1,4 @@
-
+export * from './graph'
 export * from "./request-animation-frame-throttle";
 export * from "./throttle";
 export * from "./matrix-utils";
@@ -22,3 +22,4 @@ export * from "./settled-values";
 // export * from './text-placement-correction'
 export * from "./if-defined";
 export * from "./almost-equal";
+export * from "./rounded-value"

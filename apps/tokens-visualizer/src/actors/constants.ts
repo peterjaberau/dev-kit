@@ -4,5 +4,6 @@ export enum SYSTEM_ACTOR_ID {
   GRAPH_GRID = "graph-grid",
 
   DATASOURCE = "datasource",
-  SEARCH = "search"
+  SEARCH = "search",
+  TOKEN_VISUALISER_LOGIC = 'token-visualiser-logic'
 }

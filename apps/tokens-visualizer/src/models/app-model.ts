@@ -1,6 +1,4 @@
 
-// type KeyValueObject = {[key: string]: any};
-
 type SpectrumColorThemeValue = "" | "light" | "dark";
 
 export interface AppState {

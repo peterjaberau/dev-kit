@@ -3,19 +3,14 @@ import React from "react"
 import { createActorContext } from "@xstate/react"
 import { createMachine, assign } from "xstate"
 import { SYSTEM_ACTOR_ID } from './constants'
-import {
-  dataSourceMachine,
-  searchMachine,
-  // appModelMachine,
-  // graphModelMachine,
-  // graphGridMachine,
-
-} from "./machines"
+import { searchMachine } from "./machines"
+import { tokenVisualiserLogicMachine } from "#app/demos/token-visualizer-logic/machines"
 
 
 export const rootMachine = createMachine({
   entry: assign({
     search: ({ spawn }) => spawn(searchMachine, { systemId: SYSTEM_ACTOR_ID.SEARCH }),
+    // tokenVisualiserLogic: ({ spawn }) => spawn(tokenVisualiserLogicMachine, { systemId: SYSTEM_ACTOR_ID.TOKEN_VISUALISER_LOGIC })
 
     // dataSource: ({ spawn }) => spawn(dataSourceMachine, { systemId: SYSTEM_ACTOR_ID.DATASOURCE }),
 
