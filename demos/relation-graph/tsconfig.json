@@ -38,8 +38,8 @@
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
 
-      "#apps/*": ["./src/apps/*"],
-      "#apps": ["./src/apps"]
+      "#app/*": ["./src/app/*"],
+      "#app": ["./src/app"]
     }
   },
   "include": [

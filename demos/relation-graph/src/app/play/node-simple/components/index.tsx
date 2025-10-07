@@ -111,8 +111,10 @@ const Index: React.FC = () => {
 
   const options: RGOptions = {
     debug: true,
+    showDebugPanel: true,
     defaultLineShape: 1,
     reLayoutWhenExpandedOrCollapsed: true,
+    allowShowMiniToolBar: true,
     layout: {
       layoutName: "center",
       maxLayoutTimes: 3000,
@@ -141,4 +143,5 @@ const Index: React.FC = () => {
     </div>
   )
 }
+//@ts-ignore
 export default Index

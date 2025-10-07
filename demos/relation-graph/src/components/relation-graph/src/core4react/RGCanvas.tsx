@@ -78,7 +78,7 @@ const RGCanvas: React.FC<RGCanvasProps> = (canvasProps) => {
         width: '100%',
         height: '100%',
         backgroundImage: relationGraph.options.backgroundImage ? `url(${relationGraph.options.backgroundImage})` : undefined,
-        backgroundColor: relationGraph.options.backgroundColor,
+        backgroundColor: relationGraph.options.backgroundColor || 'transparent',
       }}
       ref={rgMap$}
       className={[
