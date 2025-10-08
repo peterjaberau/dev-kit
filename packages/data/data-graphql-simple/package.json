@@ -1,0 +1,42 @@
+{
+  "name": "@dev-kit/data-graphql-simple",
+  "version": "0.0.1",
+  "files": [
+    "LICENSE",
+    "*.md",
+    "dist",
+    "src"
+  ],
+  "main": "src/index.ts",
+
+  "homepage": "#",
+  "license": "MIT",
+  "repository": "#",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "#"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.3.19",
+    "graphql-ast-types-browser": "~1.0.2",
+    "pluralize": "^8.0.0",
+    "@dev-kit/core": "workspace:*",
+    "@dev-kit/data-graphql": "workspace:*"
+
+  },
+  "devDependencies": {
+    "graphql": "^15.6.0",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "graphql": "^15.6.0"
+  }
+}

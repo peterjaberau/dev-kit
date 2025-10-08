@@ -1,0 +1,40 @@
+{
+  "name": "@dev-kit/data-graphql",
+  "version": "0.0.1",
+  "files": [
+    "LICENSE",
+    "*.md",
+    "dist",
+    "src"
+  ],
+  "main": "src/index.ts",
+  "homepage": "#",
+  "license": "MIT",
+  "repository": "#",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "#"
+  },
+  "dependencies": {
+    "@apollo/client": "^4.0.7",
+    "graphql-tag": "^2.12.6",
+    "pluralize": "^8.0.0",
+    "graphql": "^16.11.0",
+    "@dev-kit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "graphql": "^15.6.0"
+  },
+  "peerDependencies": {
+    "graphql": "^15.6.0 || ^16"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "@dev-kit/core",
+  "version": "0.0.1",
+  "files": [
+    "*.md",
+    "dist",
+    "src"
+  ],
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "main": "src/index.ts",
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.2",
+    "query-string": "^9.3.1",
+    "react-error-boundary": "^6.0.0",
+    "react-is": "^19.2.0",
+    "date-fns": "^4.1.0",
+    "inflection": "^3.0.2",
+    "jsonexport": "^3.2.0",
+    "eventemitter3": "^5.0.1"
+  },
+  "devDependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@tanstack/react-query": "^5.90.2",
+    "@tanstack/react-query-devtools": "^5.90.2",
+    "@types/node-polyglot": "^2.5.0",
+    "react-hook-form": "^7.64.0",
+    "react-router": "^7.9.3",
+    "react-router-dom": "^7.9.3",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.8.3",
+    "@types/node": "^20.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

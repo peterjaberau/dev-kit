@@ -1,0 +1,34 @@
+{
+  "name": "@dev-kit/data-json-server",
+  "version": "0.0.1",
+  "files": [
+    "LICENSE",
+    "*.md",
+    "dist",
+    "src"
+  ],
+  "main": "src/index.ts",
+
+  "homepage": "#",
+  "license": "MIT",
+  "repository": "#",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "#"
+  },
+  "dependencies": {
+    "query-string": "^9.3.1",
+    "@dev-kit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

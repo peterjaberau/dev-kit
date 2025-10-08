@@ -1,0 +1,35 @@
+{
+  "name": "@dev-kit/data-local-forage",
+  "version": "0.0.1",
+  "files": [
+    "LICENSE",
+    "*.md",
+    "dist",
+    "src"
+  ],
+  "main": "src/index.ts",
+
+  "homepage": "#",
+  "license": "MIT",
+  "repository": "#",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "#"
+  },
+  "dependencies": {
+    "localforage": "^1.10.0",
+    "@dev-kit/data-fakerest": "workspace:*",
+    "@dev-kit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
