@@ -348,6 +348,37 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  demos/layouts:
+    dependencies:
+      '@dev-kit/components':
+        specifier: workspace:*
+        version: link:../../packages/ui-kit/components
+      next:
+        specifier: ^15.5.4
+        version: 15.5.4(@babel/core@7.28.4)(@opentelemetry/api@1.9.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.19
+      '@types/react':
+        specifier: ^19.0.10
+        version: 19.2.0
+      '@types/react-dom':
+        specifier: ^19.0.4
+        version: 19.2.0(@types/react@19.2.0)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/icons:
     devDependencies:
       '@svgo/jsx':
