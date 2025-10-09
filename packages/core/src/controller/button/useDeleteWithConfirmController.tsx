@@ -112,7 +112,7 @@ const useDeleteWithConfirmController = <
                     record && unselect([record.id]);
                     redirect(redirectTo, resource);
                 },
-                onError: error => {
+                onError: (error: any) => {
                     setOpen(false);
 
                     notify(
@@ -139,7 +139,7 @@ const useDeleteWithConfirmController = <
             redirect: redirectTo,
             successMessage,
             ...rest,
-        });
+        } as any);
 
     const handleDialogOpen = useEvent((e: any) => {
         e.stopPropagation();

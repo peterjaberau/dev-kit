@@ -1,8 +1,8 @@
 import * as React from 'react';
-import englishMessages from 'ra-language-english';
-import frenchMessages from 'ra-language-french';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
-import fakeRestDataProvider from 'ra-data-fakerest';
+import englishMessages from '@dev-kit/language-english';
+import frenchMessages from '@dev-kit/language-french';
+import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+import fakeRestDataProvider from '@dev-kit/data-fakerest';
 import {
     AuthProvider,
     CoreAdminContext,
@@ -26,7 +26,7 @@ import {
 import { onlineManager, useMutationState } from '@tanstack/react-query';
 
 export default {
-    title: 'ra-core/controller/EditBase',
+    title: '@dev-kit/core/controller/EditBase',
 };
 
 const defaultI18nProvider = polyglotI18nProvider(

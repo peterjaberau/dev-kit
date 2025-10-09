@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { onlineManager, QueryClient } from '@tanstack/react-query';
-import { RecordsIterator } from 'ra-core';
+import { RecordsIterator } from '@dev-kit/core';
 import { CoreAdmin } from '../../core/CoreAdmin';
 import { Resource } from '../../core/Resource';
 import { ShowBase } from '../../controller/show/ShowBase';
 import { TestMemoryRouter } from '../../routing';
 import { ReferenceManyFieldBase } from './ReferenceManyFieldBase';
 import { ListBase, useListContext } from '../list';
-import fakeRestDataProvider from 'ra-data-fakerest';
+import fakeRestDataProvider from '@dev-kit/data-fakerest';
 import { useIsOffline } from '../../core';
 
 export default {
-    title: 'ra-core/controller/field/ReferenceManyFieldBase',
+    title: '@dev-kit/core/controller/field/ReferenceManyFieldBase',
     excludeStories: ['dataProviderWithAuthors'],
 };
 

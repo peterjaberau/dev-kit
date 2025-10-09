@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as echarts from 'echarts';
 import { useEffect, useRef } from 'react';
-import fakerestDataProvider from 'ra-data-fakerest';
+import fakerestDataProvider from '@dev-kit/data-fakerest';
 
 import { ListBase } from './ListBase';
 import { WithListContext } from './WithListContext';
 import { CoreAdminContext } from '../../core/CoreAdminContext';
 
 export default {
-    title: 'ra-core/controller/list/WithListContext',
+    title: '@dev-kit/core/controller/list/WithListContext',
 };
 
 // Date,Apples,Blueberries,Carrots

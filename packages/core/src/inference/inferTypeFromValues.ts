@@ -57,7 +57,7 @@ export interface InferredElementDescription {
  * @param {any[]} values an array of values from which to determine the type, e.g. [12, 34.4, 43]
  */
 export const inferTypeFromValues = (
-    name,
+    name: any,
     values: any[] = []
 ): InferredElementDescription => {
     if (name === 'id') {
@@ -166,7 +166,7 @@ export const inferTypeFromValues = (
         if (!propName) {
             return { type: 'object', props: { source: name } };
         }
-        const leafValues = values.map(v => v[propName]);
+        const leafValues = values.map((v: any) => v[propName]);
         return inferTypeFromValues(`${name}.${propName}`, leafValues);
     }
     return { type: 'string', props: { source: name } };

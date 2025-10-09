@@ -5,7 +5,7 @@ import useLogout from './useLogout';
 import { useNotify } from '../notification';
 import { useNavigate } from 'react-router';
 
-let timer;
+let timer: any;
 
 /**
  * Returns a callback used to call the authProvider.checkError() method
@@ -140,7 +140,7 @@ const logoutIfAccessDeniedWithoutProvider = async () => false;
  */
 type LogoutIfAccessDenied = (error?: any) => Promise<boolean>;
 
-const getErrorMessage = (error, defaultMessage) =>
+const getErrorMessage = (error: any, defaultMessage: any) =>
     typeof error === 'string'
         ? error
         : typeof error === 'undefined' || !error.message

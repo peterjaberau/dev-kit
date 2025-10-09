@@ -13,10 +13,10 @@ import {
 } from 'react-admin';
 import get from 'lodash/get';
 import set from 'lodash/set';
-import fakerestDataProvider from 'ra-data-fakerest';
+import fakerestDataProvider from '@dev-kit/data-fakerest';
 
 export default {
-    title: 'ra-core/form/useRegisterMutationMiddleware',
+    title: '@dev-kit/core/form/useRegisterMutationMiddleware',
 };
 
 const handleImageUpload =

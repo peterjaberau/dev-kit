@@ -5,12 +5,12 @@ import {
     DELETE,
     DELETE_MANY,
     UPDATE_MANY,
-} from 'ra-core';
+} from '@dev-kit/core';
 import {
     QUERY_TYPES,
     IntrospectionResult,
     IntrospectedResource,
-} from 'ra-data-graphql';
+} from '@dev-kit/data-graphql';
 import {
     ArgumentNode,
     IntrospectionField,

@@ -80,7 +80,7 @@ export const useCanAccess = <
                 record,
                 resource,
                 signal: authProvider.supportAbortSignal ? signal : undefined,
-            });
+            } as any);
         },
         enabled: authProviderHasCanAccess,
         ...params,

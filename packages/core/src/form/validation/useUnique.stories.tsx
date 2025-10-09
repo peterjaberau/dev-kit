@@ -1,7 +1,7 @@
 import * as React from 'react';
-import fakerestDataProvider from 'ra-data-fakerest';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
-import englishMessages from 'ra-language-english';
+import fakerestDataProvider from '@dev-kit/data-fakerest';
+import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+import englishMessages from '@dev-kit/language-english';
 import { Form } from '../Form';
 import { useInput } from '../useInput';
 import {
@@ -18,7 +18,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { TestMemoryRouter } from '../../routing';
 
 export default {
-    title: 'ra-core/form/validation/useUnique',
+    title: '@dev-kit/core/form/validation/useUnique',
 };
 
 const Input = props => {

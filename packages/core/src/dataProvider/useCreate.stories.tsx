@@ -6,7 +6,7 @@ import { useCreate } from './useCreate';
 import { useGetOne } from './useGetOne';
 import type { MutationMode as MutationModeType } from '../types';
 
-export default { title: 'ra-core/dataProvider/useCreate' };
+export default { title: '@dev-kit/core/dataProvider/useCreate' };
 
 export const MutationMode = ({ timeout = 1000 }) => {
     const posts = [{ id: 1, title: 'Hello', author: 'John Doe' }];

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import englishMessages from 'ra-language-english';
-import frenchMessages from 'ra-language-french';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
+import englishMessages from "@dev-kit/language-english"
+import frenchMessages from '@dev-kit/language-french';
+import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
 import {
     AuthProvider,
     CoreAdminContext,
@@ -18,7 +18,7 @@ import {
 } from '../..';
 
 export default {
-    title: 'ra-core/controller/CreateBase',
+    title: '@dev-kit/core/controller/CreateBase',
 };
 
 const defaultI18nProvider = polyglotI18nProvider(

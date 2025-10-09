@@ -45,7 +45,7 @@ const useLogin = (): Login => {
     );
 
     const login = useCallback(
-        (params: any = {}, pathName) => {
+        (params: any = {}, pathName: any) => {
             if (authProvider) {
                 return authProvider.login(params).then(ret => {
                     resetNotifications();

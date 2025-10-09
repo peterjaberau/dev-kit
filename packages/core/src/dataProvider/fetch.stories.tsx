@@ -2,7 +2,7 @@ import * as React from 'react';
 import { fetchJson } from './fetch';
 
 export default {
-    title: 'ra-core/dataProvider/fetch',
+    title: '@dev-kit/core/dataProvider/fetch',
 };
 
 export const FetchJson = () => {

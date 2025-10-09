@@ -68,7 +68,7 @@ export const useCanAccessResources = <
                         signal: authProvider.supportAbortSignal
                             ? signal
                             : undefined,
-                    });
+                    } as any);
 
                     return { canAccess, resource };
                 })

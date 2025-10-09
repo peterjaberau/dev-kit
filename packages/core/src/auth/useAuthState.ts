@@ -170,7 +170,7 @@ export type UseAuthStateResult<ErrorType = Error> = QueryObserverResult<
 
 export default useAuthState;
 
-const getErrorMessage = (error, defaultMessage) =>
+const getErrorMessage = (error: any, defaultMessage: any) =>
     typeof error === 'string'
         ? error
         : typeof error === 'undefined' || !error.message

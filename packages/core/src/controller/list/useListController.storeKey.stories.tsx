@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route } from 'react-router';
 import { Link } from 'react-router-dom';
-import fakeDataProvider from 'ra-data-fakerest';
+import fakeDataProvider from '@dev-kit/data-fakerest';
 
 import {
     CoreAdminContext,
@@ -15,7 +15,7 @@ import { CoreLayoutProps, SortPayload } from '../../types';
 import { useListController } from './useListController';
 
 export default {
-    title: 'ra-core/controller/list/useListController',
+    title: '@dev-kit/core/controller/list/useListController',
     decorators: [FakeBrowserDecorator],
     parameters: {
         initialEntries: ['/top'],

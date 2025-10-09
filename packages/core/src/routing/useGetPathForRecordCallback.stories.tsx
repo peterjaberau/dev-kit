@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeRestDataProvider from 'ra-data-fakerest';
+import fakeRestDataProvider from '@dev-kit/data-fakerest';
 
 import {
     AuthProvider,
@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 
 export default {
-    title: 'ra-core/routing/useGetPathForRecordCallback',
+    title: '@dev-kit/core/routing/useGetPathForRecordCallback',
 };
 
 export const InferredWithoutAuthProviderWithBothShowAndEditView = () => (

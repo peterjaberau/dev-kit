@@ -4,7 +4,7 @@ import { TestTranslationProvider } from './TestTranslationProvider';
 import { SourceContextProvider } from '..';
 
 export default {
-    title: 'ra-core/i18n/useTranslateLabel',
+    title: '@dev-kit/core/i18n/useTranslateLabel',
 };
 
 const TranslateLabel = ({
@@ -23,24 +23,24 @@ const TranslateLabel = ({
                 label,
                 source,
                 resource,
-            })}
+            } as any)}
         </>
     );
 };
 export const Basic = () => (
-    <TestTranslationProvider translate={m => m}>
+    <TestTranslationProvider translate={(m: any) => m}>
         <TranslateLabel source="title" resource="posts" />
     </TestTranslationProvider>
 );
 
 export const Source = () => (
-    <TestTranslationProvider translate={m => m}>
+    <TestTranslationProvider translate={(m: any) => m}>
         <TranslateLabel source="date" resource="posts" />
     </TestTranslationProvider>
 );
 
 export const Resource = () => (
-    <TestTranslationProvider translate={m => m}>
+    <TestTranslationProvider translate={(m: any) => m}>
         <TranslateLabel source="title" resource="comments" />
     </TestTranslationProvider>
 );
@@ -125,7 +125,7 @@ export const InSourceContext = () => (
 );
 
 export const InSourceContextI18nKey = () => (
-    <TestTranslationProvider translate={m => m}>
+    <TestTranslationProvider translate={(m: any) => m}>
         <SourceContextProvider
             value={{
                 getSource: source => source,

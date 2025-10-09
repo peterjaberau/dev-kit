@@ -1,5 +1,5 @@
 import { Database } from 'fakerest';
-import { DataProvider } from 'ra-core';
+import { DataProvider } from '@dev-kit/core';
 
 function log(type, resource, params, response) {
     // @ts-ignore
@@ -31,7 +31,7 @@ function delayed(response: any, delay?: number) {
  *
  * @example
  *
- * import fakeDataProvider from 'ra-data-fakerest';
+ * import fakeDataProvider from '@dev-kit/data-fakerest';
  * const dataProvider = fakeDataProvider({
  *   posts: [
  *     { id: 0, title: 'Hello, world!' },

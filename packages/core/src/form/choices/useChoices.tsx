@@ -48,8 +48,8 @@ export const useChoices = ({
     optionValue = 'id',
     disableValue = 'disabled',
     translateChoice = true,
-    createValue = '@@ra-create',
-    createHintValue = '@@ra-create-hint',
+    createValue = '@@@dev-kit/create',
+    createHintValue = '@@@dev-kit/create-hint',
 }: UseChoicesOptions) => {
     const translate = useTranslate();
 

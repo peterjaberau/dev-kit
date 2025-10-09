@@ -7,7 +7,7 @@ import { useTakeUndoableMutation } from './undo';
 import { useDelete } from './useDelete';
 import { useGetList } from './useGetList';
 
-export default { title: 'ra-core/dataProvider/useDelete/undoable' };
+export default { title: '@dev-kit/core/dataProvider/useDelete/undoable' };
 
 export const SuccessCase = () => {
     const posts = [

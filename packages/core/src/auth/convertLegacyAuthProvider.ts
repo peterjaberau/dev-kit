@@ -17,12 +17,12 @@ import { AuthProvider, LegacyAuthProvider } from '../types';
  * @returns {Object} An authProvider that react-admin can use
  */
 export default (legacyAuthProvider: LegacyAuthProvider): AuthProvider => {
-    const authProvider = (...args) => legacyAuthProvider.apply(null, args);
-    authProvider.login = params => legacyAuthProvider(AUTH_LOGIN, params);
-    authProvider.logout = params => legacyAuthProvider(AUTH_LOGOUT, params);
-    authProvider.checkAuth = params => legacyAuthProvider(AUTH_CHECK, params);
-    authProvider.checkError = error => legacyAuthProvider(AUTH_ERROR, error);
-    authProvider.getPermissions = params =>
+    const authProvider = (...args: any) => legacyAuthProvider.apply(null, args);
+    authProvider.login = (params: any) => legacyAuthProvider(AUTH_LOGIN, params);
+    authProvider.logout = (params: any) => legacyAuthProvider(AUTH_LOGOUT, params);
+    authProvider.checkAuth = (params: any) => legacyAuthProvider(AUTH_CHECK, params);
+    authProvider.checkError = (error: any) => legacyAuthProvider(AUTH_ERROR, error);
+    authProvider.getPermissions = (params: any) =>
         legacyAuthProvider(AUTH_GET_PERMISSIONS, params);
     return authProvider;
 };

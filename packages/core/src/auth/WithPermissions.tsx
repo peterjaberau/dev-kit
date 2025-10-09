@@ -25,7 +25,7 @@ export interface WithPermissionsProps {
     [key: string]: any;
 }
 
-const isEmptyChildren = children => Children.count(children) === 0;
+const isEmptyChildren = (children: any) => Children.count(children) === 0;
 
 /**
  * After checking that the user is authenticated,

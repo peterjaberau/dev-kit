@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { Browser } from '../storybook/FakeBrowser';
 
 export default {
-    title: 'ra-core/core/CoreAdminRoutes',
+    title: '@dev-kit/core/core/CoreAdminRoutes',
 };
 
 export const Basic = ({

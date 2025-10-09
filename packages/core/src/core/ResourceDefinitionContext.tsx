@@ -28,7 +28,7 @@ export const ResourceDefinitionContext =
  *
  * @example
  *
- * import { useResourceDefinition, useTranslate } from 'ra-core';
+ * import { useResourceDefinition, useTranslate } from '@dev-kit/core';
  *
  * const PostMenuItem = () => {
  *     const { name, icon } = useResourceDefinition({ resource: 'posts' });

@@ -6,8 +6,8 @@ import {
 } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
-import englishMessages from 'ra-language-english';
+import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+import englishMessages from '@dev-kit/language-english';
 import {
     Route,
     Routes,
@@ -28,7 +28,7 @@ import { TestMemoryRouter } from '../routing';
 import { useNotificationContext } from '../notification';
 
 export default {
-    title: 'ra-core/form/Form',
+    title: '@dev-kit/core/form/Form',
 };
 
 const Input = props => {

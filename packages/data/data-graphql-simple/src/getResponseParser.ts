@@ -4,8 +4,8 @@ import {
     GET_MANY,
     GET_MANY_REFERENCE,
     UPDATE_MANY,
-} from 'ra-core';
-import { IntrospectionResult, IntrospectedResource } from 'ra-data-graphql';
+} from '@dev-kit/core';
+import { IntrospectionResult, IntrospectedResource } from '@dev-kit/data-graphql';
 import { IntrospectionField } from 'graphql';
 import { ApolloQueryResult } from '@apollo/client';
 

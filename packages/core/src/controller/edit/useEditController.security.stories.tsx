@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeDataProvider from 'ra-data-fakerest';
+import fakeDataProvider from '@dev-kit/data-fakerest';
 import { QueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Browser } from '../../storybook/FakeBrowser';
@@ -13,7 +13,7 @@ import { EditControllerProps, useEditController } from './useEditController';
 import { useAuthState } from '../..';
 
 export default {
-    title: 'ra-core/controller/useEditController',
+    title: '@dev-kit/core/controller/useEditController',
 };
 
 const styles = {

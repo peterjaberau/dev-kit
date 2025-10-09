@@ -12,7 +12,7 @@ import { InfiniteListControllerResult } from './useInfiniteListController';
 
  * @example
  *
- * import { useListController, ListPaginationContext } from 'ra-core';
+ * import { useListController, ListPaginationContext } from '@dev-kit/core';
  *
  * const List = props => {
  *     const { fetchNextPage, fetchPreviousPage } = useInfiniteListController(props);

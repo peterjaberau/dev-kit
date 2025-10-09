@@ -4,7 +4,7 @@ import { CoreAdminContext } from '../core';
 import { TestMemoryRouter, WithPermissions } from '..';
 
 export default {
-    title: 'ra-core/auth/WithPermissions',
+    title: '@dev-kit/core/auth/WithPermissions',
 };
 
 export const NoAuthProvider = () => (

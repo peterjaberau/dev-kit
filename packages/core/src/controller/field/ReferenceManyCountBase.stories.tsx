@@ -11,7 +11,7 @@ import { TestMemoryRouter } from '../../routing';
 import { ReferenceManyCountBase } from './ReferenceManyCountBase';
 
 export default {
-    title: 'ra-core/controller/field/ReferenceManyCountBase',
+    title: '@dev-kit/core/controller/field/ReferenceManyCountBase',
     excludeStories: ['Wrapper'],
 };
 

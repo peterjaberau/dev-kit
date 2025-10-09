@@ -21,7 +21,7 @@ import { CoreAdminUI, CoreAdminUIProps } from './CoreAdminUI';
  *     Resource,
  *     ListGuesser,
  *     useDataProvider,
- * } from 'ra-core';
+ * } from '@dev-kit/core';
  *
  * const App = () => (
  *     <CoreAdmin dataProvider={myDataProvider}>
@@ -36,7 +36,7 @@ import { CoreAdminUI, CoreAdminUIProps } from './CoreAdminUI';
  *     Resource,
  *     ListGuesser,
  *     useDataProvider,
- * } from 'ra-core';
+ * } from '@dev-kit/core';
  *
  * const App = () => (
  *     <CoreAdmin dataProvider={myDataProvider}>
@@ -58,7 +58,7 @@ import { CoreAdminUI, CoreAdminUIProps } from './CoreAdminUI';
  *     Resource,
  *     ListGuesser,
  *     useDataProvider,
- * } from 'ra-core';
+ * } from '@dev-kit/core';
  *
  * const App = () => (
  *     <CoreAdminContext dataProvider={myDataProvider}>

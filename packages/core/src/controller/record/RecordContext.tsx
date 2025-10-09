@@ -25,7 +25,7 @@ RecordContext.displayName = 'RecordContext';
  *
  * @example
  *
- * import { useGetOne, RecordContextProvider } from 'ra-core';
+ * import { useGetOne, RecordContextProvider } from '@dev-kit/core';
  *
  * const Show = ({ resource, id }) => {
  *     const { data } = useGetOne(resource, { id });

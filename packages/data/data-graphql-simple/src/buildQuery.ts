@@ -1,4 +1,4 @@
-import { IntrospectionResult, BuildQuery } from 'ra-data-graphql';
+import { IntrospectionResult, BuildQuery } from '@dev-kit/data-graphql';
 import buildVariables from './buildVariables';
 import buildGqlQuery from './buildGqlQuery';
 import getResponseParser from './getResponseParser';

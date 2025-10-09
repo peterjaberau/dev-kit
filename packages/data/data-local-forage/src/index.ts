@@ -1,4 +1,4 @@
-import fakeRestProvider from 'ra-data-fakerest';
+import fakeRestProvider from '@dev-kit/data-fakerest';
 import {
     CreateParams,
     DataProvider,
@@ -12,7 +12,7 @@ import {
     UpdateParams,
     UpdateManyParams,
     DeleteManyParams,
-} from 'ra-core';
+} from '@dev-kit/core';
 import pullAt from 'lodash/pullAt';
 import localforage from 'localforage';
 
@@ -23,12 +23,12 @@ import localforage from 'localforage';
  *
  * @example // initialize with no data
  *
- * import localForageDataProvider from 'ra-data-local-forage';
+ * import localForageDataProvider from '@dev-kit/data-local-forage';
  * const dataProvider = localForageDataProvider();
  *
  * @example // initialize with default data (will be ignored if data has been modified by user)
  *
- * import localForageDataProvider from 'ra-data-local-forage';
+ * import localForageDataProvider from '@dev-kit/data-local-forage';
  * const dataProvider = localForageDataProvider({
  *   defaultData: {
  *     posts: [
@@ -45,7 +45,7 @@ import localforage from 'localforage';
 export default (params?: LocalForageDataProviderParams): DataProvider => {
     const {
         defaultData = {},
-        prefixLocalForageKey = 'ra-data-local-forage-',
+        prefixLocalForageKey = '@dev-kit/data-local-forage-',
         loggingEnabled = false,
     } = params || {};
 

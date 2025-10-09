@@ -5,7 +5,7 @@ import { substituteTokens } from './substituteTokens';
 export type I18nContextProps = I18nProvider;
 
 const defaultI18nProvider = {
-    translate: (key, options) =>
+    translate: (key: any, options: any) =>
         options?._
             ? substituteTokens(options._, options)
             : substituteTokens(key, options),

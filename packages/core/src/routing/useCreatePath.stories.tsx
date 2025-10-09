@@ -7,7 +7,7 @@ import { useCreatePath } from './useCreatePath';
 import { FakeBrowserDecorator } from '../storybook//FakeBrowser';
 
 export default {
-    title: 'ra-core/routing/useCreatePath',
+    title: '@dev-kit/core/routing/useCreatePath',
     decorators: [FakeBrowserDecorator],
 };
 

@@ -1,0 +1,37 @@
+{
+  "name": "@dev-kit/i18n-i18next",
+  "version": "0.0.1",
+  "files": [
+    "LICENSE",
+    "*.md",
+    "dist",
+    "src"
+  ],
+  "main": "src/index.ts",
+
+  "homepage": "#",
+  "license": "MIT",
+  "repository": "#",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "#"
+  },
+  "dependencies": {
+    "i18next": "^25.5.3",
+    "@dev-kit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "i18next-resources-to-backend": "^1.2.1",
+    "@dev-kit/language-english": "workspace:*",
+    "@dev-kit/language-french": "workspace:*",
+    "typescript": "^5.8.3"
+  }
+}

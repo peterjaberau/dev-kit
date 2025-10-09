@@ -4,7 +4,7 @@ import { Form, useInput } from '../form';
 import { TestMemoryRouter } from '../routing';
 
 export default {
-    title: 'ra-core/core/SourceContext',
+    title: '@dev-kit/core/core/SourceContext',
 };
 
 const TextInput = props => {

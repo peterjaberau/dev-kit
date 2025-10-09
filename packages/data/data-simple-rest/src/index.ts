@@ -1,5 +1,5 @@
 import { stringify } from 'query-string';
-import { fetchUtils, DataProvider } from 'ra-core';
+import { fetchUtils, DataProvider } from '@dev-kit/core';
 
 /**
  * Maps react-admin queries to a simple REST API
@@ -21,7 +21,7 @@ import { fetchUtils, DataProvider } from 'ra-core';
  *
  * import * as React from "react";
  * import { Admin, Resource } from 'react-admin';
- * import simpleRestProvider from 'ra-data-simple-rest';
+ * import simpleRestProvider from '@dev-kit/data-simple-rest';
  *
  * import { PostList } from './posts';
  *

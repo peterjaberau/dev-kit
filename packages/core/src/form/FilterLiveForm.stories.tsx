@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeRestDataProvider from 'ra-data-fakerest';
+import fakeRestDataProvider from '@dev-kit/data-fakerest';
 import {
     FilterLiveForm,
     FilterLiveFormProps,
@@ -13,7 +13,7 @@ import { CoreAdminContext } from '../core/CoreAdminContext';
 import { memoryStore } from '../store';
 import { TestMemoryRouter } from '../routing';
 
-export default { title: 'ra-core/form/FilterLiveForm' };
+export default { title: '@dev-kit/core/form/FilterLiveForm' };
 
 const dataProvider = fakeRestDataProvider(
     {

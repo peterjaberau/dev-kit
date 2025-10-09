@@ -8,7 +8,7 @@ import { AuthProvider } from '../types';
 import { Link } from 'react-router-dom';
 
 export default {
-    title: 'ra-core/core/NavigateToFirstResource',
+    title: '@dev-kit/core/core/NavigateToFirstResource',
 };
 
 export const NoAuthProvider = () => (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeDataProvider from 'ra-data-fakerest';
+import fakeDataProvider from '@dev-kit/data-fakerest';
 
 import { CoreAdminContext } from '../../core';
 import { ListController } from './ListController';
@@ -8,7 +8,7 @@ import type { ListControllerResult } from './useListController';
 import { TestMemoryRouter } from '../..';
 
 export default {
-    title: 'ra-core/controller/list/useListController',
+    title: '@dev-kit/core/controller/list/useListController',
     excludeStories: ['defaultDataProvider'],
 };
 

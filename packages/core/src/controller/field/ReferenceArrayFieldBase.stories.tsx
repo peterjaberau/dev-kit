@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeRestProvider from 'ra-data-fakerest';
+import fakeRestProvider from '@dev-kit/data-fakerest';
 
 import { ReferenceArrayFieldBase } from './ReferenceArrayFieldBase';
 import {
@@ -15,7 +15,7 @@ import {
 } from '../..';
 import { onlineManager, QueryClient } from '@tanstack/react-query';
 
-export default { title: 'ra-core/controller/field/ReferenceArrayFieldBase' };
+export default { title: '@dev-kit/core/controller/field/ReferenceArrayFieldBase' };
 
 const fakeData = {
     bands: [{ id: 1, name: 'The Beatles', members: [1, 2, 3, 4, 5, 6, 7, 8] }],

@@ -6,7 +6,7 @@ import { CoreAdminContext } from '../core';
 import { useDelete } from './useDelete';
 import { useGetList } from './useGetList';
 
-export default { title: 'ra-core/dataProvider/useDelete/optimistic' };
+export default { title: '@dev-kit/core/dataProvider/useDelete/optimistic' };
 
 export const SuccessCase = () => {
     const posts = [

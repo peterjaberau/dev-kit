@@ -8,7 +8,7 @@ import {
 } from './useCanAccessResources';
 
 export default {
-    title: 'ra-core/auth/useCanAccessResources',
+    title: '@dev-kit/core/auth/useCanAccessResources',
 };
 
 const UseCanAccessResources = ({
@@ -65,7 +65,7 @@ export const Basic = ({
             action="read"
             resources={['posts.id', 'posts.title', 'posts.author']}
         >
-            {result => <StateInspector state={result} />}
+            {(result: any) => <StateInspector state={result} />}
         </UseCanAccessResources>
     </CoreAdminContext>
 );
@@ -80,7 +80,7 @@ export const NoAuthProvider = ({
             action="read"
             resources={['posts.id', 'posts.title', 'posts.author']}
         >
-            {result => <StateInspector state={result} />}
+            {(result: any) => <StateInspector state={result} />}
         </UseCanAccessResources>
     </CoreAdminContext>
 );

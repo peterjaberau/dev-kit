@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
  *
  * @example Usage in a storybook
  * export default {
- *     title: 'ra-core/Admin/CustomRoutes/Authenticated',
+ *     title: '@dev-kit/core/Admin/CustomRoutes/Authenticated',
  *     decorators: [FakeBrowserDecorator],
  *     parameters: {
  *         // You can pass the react-router history initial entries like this

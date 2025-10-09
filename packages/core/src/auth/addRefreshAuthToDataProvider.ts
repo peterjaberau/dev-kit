@@ -14,7 +14,7 @@ import { DataProvider } from '../types';
  *
  * @example
  * import { addRefreshAuthToDataProvider } from 'react-admin';
- * import { jsonServerProvider } from 'ra-data-json-server';
+ * import { jsonServerProvider } from '@dev-kit/data-json-server';
  * import { refreshAuth } from './refreshAuth';
  *
  * const dataProvider = addRefreshAuthToDataProvider(jsonServerProvider('http://localhost:3000'), refreshAuth);

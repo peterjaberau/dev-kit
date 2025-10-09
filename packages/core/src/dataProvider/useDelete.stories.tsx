@@ -7,7 +7,7 @@ import { useDelete } from './useDelete';
 import { useGetList } from './useGetList';
 import type { DataProvider, MutationMode as MutationModeType } from '../types';
 
-export default { title: 'ra-core/dataProvider/useDelete' };
+export default { title: '@dev-kit/core/dataProvider/useDelete' };
 
 export const MutationMode = () => {
     const posts = [

@@ -33,4 +33,4 @@ export const useTranslate = (): TranslateFunction => {
     return i18nProvider ? translate : identity;
 };
 
-const identity = key => key;
+const identity = (key: any) => key;

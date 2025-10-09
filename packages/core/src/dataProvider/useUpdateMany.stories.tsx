@@ -9,7 +9,7 @@ import { useGetOne } from './useGetOne';
 import { useTakeUndoableMutation } from './undo';
 import type { DataProvider, MutationMode as MutationModeType } from '../types';
 
-export default { title: 'ra-core/dataProvider/useUpdateMany' };
+export default { title: '@dev-kit/core/dataProvider/useUpdateMany' };
 
 export const UndefinedValues = () => {
     const data = [

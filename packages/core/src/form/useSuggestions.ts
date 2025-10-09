@@ -30,7 +30,7 @@ export const useSuggestions = ({
     choices,
     createText = 'ra.action.create',
     createValue = '@@create',
-    createHintValue = '@@ra-create-hint',
+    createHintValue = '@@@dev-kit/create-hint',
     limitChoicesToValue,
     matchSuggestion,
     optionText,

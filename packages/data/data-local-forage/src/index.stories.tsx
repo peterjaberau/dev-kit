@@ -1,15 +1,15 @@
 import React from 'react';
-import { Resource } from 'ra-core';
+import { Resource } from '@dev-kit/core';
 import {
     AdminContext,
     AdminUI,
     EditGuesser,
     ListGuesser,
-} from 'ra-ui-materialui';
+} from '@dev-kit/ui-materialui';
 import localforageDataProvider from './index';
 
 export default {
-    title: 'ra-data-local-forage',
+    title: '@dev-kit/data-local-forage',
 };
 
 export const Basic = () => {

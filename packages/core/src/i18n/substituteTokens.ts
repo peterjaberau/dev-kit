@@ -5,7 +5,7 @@
  * @param {object} data The data to interpolate, e.g. { name: 'John' }
  * @returns {string} The interpolated string, e.g. 'Hello, John'
  */
-export const substituteTokens = (template, data) =>
+export const substituteTokens = (template: any, data: any) =>
     template && data
         ? String.prototype.replace.call(
               template,

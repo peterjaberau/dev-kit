@@ -133,7 +133,7 @@ export const useDeleteController = <
             {
                 mutationMode,
                 ...otherMutationOptions,
-            }
+            } as any
         );
     }, [
         deleteOne,

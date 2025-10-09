@@ -14,9 +14,9 @@ interface AllNavigatorLanguage extends NavigatorLanguage {
  * @example
  *    import * as React from "react";
  *    import { Admin, Resource, resolveBrowserLocale } from 'react-admin';
- *    import polyglotI18nProvider from 'ra-i18n-polyglot';
- *    import englishMessages from 'ra-language-english';
- *    import frenchMessages from 'ra-language-french';
+ *    import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+ *    import englishMessages from '@dev-kit/language-english';
+ *    import frenchMessages from '@dev-kit/language-french';
  *
  *    const messages = {
  *        fr: frenchMessages,
@@ -64,9 +64,9 @@ export const resolveBrowserLocale = (
  * @example
  *     import * as React from "react";
  *     import { Admin, Resource, mergeTranslations } from 'react-admin';
- *     import polyglotI18nProvider from 'ra-i18n-polyglot';
- *     import englishMessages from 'ra-language-english';
- *     import englishTreeMessages from 'ra-tree-language-english';
+ *     import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+ *     import englishMessages from '@dev-kit/language-english';
+ *     import englishTreeMessages from '@dev-kit/tree-language-english';
  *
  *     const messages = {
  *        en: mergeTranslations(englishMessages, englishTreeMessages),

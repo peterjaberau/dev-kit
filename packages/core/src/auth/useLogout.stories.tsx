@@ -5,7 +5,7 @@ import { CoreAdminContext } from '../core/CoreAdminContext';
 import useLogout from './useLogout';
 
 export default {
-    title: 'ra-core/auth/useLogout',
+    title: '@dev-kit/core/auth/useLogout',
 };
 
 export const Redirect = ({
@@ -67,7 +67,7 @@ Redirect.argTypes = {
     },
 };
 
-const LogoutButton = ({ redirectTo }: { redirectTo?: string }) => {
+const LogoutButton = ({ redirectTo }: { redirectTo?: string | any }) => {
     const logout = useLogout();
     return (
         <button onClick={() => logout(undefined, redirectTo)}>Logout</button>

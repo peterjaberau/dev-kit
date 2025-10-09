@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { QueryClient, useIsMutating } from '@tanstack/react-query';
-import fakeRestDataProvider from 'ra-data-fakerest';
+import fakeRestDataProvider from '@dev-kit/data-fakerest';
 
 import { CoreAdminContext } from '../core';
 import { ListController } from '../controller/list';
 import { useDelete } from './useDelete';
 import { useGetList } from './useGetList';
 
-export default { title: 'ra-core/dataProvider/useDelete/pessimistic' };
+export default { title: '@dev-kit/core/dataProvider/useDelete/pessimistic' };
 
 export const SuccessCase = () => {
     const posts = [

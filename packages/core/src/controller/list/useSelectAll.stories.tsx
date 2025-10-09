@@ -1,12 +1,12 @@
 import * as React from 'react';
-import fakeDataProvider from 'ra-data-fakerest';
+import fakeDataProvider from '@dev-kit/data-fakerest';
 
 import { CoreAdminContext } from '../../core';
 import { ListController } from './ListController';
 import { useSelectAll } from './useSelectAll';
 
 export default {
-    title: 'ra-core/controller/useSelectAll',
+    title: '@dev-kit/core/controller/useSelectAll',
     excludeStories: ['defaultDataProvider'],
 };
 

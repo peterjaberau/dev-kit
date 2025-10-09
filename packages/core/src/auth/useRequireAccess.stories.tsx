@@ -7,7 +7,7 @@ import { useRequireAccess, UseRequireAccessResult } from './useRequireAccess';
 import { TestMemoryRouter } from '..';
 
 export default {
-    title: 'ra-core/auth/useRequireAccess',
+    title: '@dev-kit/core/auth/useRequireAccess',
 };
 
 const UseRequireAccess = ({
@@ -70,7 +70,7 @@ export const Basic = ({
                     path="/"
                     element={
                         <UseRequireAccess action="read" resource="test">
-                            {state => <StateInspector state={state} />}
+                            {(state: any) => <StateInspector state={state} />}
                         </UseRequireAccess>
                     }
                 />
@@ -99,7 +99,7 @@ export const NoAuthProvider = ({
                     path="/"
                     element={
                         <UseRequireAccess action="read" resource="test">
-                            {state => <StateInspector state={state} />}
+                            {(state: any) => <StateInspector state={state} />}
                         </UseRequireAccess>
                     }
                 />

@@ -3,8 +3,8 @@ import buildDataProvider, {
     BuildQueryFactory,
     Options,
     defaultOptions as baseDefaultOptions,
-} from 'ra-data-graphql';
-import { DELETE_MANY, DataProvider, Identifier, UPDATE_MANY } from 'ra-core';
+} from '@dev-kit/data-graphql';
+import { DELETE_MANY, DataProvider, Identifier, UPDATE_MANY } from '@dev-kit/core';
 import pluralize from 'pluralize';
 
 import defaultBuildQuery from './buildQuery';

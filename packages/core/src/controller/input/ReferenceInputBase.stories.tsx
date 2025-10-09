@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { onlineManager, QueryClient } from '@tanstack/react-query';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
-import englishMessages from 'ra-language-english';
-import fakeRestDataProvider from 'ra-data-fakerest';
+import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+import englishMessages from '@dev-kit/language-english';
+import fakeRestDataProvider from '@dev-kit/data-fakerest';
 import { TestMemoryRouter } from '../../routing';
 
 import { EditBase } from '../edit';
@@ -28,7 +28,7 @@ import {
 } from '../..';
 
 export default {
-    title: 'ra-core/controller/input/ReferenceInputBase',
+    title: '@dev-kit/core/controller/input/ReferenceInputBase',
     excludeStories: ['dataProviderWithAuthors'],
 };
 

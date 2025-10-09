@@ -3,7 +3,7 @@ import usePermissions from './usePermissions';
 import { CoreAdminContext, TestMemoryRouter, useLogin, useLogout } from '..';
 
 export default {
-    title: 'ra-core/auth/useLogin',
+    title: '@dev-kit/core/auth/useLogin',
 };
 
 const getAuthProviderWithLoginAndLogout = () => {

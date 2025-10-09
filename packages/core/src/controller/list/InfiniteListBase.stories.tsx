@@ -1,8 +1,8 @@
 import * as React from 'react';
-import fakeRestProvider from 'ra-data-fakerest';
-import englishMessages from 'ra-language-english';
-import frenchMessages from 'ra-language-french';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
+import fakeRestProvider from '@dev-kit/data-fakerest';
+import englishMessages from '@dev-kit/language-english';
+import frenchMessages from '@dev-kit/language-french';
+import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
 import { InfiniteListBase, InfiniteListBaseProps } from './InfiniteListBase';
 import { CoreAdminContext } from '../../core';
 import { useListContext } from './useListContext';
@@ -20,7 +20,7 @@ import {
 import { onlineManager } from '@tanstack/react-query';
 
 export default {
-    title: 'ra-core/controller/list/InfiniteListBase',
+    title: '@dev-kit/core/controller/list/InfiniteListBase',
 };
 
 const data = {

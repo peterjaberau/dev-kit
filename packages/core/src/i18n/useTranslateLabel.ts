@@ -5,7 +5,7 @@ import { getFieldLabelTranslationArgs } from '../util';
 import { useResourceContext, useOptionalSourceContext } from '../core';
 
 export const useTranslateLabel = () => {
-    const translate = useTranslate();
+    const translate: any = useTranslate();
     const resourceFromContext = useResourceContext();
     const sourceContext = useOptionalSourceContext();
 
@@ -36,7 +36,7 @@ export const useTranslateLabel = () => {
                     resource,
                     resourceFromContext,
                     source,
-                })
+                } as any)
             );
         },
         [resourceFromContext, translate, sourceContext]

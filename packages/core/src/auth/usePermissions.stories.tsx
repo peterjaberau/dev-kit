@@ -4,7 +4,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { AuthProvider, CoreAdminContext, TestMemoryRouter } from '..';
 
 export default {
-    title: 'ra-core/auth/usePermissions',
+    title: '@dev-kit/core/auth/usePermissions',
 };
 
 export const NoAuthProvider = () => (

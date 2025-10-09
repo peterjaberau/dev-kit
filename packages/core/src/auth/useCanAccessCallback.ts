@@ -65,7 +65,7 @@ export const useCanAccessCallback = <
         },
         retry: false,
         ...options,
-    });
+    } as any);
 
     return mutateAsync;
 };

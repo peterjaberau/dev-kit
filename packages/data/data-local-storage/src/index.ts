@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
-import fakeRestProvider from 'ra-data-fakerest';
-import { DataProvider, RaRecord } from 'ra-core';
+import fakeRestProvider from '@dev-kit/data-fakerest';
+import { DataProvider, RaRecord } from '@dev-kit/core';
 import pullAt from 'lodash/pullAt';
 
 /**
@@ -10,12 +10,12 @@ import pullAt from 'lodash/pullAt';
  *
  * @example // initialize with no data
  *
- * import localStorageDataProvider from 'ra-data-local-storage';
+ * import localStorageDataProvider from '@dev-kit/data-local-storage';
  * const dataProvider = localStorageDataProvider();
  *
  * @example // initialize with default data (will be ignored if data has been modified by user)
  *
- * import localStorageDataProvider from 'ra-data-local-storage';
+ * import localStorageDataProvider from '@dev-kit/data-local-storage';
  * const dataProvider = localStorageDataProvider({
  *   defaultData: {
  *     posts: [
@@ -32,7 +32,7 @@ import pullAt from 'lodash/pullAt';
 export default (params?: LocalStorageDataProviderParams): DataProvider => {
     const {
         defaultData = {},
-        localStorageKey = 'ra-data-local-storage',
+        localStorageKey = '@dev-kit/data-local-storage',
         loggingEnabled = false,
         localStorageUpdateDelay = 10, // milliseconds
     } = params || {};

@@ -39,7 +39,7 @@ const UseNavigate = ({
  * - a `locationCallback` prop to get the location in the test
  * - a `navigateCallback` prop to be able to navigate in the test
  */
-export const TestMemoryRouter = ({
+export const TestMemoryRouter: any = ({
     children,
     locationCallback,
     navigateCallback,
@@ -83,8 +83,7 @@ export const TestMemoryRouter = ({
     return (
         <RouterProvider
             router={router}
-            // @ts-expect-error react-router types are not up-to-date
-            future={{ v7_startTransition: false, v7_relativeSplatPath: false }}
+            future={{ v7_startTransition: false, v7_relativeSplatPath: false } as any}
         />
     );
 };

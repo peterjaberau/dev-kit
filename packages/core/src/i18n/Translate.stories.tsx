@@ -3,7 +3,7 @@ import { TestTranslationProvider } from './TestTranslationProvider';
 import { Translate } from './Translate';
 
 export default {
-    title: 'ra-core/i18n/Translate',
+    title: '@dev-kit/core/i18n/Translate',
 };
 
 export const Basic = () => (
@@ -44,7 +44,7 @@ export const Options = () => (
     <TestTranslationProvider
         messages={{
             custom: {
-                myKey: ({ price }) => `It cost ${price}.00 $`,
+                myKey: ({ price }: any) => `It cost ${price}.00 $`,
             },
         }}
     >

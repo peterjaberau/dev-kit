@@ -5,7 +5,7 @@ import { StoreContextProvider } from './StoreContextProvider';
 import { useStore } from './useStore';
 
 export default {
-    title: 'ra-core/store/memory',
+    title: '@dev-kit/core/store/memory',
 };
 
 const StoreReader = ({ name }) => {

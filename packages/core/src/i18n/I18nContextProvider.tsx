@@ -12,7 +12,7 @@ import { I18nProvider } from '../types';
 export const I18nContextProvider = ({
     value = defaulti18nContext,
     children,
-}: I18nContextProviderProps) => {
+}: I18nContextProviderProps | any) => {
     const [locale] = useStore('locale');
     const notify = useNotify();
     const [key, setKey] = useState(0);
@@ -59,8 +59,8 @@ export interface I18nContextProviderProps {
     children: ReactNode;
 }
 
-const defaulti18nContext = {
-    translate: x => x,
+const defaulti18nContext: any = {
+    translate: (x: any) => x,
     changeLocale: () => Promise.resolve(),
     getLocale: () => 'en',
 };

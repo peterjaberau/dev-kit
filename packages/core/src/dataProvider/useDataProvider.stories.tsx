@@ -7,7 +7,7 @@ import { ReferenceFieldBase } from '../controller/field/ReferenceFieldBase';
 import { RecordContextProvider, WithRecord } from '../controller/record';
 
 export default {
-    title: 'ra-core/dataProvider/useDataProvider',
+    title: '@dev-kit/core/dataProvider/useDataProvider',
 };
 
 const PostWithAuthor = () => {

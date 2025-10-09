@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeRestProvider from 'ra-data-fakerest';
+import fakeRestProvider from '@dev-kit/data-fakerest';
 import {
     CoreAdminContext,
     Exporter,
@@ -10,7 +10,7 @@ import {
 } from '..';
 
 export default {
-    title: 'ra-core/export/useBulkExport',
+    title: '@dev-kit/core/export/useBulkExport',
 };
 
 const data = {

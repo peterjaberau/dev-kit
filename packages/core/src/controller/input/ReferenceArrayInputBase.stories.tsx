@@ -1,6 +1,6 @@
 import * as React from 'react';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
-import englishMessages from 'ra-language-english';
+import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+import englishMessages from '@dev-kit/language-english';
 
 import { CoreAdmin } from '../../core/CoreAdmin';
 import { Resource } from '../../core/Resource';
@@ -22,7 +22,7 @@ import {
 import { useGetRecordRepresentation, useIsOffline } from '../..';
 import { onlineManager } from '@tanstack/react-query';
 
-export default { title: 'ra-core/controller/input/ReferenceArrayInputBase' };
+export default { title: '@dev-kit/core/controller/input/ReferenceArrayInputBase' };
 
 const tags = [
     { id: 0, name: '3D' },

@@ -7,7 +7,7 @@ import { TestMemoryRouter } from '..';
 import { Route, Routes } from 'react-router';
 
 export default {
-    title: 'ra-core/auth/useCanAccess',
+    title: '@dev-kit/core/auth/useCanAccess',
 };
 
 const UseCanAccess = ({
@@ -77,7 +77,7 @@ export const Basic = ({
                     path="/"
                     element={
                         <UseCanAccess action="read" resource="test">
-                            {state => <StateInspector state={state} />}
+                            {(state: any) => <StateInspector state={state} />}
                         </UseCanAccess>
                     }
                 />
@@ -106,7 +106,7 @@ export const NoAuthProvider = ({
                     path="/"
                     element={
                         <UseCanAccess action="read" resource="test">
-                            {state => <StateInspector state={state} />}
+                            {(state: any) => <StateInspector state={state} />}
                         </UseCanAccess>
                     }
                 />

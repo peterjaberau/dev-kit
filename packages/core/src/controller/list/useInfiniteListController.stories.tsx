@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeDataProvider from 'ra-data-fakerest';
+import fakeDataProvider from '@dev-kit/data-fakerest';
 import { QueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { CoreAdmin, CoreAdminContext, CoreAdminUI, Resource } from '../../core';
@@ -13,7 +13,7 @@ import { TestMemoryRouter } from '../../routing';
 import { useAuthState } from '../..';
 
 export default {
-    title: 'ra-core/controller/list/useInfiniteListController',
+    title: '@dev-kit/core/controller/list/useInfiniteListController',
     excludeStories: ['defaultDataProvider'],
 };
 

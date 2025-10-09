@@ -7,7 +7,7 @@ class InferredElement {
     children?: any;
 
     constructor(type?: InferredType, props?: any, children?: any) {
-        this.type = type;
+        this.type = type as any;
         this.props = props;
         this.children = children;
     }
@@ -21,7 +21,7 @@ class InferredElement {
                   this.type.component,
                   { ...this.props, ...props },
                   this.children.length > 0
-                      ? this.children.map((child, index) =>
+                      ? this.children.map((child: any, index: any) =>
                             child.getElement({ key: index })
                         )
                       : this.children.getElement()

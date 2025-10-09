@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { onlineManager, QueryClient } from '@tanstack/react-query';
-import fakeRestDataProvider from 'ra-data-fakerest';
+import fakeRestDataProvider from '@dev-kit/data-fakerest';
 import { CoreAdmin } from '../../core/CoreAdmin';
 import { Resource } from '../../core/Resource';
 import { ShowBase } from '../../controller/show/ShowBase';
@@ -13,7 +13,7 @@ import { useIsOffline } from '../../core/useIsOffline';
 import { IsOffline } from '../..';
 
 export default {
-    title: 'ra-core/controller/field/ReferenceFieldBase',
+    title: '@dev-kit/core/controller/field/ReferenceFieldBase',
     excludeStories: ['dataProviderWithAuthors'],
 };
 

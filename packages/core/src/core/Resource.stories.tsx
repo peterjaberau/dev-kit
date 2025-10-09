@@ -6,7 +6,7 @@ import { Resource } from './Resource';
 import { CoreAdmin } from './CoreAdmin';
 
 export default {
-    title: 'ra-core/core/Resource',
+    title: '@dev-kit/core/core/Resource',
 };
 
 const PostList = () => (

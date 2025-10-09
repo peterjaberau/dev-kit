@@ -7,7 +7,7 @@ import { useDeleteMany } from './useDeleteMany';
 import { useGetList } from './useGetList';
 import type { DataProvider, MutationMode as MutationModeType } from '../types';
 
-export default { title: 'ra-core/dataProvider/useDeleteMany' };
+export default { title: '@dev-kit/core/dataProvider/useDeleteMany' };
 
 export const MutationMode = () => {
     let posts = [

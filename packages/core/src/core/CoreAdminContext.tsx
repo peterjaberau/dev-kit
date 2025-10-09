@@ -87,7 +87,7 @@ export interface CoreAdminContextProps {
      * @see https://marmelab.com/react-admin/DataProviders.html
      * @example
      * import { Admin } from 'react-admin';
-     * import simpleRestProvider from 'ra-data-simple-rest';
+     * import simpleRestProvider from '@dev-kit/data-simple-rest';
      * const dataProvider = simpleRestProvider('http://path.to.my.api/');
      *
      * const App = () => (
@@ -147,8 +147,8 @@ export interface CoreAdminContextProps {
      * @see https://marmelab.com/react-admin/Translation.html
      * @example
      * // in src/i18nProvider.js
-     * import polyglotI18nProvider from 'ra-i18n-polyglot';
-     * import fr from 'ra-language-french';
+     * import polyglotI18nProvider from '@dev-kit/i18n-polyglot';
+     * import fr from '@dev-kit/language-french';
      *
      * export const i18nProvider = polyglotI18nProvider(() => fr, 'fr');
      *
@@ -166,7 +166,7 @@ export interface CoreAdminContextProps {
     i18nProvider?: I18nProvider;
 }
 
-export const CoreAdminContext = (props: CoreAdminContextProps) => {
+export const CoreAdminContext = (props: CoreAdminContextProps | any) => {
     const {
         authProvider,
         basename,

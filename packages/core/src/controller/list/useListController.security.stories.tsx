@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeDataProvider from 'ra-data-fakerest';
+import fakeDataProvider from '@dev-kit/data-fakerest';
 import { QueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ import { TestMemoryRouter } from '../../routing/TestMemoryRouter';
 import { useAuthState } from '../..';
 
 export default {
-    title: 'ra-core/controller/list/useListController',
+    title: '@dev-kit/core/controller/list/useListController',
 };
 
 const styles = {

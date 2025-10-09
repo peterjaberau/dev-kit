@@ -8,7 +8,7 @@ import { CreateControllerResult } from './useCreateController';
  *
  * @example
  *
- * import { useCreateController, CreateContextProvider } from 'ra-core';
+ * import { useCreateController, CreateContextProvider } from '@dev-kit/core';
  *
  * const Create = props => {
  *     const controllerProps = useCreateController(props);

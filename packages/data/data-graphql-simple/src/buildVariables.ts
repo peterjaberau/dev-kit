@@ -15,8 +15,8 @@ import {
     DELETE,
     DELETE_MANY,
     UPDATE_MANY,
-} from 'ra-core';
-import { IntrospectionResult, IntrospectedResource } from 'ra-data-graphql';
+} from '@dev-kit/core';
+import { IntrospectionResult, IntrospectedResource } from '@dev-kit/data-graphql';
 
 import getFinalType from './getFinalType';
 import isList from './isList';

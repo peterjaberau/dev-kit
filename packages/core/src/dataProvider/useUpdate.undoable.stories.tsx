@@ -7,7 +7,7 @@ import { useTakeUndoableMutation } from './undo';
 import { useUpdate } from './useUpdate';
 import { useGetOne } from './useGetOne';
 
-export default { title: 'ra-core/dataProvider/useUpdate/undoable' };
+export default { title: '@dev-kit/core/dataProvider/useUpdate/undoable' };
 
 export const SuccessCase = ({ timeout = 1000 }) => {
     const posts = [{ id: 1, title: 'Hello', author: 'John Doe' }];
