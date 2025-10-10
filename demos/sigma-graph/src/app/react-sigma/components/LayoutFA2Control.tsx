@@ -1,0 +1,20 @@
+"use client"
+import { ControlsContainer, SigmaContainer } from '#react-sigma/core';
+import '#react-sigma/core/assets/index.css';
+import { LayoutForceAtlas2Control } from '#react-sigma/layout-forceatlas2';
+import { CSSProperties, FC } from 'react';
+
+import { SampleGraph } from './common/SampleGraph';
+
+const LayoutFA2Control: FC<{ style: CSSProperties }> = ({ style }) => {
+  return (
+    <SigmaContainer style={style} settings={{ allowInvalidContainer: true }}>
+      <SampleGraph />
+      <ControlsContainer position={'bottom-right'}>
+        <LayoutForceAtlas2Control settings={{ settings: { slowDown: 10 } }} />
+      </ControlsContainer>
+    </SigmaContainer>
+  );
+};
+
+export default LayoutFA2Control

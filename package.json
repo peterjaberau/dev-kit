@@ -7,6 +7,7 @@
     "build-storybook": "storybook build",
 
     "start-ui-actors-stateless": "pnpm --filter \"./apps/ui-actors-stateless\" dev",
+    "start-demos-sigma-graph": "pnpm --filter \"./demos/sigma-graph\" dev",
 
     "packages": "pnpm --filter=./packages/** -r",
     "build": "pnpm packages -- build",

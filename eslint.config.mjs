@@ -17,6 +17,8 @@ export default [
     ignores: ["dist", "node_modules", "coverage", ".next", "build", "plop-templates", "**/*.d.ts"],
 
     rules: {
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-use-before-define": "off",
       "@typescript-eslint/no-explicit-any": "off",

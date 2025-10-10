@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
     "plugins": [
       {
         "name": "next"
@@ -11,6 +9,12 @@
     "paths": {
       "@/*": ["./*"],
       "~/*": ["./public/*"],
+
+      "#react-sigma/*": ["./src/app/react-sigma/packages/*"],
+      "#react-sigma": ["./src/app/react-sigma/packages"],
+
+      "#app/*": ["./src/app/*"],
+      "#app": ["./src/app"],
 
       "#actors/*": ["./src/actors/*"],
       "#actors": ["./src/actors/"],
@@ -21,8 +25,7 @@
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
 
-      "#apps/*": ["./src/apps/*"],
-      "#apps": ["./src/apps"]
+
     }
   },
   "include": [
