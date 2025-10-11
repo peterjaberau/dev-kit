@@ -1,5 +1,20 @@
 'use client'
 import React from "react";
+import {
+  Portal,
+  Button as ChakraButton,
+  Dialog as ChakraDialog,
+  createListCollection,
+  Field,
+  Stack,
+  Textarea as ChakraTextarea,
+  SimpleGrid,
+  GridItem,
+  Center,
+  Select as ChakraSelect,
+  Text,
+} from "@chakra-ui/react"
+
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import {
@@ -47,6 +62,10 @@ const caseTypeOptions: { value: CaseType; label: string }[] = [
   { value: "CONSTANT_CASE", label: "CONSTANT_CASE (e.g., PRODUCT_NAME)" },
   { value: "kebab-case", label: "kebab-case (e.g., product-name)" },
 ];
+
+const caseTypeOptionsCollection = createListCollection({
+  items: caseTypeOptions
+})
 
 const SchemaAIGenerateDialog: React.FC<SchemaAIGenerateDialogProps> = ({
   isOpen,
@@ -252,71 +271,121 @@ const SchemaAIGenerateDialog: React.FC<SchemaAIGenerateDialogProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Generate Schema with AI</DialogTitle>
-          <DialogDescription>
-            Provide a prompt and select an LLM provider to generate a JSON Schema.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <LLMConfigInputs
-            selectedProvider={selectedProvider}
-            setSelectedProvider={setSelectedProvider}
-            apiKey={apiKey}
-            setApiKey={setApiKey}
-            selectedModel={selectedModel}
-            setSelectedModel={setSelectedModel}
-          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="case-type-select">Field Name Case Type</Label>
-            <Select value={selectedCaseType} onValueChange={(value) => setSelectedCaseType(value as CaseType)}>
-              <SelectTrigger id="case-type-select">
-                <SelectValue placeholder="Select case type" />
-              </SelectTrigger>
-              <SelectContent>
-                {caseTypeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-sm text-muted-foreground">
-              This will instruct the AI to format all generated field names (property keys) in the chosen case.
-            </p>
-          </div>
+      <ChakraDialog.Root  open={isOpen} onOpenChange={(e) => onOpenChange(e.open)}>
+        <Portal>
+        <ChakraDialog.Backdrop />
+        <ChakraDialog.Positioner>
+          <ChakraDialog.Content maxWidth={'700px'} maxH={'90vh'} overflowY={'auto'}>
+            <ChakraDialog.Header>
+              <Stack gap={6}>
+                <ChakraDialog.Title>Generate Schema with AI</ChakraDialog.Title>
+                <ChakraDialog.Description>
+                  Provide a prompt and select an LLM provider to generate a JSON Schema.
+                </ChakraDialog.Description>
+              </Stack>
+            </ChakraDialog.Header>
+            <ChakraDialog.Body>
+            <Stack>
 
-          <div className="grid gap-2">
-            <Label htmlFor="user-prompt-input">Prompt for Schema Generation</Label>
-            <Textarea
-              id="user-prompt-input"
-              value={userPrompt}
-              onChange={(e) => setUserPrompt(e.target.value)}
-              placeholder="e.g., Generate a JSON schema for a 'Product' object with fields like name (string), price (float), description (string, optional), and categories (array of strings)."
-              rows={6}
-            />
-            <p className="text-sm text-muted-foreground">
-              Describe the JSON schema you want to generate. Be specific about field names, types, and relationships.
-            </p>
-          </div>
+              <SimpleGrid gap={6}>
+                <LLMConfigInputs
+                  selectedProvider={selectedProvider}
+                  setSelectedProvider={setSelectedProvider}
+                  apiKey={apiKey}
+                  setApiKey={setApiKey}
+                  selectedModel={selectedModel}
+                  setSelectedModel={setSelectedModel}
+                />
+              </SimpleGrid>
 
-          <Button onClick={handleGenerateSchema} disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <LoadingSpinner className="mr-2" /> Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4 mr-2" /> Generate Schema
-              </>
-            )}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+              <Field.Root>
+                <Field.Label>
+                  Field Name Case Type
+                </Field.Label>
+
+                <ChakraSelect.Root
+                  collection={caseTypeOptionsCollection}
+                  // @ts-ignore
+                  value={[selectedCaseType] || []}
+                  onValueChange={(e: any) => setSelectedCaseType(e.value as any)}
+                >
+                  <ChakraSelect.HiddenSelect />
+                  <ChakraSelect.Control>
+                    <ChakraSelect.Trigger >
+                      <ChakraSelect.ValueText placeholder="Select case type" />
+                    </ChakraSelect.Trigger>
+                    <ChakraSelect.IndicatorGroup>
+                      <ChakraSelect.Indicator />
+                    </ChakraSelect.IndicatorGroup>
+                  </ChakraSelect.Control>
+                  <ChakraSelect.Positioner>
+                    <ChakraSelect.Content>
+                      {caseTypeOptionsCollection.items.map((collectionItem) => (
+                        <ChakraSelect.Item item={collectionItem} key={collectionItem.value}>
+                          {collectionItem.label}
+                          <ChakraSelect.ItemIndicator />
+                        </ChakraSelect.Item>
+                      ))}
+                    </ChakraSelect.Content>
+                  </ChakraSelect.Positioner>
+                </ChakraSelect.Root>
+
+
+
+                <Field.HelperText>
+                  This will instruct the AI to format all generated field names (property keys) in the chosen case.
+                </Field.HelperText>
+              </Field.Root>
+
+
+              <Field.Root>
+                <Field.Label>
+                  Prompt for Schema Generation
+                </Field.Label>
+
+                <ChakraTextarea
+                  id="user-prompt-input"
+                  value={userPrompt}
+                  onChange={(e) => setUserPrompt(e.target.value)}
+                  placeholder="e.g., Generate a JSON schema for a 'Product' object with fields like name (string), price (float), description (string, optional), and categories (array of strings)."
+                  rows={6}
+                />
+
+
+                <Field.HelperText>
+                  This will instruct the AI to format all generated field names (property keys) in the chosen case.
+                </Field.HelperText>
+              </Field.Root>
+
+            </Stack>
+
+
+
+
+            </ChakraDialog.Body>
+            <ChakraDialog.Footer>
+              <Center w={'full'}>
+                <ChakraButton w={'full'} onClick={handleGenerateSchema} disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <LoadingSpinner  /> Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles  /> Generate Schema
+                    </>
+                  )}
+                </ChakraButton>
+              </Center>
+            </ChakraDialog.Footer>
+          </ChakraDialog.Content>
+        </ChakraDialog.Positioner>
+        </Portal>
+      </ChakraDialog.Root>
+
+
+
   );
 };
 

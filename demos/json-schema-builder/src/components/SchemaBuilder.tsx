@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, useCallback } from "react"
-import { SimpleGrid, GridItem, Card } from "@chakra-ui/react"
+import { SimpleGrid, GridItem, Card, Dialog as ChakraDialog, Portal } from "@chakra-ui/react"
 import { SchemaField } from "./FieldEditor"
 import ManageReusableTypes from "./ManageReusableTypes"
 import { v4 as uuidv4 } from "uuid"
@@ -447,13 +447,13 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
 
   return (
     <>
-      <Card.Root bg='transparent'>
+      <Card.Root size="sm">
         <Card.Header
-        css={{
-          borderBottom: '1px solid',
-          borderBottomColor: 'border.emphasized'
-
-        }}
+          css={{
+            borderBottom: "1px solid",
+            borderBottomColor: "border.emphasized",
+            padding: 2
+          }}
         >
           <SchemaBuilderToolbar
             onAddField={() => {
@@ -488,8 +488,8 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
             hasUnsavedChanges={hasUnsavedChanges} // Pass the new prop
           />
         </Card.Header>
-        <Card.Body>
-          <SimpleGrid columns={1} gap={8} >
+        <Card.Body bg={'bg.subtle'}>
+          <SimpleGrid columns={1} gap={8}>
             <GridItem marginY={2}>
               <SchemaFieldList
                 schemaFields={schemaFields}
@@ -524,21 +524,22 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
                 onConfirmClear={handleClearSchema}
               />
 
-              <Dialog open={isManageTypesOpen} onOpenChange={setIsManageTypesOpen}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[900px]">
-                  <DialogHeader>
-                    <DialogTitle>Manage Reusable Types</DialogTitle>
-                    <DialogDescription>
-                      Define and organize reusable object schemas for your main schema.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <ManageReusableTypes
-                    reusableTypes={reusableTypes}
-                    setReusableTypes={setReusableTypes}
-                    onClose={() => setIsManageTypesOpen(false)}
-                  />
-                </DialogContent>
-              </Dialog>
+              <ChakraDialog.Root   open={isManageTypesOpen} onOpenChange={() => setIsManageTypesOpen(!isManageTypesOpen)}>
+                <Portal>
+                  <ChakraDialog.Backdrop />
+                  <ChakraDialog.Positioner>
+                    <ChakraDialog.Content maxWidth={'900px'} maxHeight={'90vh'} overflowY={'auto'}>
+                      <ChakraDialog.Body>
+                        <ManageReusableTypes
+                          reusableTypes={reusableTypes}
+                          setReusableTypes={setReusableTypes}
+                          onClose={() => setIsManageTypesOpen(false)}
+                        />
+                      </ChakraDialog.Body>
+                    </ChakraDialog.Content>
+                  </ChakraDialog.Positioner>
+                </Portal>
+              </ChakraDialog.Root>
 
               <SchemaSaveLoadDialogs
                 isSaveDialogOpen={isSaveDialogOpen}
