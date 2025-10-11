@@ -1,0 +1,24 @@
+'use client'
+import * as React from "react";
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
+import { cn } from "@/lib/utils";
+
+const CustomCollapsibleContent = React.forwardRef<
+  React.ComponentRef<typeof CollapsiblePrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <CollapsiblePrimitive.Content
+    ref={ref}
+    className={cn(
+      "overflow-hidden text-sm transition-all duration-300 ease-in-out",
+      "data-[state=closed]:max-h-0 data-[state=open]:max-h-none", // Changed to max-h-none for full expansion
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </CollapsiblePrimitive.Content>
+));
+CustomCollapsibleContent.displayName = "CustomCollapsibleContent";
+
+export { CustomCollapsibleContent };

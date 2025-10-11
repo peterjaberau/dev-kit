@@ -5,6 +5,7 @@
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "start-demo-json-schema-builder": "pnpm --filter \"./demos/json-schema-builder\" dev",
 
     "start-ui-actors-stateless": "pnpm --filter \"./apps/ui-actors-stateless\" dev",
 
