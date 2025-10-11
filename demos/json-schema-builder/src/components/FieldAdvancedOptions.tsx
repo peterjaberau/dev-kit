@@ -11,8 +11,8 @@ import {
   Button as ChakraButton,
   createListCollection,
   Select as ChakraSelect,
-  Portal,
   Collapsible as ChakraCollapsible,
+  Portal,
   Text,
 } from "@chakra-ui/react"
 import { ChevronDown, ChevronUp, ListPlus } from "lucide-react" // Import ListPlus icon
@@ -123,7 +123,7 @@ const FieldAdvancedOptions: React.FC<FieldAdvancedOptionsProps> = React.memo(({ 
           Advanced options
         </ChakraButton>
       </ChakraCollapsible.Trigger>
-      <ChakraCollapsible.Content p={6} >
+      <ChakraCollapsible.Content p={6} borderWidth={isAdvancedOpen ? 1 : 0}>
         <SimpleGrid columns={2} gap={6}>
           <Field.Root>
             <Field.Label>Title (Optional)</Field.Label>
