@@ -35,6 +35,9 @@
       "#machines/*": ["./src/machines/*"],
       "#machines": ["./src/machines"],
 
+      "#shared/*": ["./src/shared/*"],
+      "#shared": ["./src/shared"],
+
 
       "#actors/*": ["./src/actors/*"],
       "#actors": ["./src/actors/"],
