@@ -8,6 +8,8 @@
 
     "start-ui-actors-stateless": "pnpm --filter \"./apps/ui-actors-stateless\" dev",
 
+    "start-demo-jsonpath-tools": "pnpm --filter \"./demos/jsonpath-tools\" dev",
+
     "packages": "pnpm --filter=./packages/** -r",
     "build": "pnpm packages -- build",
     "clean-pkgs": "pnpm -r exec rm -rf dist .swc *.log",

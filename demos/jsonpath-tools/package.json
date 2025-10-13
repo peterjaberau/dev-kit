@@ -1,0 +1,26 @@
+{
+  "name": "@dev-kit/jsonpath-tools",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3046",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@dev-kit/components": "workspace:*",
+    "next": "^15.5.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "next-themes": "^0.4.6",
+    "react18-json-view": "^0.2.9"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.8.3",
+    "@types/node": "^20.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}
