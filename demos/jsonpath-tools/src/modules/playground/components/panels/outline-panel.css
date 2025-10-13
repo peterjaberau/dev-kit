@@ -1,0 +1,119 @@
+.container {
+    width: 100%;
+    min-width: fit-content;
+}
+
+.node {
+    min-width: fit-content;
+    border-radius: var(--mantine-radius-default);
+    background: var(--mantine-color-body);
+}
+
+.label {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.children {
+    margin-left: 20px;
+}
+
+.query {
+    background: var(--mantine-color-pink-light);
+    border-color: var(--mantine-color-pink-light-color);
+    color: var(--mantine-color-pink-light-color);
+}
+
+.query:hover {
+    background: var(--mantine-color-pink-light-hover);
+}
+
+.functionExpression {
+    background: var(--mantine-color-yellow-light);
+    border-color: var(--mantine-color-yellow-light-color);
+    color: var(--mantine-color-yellow-light-color);
+}
+
+.functionExpression:hover {
+    background: var(--mantine-color-yellow-light-hover);
+}
+
+.segment {
+    background: var(--mantine-color-grape-light);
+    border-color: var(--mantine-color-grape-light-color);
+    color: var(--mantine-color-grape-light-color);
+}
+
+.segment:hover {
+    background: var(--mantine-color-grape-light-hover);
+}
+
+.selector {
+    background: var(--mantine-color-indigo-light);
+    border-color: var(--mantine-color-indigo-light-color);
+    color: var(--mantine-color-indigo-light-color);
+}
+
+.selector:hover {
+    background: var(--mantine-color-indigo-light-hover);
+}
+
+.logicalOperator {
+    background: var(--mantine-color-cyan-light);
+    border-color: var(--mantine-color-cyan-light-color);
+    color: var(--mantine-color-cyan-light-color);
+}
+
+.logicalOperator:hover {
+    background: var(--mantine-color-cyan-light-hover);
+}
+
+.comparisonOperator {
+    background: var(--mantine-color-teal-light);
+    border-color: var(--mantine-color-teal-light-color);
+    color: var(--mantine-color-teal-light-color);
+}
+
+.comparisonOperator:hover {
+    background: var(--mantine-color-teal-light-hover);
+}
+
+.literal {
+    background: var(--mantine-color-orange-light);
+    border-color: var(--mantine-color-orange-light-color);
+    color: var(--mantine-color-orange-light-color);
+}
+
+.literal:hover {
+    background: var(--mantine-color-orange-light-hover);
+}
+
+.filterQueryExpression {
+    background: var(--mantine-color-violet-light);
+    border-color: var(--mantine-color-violet-light-color);
+    color: var(--mantine-color-violet-light-color);
+}
+
+.filterQueryExpression:hover {
+    background: var(--mantine-color-violet-light-hover);
+}
+
+.paranthesisExpression {
+    background: var(--mantine-color-grape-light);
+    border-color: var(--mantine-color-grape-light-color);
+    color: var(--mantine-color-grape-light-color);
+}
+
+.paranthesisExpression:hover {
+    background: var(--mantine-color-grape-light-hover);
+}
+
+.missing {
+    background: var(--mantine-color-gray-light);
+    border-color: var(--mantine-color-gray-light-color);
+    color: var(--mantine-color-gray-light-color);
+}
+
+.missing:hover {
+    background: var(--mantine-color-gray-light-hover);
+}

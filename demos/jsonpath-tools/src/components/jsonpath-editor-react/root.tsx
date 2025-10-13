@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 import { JSONPathEditor } from "./lib";
 import { defaultQueryOptions, jsonSchemaToType } from "#components/jsonpath";

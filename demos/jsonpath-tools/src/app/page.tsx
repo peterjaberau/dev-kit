@@ -1,11 +1,12 @@
 "use client"
 import { Container } from "@chakra-ui/react"
+import { Playground } from "#modules/playground"
 
 export default function Page() {
   return (
     <Container fluid w='full' h='full' bg={'bg.subtle'}>
-      <Container p={8}>
-        json path tools
+      <Container fluid py={8}>
+        <Playground />
       </Container>
     </Container>
   )

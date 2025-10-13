@@ -23,3 +23,14 @@ declare module '@remixicon/react' {
 declare module "livecodes/react"
 declare module "@gorules/lezer-zen"
 declare module "@gorules/lezer-zen-template"
+
+
+declare module '*.md?raw' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.md' {
+  const content: string;
+  export default content;
+}

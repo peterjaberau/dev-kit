@@ -6,3 +6,8 @@ declare module "react" {
     [key: `--${string}`]: string | number
   }
 }
+
+declare module "./language-service-worker?worker&inline" {
+  const worker: new () => Worker;
+  export default worker;
+}

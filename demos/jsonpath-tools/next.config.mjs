@@ -9,7 +9,19 @@ const nextConfig = {
     clientSegmentCache: true,
     optimizePackageImports: ["@chakra-ui/react", "@ark-ui/react"],
     externalDir: true,
+    turbo: {
+      rules: {
+        // Treat .md as text
+        "*.md": {
+          loaders: ["text"],
+          as: "text",
+        },
+      },
+    },
   },
+
+
+
 }
 
 export default nextConfig

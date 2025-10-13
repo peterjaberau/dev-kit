@@ -1,3 +1,4 @@
+'use client'
 import { autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap } from "@codemirror/autocomplete";
 import { bracketMatching, foldGutter, foldKeymap, indentOnInput, indentUnit, syntaxHighlighting } from "@codemirror/language";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
@@ -10,7 +11,7 @@ import { AnyDataType, DataType, defaultQueryOptions, JSONValue, QueryOptions } f
 import { CSSProperties, useEffect, useRef } from "react";
 import { jsonpathEditorHighlightStyle } from "./jsonpath-editor-highlight-style";
 import { jsonpathEditorTheme } from "./jsonpath-editor-theme";
-import classes from "./jsonpath-editor.module.css";
+import "./jsonpath-editor.css";
 
 /**
  * JSONPath editor compliant with ([RFC 9535](https://datatracker.ietf.org/doc/rfc9535/)).
@@ -161,7 +162,7 @@ export default function JSONPathEditor({
     }
 
     return (
-        <div ref={containerElementRef} style={style} className={classes.container}></div>
+        <div ref={containerElementRef} style={style} className={'container'}></div>
     );
 }
 

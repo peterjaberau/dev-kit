@@ -80,18 +80,30 @@ export class SimpleRPC<THandler> {
         const message = data as SimpleRPCMessage | SimpleRPCMessageResponse;
         const isResponse = !("type" in message);
         if (isResponse) {
+            if (!message.id) {
+                // throw new Error("Received response with missing or undefined message ID.");
+                console.warn("Received response with missing or undefined message ID.", message);
+                return;
+
+            }
             const promiseActions = this.messageIDToPromiseActions.get(message.id);
-            if (promiseActions === undefined) throw new Error(`Received response for message that was not send (message ID '${message.id}').`);
+            if (promiseActions === undefined) {
+                console.warn(`Received response for message that was not sent (message ID '${message.id}').`);
+
+            }
             this.messageIDToPromiseActions.delete(message.id);
             promiseActions.resolve(message.data);
-        }
-        else {
+        } else {
             const handler = this.getOrCreateHandler(message.topicID);
             const handlerAction = this.messageTypeToHandlerActions.get(message.type);
-            if (handlerAction === undefined) throw new Error(`No handler action for message type '${message.type}' (message ID '${message.id}').`);
+            if (handlerAction === undefined) {
+                throw new Error(`No handler action for message type '${message.type}' (message ID '${message.id}').`);
+            }
             const result = handlerAction(handler, message.data);
-            if (result !== undefined)
+            // Only send a response if the message has a valid id (i.e., it's a request)
+            if (result !== undefined && message.id) {
                 this.sendResponse(message.id, result);
+            }
         }
     }
 

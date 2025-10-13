@@ -6,7 +6,7 @@ import { EngineProvider } from "#machines/engine/engine.provider"
 
 const themeConfig: any = defineConfig({
   ...defaultConfig,
-  cssVarsPrefix: "ck",
+  // cssVarsPrefix: "ck",
 } as any)
 const theme = createSystem(themeConfig)
 

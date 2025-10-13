@@ -1,0 +1,202 @@
+"use client"
+import { DiagnosticsSeverity } from "#components/jsonpath"
+import {  AppShell, Flex, Indicator, Tabs, Tooltip } from "@mantine/core"
+import { chakra, Text, Stack, HStack, Separator, IconButton } from '@chakra-ui/react'
+import {
+  IconBraces,
+  IconEqual,
+  IconExclamationCircle,
+  IconListTree,
+  IconPlayerPlay,
+  IconRouteSquare,
+  IconSitemap,
+} from "@tabler/icons-react"
+import { useMemo, useState } from "react"
+import JSONPathEditor from "./components/code-editors/jsonpath-editor"
+import Sidebar from "./components/sidebar"
+import DiagnosticsPanel from "./components/panels/diagnostics-panel"
+import JSONPanel from "./components/panels/json-panel"
+import OutlinePanel from "./components/panels/outline-panel"
+import PathsPanel from "./components/panels/paths-panel"
+import ResultPanel from "./components/panels/result-panel"
+import TypePanel from "./components/panels/type-panel"
+import { usePageViewModel } from "./page-view-model"
+
+/**
+ * Main page of the application.
+ */
+export default function Page() {
+  const [navbarOpened, setNavbarOpened] = useState(false)
+  const viewModel = usePageViewModel()
+  const errorCount = useMemo(() => {
+    return viewModel.diagnostics.filter((d) => d.severity === DiagnosticsSeverity.error).length
+  }, [viewModel.diagnostics])
+
+  return (
+    <AppShell
+      navbar={{
+        width: { base: 250, lg: 320 },
+        breakpoint: "md",
+        collapsed: { mobile: !navbarOpened },
+      }}
+      padding="0"
+    >
+      <AppShell.Navbar className={"navbar"}>
+        <Sidebar
+          customFunctions={viewModel.customFunctions}
+          settings={viewModel.settings}
+          onCustomFunctionsChanged={viewModel.onCustomFunctionsChanged}
+          onSettingsChanged={viewModel.onSettingsChanged}
+        />
+      </AppShell.Navbar>
+
+      <AppShell.Main className={"navbar"} h="100vh">
+        <Stack gap={0} h="full">
+          <HStack w="full" >
+            <JSONPathEditor
+              value={viewModel.queryText}
+              options={viewModel.queryOptions}
+              queryArgument={viewModel.queryArgument}
+              queryArgumentType={viewModel.queryArgumentType}
+              highlightedRange={viewModel.highlightedRange}
+              languageService={viewModel.languageService}
+              onValueChanged={viewModel.onQueryTextChanged}
+              onParsed={viewModel.onQueryParsed}
+              onDiagnosticsCreated={viewModel.onDiagnosticsPublished}
+              onGetResultAvailable={viewModel.onGetResultAvailable}
+              onRun={viewModel.onRun}
+            />
+            {!viewModel.settings.autoRun && (
+              <Tooltip label="Evaluate Query">
+                <IconButton
+                  variant="solid"
+                  aria-label="Evaluate Query"
+                  onClick={viewModel.onRun}
+                >
+                  <IconPlayerPlay />
+                </IconButton>
+              </Tooltip>
+            )}
+          </HStack>
+          <Separator size="xs" />
+          <Flex flex="1 1 0" direction={{ sm: "row", base: "column" }}>
+            <Tabs defaultValue="data" flex="1" miw={0} display="flex" style={{ flexDirection: "column" }}>
+              <Tabs.List>
+                <Tooltip
+                  label={
+                    <>
+                      <Text>Query Argument JSON</Text>
+                      {viewModel.queryArgumentError !== null && (
+                        <chakra.div css={{ color: "fg.error" }}>{viewModel.queryArgumentError}</chakra.div>
+                      )}
+                    </>
+                  }
+                >
+                  <Tabs.Tab value="data" leftSection={<IconBraces size={20} />}>
+                    <Indicator
+                      color="red"
+                      label="!"
+                      size={16}
+                      offset={-4}
+                      disabled={viewModel.queryArgumentError === null}
+                    >
+                      Data
+                    </Indicator>
+                  </Tabs.Tab>
+                </Tooltip>
+                <Tooltip
+                  label={
+                    <>
+                      <div>Query Argument Schema</div>
+                      {viewModel.queryArgumentTypeError !== null && (
+                        <chakra.div color={'fg.error'}>{viewModel.queryArgumentTypeError}</chakra.div>
+                      )}
+                    </>
+                  }
+                >
+                  <Tabs.Tab value="type" leftSection={<IconSitemap size={20} />}>
+                    <Indicator
+                      color="red"
+                      label="!"
+                      size={16}
+                      offset={-4}
+                      disabled={viewModel.queryArgumentTypeError === null}
+                    >
+                      Schema
+                    </Indicator>
+                  </Tabs.Tab>
+                </Tooltip>
+              </Tabs.List>
+              <Tabs.Panel value="data" flex="1 1 0" mih={0}>
+                <JSONPanel
+                  queryArgumentText={viewModel.queryArgumentText}
+                  paths={viewModel.resultPaths}
+                  currentPathIndex={viewModel.currentResultPathIndex}
+                  onQueryArgumentTextChanged={viewModel.onQueryArgumentTextChanged}
+                  onCurrentPathIndexChanged={viewModel.onCurrentResultPathIndexChanged}
+                />
+              </Tabs.Panel>
+              <Tabs.Panel value="type" flex="1 1 0" mih={0}>
+                <TypePanel
+                  queryArgumentTypeRaw={viewModel.queryArgumentTypeRaw}
+                  onQueryArgumentTypeRawChanged={viewModel.onQueryArgumentTypeRawChanged}
+                />
+              </Tabs.Panel>
+            </Tabs>
+            <Separator size="xs" orientation="vertical" />
+            <Separator size="xs" orientation="horizontal" />
+            <Tabs defaultValue="result" flex="1" miw={0} display="flex" style={{ flexDirection: "column" }}>
+              <Tabs.List>
+                <Tooltip label="Result JSON">
+                  <Tabs.Tab value="result" leftSection={<IconEqual size={20} />}>
+                    Result
+                  </Tabs.Tab>
+                </Tooltip>
+                <Tooltip label="Result Paths">
+                  <Tabs.Tab value="paths" leftSection={<IconRouteSquare size={20} />}>
+                    Paths
+                  </Tabs.Tab>
+                </Tooltip>
+                <Tooltip label="Query Errors and Warnings">
+                  <Tabs.Tab value="errors" leftSection={<IconExclamationCircle size={20} />}>
+                    <Indicator color="red" label={errorCount} size={16} offset={-4} disabled={errorCount === 0}>
+                      Errors
+                    </Indicator>
+                  </Tabs.Tab>
+                </Tooltip>
+                <Tooltip label="Query Tree Structure">
+                  <Tabs.Tab value="outline" leftSection={<IconListTree size={20} />}>
+                    Outline
+                  </Tabs.Tab>
+                </Tooltip>
+              </Tabs.List>
+              <Tabs.Panel value="result" flex="1 1 0" mih={0}>
+                <ResultPanel
+                  resultText={viewModel.resultText}
+                  operation={viewModel.operation}
+                  onOperationChanged={viewModel.onOperationChanged}
+                />
+              </Tabs.Panel>
+              <Tabs.Panel value="paths" flex="1 1 0" mih={0}>
+                <PathsPanel
+                  pathsText={viewModel.resultPathsText}
+                  pathType={viewModel.pathType}
+                  onPathTypeChanged={viewModel.onPathTypeChanged}
+                />
+              </Tabs.Panel>
+              <Tabs.Panel value="errors" flex="1 1 0" mih={0}>
+                <DiagnosticsPanel
+                  diagnostics={viewModel.diagnostics}
+                  onSelectedDiagnosticsChanged={viewModel.onSelectedDiagnosticsChanged}
+                />
+              </Tabs.Panel>
+              <Tabs.Panel value="outline" flex="1 1 0" mih={0}>
+                <OutlinePanel query={viewModel.query} onSelectedNodeChanged={viewModel.onSelectedNodeChanged} />
+              </Tabs.Panel>
+            </Tabs>
+          </Flex>
+        </Stack>
+      </AppShell.Main>
+    </AppShell>
+  )
+}
