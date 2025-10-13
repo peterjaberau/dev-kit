@@ -6,7 +6,7 @@
   "overrides": [],
   "bracketSpacing": true,
   "jsxSingleQuote": false,
-  "printWidth": 120,
+  "printWidth": 250,
   "proseWrap": "always",
   "semi": false,
   "singleQuote": false,

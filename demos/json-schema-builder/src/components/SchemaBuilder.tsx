@@ -249,8 +249,11 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
     [savedSchemaNames],
   )
 
+
+
   // Helper function to deep copy a SchemaField, generating new IDs for all children
   const deepCopyField = useCallback((field: SchemaField): SchemaField => {
+
     const newField: SchemaField = {
       ...field,
       id: uuidv4(), // Generate a new ID for the copied field
@@ -263,6 +266,8 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
       // Explicitly set children to undefined for non-object types
       newField.children = undefined
     }
+
+    console.log('---deepCopyField---', {field, newField})
     return newField
   }, [])
 
@@ -286,6 +291,11 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
   const handleInitiateConvertToReusableType = useCallback(
     (fieldId: string) => {
       const fieldToConvert = findFieldById(schemaFields, fieldId)
+
+      console.log('---handleInitiateConvertToReusableType---', {fieldId, fieldToConvert})
+      console.log('---findFieldById---', {schemaFields, fieldId})
+
+
       if (fieldToConvert) {
         setFieldToConvertForNaming(fieldToConvert)
         setIsReusableTypeNameDialogOpen(true)
@@ -300,6 +310,7 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
   const handleConfirmConvertToReusableType = useCallback(
     (reusableTypeName: string) => {
       if (!fieldToConvertForNaming) return
+      console.log('---handleConfirmConvertToReusableType---', {reusableTypeName})
 
       // Check for duplicate name
       if (reusableTypes.some((rt) => rt.name === reusableTypeName)) {
@@ -310,6 +321,9 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
       // 1. Create a new reusable type from the found field
       // Use deepCopyField for the entire fieldToConvertForNaming to ensure all nested properties are new instances
       const newReusableTypeBase = deepCopyField(fieldToConvertForNaming)
+
+
+      console.log('---handleConfirmConvertToReusableType.newReusableTypeBase---', {newReusableTypeBase})
 
       const newReusableType: SchemaField = {
         ...newReusableTypeBase, // Start with a deep copy of the field
@@ -323,6 +337,8 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
         description:
           newReusableTypeBase.description || `Reusable definition for ${newReusableTypeBase.name || "an unnamed type"}`,
       }
+
+      console.log('---handleConfirmConvertToReusableType.newReusableType---', {newReusableType})
 
       setReusableTypes((prev) => [...prev, newReusableType])
 
@@ -345,6 +361,9 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
         // e.g., an array of references, or a required reference.
       }
 
+      console.log('---handleConfirmConvertToReusableType.updatedOriginalField---', {updatedOriginalField})
+
+
       // Function to update the field in the schemaFields tree
       const updateFieldInSchema = (fields: SchemaField[]): SchemaField[] => {
         return fields.map((field) => {
@@ -359,6 +378,9 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
           return field
         })
       }
+
+      console.log('---handleConfirmConvertToReusableType.updateFieldInSchema---', {updateFieldInSchema})
+
 
       setSchemaFields(updateFieldInSchema(schemaFields))
       showSuccess(`Field "${fieldToConvertForNaming.name}" converted to reusable type "${newReusableType.name}"!`)
@@ -415,6 +437,11 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
     setIsMergeReplaceConfirmOpen(false)
     setPendingGeneratedFields([])
     setPendingGeneratedReusableTypes([])
+
+    console.log('---handleMergeSchema---', {schemaFields, pendingGeneratedFields, mergedFields,
+      mergedReusableTypesMap, mergedReusableTypes})
+
+
   }, [schemaFields, reusableTypes, pendingGeneratedFields, pendingGeneratedReusableTypes])
 
   const handleRefineFieldWithAI = useCallback((field: SchemaField) => {
@@ -441,9 +468,13 @@ const SchemaBuilder: React.FC<SchemaBuilderProps> = () => {
       setInitialSchemaFields(JSON.stringify(updateFields(schemaFields))) // Update initial state
       setIsFieldRefineDialogOpen(false)
       setFieldToRefine(null)
+
+      console.log('---handleFieldRefined.updateFields---', {updateFields})
+
     },
     [schemaFields],
   )
+
 
   return (
     <>
