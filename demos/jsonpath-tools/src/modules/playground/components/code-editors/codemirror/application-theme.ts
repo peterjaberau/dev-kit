@@ -26,16 +26,16 @@ export const applicationThemeCommon = EditorView.theme({
     "&.cm-focused .cm-matchingBracket": { background: "var(--application-color-code-highlighted-match)" },
 
     // Tooltips.
-    "& .cm-tooltip": { fontFamily: "var(--chakra-fonts-body)", backgroundColor: "var(--chakra-colors-bg-panel)", color: "var(--chakra-colors-fg)", border: "1px solid var(--app-shell-border-color)", boxShadow: "var(--mantine-shadow-xl)", borderRadius: "var(--mantine-radius-md)", padding: "var(--mantine-spacing-xs)" },
-    "& .cm-tooltip-section:not(:first-child)": { borderTop: "1px solid var(--chakra-colors-border)", paddingTop: "var(--mantine-spacing-xs)", marginTop: "var(--mantine-spacing-xs)" },
+    "& .cm-tooltip": { fontFamily: "var(--chakra-fonts-body)", backgroundColor: "var(--chakra-colors-bg-panel)", color: "var(--chakra-colors-fg)", border: "1px solid var(--app-shell-border-color)", boxShadow: "var(--mantine-shadow-xl)", borderRadius: "var(--chakra-radii-md)", padding: "var(--chakra-spacing-2)" },
+    "& .cm-tooltip-section:not(:first-child)": { borderTop: "1px solid var(--chakra-colors-border)", paddingTop: "var(--chakra-spacing-2)", marginTop: "var(--chakra-spacing-2)" },
 
     // Autocomplete.
     "& .cm-tooltip.cm-tooltip-autocomplete": {},
     "& .cm-tooltip.cm-tooltip-autocomplete > ul": { fontFamily: "var(--chakra-fonts-mono)" },
-    "& .cm-tooltip-autocomplete ul li[aria-selected]": { background: "var(--mantine-color-default-hover)" },
-    "& .cm-tooltip.cm-tooltip-autocomplete > ul > li": { padding: "5px 12px", display: "flex", color: "var(--chakra-colors-fg)", borderRadius: "var(--mantine-radius-md)" },
-    "& .cm-tooltip-autocomplete .cm-completionDetail": { marginLeft: "auto", paddingLeft: "50px", fontStyle: "normal", color: "var(--mantine-color-dimmed)" },
-    "& .cm-tooltip.cm-completionInfo": { whiteSpace: "unset", padding: "var(--mantine-spacing-xs)" },
+    "& .cm-tooltip-autocomplete ul li[aria-selected]": { background: "var(--chakra-colors-bg-subtle)" },
+    "& .cm-tooltip.cm-tooltip-autocomplete > ul > li": { padding: "5px 12px", display: "flex", color: "var(--chakra-colors-fg)", borderRadius: "var(--chakra-radii-md)" },
+    "& .cm-tooltip-autocomplete .cm-completionDetail": { marginLeft: "auto", paddingLeft: "50px", fontStyle: "normal", color: "var(--chakra-colors-fg)" },
+    "& .cm-tooltip.cm-completionInfo": { whiteSpace: "unset", padding: "var(--chakra-spacing-2)" },
     "& .cm-completionMatchedText": { textDecoration: "none", color: "var(--mantine-color-violet-text)" },
     "& .cm-completionIcon": { display: "flex", flexDirection: "column", justifyContent: "center", marginRight: "6px", opacity: "0.8" },
     "& .cm-completionIcon::after": { width: "20px", height: "20px", display: "block" },
