@@ -10,7 +10,7 @@ export default function Page() {
 
 
   return (
-    <Container fluid w="full" h="100vh" bg={"bg.subtle"}>
+    <Container fluid w="full" h="100vh">
       <Container h="full" fluid py={8}>
         <ComponentRenderer id={params?.id as any} />
       </Container>
