@@ -95,8 +95,33 @@ export const registryMetadata: any[] = [
     title: 'Sharing 02',
     path: "#modules/creator-ui/sidebar/examples/sharing-02"
   },
+
+  {
+    id: 'property-panel-00',
+    title: 'Property panel 00',
+    path: "#modules/creator-ui/sidebar/examples/property-panel-00"
+  },
+
+  {
+    id: 'property-panel-01',
+    title: 'Property panel 01',
+    path: "#modules/creator-ui/sidebar/examples/property-panel-01"
+  },
+
+  {
+    id: 'property-panel-02',
+    title: 'Property panel 02',
+    path: "#modules/creator-ui/sidebar/examples/property-panel-02"
+  },
+
+  {
+    id: 'property-panel-03',
+    title: 'Property panel 03',
+    path: "#modules/creator-ui/sidebar/examples/property-panel-03"
+  },
+
+
 ]
-// sharing-02
 
 export const registryComponentsObj = (id: any) => {
 

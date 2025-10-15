@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 
-import { IconButton, Container, Center, Card, Stack, HStack, Text, Icon } from "@chakra-ui/react"
+import { IconButton, Container, Center, Card, Stack, HStack, Text, Icon, SimpleGrid, GridItem } from "@chakra-ui/react"
 import { LuArrowRight } from "react-icons/lu"
 import { registryMetadata } from "#app/examples/components"
 import { MenuIcon } from "@dev-kit/icons"
@@ -12,67 +12,24 @@ export default function Page() {
   return (
     <Container fluid w="full" h="full" bg={"bg.subtle"}>
       <Center py={8} >
-        <Card.Root size="sm" minWidth={'350px'}>
+        <Card.Root size="sm" minWidth={'350px'} boxShadow={'sm'} borderRadius={'md'}>
           <Card.Header>
-            <Stack>
-              <HStack gap={4}>
-                <MenuIcon />
-
-                <Icon size={'2xl'}>
-                  <MenuIcon />
+            <Card.Title>
+              <HStack gap={4} >
+                <Icon size={'lg'}>
+                  <IconNamed name={'align-self-stretch-icon'} />
                 </Icon>
-                <Icon size={'sm'}>
-                  <MenuIcon />
-                </Icon>
-
-                <IconButton size={'2xl'}>
-                  <MenuIcon />
-                </IconButton>
-                <IconButton size={'sm'}>
-                  <MenuIcon />
-                </IconButton>
-
-                <IconButton variant={'ghost'} size={'2xl'}>
-                  <MenuIcon />
-                </IconButton>
-                <IconButton variant={'ghost'} size={'sm'}>
-                  <MenuIcon />
-                </IconButton>
+                Examples
 
               </HStack>
-              <HStack gap={4}>
-                <IconNamed name={'align-self-stretch-icon'} />
-
-                <Icon size={'2xl'}>
-                  <IconNamed name={'align-self-stretch-icon'} />
-                </Icon>
-                <Icon size={'sm'}>
-                  <IconNamed name={'align-self-stretch-icon'} />
-                </Icon>
-
-                <IconButton size={'2xl'}>
-                  <IconNamed name={'align-self-stretch-icon'} />
-                </IconButton>
-                <IconButton size={'sm'}>
-                  <IconNamed name={'align-self-stretch-icon'} />
-                </IconButton>
-
-                <IconButton variant={'ghost'} size={'2xl'}>
-                  <IconNamed name={'align-self-stretch-icon'} />
-                </IconButton>
-                <IconButton variant={'ghost'} size={'sm'}>
-                  <IconNamed name={'align-self-stretch-icon'} />
-                </IconButton>
-
-
-
-              </HStack>
-            </Stack>
+            </Card.Title>
           </Card.Header>
           <Card.Body>
-            <Stack gap="2">
+            <SimpleGrid columns={3} gap="2" bg={'bg.subtle'} borderRadius={'md'}  borderWidth={'1px'} gap={4} p={4}>
               {registryMetadata.map((registryItem) => (
                 <HStack
+                  boxShadow={'sm'}
+                  bg={'bg.panel'}
                   py="3"
                   px="2.5"
                   rounded="l2"
@@ -91,7 +48,7 @@ export default function Page() {
                   </Link>
                 </HStack>
               ))}
-            </Stack>
+            </SimpleGrid>
           </Card.Body>
         </Card.Root>
       </Center>
