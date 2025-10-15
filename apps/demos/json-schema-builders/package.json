@@ -1,0 +1,34 @@
+{
+  "name": "@dev-kit/json-schema-builders",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3048",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "katex": "^0.16.25",
+    "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "harden-react-markdown": "^1.1.5",
+    "use-stick-to-bottom": "^1.1.1",
+    "react-icons": "^5.5.0",
+    "@dev-kit/components": "workspace:*",
+    "@dev-kit/icons": "workspace:*",
+    "next": "^15.5.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "next-themes": "^0.4.6",
+    "react18-json-view": "^0.2.9"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.8.3",
+    "@types/node": "^20.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

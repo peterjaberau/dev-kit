@@ -7,6 +7,8 @@
     "build-storybook": "storybook build",
 
     "start-ui-actors-stateless": "pnpm --filter \"./apps/ui-actors-stateless\" dev",
+    "start-demo-json-schema-builder": "pnpm --filter \"./demos/json-schema-builder\" dev",
+
 
     "packages": "pnpm --filter=./packages/** -r",
     "build": "pnpm packages -- build",
