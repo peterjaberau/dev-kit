@@ -26,6 +26,7 @@ export const registryMeta: any = {
   "property-panel-03": dynamic(() => import('#components/ui-chakra-pro/property-panel-03'), { ssr: false }),
   "movable-panel-001": dynamic(() => import('#components/ui-examples/movable-panel-001'), { ssr: false }),
   "panel-001": dynamic(() => import('#components/ui-examples/panel-001'), { ssr: false }),
+  "layout-001": dynamic(() => import('#components/ui-examples/layout-001'), { ssr: false }),
 
 
 
