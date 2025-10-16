@@ -88,7 +88,7 @@ export function SelectField(props: SelectFieldProps) {
         size="sm"
         defaultValue={defaultValue ? [defaultValue] : undefined}
         value={value ? [value] : undefined}
-        onValueChange={(e) => onChange?.(e.value[0])}
+        onValueChange={(e: any) => onChange?.(e.value[0])}
         positioning={{ sameWidth }}
       >
         <Select.HiddenSelect />
@@ -172,7 +172,7 @@ export function NumberField(props: NumberFieldProps) {
           max={max}
           step={step}
           value={valueState != null ? [Number.parseFloat(valueState)] : undefined}
-          onValueChange={(e) => setValueState(e.value[0].toString())}
+          onValueChange={(e: any) => setValueState(e.value[0].toString())}
           variant="solid"
           size="sm"
           thumbAlignment="center"

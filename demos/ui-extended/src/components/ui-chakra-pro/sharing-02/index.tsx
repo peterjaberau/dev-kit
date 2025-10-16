@@ -1,3 +1,4 @@
+'use client'
 import {
   Button,
   Card,
@@ -41,8 +42,8 @@ const Index = () => {
 
           <Tabs.Content value="embed">
             <Stack gap="3">
-              {embedActions.map((item) => (
-                <HStack key={item.value}>
+              {embedActions.map((item: any, index: any) => (
+                <HStack key={index}>
                   <HStack textStyle="sm" fontWeight="medium" flex="1">
                     {item.icon} {item.label}
                   </HStack>
