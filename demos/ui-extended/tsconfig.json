@@ -26,6 +26,14 @@
       "@/*": ["./*", "./src/*"],
       "~/*": ["./public/*"],
 
+      "#schemaValidator/*": ["./src/components/schema-validator/*"],
+      "#schemaValidator": ["./src/components/schema-validator"],
+
+      "#schemaForm/*": ["./src/components/schema-form/*"],
+      "#schemaForm": ["./src/components/schema-form"],
+
+      "#schemaBuilder/*": ["./src/components/schema-builder/*"],
+      "#schemaBuilder": ["./src/components/schema-builder"],
 
 
       "#app/*": ["./src/app/*"],
