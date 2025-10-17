@@ -1,15 +1,29 @@
-'use client';
-
 import { CSSProperties } from 'react';
-import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@/components/module-rjsf/rjsf-utils';
+import {
+  ArrayFieldItemTemplateType,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '#schemaForm/utils';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
-export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: ArrayFieldTemplateItemType<T, S, F>) {
-  const { children, className, disabled, hasToolbar, hasMoveDown, hasMoveUp, hasRemove, hasCopy, index, onCopyIndexClick, onDropIndexClick, onReorderClick, readonly, registry, uiSchema } = props;
-  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: ArrayFieldItemTemplateType<T, S, F>) {
+  const { children, className, buttonsProps, hasToolbar, registry, uiSchema } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
+    'ArrayFieldItemButtonsTemplate',
+    registry,
+    uiOptions,
+  );
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
@@ -20,17 +34,15 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     <div className={className}>
       <div className={hasToolbar ? 'col-xs-9' : 'col-xs-12'}>{children}</div>
       {hasToolbar && (
-        <div className="col-xs-3 array-item-toolbox">
+        <div className='col-xs-3 array-item-toolbox'>
           <div
-            className="btn-group"
+            className='btn-group'
             style={{
               display: 'flex',
               justifyContent: 'space-around',
-            }}>
-            {(hasMoveUp || hasMoveDown) && <MoveUpButton style={btnStyle} disabled={disabled || readonly || !hasMoveUp} onClick={onReorderClick(index, index - 1)} uiSchema={uiSchema} registry={registry} />}
-            {(hasMoveUp || hasMoveDown) && <MoveDownButton style={btnStyle} disabled={disabled || readonly || !hasMoveDown} onClick={onReorderClick(index, index + 1)} uiSchema={uiSchema} registry={registry} />}
-            {hasCopy && <CopyButton style={btnStyle} disabled={disabled || readonly} onClick={onCopyIndexClick(index)} uiSchema={uiSchema} registry={registry} />}
-            {hasRemove && <RemoveButton style={btnStyle} disabled={disabled || readonly} onClick={onDropIndexClick(index)} uiSchema={uiSchema} registry={registry} />}
+            }}
+          >
+            <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
           </div>
         </div>
       )}

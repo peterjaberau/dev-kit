@@ -1,22 +1,48 @@
-'use client';
-
 import { FocusEvent, useCallback } from 'react';
-import { ariaDescribedByIds, enumOptionsIsSelected, enumOptionsValueForIndex, optionId, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@/components/module-rjsf/rjsf-utils';
+import {
+  ariaDescribedByIds,
+  enumOptionsIsSelected,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '#schemaForm/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({ options, value, required, disabled, readonly, autofocus = false, onBlur, onFocus, onChange, id }: WidgetProps<T, S, F>) {
+function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  options,
+  value,
+  required,
+  disabled,
+  readonly,
+  autofocus = false,
+  onBlur,
+  onFocus,
+  onChange,
+  id,
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
 
-  const handleBlur = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)), [onBlur, id]);
+  const handleBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) =>
+      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
+    [onBlur, enumOptions, emptyValue, id],
+  );
 
-  const handleFocus = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)), [onFocus, id]);
+  const handleFocus = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) =>
+      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
+    [onFocus, enumOptions, emptyValue, id],
+  );
 
   return (
-    <div className="field-radio-group" id={id}>
+    <div className='field-radio-group' id={id} role='radiogroup'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value);
@@ -27,7 +53,20 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
           const radio = (
             <span>
-              <input type="radio" id={optionId(id, i)} checked={checked} name={id} required={required} value={String(i)} disabled={disabled || itemDisabled || readonly} autoFocus={autofocus && i === 0} onChange={handleChange} onBlur={handleBlur} onFocus={handleFocus} aria-describedby={ariaDescribedByIds<T>(id)} />
+              <input
+                type='radio'
+                id={optionId(id, i)}
+                checked={checked}
+                name={id}
+                required={required}
+                value={String(i)}
+                disabled={disabled || itemDisabled || readonly}
+                autoFocus={autofocus && i === 0}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                aria-describedby={ariaDescribedByIds(id)}
+              />
               <span>{option.label}</span>
             </span>
           );

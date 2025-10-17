@@ -25,9 +25,34 @@
     "react-dom": "^19.2.0",
     "next-themes": "^0.4.6",
     "react18-json-view": "^0.2.9",
-    "@uidotdev/usehooks": "^2.4.1"
+    "@uidotdev/usehooks": "^2.4.1",
+    "json-schema-merge-allof": "^0.8.1",
+    "jsonpointer": "^5.0.1",
+    "json-schema": "^0.4.0",
+    "lucide-react": "^0.546.0",
+    "@emotion/is-prop-valid": "^1.4.0",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/weak-memoize": "^0.4.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^2.1.1",
+    "markdown-to-jsx": "^7.7.15",
+    "chakra-react-select": "^6.1.0",
+
+    "fast-uri": "^3.1.0",
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
+    "react-is": "^18.3.1"
   },
   "devDependencies": {
+    "@types/markdown-to-jsx": "^7.0.1",
+    "@types/json-schema": "^7.0.15",
+    "@types/json-schema-merge-allof": "^0.6.5",
+    "@types/react-is": "^18.3.1",
+    "deep-freeze-es6": "^4.0.1",
+
+
+    "ajv-i18n": "^4.2.0",
+    "@types/jsonpointer": "^4.0.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "typescript": "^5.8.3",

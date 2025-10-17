@@ -1,5 +1,3 @@
-'use client';
-
 const REQUIRED_FIELD_SYMBOL = '*';
 
 export type LabelProps = {
@@ -21,9 +19,9 @@ export default function Label(props: LabelProps) {
     return null;
   }
   return (
-    <label className="control-label" htmlFor={id}>
+    <label className='control-label' htmlFor={id}>
       {label}
-      {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
+      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
   );
 }

@@ -9,7 +9,16 @@ import { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOption
  * @param [autoDefaultStepAny=true] - Determines whether to auto-default step=any when the type is number and no step
  * @returns - The extracted `InputPropsType` object
  */
-export default function getInputProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(schema: RJSFSchema, defaultType?: string, options: UIOptionsType<T, S, F> = {}, autoDefaultStepAny = true): InputPropsType {
+export default function getInputProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
+  schema: RJSFSchema,
+  defaultType?: string,
+  options: UIOptionsType<T, S, F> = {},
+  autoDefaultStepAny = true,
+): InputPropsType {
   const inputProps: InputPropsType = {
     type: defaultType || 'text',
     ...rangeSpec(schema),
@@ -40,6 +49,10 @@ export default function getInputProps<T = any, S extends StrictRJSFSchema = RJSF
 
   if (options.autocomplete) {
     inputProps.autoComplete = options.autocomplete;
+  }
+
+  if (options.accept) {
+    inputProps.accept = options.accept as string;
   }
 
   return inputProps;

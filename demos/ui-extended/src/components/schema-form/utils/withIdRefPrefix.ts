@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants';
 import { RJSFSchema, StrictRJSFSchema } from './types';
 import isObject from 'lodash/isObject';
@@ -38,7 +39,9 @@ function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[]
  * @param schemaNode - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
  * @returns - A copy of the `schemaNode` with updated `$ref`s
  */
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S | S[] | S[keyof S]): S | S[] | S[keyof S] {
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaNode: S | S[] | S[keyof S],
+): S | S[] | S[keyof S] {
   if (Array.isArray(schemaNode)) {
     return withIdRefPrefixArray<S>([...schemaNode]);
   }

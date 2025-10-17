@@ -1,7 +1,14 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
-import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import { PROPERTIES_KEY, REF_KEY } from '../constants';
 import retrieveSchema from './retrieveSchema';
 
@@ -51,10 +58,22 @@ const NO_VALUE = Symbol('no Value');
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
-export default function sanitizeDataForNewSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
+export default function sanitizeDataForNewSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
+  validator: ValidatorType<T, S, F>,
+  rootSchema: S,
+  newSchema?: S,
+  oldSchema?: S,
+  data: any = {},
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+): T {
   // By default, we will clear the form data
   let newFormData;
   // If the new schema is of type object and that object contains a list of properties
@@ -74,14 +93,26 @@ export default function sanitizeDataForNewSchema<T = any, S extends StrictRJSFSc
     const nestedData: GenericObjectType = {};
     keys.forEach((key) => {
       const formValue = get(data, key);
-      let oldKeyedSchema: S = get(oldSchema, [PROPERTIES_KEY, key], {});
-      let newKeyedSchema: S = get(newSchema, [PROPERTIES_KEY, key], {});
+      let oldKeyedSchema: S = get(oldSchema, [PROPERTIES_KEY, key], {}) as S;
+      let newKeyedSchema: S = get(newSchema, [PROPERTIES_KEY, key], {}) as S;
       // Resolve the refs if they exist
       if (has(oldKeyedSchema, REF_KEY)) {
-        oldKeyedSchema = retrieveSchema<T, S, F>(validator, oldKeyedSchema, rootSchema, formValue);
+        oldKeyedSchema = retrieveSchema<T, S, F>(
+          validator,
+          oldKeyedSchema,
+          rootSchema,
+          formValue,
+          experimental_customMergeAllOf,
+        );
       }
       if (has(newKeyedSchema, REF_KEY)) {
-        newKeyedSchema = retrieveSchema<T, S, F>(validator, newKeyedSchema, rootSchema, formValue);
+        newKeyedSchema = retrieveSchema<T, S, F>(
+          validator,
+          newKeyedSchema,
+          rootSchema,
+          formValue,
+          experimental_customMergeAllOf,
+        );
       }
       // Now get types and see if they are the same
       const oldSchemaTypeForKey = get(oldKeyedSchema, 'type');
@@ -95,7 +126,14 @@ export default function sanitizeDataForNewSchema<T = any, S extends StrictRJSFSc
         // If it is an object, we'll recurse and store the resulting sanitized data for the key
         if (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
-          const itemData = sanitizeDataForNewSchema<T, S, F>(validator, rootSchema, newKeyedSchema, oldKeyedSchema, formValue);
+          const itemData = sanitizeDataForNewSchema<T, S, F>(
+            validator,
+            rootSchema,
+            newKeyedSchema,
+            oldKeyedSchema,
+            formValue,
+            experimental_customMergeAllOf,
+          );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
             nestedData[key] = itemData;
@@ -137,12 +175,29 @@ export default function sanitizeDataForNewSchema<T = any, S extends StrictRJSFSc
     let newSchemaItems = get(newSchema, 'items');
     // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
     // Eventually, we may want to deal with when either of the `items` are arrays since those tuple validations
-    if (typeof oldSchemaItems === 'object' && typeof newSchemaItems === 'object' && !Array.isArray(oldSchemaItems) && !Array.isArray(newSchemaItems)) {
+    if (
+      typeof oldSchemaItems === 'object' &&
+      typeof newSchemaItems === 'object' &&
+      !Array.isArray(oldSchemaItems) &&
+      !Array.isArray(newSchemaItems)
+    ) {
       if (has(oldSchemaItems, REF_KEY)) {
-        oldSchemaItems = retrieveSchema<T, S, F>(validator, oldSchemaItems as S, rootSchema, data as T);
+        oldSchemaItems = retrieveSchema<T, S, F>(
+          validator,
+          oldSchemaItems as S,
+          rootSchema,
+          data as T,
+          experimental_customMergeAllOf,
+        );
       }
       if (has(newSchemaItems, REF_KEY)) {
-        newSchemaItems = retrieveSchema<T, S, F>(validator, newSchemaItems as S, rootSchema, data as T);
+        newSchemaItems = retrieveSchema<T, S, F>(
+          validator,
+          newSchemaItems as S,
+          rootSchema,
+          data as T,
+          experimental_customMergeAllOf,
+        );
       }
       // Now get types and see if they are the same
       const oldSchemaType = get(oldSchemaItems, 'type');
@@ -152,7 +207,14 @@ export default function sanitizeDataForNewSchema<T = any, S extends StrictRJSFSc
         const maxItems = get(newSchema, 'maxItems', -1);
         if (newSchemaType === 'object') {
           newFormData = data.reduce((newValue, aValue) => {
-            const itemValue = sanitizeDataForNewSchema<T, S, F>(validator, rootSchema, newSchemaItems as S, oldSchemaItems as S, aValue);
+            const itemValue = sanitizeDataForNewSchema<T, S, F>(
+              validator,
+              rootSchema,
+              newSchemaItems as S,
+              oldSchemaItems as S,
+              aValue,
+              experimental_customMergeAllOf,
+            );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
             }
@@ -162,7 +224,11 @@ export default function sanitizeDataForNewSchema<T = any, S extends StrictRJSFSc
           newFormData = maxItems > 0 && data.length > maxItems ? data.slice(0, maxItems) : data;
         }
       }
-    } else if (typeof oldSchemaItems === 'boolean' && typeof newSchemaItems === 'boolean' && oldSchemaItems === newSchemaItems) {
+    } else if (
+      typeof oldSchemaItems === 'boolean' &&
+      typeof newSchemaItems === 'boolean' &&
+      oldSchemaItems === newSchemaItems
+    ) {
       // If they are both booleans and have the same value just return the data as is otherwise fall-thru to undefined
       newFormData = data;
     }

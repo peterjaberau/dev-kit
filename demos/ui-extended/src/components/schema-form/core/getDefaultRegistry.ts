@@ -1,4 +1,12 @@
-import { englishStringTranslator, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@/components/module-rjsf/rjsf-utils';
+import {
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
+  englishStringTranslator,
+  FormContextType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '#schemaForm/utils';
 
 import fields from './components/fields';
 import templates from './components/templates';
@@ -8,7 +16,11 @@ import widgets from './components/widgets';
  * plus an empty `rootSchema` and `formContext. We omit schemaUtils here because it cannot be defaulted without a
  * rootSchema and validator. It will be added into the computed registry later in the Form.
  */
-export default function getDefaultRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(): Omit<Registry<T, S, F>, 'schemaUtils'> {
+export default function getDefaultRegistry<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(): Omit<Registry<T, S, F>, 'schemaUtils'> {
   return {
     fields: fields<T, S, F>(),
     templates: templates<T, S, F>(),
@@ -16,5 +28,6 @@ export default function getDefaultRegistry<T = any, S extends StrictRJSFSchema =
     rootSchema: {} as S,
     formContext: {} as F,
     translateString: englishStringTranslator,
+    globalFormOptions: { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR },
   };
 }

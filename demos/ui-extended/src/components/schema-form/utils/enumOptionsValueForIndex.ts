@@ -11,7 +11,11 @@ import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
  * @returns - The single or list of values specified by the single or list of indexes if they are valid. Otherwise,
  *        `emptyValue` or an empty list.
  */
-export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJSFSchema>(valueIndex: string | number | Array<string | number>, allEnumOptions: EnumOptionsType<S>[] = [], emptyValue?: EnumOptionsType<S>['value']): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {
+export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJSFSchema>(
+  valueIndex: string | number | Array<string | number>,
+  allEnumOptions: EnumOptionsType<S>[] = [],
+  emptyValue?: EnumOptionsType<S>['value'],
+): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {
   if (Array.isArray(valueIndex)) {
     return (
       valueIndex

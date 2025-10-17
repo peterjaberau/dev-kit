@@ -1,6 +1,13 @@
-'use client';
 import { useState, useCallback } from 'react';
-import { asNumber, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@/components/module-rjsf/rjsf-utils';
+import {
+  asNumber,
+  ErrorSchema,
+  FieldPathList,
+  FieldProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '#schemaForm/utils';
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
 // digits followed by any number of 0 characters up until the end of the line.
@@ -31,7 +38,9 @@ const trailingCharMatcher = /[0.]0*$/;
  *    value cached in the state. If it matches the cached value, the cached
  *    value is passed to the input instead of the formData value
  */
-function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: FieldProps<T, S, F>) {
+function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FieldProps<T, S, F>,
+) {
   const { registry, onChange, formData, value: initialValue } = props;
   const [lastValue, setLastValue] = useState(initialValue);
   const { StringField } = registry.fields;
@@ -43,7 +52,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (value: FieldProps<T, S, F>['value']) => {
+    (value: FieldProps<T, S, F>['value'], path: FieldPathList, errorSchema?: ErrorSchema<T>, id?: string) => {
       // Cache the original value in component state
       setLastValue(value);
 
@@ -56,9 +65,12 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
-      const processed = typeof value === 'string' && value.match(trailingCharMatcherWithPrefix) ? asNumber(value.replace(trailingCharMatcher, '')) : asNumber(value);
+      const processed =
+        typeof value === 'string' && value.match(trailingCharMatcherWithPrefix)
+          ? asNumber(value.replace(trailingCharMatcher, ''))
+          : asNumber(value);
 
-      onChange(processed as unknown as T);
+      onChange(processed as unknown as T, path, errorSchema, id);
     },
     [onChange],
   );
@@ -67,7 +79,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     // Construct a regular expression that checks for a string that consists
     // of the formData value suffixed with zero or one '.' characters and zero
     // or more '0' characters
-    const re = new RegExp(`${value}`.replace('.', '\\.') + '\\.?0*$');
+    const re = new RegExp(`^(${String(value).replace('.', '\\.')})?\\.?0*$`);
 
     // If the cached "lastValue" is a match, use that instead of the formData
     // value to prevent the input value from changing in the UI

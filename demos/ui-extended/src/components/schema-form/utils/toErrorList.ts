@@ -9,7 +9,10 @@ import { ErrorSchema, GenericObjectType, RJSFValidationError } from './types';
  * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
  * @returns - The list of `RJSFValidationErrors` extracted from the `errorSchema`
  */
-export default function toErrorList<T = any>(errorSchema?: ErrorSchema<T>, fieldPath: string[] = []): RJSFValidationError[] {
+export default function toErrorList<T = any>(
+  errorSchema?: ErrorSchema<T>,
+  fieldPath: string[] = [],
+): RJSFValidationError[] {
   if (!errorSchema) {
     return [];
   }

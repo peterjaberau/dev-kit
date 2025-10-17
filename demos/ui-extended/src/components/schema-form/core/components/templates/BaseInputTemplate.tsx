@@ -1,7 +1,13 @@
-'use client';
-
 import { ChangeEvent, FocusEvent, useCallback } from 'react';
-import { ariaDescribedByIds, BaseInputTemplateProps, examplesId, getInputProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@/components/module-rjsf/rjsf-utils';
+import {
+  ariaDescribedByIds,
+  BaseInputTemplateProps,
+  examplesId,
+  getInputProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '#schemaForm/utils';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -9,7 +15,11 @@ import { ariaDescribedByIds, BaseInputTemplateProps, examplesId, getInputProps, 
  *
  * @param props - The `WidgetProps` for this template
  */
-export default function BaseInputTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: BaseInputTemplateProps<T, S, F>) {
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     name, // remove this from ...rest
@@ -24,7 +34,6 @@ export default function BaseInputTemplate<T = any, S extends StrictRJSFSchema = 
     options,
     schema,
     uiSchema,
-    formContext,
     registry,
     rawErrors,
     type,
@@ -51,18 +60,43 @@ export default function BaseInputTemplate<T = any, S extends StrictRJSFSchema = 
     inputValue = value == null ? '' : value;
   }
 
-  const _onChange = useCallback(({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value), [onChange, options]);
-  const _onBlur = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value), [onBlur, id]);
-  const _onFocus = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value), [onFocus, id]);
+  const _onChange = useCallback(
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
+    [onChange, options],
+  );
+  const _onBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value),
+    [onBlur, id],
+  );
+  const _onFocus = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value),
+    [onFocus, id],
+  );
 
   return (
     <>
-      <input id={id} name={id} className="form-control" readOnly={readonly} disabled={disabled} autoFocus={autofocus} value={inputValue} {...inputProps} list={schema.examples ? examplesId<T>(id) : undefined} onChange={onChangeOverride || _onChange} onBlur={_onBlur} onFocus={_onFocus} aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)} />
+      <input
+        id={id}
+        name={id}
+        className='form-control'
+        readOnly={readonly}
+        disabled={disabled}
+        autoFocus={autofocus}
+        value={inputValue}
+        {...inputProps}
+        list={schema.examples ? examplesId(id) : undefined}
+        onChange={onChangeOverride || _onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+      />
       {Array.isArray(schema.examples) && (
-        <datalist key={`datalist_${id}`} id={examplesId<T>(id)}>
-          {(schema.examples as string[]).concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : []).map((example: any) => {
-            return <option key={example} value={example} />;
-          })}
+        <datalist key={`datalist_${id}`} id={examplesId(id)}>
+          {(schema.examples as string[])
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
         </datalist>
       )}
     </>

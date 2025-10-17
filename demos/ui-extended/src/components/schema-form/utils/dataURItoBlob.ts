@@ -1,3 +1,4 @@
+//@ts-nocheck
 /** Given the `FileReader.readAsDataURL()` based `dataURI` extracts that data into an actual Blob along with the name
  * of that Blob if provided in the URL. If no name is provided, then the name falls back to `unknown`.
  *

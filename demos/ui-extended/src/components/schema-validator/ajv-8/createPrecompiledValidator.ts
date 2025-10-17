@@ -1,4 +1,4 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '@/components/module-rjsf/rjsf-utils';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '#schemaForm/utils';
 
 import { Localizer, ValidatorFunctions } from './types';
 import AJV8PrecompiledValidator from './precompiledValidator';
@@ -14,6 +14,10 @@ import AJV8PrecompiledValidator from './precompiledValidator';
  * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
  * @returns - The precompiled validator implementation resulting from the set of parameters provided
  */
-export default function createPrecompiledValidator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validateFns: ValidatorFunctions, rootSchema: S, localizer?: Localizer): ValidatorType<T, S, F> {
+export default function createPrecompiledValidator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(validateFns: ValidatorFunctions, rootSchema: S, localizer?: Localizer): ValidatorType<T, S, F> {
   return new AJV8PrecompiledValidator<T, S, F>(validateFns, rootSchema, localizer);
 }

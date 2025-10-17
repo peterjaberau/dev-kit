@@ -9,7 +9,14 @@ import { FormContextType, GlobalUISchemaOptions, RJSFSchema, StrictRJSFSchema, U
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
  * @returns - An object containing all the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
  */
-export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(uiSchema: UiSchema<T, S, F> = {}, globalOptions: GlobalUISchemaOptions = {}): UIOptionsType<T, S, F> {
+export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  uiSchema: UiSchema<T, S, F> = {},
+  globalOptions: GlobalUISchemaOptions = {},
+): UIOptionsType<T, S, F> {
+  // Handle null or undefined uiSchema
+  if (!uiSchema) {
+    return { ...globalOptions };
+  }
   return Object.keys(uiSchema)
     .filter((key) => key.indexOf('ui:') === 0)
     .reduce(

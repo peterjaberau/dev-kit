@@ -1,5 +1,5 @@
 import standaloneCode from 'ajv/dist/standalone';
-import { RJSFSchema, StrictRJSFSchema, schemaParser } from '@/components/module-rjsf/rjsf-utils';
+import { RJSFSchema, StrictRJSFSchema, schemaParser } from '#schemaForm/utils';
 
 import createAjvInstance from './createAjvInstance';
 import { CustomValidatorOptionsType } from './types';
@@ -14,7 +14,10 @@ import { CustomValidatorOptionsType } from './types';
  *        compiling the schema. They are the same options that are passed to the `customizeValidator()` function in
  *        order to modify the behavior of the regular AJV-based validator.
  */
-export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(schema: S, options: CustomValidatorOptionsType = {}) {
+export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  options: CustomValidatorOptionsType = {},
+) {
   const schemaMaps = schemaParser(schema);
   const schemas = Object.values(schemaMaps);
 

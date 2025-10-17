@@ -9,6 +9,9 @@ export default [
       globals: {
         node: true,
       },
+      parseOptions: {
+        project: false
+      },
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
@@ -21,7 +24,14 @@ export default [
       "@typescript-eslint/no-use-before-define": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
-      '@typescript-eslint/no-unsafe-member-access': 'off',
+      "@typescript-eslint/no-unsafe-member-access": "off",
+
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+
       "no-param-reassign": "off",
       "prefer-spread": "off",
       "no-console": "off",
@@ -62,13 +72,6 @@ export default [
         },
       ],
       "default-case": "off",
-    },
-  },
-
-  {
-    files: ["**/*.{ts,tsx}", "**/*.{js,jsx}"],
-    parserOptions: {
-      project: "tsconfig.eslint.json",
     },
   },
 ]

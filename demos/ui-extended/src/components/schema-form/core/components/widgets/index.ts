@@ -1,4 +1,4 @@
-import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@/components/module-rjsf/rjsf-utils';
+import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '#schemaForm/utils';
 
 import AltDateWidget from './AltDateWidget';
 import AltDateTimeWidget from './AltDateTimeWidget';
@@ -13,6 +13,7 @@ import HiddenWidget from './HiddenWidget';
 import PasswordWidget from './PasswordWidget';
 import RadioWidget from './RadioWidget';
 import RangeWidget from './RangeWidget';
+import RatingWidget from './RatingWidget';
 import SelectWidget from './SelectWidget';
 import TextareaWidget from './TextareaWidget';
 import TextWidget from './TextWidget';
@@ -20,7 +21,11 @@ import TimeWidget from './TimeWidget';
 import URLWidget from './URLWidget';
 import UpDownWidget from './UpDownWidget';
 
-function widgets<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(): RegistryWidgetsType<T, S, F> {
+function widgets<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(): RegistryWidgetsType<T, S, F> {
   return {
     AltDateWidget,
     AltDateTimeWidget,
@@ -35,6 +40,7 @@ function widgets<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     PasswordWidget,
     RadioWidget,
     RangeWidget,
+    RatingWidget,
     SelectWidget,
     TextWidget,
     TextareaWidget,

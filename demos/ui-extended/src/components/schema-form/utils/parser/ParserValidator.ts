@@ -1,9 +1,20 @@
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 
 import { ID_KEY } from '../constants';
 import hashForSchema from '../hashForSchema';
-import { CustomValidator, ErrorSchema, ErrorTransformer, FormContextType, RJSFSchema, RJSFValidationError, StrictRJSFSchema, UiSchema, ValidationData, ValidatorType } from '../types';
+import {
+  CustomValidator,
+  ErrorSchema,
+  ErrorTransformer,
+  FormContextType,
+  RJSFSchema,
+  RJSFValidationError,
+  StrictRJSFSchema,
+  UiSchema,
+  ValidationData,
+  ValidatorType,
+} from '../types';
+import deepEquals from '../deepEquals';
 
 /** The type of the map of schema hash to schema
  */
@@ -18,7 +29,9 @@ export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = {
  * the hashed value of the schema. NOTE: After hashing the schema, an $id with the hash value is added to the
  * schema IF that schema doesn't already have an $id, prior to putting the schema into the map.
  */
-export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> implements ValidatorType<T, S, F> {
+export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
+  implements ValidatorType<T, S, F>
+{
   /** The rootSchema provided during construction of the class */
   readonly rootSchema: S;
 
@@ -35,6 +48,12 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
     this.addSchema(rootSchema, hashForSchema<S>(rootSchema));
   }
 
+  /** Resets the internal AJV validator to clear schemas from it. Can be helpful for resetting the validator for tests.
+   */
+  reset() {
+    this.schemaMap = {};
+  }
+
   /** Adds the given `schema` to the `schemaMap` keyed by the `hash` or `ID_KEY` if present on the `schema`. If the
    * schema does not have an `ID_KEY`, then the `hash` will be added as the `ID_KEY` to allow the schema to be
    * associated with it's `hash` for future use (by a schema compiler).
@@ -48,10 +67,12 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
     const existing = this.schemaMap[key];
     if (!existing) {
       this.schemaMap[key] = identifiedSchema;
-    } else if (!isEqual(existing, identifiedSchema)) {
+    } else if (!deepEquals(existing, identifiedSchema)) {
       console.error('existing schema:', JSON.stringify(existing, null, 2));
       console.error('new schema:', JSON.stringify(identifiedSchema, null, 2));
-      throw new Error(`Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $id to one of the schemas`);
+      throw new Error(
+        `Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $id to one of the schemas`,
+      );
     }
   }
 
@@ -70,7 +91,7 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
    * @throws - Error when the given `rootSchema` differs from the root schema provided during construction
    */
   isValid(schema: S, _formData: T, rootSchema: S): boolean {
-    if (!isEqual(rootSchema, this.rootSchema)) {
+    if (!deepEquals(rootSchema, this.rootSchema)) {
       throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
     }
     this.addSchema(schema, hashForSchema<S>(schema));
@@ -105,7 +126,13 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
    * @param _transformErrors - The transformErrors parameter that is ignored
    * @param _uiSchema - The uiSchema parameter that is ignored
    */
-  validateFormData(_formData: T, _schema: S, _customValidate?: CustomValidator<T, S, F>, _transformErrors?: ErrorTransformer<T, S, F>, _uiSchema?: UiSchema<T, S, F>): ValidationData<T> {
+  validateFormData(
+    _formData: T,
+    _schema: S,
+    _customValidate?: CustomValidator<T, S, F>,
+    _transformErrors?: ErrorTransformer<T, S, F>,
+    _uiSchema?: UiSchema<T, S, F>,
+  ): ValidationData<T> {
     throw new Error('Unexpectedly calling the `validateFormData()` method during schema parsing');
   }
 }

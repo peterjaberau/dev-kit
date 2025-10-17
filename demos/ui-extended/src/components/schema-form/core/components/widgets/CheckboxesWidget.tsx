@@ -1,21 +1,48 @@
-'use client';
-
 import { ChangeEvent, FocusEvent, useCallback } from 'react';
-import { ariaDescribedByIds, enumOptionsDeselectValue, enumOptionsIsSelected, enumOptionsSelectValue, enumOptionsValueForIndex, optionId, FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@/components/module-rjsf/rjsf-utils';
+import {
+  ariaDescribedByIds,
+  enumOptionsDeselectValue,
+  enumOptionsIsSelected,
+  enumOptionsSelectValue,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  WidgetProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '#schemaForm/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
  *
  * @param props - The `WidgetProps` for this component
  */
-function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({ id, disabled, options: { inline = false, enumOptions, enumDisabled, emptyValue }, value, autofocus = false, readonly, onChange, onBlur, onFocus }: WidgetProps<T, S, F>) {
+function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  id,
+  disabled,
+  options: { inline = false, enumOptions, enumDisabled, emptyValue },
+  value,
+  autofocus = false,
+  readonly,
+  onChange,
+  onBlur,
+  onFocus,
+}: WidgetProps<T, S, F>) {
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const handleBlur = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)), [onBlur, id]);
+  const handleBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) =>
+      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
+    [onBlur, id, enumOptions, emptyValue],
+  );
 
-  const handleFocus = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)), [onFocus, id]);
+  const handleFocus = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) =>
+      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
+    [onFocus, id, enumOptions, emptyValue],
+  );
   return (
-    <div className="checkboxes" id={id}>
+    <div className='checkboxes' id={id}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -32,7 +59,19 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
           const checkbox = (
             <span>
-              <input type="checkbox" id={optionId(id, index)} name={id} checked={checked} value={String(index)} disabled={disabled || itemDisabled || readonly} autoFocus={autofocus && index === 0} onChange={handleChange} onBlur={handleBlur} onFocus={handleFocus} aria-describedby={ariaDescribedByIds<T>(id)} />
+              <input
+                type='checkbox'
+                id={optionId(id, index)}
+                name={id}
+                checked={checked}
+                value={String(index)}
+                disabled={disabled || itemDisabled || readonly}
+                autoFocus={autofocus && index === 0}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                aria-describedby={ariaDescribedByIds(id)}
+              />
               <span>{option.label}</span>
             </span>
           );

@@ -10,7 +10,11 @@ import { GenericObjectType } from './types';
  *          NOTE: Uses shallow comparison for the duplicate checking.
  * @returns - A new object that is the merge of the two given objects
  */
-export default function mergeObjects(obj1: GenericObjectType, obj2: GenericObjectType, concatArrays: boolean | 'preventDuplicates' = false) {
+export default function mergeObjects(
+  obj1: GenericObjectType,
+  obj2: GenericObjectType,
+  concatArrays: boolean | 'preventDuplicates' = false,
+) {
   return Object.keys(obj2).reduce(
     (acc, key) => {
       const left = obj1 ? obj1[key] : {},

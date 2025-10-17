@@ -1,6 +1,4 @@
-'use client';
-
-import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@/components/module-rjsf/rjsf-utils';
+import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '#schemaForm/utils';
 
 const REQUIRED_FIELD_SYMBOL = '*';
 
@@ -8,12 +6,19 @@ const REQUIRED_FIELD_SYMBOL = '*';
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: TitleFieldProps<T, S, F>) {
-  const { id, title, required } = props;
+export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: TitleFieldProps<T, S, F>,
+) {
+  const { id, title, required, optionalDataControl } = props;
   return (
     <legend id={id}>
       {title}
-      {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
+      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
+      {optionalDataControl && (
+        <span className='pull-right' style={{ marginBottom: '2px' }}>
+          {optionalDataControl}
+        </span>
+      )}
     </legend>
   );
 }

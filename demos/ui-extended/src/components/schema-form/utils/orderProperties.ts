@@ -20,7 +20,8 @@ export default function orderProperties(properties: string[], order?: string[]):
       prev[curr] = true;
       return prev;
     }, {});
-  const errorPropList = (arr: string[]) => (arr.length > 1 ? `properties '${arr.join("', '")}'` : `property '${arr[0]}'`);
+  const errorPropList = (arr: string[]) =>
+    arr.length > 1 ? `properties '${arr.join("', '")}'` : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
   const orderFiltered = order.filter((prop) => prop === '*' || propertyHash[prop]);
   const orderHash = arrayToHash(orderFiltered);

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { createElement } from 'react';
 import ReactIs from 'react-is';
 import get from 'lodash/get';
@@ -68,7 +69,9 @@ const widgetMap: { [k: string]: { [j: string]: string } } = {
  * @param AWidget - A widget that will be wrapped or one that is already wrapped
  * @returns - The wrapper widget
  */
-function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(AWidget: Widget<T, S, F>) {
+function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  AWidget: Widget<T, S, F>,
+) {
   let MergedWidget: Widget<T, S, F> | undefined = get(AWidget, 'MergedWidget');
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
@@ -92,15 +95,23 @@ function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
  * @returns - The `Widget` component to use
  * @throws - An error if there is no `Widget` component that can be returned
  */
-export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(schema: RJSFSchema, widget?: Widget<T, S, F> | string, registeredWidgets: RegistryWidgetsType<T, S, F> = {}): Widget<T, S, F> {
+export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  schema: RJSFSchema,
+  widget?: Widget<T, S, F> | string,
+  registeredWidgets: RegistryWidgetsType<T, S, F> = {},
+): Widget<T, S, F> {
   const type = getSchemaType(schema);
 
-  if (typeof widget === 'function' || (widget && ReactIs.isForwardRef(createElement(widget))) || ReactIs.isMemo(widget)) {
+  if (
+    typeof widget === 'function' ||
+    (widget && ReactIs.isForwardRef(createElement(widget))) ||
+    ReactIs.isMemo(widget)
+  ) {
     return mergeWidgetOptions<T, S, F>(widget as Widget<T, S, F>);
   }
 
   if (typeof widget !== 'string') {
-    throw new Error(`Unsupported widget definition: ${typeof widget}`);
+    throw new Error(`Unsupported widget definition: ${typeof widget} in schema: ${JSON.stringify(schema)}`);
   }
 
   if (widget in registeredWidgets) {
@@ -110,7 +121,7 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
 
   if (typeof type === 'string') {
     if (!(type in widgetMap)) {
-      throw new Error(`No widget for type '${type}'`);
+      throw new Error(`No widget for type '${type}' in schema: ${JSON.stringify(schema)}`);
     }
 
     if (widget in widgetMap[type]) {
@@ -119,5 +130,5 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
     }
   }
 
-  throw new Error(`No widget '${widget}' for type '${type}'`);
+  throw new Error(`No widget '${widget}' for type '${type}' in schema: ${JSON.stringify(schema)}`);
 }

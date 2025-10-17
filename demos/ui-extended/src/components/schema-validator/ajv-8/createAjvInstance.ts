@@ -1,17 +1,20 @@
+//@ts-nocheck
 import Ajv, { Options } from 'ajv';
 import addFormats, { FormatsPluginOptions } from 'ajv-formats';
 import isObject from 'lodash/isObject';
+import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '#schemaForm/utils';
 
 import { CustomValidatorOptionsType } from './types';
-import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITONAL_PROPERTIES_FLAG } from '@/components/module-rjsf/rjsf-utils';
 
 export const AJV_CONFIG: Options = {
   allErrors: true,
   multipleOfPrecision: 8,
   strict: false,
   verbose: true,
+  discriminator: false, // TODO enable this in V6
 } as const;
-export const COLOR_FORMAT_REGEX = /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/;
+export const COLOR_FORMAT_REGEX =
+  /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/;
 export const DATA_URL_FORMAT_REGEX = /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/;
 
 /** Creates an Ajv version 8 implementation object with standard support for the 'color` and `data-url` custom formats.
@@ -29,7 +32,13 @@ export const DATA_URL_FORMAT_REGEX = /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*)
  * @param [ajvFormatOptions] - The `ajv-format` options to use when adding formats to `ajv`; pass `false` to disable it
  * @param [AjvClass] - The `Ajv` class to use when creating the validator instance
  */
-export default function createAjvInstance(additionalMetaSchemas?: CustomValidatorOptionsType['additionalMetaSchemas'], customFormats?: CustomValidatorOptionsType['customFormats'], ajvOptionsOverrides: CustomValidatorOptionsType['ajvOptionsOverrides'] = {}, ajvFormatOptions?: FormatsPluginOptions | false, AjvClass: typeof Ajv = Ajv) {
+export default function createAjvInstance(
+  additionalMetaSchemas?: CustomValidatorOptionsType['additionalMetaSchemas'],
+  customFormats?: CustomValidatorOptionsType['customFormats'],
+  ajvOptionsOverrides: CustomValidatorOptionsType['ajvOptionsOverrides'] = {},
+  ajvFormatOptions?: FormatsPluginOptions | false,
+  AjvClass: typeof Ajv = Ajv,
+) {
   const ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
   if (ajvFormatOptions) {
     addFormats(ajv, ajvFormatOptions);
@@ -43,7 +52,7 @@ export default function createAjvInstance(additionalMetaSchemas?: CustomValidato
 
   // Add RJSF-specific additional properties keywords so Ajv doesn't report errors if strict is enabled.
   ajv.addKeyword(ADDITIONAL_PROPERTY_FLAG);
-  ajv.addKeyword(RJSF_ADDITONAL_PROPERTIES_FLAG);
+  ajv.addKeyword(RJSF_ADDITIONAL_PROPERTIES_FLAG);
 
   // add more schemas to validate against
   if (Array.isArray(additionalMetaSchemas)) {

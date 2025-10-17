@@ -19,7 +19,12 @@ type DateElementProp = {
  * @returns Array of props for DateElement
  */
 
-export default function getDateElementProps(date: DateObject, time: boolean, yearRange: [number, number] = [1900, new Date().getFullYear() + 2], format: DateElementFormat = 'YMD') {
+export default function getDateElementProps(
+  date: DateObject,
+  time: boolean,
+  yearRange: [number, number] = [1900, new Date().getFullYear() + 2],
+  format: DateElementFormat = 'YMD',
+) {
   const { day, month, year, hour, minute, second } = date;
 
   const dayObj: DateElementProp = { type: 'day', range: [1, 31], value: day };
@@ -40,7 +45,11 @@ export default function getDateElementProps(date: DateObject, time: boolean, yea
   }
 
   if (time) {
-    dateElementProp.push({ type: 'hour', range: [0, 23], value: hour }, { type: 'minute', range: [0, 59], value: minute }, { type: 'second', range: [0, 59], value: second });
+    dateElementProp.push(
+      { type: 'hour', range: [0, 23], value: hour },
+      { type: 'minute', range: [0, 59], value: minute },
+      { type: 'second', range: [0, 59], value: second },
+    );
   }
 
   return dateElementProp;

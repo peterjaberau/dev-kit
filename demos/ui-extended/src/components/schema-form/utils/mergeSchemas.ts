@@ -20,7 +20,14 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
       right = obj2[key];
     if (obj1 && key in obj1 && isObject(right)) {
       acc[key] = mergeSchemas(left, right);
-    } else if (obj1 && obj2 && (getSchemaType(obj1) === 'object' || getSchemaType(obj2) === 'object') && key === REQUIRED_KEY && Array.isArray(left) && Array.isArray(right)) {
+    } else if (
+      obj1 &&
+      obj2 &&
+      (getSchemaType(obj1) === 'object' || getSchemaType(obj2) === 'object') &&
+      key === REQUIRED_KEY &&
+      Array.isArray(left) &&
+      Array.isArray(right)
+    ) {
       // Don't include duplicate values when merging 'required' fields.
       acc[key] = union(left, right);
     } else {

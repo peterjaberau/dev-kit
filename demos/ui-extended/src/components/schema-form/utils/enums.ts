@@ -1,4 +1,4 @@
-/** An enumeration of all the translatable strings used by `@/components/module-rjsf/rjsf-core` and its themes. The value of each of the
+/** An enumeration of all the translatable strings used by `@rjsf/core` and its themes. The value of each of the
  * enumeration keys is expected to be the actual english string. Some strings contain replaceable parameter values
  * as indicated by `%1`, `%2`, etc. The number after the `%` indicates the order of the parameter. The ordering of
  * parameters is important because some languages may choose to put the second parameter before the first in its
@@ -9,6 +9,8 @@ export enum TranslatableString {
   ArrayItemTitle = 'Item',
   /** Missing items reason, used by ArrayField */
   MissingItems = 'Missing items definition',
+  /** Empty array message, used by ArrayField */
+  EmptyArray = 'No items yet. Use the button below to add some.',
   /** Yes label, used by BooleanField */
   YesLabel = 'Yes',
   /** No label, used by BooleanField */
@@ -43,6 +45,12 @@ export enum TranslatableString {
   DecrementAriaLabel = 'Decrease value by 1',
   /** Increment button aria label, used by UpDownWidget */
   IncrementAriaLabel = 'Increase value by 1',
+  /** The label for the Add button in for an optional object field */
+  OptionalObjectAdd = 'Add data for optional field',
+  /** The label for the Remove button in for an optional object field */
+  OptionalObjectRemove = 'Remove data for optional field',
+  /** The label for when displaying a non-editable form with missing optional field data */
+  OptionalObjectEmptyMsg = 'No data for optional field',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
   UnknownFieldType = 'Unknown field type %1',
@@ -55,18 +63,25 @@ export enum TranslatableString {
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel = '%1 Key',
   // Strings with replaceable parameters AND/OR that support markdown and html
-  /** Invalid object field configuration as provided by the ObjectField */
-  InvalidObjectField = 'Invalid "%1" object field configuration: <em>%2</em>.',
+  /** Invalid object field configuration as provided by the ObjectField.
+   * NOTE: Use markdown notation rather than html tags.
+   */
+  InvalidObjectField = 'Invalid "%1" object field configuration: _%2_.',
   /** Unsupported field schema, used by UnsupportedField */
   UnsupportedField = 'Unsupported field schema.',
-  /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField */
-  UnsupportedFieldWithId = 'Unsupported field schema for field <code>%1</code>.',
-  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField */
-  UnsupportedFieldWithReason = 'Unsupported field schema: <em>%1</em>.',
-  /** Unsupported field schema, where %1 and %2 will be replaced by the idSchema.$id and reason strings, respectively,
-   * as provided by UnsupportedField
+  /** Unsupported field schema, where %1 will be replaced by the FieldPathId.$id as provided by UnsupportedField.
+   * NOTE: Use markdown notation rather than html tags.
    */
-  UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field <code>%1</code>: <em>%2</em>.',
+  UnsupportedFieldWithId = 'Unsupported field schema for field `%1`.',
+  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField.
+   * NOTE: Use markdown notation rather than html tags.
+   */
+  UnsupportedFieldWithReason = 'Unsupported field schema: _%1_.',
+  /** Unsupported field schema, where %1 and %2 will be replaced by the FieldPathId.$id and reason strings,
+   * respectively, as provided by UnsupportedField.
+   * NOTE: Use markdown notation rather than html tags.
+   */
+  UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field `%1`: _%2_.',
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */

@@ -10,7 +10,11 @@ import isNil from 'lodash/isNil';
  * @param [allEnumOptions=[]] - The list of all the known enumOptions
  * @returns - The updated list of selected enum values with enum value at the `valueIndex` added to it
  */
-export default function enumOptionsSelectValue<S extends StrictRJSFSchema = RJSFSchema>(valueIndex: string | number, selected: EnumOptionsType<S>['value'][], allEnumOptions: EnumOptionsType<S>[] = []) {
+export default function enumOptionsSelectValue<S extends StrictRJSFSchema = RJSFSchema>(
+  valueIndex: string | number,
+  selected: EnumOptionsType<S>['value'][],
+  allEnumOptions: EnumOptionsType<S>[] = [],
+) {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
   if (!isNil(value)) {
     const index = allEnumOptions.findIndex((opt) => value === opt.value);

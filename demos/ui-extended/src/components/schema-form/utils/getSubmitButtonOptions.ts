@@ -17,7 +17,11 @@ export const DEFAULT_OPTIONS: UISchemaSubmitButtonOptions = {
  * @param [uiSchema={}] - the UI Schema from which to extract submit button props
  * @returns - The merging of the `DEFAULT_OPTIONS` with any custom ones
  */
-export default function getSubmitButtonOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(uiSchema: UiSchema<T, S, F> = {}): UISchemaSubmitButtonOptions {
+export default function getSubmitButtonOptions<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(uiSchema: UiSchema<T, S, F> = {}): UISchemaSubmitButtonOptions {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   if (uiOptions && uiOptions[SUBMIT_BTN_OPTIONS_KEY]) {
     const options = uiOptions[SUBMIT_BTN_OPTIONS_KEY] as UISchemaSubmitButtonOptions;

@@ -1,15 +1,33 @@
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
-import { CustomValidator, ErrorSchema, ErrorTransformer, FormContextType, hashForSchema, ID_KEY, JUNK_OPTION_ID, RJSFSchema, StrictRJSFSchema, toErrorList, UiSchema, ValidationData, ValidatorType, retrieveSchema } from '@/components/module-rjsf/rjsf-utils';
+import {
+  CustomValidator,
+  deepEquals,
+  ErrorTransformer,
+  FormContextType,
+  hashForSchema,
+  ID_KEY,
+  JUNK_OPTION_ID,
+  retrieveSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  ValidationData,
+  ValidatorType,
+} from '#schemaForm/utils';
 
 import { CompiledValidateFunction, Localizer, ValidatorFunctions } from './types';
 import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
 
 /** `ValidatorType` implementation that uses an AJV 8 precompiled validator as created by the
- * `compileSchemaValidators()` function provided by the `@rjsf/validator-ajv8` library.
+ * `compileSchemaValidators()` function provided by the `#schemaValidator/ajv-8` library.
  */
-export default class AJV8PrecompiledValidator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> implements ValidatorType<T, S, F> {
+export default class AJV8PrecompiledValidator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> implements ValidatorType<T, S, F>
+{
   /** The root schema object used to construct this validator
    *
    * @private
@@ -72,25 +90,16 @@ export default class AJV8PrecompiledValidator<T = any, S extends StrictRJSFSchem
    * @param [formData] - The form data to validate if any
    */
   ensureSameRootSchema(schema: S, formData?: T) {
-    if (!isEqual(schema, this.rootSchema)) {
+    if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
       const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
-      if (!isEqual(schema, resolvedRootSchema)) {
-        throw new Error('The schema associated with the precompiled validator differs from the rootSchema provided for validation');
+      if (!deepEquals(schema, resolvedRootSchema)) {
+        throw new Error(
+          'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+        );
       }
     }
     return true;
-  }
-
-  /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
-   *
-   * @param errorSchema - The `ErrorSchema` instance to convert
-   * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
-   * @deprecated - Use the `toErrorList()` function provided by `../rjsf-utils` instead. This function will be removed in
-   *        the next major release.
-   */
-  toErrorList(errorSchema?: ErrorSchema<T>, fieldPath: string[] = []) {
-    return toErrorList(errorSchema, fieldPath);
   }
 
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
@@ -126,7 +135,13 @@ export default class AJV8PrecompiledValidator<T = any, S extends StrictRJSFSchem
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
-  validateFormData(formData: T | undefined, schema: S, customValidate?: CustomValidator<T, S, F>, transformErrors?: ErrorTransformer<T, S, F>, uiSchema?: UiSchema<T, S, F>): ValidationData<T> {
+  validateFormData(
+    formData: T | undefined,
+    schema: S,
+    customValidate?: CustomValidator<T, S, F>,
+    transformErrors?: ErrorTransformer<T, S, F>,
+    uiSchema?: UiSchema<T, S, F>,
+  ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(this, rawErrors, formData, schema, customValidate, transformErrors, uiSchema);
   }

@@ -1,6 +1,11 @@
-'use client';
-
-import { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, getTemplate, getUiOptions } from '@/components/module-rjsf/rjsf-utils';
+import {
+  FieldTemplateProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  getTemplate,
+  getUiOptions,
+} from '#schemaForm/utils';
 
 import Label from './Label';
 
@@ -9,12 +14,20 @@ import Label from './Label';
  *
  * @param props - The `FieldTemplateProps` for this component
  */
-export default function FieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: FieldTemplateProps<T, S, F>) {
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: FieldTemplateProps<T, S, F>) {
   const { id, label, children, errors, help, description, hidden, required, displayLabel, registry, uiSchema } = props;
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>('WrapIfAdditionalTemplate', registry, uiOptions);
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
+    'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions,
+  );
   if (hidden) {
-    return <div className="hidden">{children}</div>;
+    return <div className='hidden'>{children}</div>;
   }
   return (
     <WrapIfAdditionalTemplate {...props}>
