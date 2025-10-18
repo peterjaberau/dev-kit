@@ -2,6 +2,7 @@ import { Provider as ChakraProvider } from "./provider"
 import { Suspense } from "react"
 import "react18-json-view/src/style.css"
 import { Container, Flex, HStack, Stack, Wrap, Box } from "@chakra-ui/react"
+import { FilterAndNavigate } from './_app/components/filter-and-navigate'
 
 export default function RootLayout({
   children,
@@ -30,7 +31,11 @@ export default function RootLayout({
                     justifyContent: "space-between",
                     alignItems: "center",
                   }}
-                ></HStack>
+                >
+                  <FilterAndNavigate />
+
+
+                </HStack>
               </Container>
             </Container>
             <Container

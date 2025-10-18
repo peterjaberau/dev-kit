@@ -1,8 +1,8 @@
 import { useSelector } from "@xstate/react"
-import { RootContext } from "../provider"
+import { ActorsModelContext } from "../provider"
 
 export function useRoot() {
-  const rootRef = RootContext.useActorRef()
+  const rootRef = ActorsModelContext.useActorRef()
   const sendToRoot = rootRef.send
 
   const rootState: any = useSelector(rootRef, (state) => state)
