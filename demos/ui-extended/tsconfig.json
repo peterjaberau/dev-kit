@@ -56,6 +56,12 @@
       "#json-pointer/*": ["./src/components/schema-designer/packages/json-pointer/*"],
       "#json-pointer": ["./src/components/schema-designer/packages/json-pointer"],
 
+      "#json-query/*": ["./src/components/schema-designer/packages/json-query/*"],
+      "#json-query": ["./src/components/schema-designer/packages/json-query"],
+
+      "#json-schema-library/*": ["./src/components/schema-designer/packages/json-schema-library/*"],
+      "#json-schema-library": ["./src/components/schema-designer/packages/json-schema-library"],
+
 
       "#app/*": ["./src/app/*"],
       "#app": ["./src/app"],
