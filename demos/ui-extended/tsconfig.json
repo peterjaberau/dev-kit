@@ -35,6 +35,27 @@
       "#schemaBuilder/*": ["./src/components/schema-builder/*"],
       "#schemaBuilder": ["./src/components/schema-builder"],
 
+      "#schemaDesigner/*": ["./src/components/schema-designer/*"],
+      "#schemaDesigner": ["./src/components/schema-designer"],
+
+
+      "#json-editor/*": ["./src/components/schema-designer/packages/json-editor/*"],
+      "#json-editor": ["./src/components/schema-designer/packages/json-editor"],
+
+      "#json-editor-headless/*": ["./src/components/schema-designer/packages/json-editor-headless/*"],
+      "#json-editor-headless": ["./src/components/schema-designer/packages/json-editor-headless"],
+
+
+      "#json-editor-widgets/*": ["./src/components/schema-designer/packages/json-editor-widgets/*"],
+      "#json-editor-widgets": ["./src/components/schema-designer/packages/json-editor-widgets"],
+
+      "#json-editor-widgets-code/*": ["./src/components/schema-designer/packages/json-editor-widgets-code/*"],
+      "#json-editor-widgets-code": ["./src/components/schema-designer/packages/json-editor-widgets-code"],
+
+
+      "#json-pointer/*": ["./src/components/schema-designer/packages/json-pointer/*"],
+      "#json-pointer": ["./src/components/schema-designer/packages/json-pointer"],
+
 
       "#app/*": ["./src/app/*"],
       "#app": ["./src/app"],

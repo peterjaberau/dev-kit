@@ -1,0 +1,34 @@
+@use './styles/adjustments';
+@use './components/icon/icon';
+@use './components/widgetinputwrapper/widget-input-wrapper';
+@use './widgets/arraywidget/array-widget';
+@use './widgets/datewidget/date-widget';
+@use './widgets/text-widget';
+
+@font-face {
+    font-family: Icon;
+    font-style: normal;
+    font-weight: 100 700;
+    src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v88/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsLjBuVY.woff2)
+        format(woff2);
+}
+
+.sortable-chosen {
+    background: var(--mantine-primary-color-0) !important;
+}
+
+.sortable-ghost {
+    background: var(--mantine-primary-color-0) !important;
+    opacity: 0.05;
+}
+
+.rje-array__items {
+    .rje-drag__handle {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    > tbody td.rje-drag__handle + td {
+        padding-left: 0; // remove double padding with handlt
+    }
+}

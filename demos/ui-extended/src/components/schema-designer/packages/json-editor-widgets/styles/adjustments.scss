@@ -1,0 +1,69 @@
+.rje-field .mantine-InputWrapper-root label {
+    width: 100%;
+}
+
+.rje-field--boolean {
+    padding-top: 0.5em; // compensate to match other fields where label is top
+}
+
+.rje-field--select > .mantine-InputWrapper-root[data-error='true'] > .mantine-InputWrapper-error {
+    padding-top: 0.4em; // select options cause missing margin line-height) in error-message
+}
+
+.rje-field {
+    width: 100%; // fix layout with custom elements in conjunction with mantine
+}
+
+.rje-widget__input-wrapper > label + div > .rje-object__properties,
+.rje-widget__input-wrapper > label + div > .rje-array__items {
+    margin-top: 0.5em;
+}
+
+.rje-oneOf__children {
+    // one-of selection controls the whole section. We show this by using the same horizontal
+    // indent the tables use (array-items)
+    padding-left: var(--table-horizontal-spacing, var(--mantine-spacing-xs));
+}
+
+.rje-form label {
+    display: inline-flex;
+}
+
+.mantine-Chip-root.rje-chip--error label {
+    background-color: var(--mantine-color-red-2);
+}
+
+.rje-form {
+    // form layout
+    --rje-property-spacing: 1em;
+    --rje-header-top-spacing: 1em;
+    --rje-action-color: var(--mantine-primary-color-3); // color of action buttons
+    // header
+    --mantine-h1-font-size: 2em;
+    --mantine-h1-font-weight: 200;
+    --mantine-h2-font-size: 1.6em;
+    --mantine-h2-font-weight: 200;
+    --mantine-h3-font-size: var(--input-label-size, var(--mantine-font-size-sm));
+    //
+    --mantine-cursor-type: pointer;
+    --mantine-heading-text-wrap: wrap;
+
+    .rje-oneOf__children,
+    .rje-content--object.rje-content--with-header {
+        padding-top: var(--rje-property-spacing); // spacing object header to first property
+    }
+
+    .rje-object__properties {
+        gap: var(--rje-property-spacing);
+    }
+
+    .rje-array__inline-add,
+    .rje-object__missing-properties {
+        padding-top: calc(0.5 * var(--rje-property-spacing, 1em));
+    }
+
+    .rje-object__property + .rje-object__property > .rje-field--parent > .rje-widget__input-wrapper > label,
+    .rje-object__property + .rje-object__property > .rje-field--null > .rje-widget__input-wrapper > label {
+        padding-top: var(--rje-header-top-spacing);
+    }
+}

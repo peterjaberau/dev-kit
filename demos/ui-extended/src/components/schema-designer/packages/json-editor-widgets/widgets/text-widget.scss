@@ -1,0 +1,8 @@
+.rje-textarea__icon {
+    &[data-position] {
+        align-items: flex-start;
+        span {
+            line-height: 2.25;
+        }
+    }
+}

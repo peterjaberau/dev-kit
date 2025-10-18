@@ -1,0 +1,32 @@
+.rje-widget__label {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+}
+
+.rje-widget__asterisk {
+    color: var(--input-asterisk-color, var(--mantine-color-error));
+    cursor: default;
+    font-size: var(--input-label-size, var(--mantine-font-size-sm));
+    font-weight: 500;
+    line-height: 1;
+    position: relative;
+    top: -0.2em;
+    word-break: break-word;
+}
+
+.rje-widget-menu {
+    display: flex;
+    gap: 0.5em;
+}
+
+.rje-widget-menu__label {
+    display: inline;
+    width: auto !important;
+    order: 1;
+    flex-grow: 0;
+}
+
+.rje-widget-menu__wrapper {
+    width: 100%;
+}
