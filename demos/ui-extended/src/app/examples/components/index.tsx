@@ -5,6 +5,9 @@ import { cache } from "react"
 import { Center } from "@chakra-ui/react"
 
 export const registryMeta: any = {
+  "group-panels": dynamic(() => import("#components/ui-dockables/group-panels"), { ssr: false }),
+  "movable-panel-001": dynamic(() => import("#components/ui-examples/movable-panel-001"), { ssr: false }),
+
   "ai-code-and-preview": dynamic(() => import("#components/ui-chakra-pro/ai-code-and-preview"), { ssr: false }),
   "ai-prompt-with-action-02": dynamic(() => import("#components/ui-chakra-pro/ai-prompt-with-action-02"), { ssr: false }),
   "ai-prompt-with-action-centered": dynamic(() => import("#components/ui-chakra-pro/ai-prompt-with-action-centered"), { ssr: false }),
@@ -37,7 +40,6 @@ export const registryMeta: any = {
   "layout-with-sticky-navbar": dynamic(() => import("#components/ui-chakra-pro/layout-with-sticky-navbar"), { ssr: false }),
   "layout-with-sticky-sidebar": dynamic(() => import("#components/ui-chakra-pro/layout-with-sticky-sidebar"), { ssr: false }),
 
-  "movable-panel-001": dynamic(() => import("#components/ui-examples/movable-panel-001"), { ssr: false }),
   "navbar-004": dynamic(() => import("#components/ui-chakra-pro/navbar-004"), { ssr: false }),
   "navbar-multi-level": dynamic(() => import("#components/ui-chakra-pro/navbar-multi-level"), { ssr: false }),
   "navbar-with-centered-search": dynamic(() => import("#components/ui-chakra-pro/navbar-with-centered-search"), { ssr: false }),
