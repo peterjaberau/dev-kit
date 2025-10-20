@@ -32,7 +32,7 @@ export function GroupPanelsCanvas() {
 
         <PanelDragger />
         <Panel>
-          <RendererPaneLazy />
+          <RendererPaneLazy panelType={'draggable-tree-panel'} />
         </Panel>
       </PanelGroup>
     </Box>

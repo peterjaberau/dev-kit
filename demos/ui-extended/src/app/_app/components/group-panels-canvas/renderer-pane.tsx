@@ -5,6 +5,7 @@ import { LuServer as IconServer, LuChevronRight, LuStar, LuPlus } from "react-ic
 import { BiSolidTerminal } from "react-icons/bi"
 import { LuComponent } from "react-icons/lu"
 import { memo, useMemo } from "react"
+import { Tree } from '../pragmatic-drag-and-drop/tree'
 
 import { LuArrowRight, LuBriefcase, LuCode, LuHeadphones, LuPencil, LuRocket, LuScale, LuSearch, LuSettings, LuSpeaker, LuTrendingUp, LuUsers, LuWallet } from "react-icons/lu"
 import { useEffect, useState } from "react"
@@ -40,7 +41,13 @@ const NewPanelContent = memo(() => (
   </RadioCard.Root>
 ))
 
-const panelRegister = {
+const DraggableTreeContent = memo(() => (
+  <>
+    <Tree />
+  </>
+))
+
+const panelRegister: any = {
   "empty-panel": {
     title: "Empty Panel",
     icon: <LuComponent />,
@@ -56,12 +63,17 @@ const panelRegister = {
     icon: <LuComponent />,
     content: () => <>renderer panel example</>,
   },
+  "draggable-tree-panel": {
+    title: "Draggable Tree",
+    icon: <LuComponent />,
+    content: DraggableTreeContent
+  }
 }
 
 
 
 
-export function RendererPane({ panelType }: { panelType: keyof typeof panelRegister }) {
+export function RendererPane({ panelType }: { panelType: keyof typeof panelRegister } | any) {
   const panel = useMemo(() => panelRegister[panelType] ?? panelRegister["empty-panel"], [panelType])
   const ComponentContent = panel.content
 
