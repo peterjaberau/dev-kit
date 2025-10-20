@@ -2,7 +2,7 @@ import { Provider as ChakraProvider } from "./provider"
 import { Suspense } from "react"
 import "react18-json-view/src/style.css"
 import { Container, Flex, HStack, Stack, Wrap, Box } from "@chakra-ui/react"
-import { FilterAndNavigate } from './_app/components/filter-and-navigate'
+import { FilterAndNavigate } from "./_app/components/filter-and-navigate"
 
 export default function RootLayout({
   children,
@@ -15,6 +15,7 @@ export default function RootLayout({
         <Suspense>
           <ChakraProvider>
             <Container
+              data-id="app-header"
               fluid
               css={{
                 zIndex: 30,
@@ -33,12 +34,11 @@ export default function RootLayout({
                   }}
                 >
                   <FilterAndNavigate />
-
-
                 </HStack>
               </Container>
             </Container>
             <Container
+              data-id="app-main"
               fluid
               padding={0}
               paddingTop={3}
@@ -51,14 +51,17 @@ export default function RootLayout({
               }}
             >
               <Stack
+                data-id={"app-main-body"}
                 css={{
                   height: "100%",
                   width: "100%",
                 }}
               >
-                <Flex flex={1} overflowX={"auto"} paddingBottom={3}>
-                  <Flex width={"full"} flex={1} paddingX={3}>
+                <Flex data-id='app-main-body-scrollable' flex={1} overflowX={"auto"} paddingBottom={3}>
+                  <Flex width={"full"} flex={1} paddingX={0}>
                     <Box
+                      data-id={"content-id"}
+                      px={4}
                       borderRadius={"lg"}
                       css={{
                         width: "100%",
@@ -72,6 +75,7 @@ export default function RootLayout({
                   </Flex>
                 </Flex>
                 <Wrap
+                  data-id={"app-main-body-bottom"}
                   position={"sticky"}
                   bottom={0}
                   justifyContent={"space-between"}

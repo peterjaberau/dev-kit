@@ -1,6 +1,6 @@
 import { assign, setup } from "xstate"
 import { currentAppConfigDefaults } from "../shared/config"
-import { mockData, dataNavigations } from "../shared/data"
+import { mockData, dataCategoryList, dataCategoryListItems } from "../shared/data"
 
 export const currentAppMachine = setup({
   types: {} as any,
@@ -10,18 +10,22 @@ export const currentAppMachine = setup({
       const { payload } = event
       const { id } = payload
 
-      const category = context.topNavigation.find((item: any) => item.id === id)
+      const category = context.topNavigation.categoryList.find((item: any) => item.id === id)
+      const categoryItems = context.topNavigation.categoryListItems.filter((item: any) => item.parentId === category.id)
+
+
 
       context.memoryValues = {
         ...context.memoryValues,
         selectedCategory: category,
-        selectedCategoryItem: category.items[0]
+        selectedCategoryItem: categoryItems.length > 0 ? categoryItems[0] : null
       }
     }),
     selectCategoryItem: assign(({ context, event }) => {
       const { payload } = event
       const { id } = payload
-      context.memoryValues.selectedCategoryItem = context.memoryValues.selectedCategory.items.find((item: any) => item.id === id)
+      context.memoryValues.selectedCategoryItem = context.topNavigation.categoryListItems.find((item: any) => item.id === id)
+
     }),
 
 
@@ -32,10 +36,13 @@ export const currentAppMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...currentAppConfigDefaults,
-    topNavigation: dataNavigations.examples,
+    topNavigation: {
+      categoryList: dataCategoryList,
+      categoryListItems: dataCategoryListItems,
+    },
     memoryValues: {
-      selectedCategory: dataNavigations.examples[0],
-      selectedCategoryItem: dataNavigations.examples[0].items[0],
+      selectedCategory: dataCategoryList[0],
+      selectedCategoryItem: dataCategoryListItems.filter((item: any) => item.parentId === 'root')[0]
     },
     ...input,
   }),

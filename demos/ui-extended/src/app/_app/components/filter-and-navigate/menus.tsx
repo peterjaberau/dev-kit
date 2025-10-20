@@ -1,7 +1,9 @@
 import {  HStack, Icon, Menu, Portal, Text } from '@chakra-ui/react'
-import type React from 'react'
+import React, { useEffect } from "react"
 import { LuCheck, LuChevronsUpDown } from 'react-icons/lu'
 import { useCurrentApp } from "../../actors-model/selectors"
+import Link from 'next/link'
+
 
 const Trigger = (props: Menu.TriggerProps) => {
   return (
@@ -53,7 +55,7 @@ export const MenuCategories = () => {
       <Content
         label="Demo Categories"
       >
-        {topNavigation.map((item: any) => (
+        {topNavigation.categoryList.map((item: any) => (
           <Menu.Item key={item.id} value={item.id} onSelect={() => selectCategory(item.id)} rounded="l2">
             <HStack gap="2" flex="1">
 
@@ -72,9 +74,7 @@ export const MenuCategories = () => {
 }
 
 export const MenuSelectedCategoryItems = () => {
-  const { selectedCategory, selectedCategoryItem, selectCategoryItem } = useCurrentApp()
-
-
+  const { topNavigation, getCategoryItemHref, selectedCategory, selectedCategoryItem, selectCategoryItem, getCategoryItems } = useCurrentApp()
 
   return (
     <Menu.Root positioning={{ placement: 'bottom-start' }} >
@@ -88,15 +88,18 @@ export const MenuSelectedCategoryItems = () => {
       </Trigger>
       <Content
         label="Demos"
-
       >
-        {selectedCategory.items.map((item: any) => (
-          <Menu.Item key={item.id} value={item.id} onSelect={() => selectCategoryItem(item.id)}>
+        {getCategoryItems(selectedCategory.id).map((item: any) => (
+          <Link href={getCategoryItemHref(item.id)} key={item.id} passHref >
+          <Menu.Item value={item.id} onSelect={() => {
+            selectCategoryItem(item.id);
+          }}>
             <Text fontWeight="medium" textStyle="sm" flex="1">
               {item.name}
             </Text>
             {selectedCategoryItem.id === item.id && <LuCheck />}
           </Menu.Item>
+          </Link>
         ))}
       </Content>
     </Menu.Root>

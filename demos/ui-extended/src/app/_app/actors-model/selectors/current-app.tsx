@@ -16,12 +16,18 @@ export const useCurrentApp = () => {
   const selectCategory = (id: string) => sendToCurrentApp({ type: 'CATEGORY_SELECT', payload: { id } })
   const selectCategoryItem = (id: string) => sendToCurrentApp({ type: 'CATEGORY_ITEM_SELECT', payload: { id } })
 
-  console.log({
-    topNavigation,
-    selectedCategory,
-    selectedCategoryItem
-  })
+  const getCategoryItems = (id: string) => topNavigation.categoryListItems.filter((item: any) => item.parentId === id)
 
+
+  const getCategoryItemHref =  (id: string) => {
+    if (selectedCategory.id === 'root') {
+      console.log(id)
+
+      return id === 'root' ? '/' : `/${id}`
+    } else {
+      return `/examples/${id}`
+    }
+  }
 
   return {
     currentAppRef,
@@ -34,8 +40,11 @@ export const useCurrentApp = () => {
     memoryValues,
     selectedCategory,
     selectedCategoryItem,
+    getCategoryItems,
 
     selectCategory,
-    selectCategoryItem
+    selectCategoryItem,
+    getCategoryItemHref
+
   }
 }

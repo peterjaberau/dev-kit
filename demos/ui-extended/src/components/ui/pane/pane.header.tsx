@@ -1,9 +1,9 @@
 "use client"
 
-import { Card, Icon, HStack } from "@chakra-ui/react"
+import { Card, Icon, HStack, SegmentGroup } from "@chakra-ui/react"
 
 export interface PaneHeaderProps {
-  title?: string
+  title?: string | any
   icon?: React.ReactNode
   leftSection?: React.ReactNode
   infoSection?: React.ReactNode
@@ -16,6 +16,8 @@ export const PaneHeader = ({ title, icon, leftSection, infoSection, rightSection
   return (
     (title || icon || leftSection || rightSection || infoSection) && (
       <Card.Header
+        paddingX={2}
+        paddingY={1}
         display="flex"
         flexDirection="row"
         alignItems="center"
@@ -25,8 +27,18 @@ export const PaneHeader = ({ title, icon, leftSection, infoSection, rightSection
         <HStack w={'full'}>
           <HStack flex={1}>
             {leftSection}
-            {icon && <Icon>{icon}</Icon>}
-            <Card.Title>{title}</Card.Title>
+            <SegmentGroup.Root defaultValue={title} size={'sm'} >
+              <SegmentGroup.Indicator />
+              <SegmentGroup.Items  items={[{
+                value: title,
+                label: (
+                  <HStack>
+                    {icon && <Icon>{icon}</Icon>}
+                    {title}
+                  </HStack>
+                )
+              }]} />
+            </SegmentGroup.Root>
             {infoSection}
           </HStack>
           <HStack justifyContent={'flex-end'} alignItems={'center'}>{rightSection}</HStack>

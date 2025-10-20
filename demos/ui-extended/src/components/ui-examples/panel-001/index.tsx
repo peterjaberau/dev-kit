@@ -19,7 +19,7 @@ export function Index() {
   const [minResultHeight, wrapperRef] = usePanelMinSize(48, "height")
 
   return (
-    <Box height={"100%"} ref={rootRef}>
+    <Box height={"full"} ref={rootRef}>
       <PanelGroup direction={"horizontal"} style={{ opacity: minSidebarSize === 0 ? 0 : 1 }}>
         <>
           <Panel defaultSize={minSidebarSize} minSize={minSidebarSize} maxSize={35} id="tabs" order={1}>

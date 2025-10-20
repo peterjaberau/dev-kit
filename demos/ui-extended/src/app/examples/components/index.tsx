@@ -5,6 +5,7 @@ import { cache } from "react"
 import { Center } from "@chakra-ui/react"
 
 export const registryMeta: any = {
+  "jsw-array-items": dynamic(() => import("#components/schema-designer/examples/jsw-array-items"), { ssr: false }),
   "group-panels": dynamic(() => import("#components/ui-dockables/group-panels"), { ssr: false }),
   "movable-panel-001": dynamic(() => import("#components/ui-examples/movable-panel-001"), { ssr: false }),
 

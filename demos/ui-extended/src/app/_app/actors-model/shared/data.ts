@@ -275,6 +275,364 @@ export const dataNavigations: any = {
   ]
 }
 
+export const dataCategoryList: any = [
+  {
+    id: 'root',
+    name: 'Root',
+  },
+
+  {
+    id: 'custom',
+    name: 'Custom',
+  },
+  {
+    id: 'json-schema',
+    name: 'Json Schema',
+  },
+  {
+    id: 'ui-chakra-pro',
+    name: 'Chakra Pro',
+  }
+]
+export const dataCategoryListItems: any = [
+  {
+    parentId: "root",
+    id: "root",
+    name: "Root",
+  },
+
+  {
+    parentId: "json-schema",
+    id: "jsw-array-items",
+    name: "Array Items Widget",
+  },
+
+  {
+    parentId: "custom",
+    id: "group-panels",
+    name: "Group Panels",
+  },
+  {
+    parentId: "custom",
+    id: "movable-panel-001",
+    name: "Movable panel 001",
+  },
+  {
+    parentId: "custom",
+    id: "custom",
+    name: "Left & Right Nav bars",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "ai-code-and-preview",
+    name: "ai-code-and-preview",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "ai-prompt-with-action-02",
+    name: "ai-prompt-with-action-02",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "ai-prompt-with-action-centered",
+    name: "ai-prompt-with-action-centered",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "card-authentification",
+    name: "card-authentification",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "card-career",
+    name: "card-career",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "card-payment",
+    name: "card-payment",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "card-share-documents",
+    name: "card-share-documents",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "card-with-tabs",
+    name: "card-with-tabs",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "code-block-002",
+    name: "code-block-002",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "code-block-003",
+    name: "code-block-003",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "code-block-006",
+    name: "code-block-006",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "code-block-010",
+    name: "code-block-010",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "divider-with-button",
+    name: "divider-with-button",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "divider-with-button-group",
+    name: "divider-with-button-group",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "example-preview-001",
+    name: "example-preview-001",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "example-preview-002",
+    name: "example-preview-002",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "example-preview-003",
+    name: "example-preview-003",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "feed-with-comments-01",
+    name: "feed-with-comments-01",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "feed-with-upvote-01",
+    name: "feed-with-upvote-01",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "help-center-collection-03",
+    name: "help-center-collection-03",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "help-center-collection-04",
+    name: "help-center-collection-04",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "help-center-section-02",
+    name: "help-center-section-02",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "layout-001",
+    name: "layout-001",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "layout-app-multi-level-navbar",
+    name: "layout-app-multi-level-navbar",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "layout-app-sidebar-column-content",
+    name: "layout-app-sidebar-column-content",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "layout-app-two-columns",
+    name: "layout-app-two-columns",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "layout-app-width-sidebar",
+    name: "layout-app-width-sidebar",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "layout-with-sticky-navbar",
+    name: "layout-with-sticky-navbar",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "layout-with-sticky-sidebar",
+    name: "layout-with-sticky-sidebar",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "navbar-004",
+    name: "navbar-004",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "navbar-multi-level",
+    name: "navbar-multi-level",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "navbar-with-centered-search",
+    name: "navbar-with-centered-search",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "navbar-with-search",
+    name: "navbar-with-search",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "notification-tray-with-filter-empty-state",
+    name: "notification-tray-with-filter-empty-state",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "notification-tray-with-tabs-empty-state",
+    name: "notification-tray-with-tabs-empty-state",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "onboarding-simple-02",
+    name: "onboarding-simple-02",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "onboarding-workspace-03",
+    name: "onboarding-workspace-03",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "onboarding-workspace-04",
+    name: "onboarding-workspace-04",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "page-header-with-actions-02",
+    name: "page-header-with-actions-02",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "pagination-002",
+    name: "pagination-002",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "pagination-003",
+    name: "pagination-003",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "panel-001",
+    name: "panel-001",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "parameter-field-003",
+    name: "parameter-field-003",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "parameter-field-004",
+    name: "parameter-field-004",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "property-panel-00",
+    name: "property-panel-00",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "property-panel-01",
+    name: "property-panel-01",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "property-panel-02",
+    name: "property-panel-02",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "property-panel-03",
+    name: "property-panel-03",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "setting-api-key-empty-state",
+    name: "setting-api-key-empty-state",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "setting-billing-usage",
+    name: "setting-billing-usage",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "setting-copy-api-key-02",
+    name: "setting-copy-api-key-02",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "sharing-02",
+    name: "sharing-02",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "sidebar-001",
+    name: "sidebar-001",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "sidebar-003",
+    name: "sidebar-003",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "sidebar-004",
+    name: "sidebar-004",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "sidebar-005",
+    name: "sidebar-005",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "sidebar-006",
+    name: "sidebar-006",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "sidebar-with-side-navbar",
+    name: "sidebar-with-side-navbar",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "toc-line",
+    name: "toc-line",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "toc-minimal",
+    name: "toc-minimal",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "with-actions",
+    name: "with-actions",
+  },
+  {
+    parentId: "ui-chakra-pro",
+    id: "with-project",
+    name: "with-project",
+  },
+]
 
 
 
@@ -360,7 +718,5 @@ export const mockData = {
     },
   }
 }
-
-
 
 
