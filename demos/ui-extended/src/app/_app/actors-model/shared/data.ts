@@ -290,6 +290,10 @@ export const dataCategoryList: any = [
     name: 'Json Schema',
   },
   {
+    id: 'remoteoss-jschema',
+    name: 'RemoteOss - JSchema',
+  },
+  {
     id: 'ui-chakra-pro',
     name: 'Chakra Pro',
   }
@@ -299,6 +303,12 @@ export const dataCategoryListItems: any = [
     parentId: "root",
     id: "root",
     name: "Root",
+  },
+
+  {
+    parentId: "remoteoss-jschema",
+    id: "jschema-intro",
+    name: "JSchema Intro",
   },
 
   {

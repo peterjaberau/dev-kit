@@ -9,6 +9,9 @@ export const registryMeta: any = {
   "group-panels": dynamic(() => import("#components/ui-dockables/group-panels"), { ssr: false }),
   "movable-panel-001": dynamic(() => import("#components/ui-examples/movable-panel-001"), { ssr: false }),
 
+  "jschema-intro": dynamic(() => import("#components/ui-examples/remoteoss/jschema-intro"), { ssr: false }),
+
+
   "ai-code-and-preview": dynamic(() => import("#components/ui-chakra-pro/ai-code-and-preview"), { ssr: false }),
   "ai-prompt-with-action-02": dynamic(() => import("#components/ui-chakra-pro/ai-prompt-with-action-02"), { ssr: false }),
   "ai-prompt-with-action-centered": dynamic(() => import("#components/ui-chakra-pro/ai-prompt-with-action-centered"), { ssr: false }),
