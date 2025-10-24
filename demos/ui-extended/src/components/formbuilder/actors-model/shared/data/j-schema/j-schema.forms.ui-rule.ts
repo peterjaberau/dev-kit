@@ -1,0 +1,119 @@
+export default {
+  "type": "object",
+
+  "definitions": {
+
+    "ruleEffect": {
+      "type": "string",
+      "enum": [
+        "SHOW",
+        "HIDE",
+        "ENABLE",
+        "DISABLE"
+      ]
+    },
+
+    "scopeString": {
+      "type": "string",
+      "title": "Manual path",
+      "description": "#/properties/NAME"
+    },
+
+    "schemaBasedCondition": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "object",
+          "---$ref": "http://json-schema.org/draft-07/schema"
+        },
+        "scope": {
+          "---type": "string",
+          "anyOf": [
+            {"$ref": "scopeTool.scopes"},
+            {"$ref": "#/definitions/scopeString"}
+          ]
+        },
+        "failWhenUndefined": {
+          "type": "boolean"
+        }
+      },
+      "dependentRequired": {
+        "schema": ["scope"],
+        "scope": ["schema"]
+      }
+    },
+
+    "leafCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["LEAF"]
+        },
+        "expectedValue": {
+          "type": ["string","number","array"]
+        },
+        "scope": {
+          "type": "string"
+        }
+      },
+      "required": ["type","expectedValue","scope"]
+    },
+
+    "composableCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["AND","OR"]
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {"$ref": "#/definitions/schemaBasedCondition"},
+              {"$ref": "#/definitions/leafCondition"}
+            ]
+          }
+        }
+      },
+      "required": ["type", "conditions"]
+    }
+  },
+
+  "properties": {
+
+    "effect": {
+      "$ref": "#/definitions/ruleEffect"
+    },
+    "condition": {
+      "oneOf": [
+        {"$ref": "#/definitions/schemaBasedCondition"},
+        {"$ref": "#/definitions/leafCondition"},
+        {"$ref": "#/definitions/composableCondition"}
+      ]
+    }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "effect": {"minLength": 1}
+        },
+        "required": ["effect"]
+      },
+      "then": {
+        "properties": {
+          "condition": {
+            "properties": {
+              "scope": {"pattern": "^#\/\\w+"}
+            },
+            "required": ["scope"]
+          }
+        },
+        "required": ["condition"]
+      }
+    }
+  ]
+}
