@@ -26,6 +26,9 @@
       "@/*": ["./*", "./src/*"],
       "~/*": ["./public/*"],
 
+      "#jSchemaBuilder/*": ["./src/components/j-schema-builder/packages/*"],
+      "#jSchemaBuilder": ["./src/components/j-schema-builder/packages"],
+
       "#schemaValidator/*": ["./src/components/schema-validator/*"],
       "#schemaValidator": ["./src/components/schema-validator"],
 

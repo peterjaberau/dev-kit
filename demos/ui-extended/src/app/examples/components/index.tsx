@@ -9,6 +9,9 @@ export const registryMeta: any = {
   "group-panels": dynamic(() => import("#components/ui-dockables/group-panels"), { ssr: false }),
   "movable-panel-001": dynamic(() => import("#components/ui-examples/movable-panel-001"), { ssr: false }),
 
+  "jbuilder-intro": dynamic(() => import("#components/j-schema-builder/examples/jbuilder-intro"), { ssr: false }),
+
+
   "jschema-intro": dynamic(() => import("#components/ui-examples/remoteoss/jschema-intro"), { ssr: false }),
 
 

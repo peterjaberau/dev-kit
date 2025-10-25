@@ -286,6 +286,10 @@ export const dataCategoryList: any = [
     name: 'Custom',
   },
   {
+    id: 'j-schema-builder',
+    name: 'Json Schema Builder',
+  },
+  {
     id: 'json-schema',
     name: 'Json Schema',
   },
@@ -303,6 +307,12 @@ export const dataCategoryListItems: any = [
     parentId: "root",
     id: "root",
     name: "Root",
+  },
+
+  {
+    parentId: "j-schema-builder",
+    id: "jbuilder-intro",
+    name: "Intro",
   },
 
   {
