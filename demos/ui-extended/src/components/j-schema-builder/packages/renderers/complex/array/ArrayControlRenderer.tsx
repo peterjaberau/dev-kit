@@ -1,25 +1,13 @@
-'use client'
-import range from 'lodash/range';
-import React, { useMemo } from 'react';
-import {
-  ArrayControlProps,
-  composePaths,
-  createDefaultValue,
-  findUISchema,
-  Helpers,
-  ControlElement,
-  ArrayTranslations,
-} from '#jSchemaBuilder/core';
-import {
-  JsonFormsDispatch,
-  withArrayTranslationProps,
-  withJsonFormsArrayControlProps,
-  withTranslateProps,
-} from '#jSchemaBuilder/react';
-import type { VanillaRendererProps } from '../../index';
-import { withVanillaControlProps } from '../../util';
+"use client"
+import range from "lodash/range"
+import { Button, IconButton, HStack, Stack, Text, Card, Flex, SimpleGrid, GridItem } from "@chakra-ui/react"
+import React, { useMemo } from "react"
+import { ArrayControlProps, composePaths, createDefaultValue, findUISchema, Helpers, ControlElement, ArrayTranslations } from "#jSchemaBuilder/core"
+import { JsonFormsDispatch, withArrayTranslationProps, withJsonFormsArrayControlProps, withTranslateProps } from "#jSchemaBuilder/react"
+import type { VanillaRendererProps } from "../../index"
+import { withVanillaControlProps } from "../../util"
 
-const { convertToValidClassName } = Helpers;
+const { convertToValidClassName } = Helpers
 
 export const ArrayControl = ({
   classNames,
@@ -39,118 +27,100 @@ export const ArrayControl = ({
   rootSchema,
   translations,
   enabled,
-}: any | ArrayControlProps &
-  VanillaRendererProps & { translations: ArrayTranslations }) => {
-  const controlElement = uischema as ControlElement;
+}: any | (ArrayControlProps & VanillaRendererProps & { translations: ArrayTranslations })) => {
+  const controlElement = uischema as ControlElement
   const childUiSchema = useMemo(
-    () =>
-      findUISchema(
-        uischemas,
-        schema,
-        uischema.scope,
-        path,
-        undefined,
-        uischema,
-        rootSchema
-      ),
-    [uischemas, schema, uischema.scope, path, uischema, rootSchema]
-  );
-  const isValid = errors.length === 0;
-  const validationClass = getStyleAsClassName('array.control.validation');
-  const divClassNames = [validationClass]
-    .concat(
-      isValid ? '' : getStyleAsClassName('array.control.validation.error')
-    )
-    .join(' ');
-  const buttonClassAdd = getStyleAsClassName('array.control.add');
-  const labelClass = getStyleAsClassName('array.control.label');
-  const childControlsClass = getStyleAsClassName('array.child.controls');
-  const buttonClassUp = getStyleAsClassName('array.child.controls.up');
-  const buttonClassDown = getStyleAsClassName('array.child.controls.down');
-  const buttonClassDelete = getStyleAsClassName('array.child.controls.delete');
-  const controlClass = [
-    getStyleAsClassName('array.control'),
-    convertToValidClassName(controlElement.scope),
-  ].join(' ');
+    () => findUISchema(uischemas, schema, uischema.scope, path, undefined, uischema, rootSchema),
+    [uischemas, schema, uischema.scope, path, uischema, rootSchema],
+  )
+  const isValid = errors.length === 0
+  const validationClass = getStyleAsClassName("array.control.validation")
+  const divClassNames = [validationClass].concat(isValid ? "" : getStyleAsClassName("array.control.validation.error")).join(" ")
+  const buttonClassAdd = getStyleAsClassName("array.control.add")
+  const labelClass = getStyleAsClassName("array.control.label")
+  const childControlsClass = getStyleAsClassName("array.child.controls")
+  const buttonClassUp = getStyleAsClassName("array.child.controls.up")
+  const buttonClassDown = getStyleAsClassName("array.child.controls.down")
+  const buttonClassDelete = getStyleAsClassName("array.child.controls.delete")
+  const controlClass = [getStyleAsClassName("array.control"), convertToValidClassName(controlElement.scope)].join(" ")
 
   return (
-    <div className={controlClass}>
-      <header>
-        <label className={labelClass}>{label}</label>
-        <button
-          type='button'
-          className={buttonClassAdd}
-          disabled={!enabled}
-          onClick={addItem(path, createDefaultValue(schema, rootSchema))}
-        >
-          Add to {label}
-        </button>
-      </header>
-      <div className={divClassNames}>{errors}</div>
-      <div className={classNames.children}>
+    <Card.Root size={"sm"} className={controlClass}>
+      <Card.Header>
+        <HStack gap={4} w={"full"} alignItems={"center"} justifyContent={"space-between"}>
+          <HStack>
+            <Card.Title flex={1}>{label}</Card.Title>
+          </HStack>
+          <HStack justifyContent={"flex-end"} gap={4}>
+            <Button size={"xs"} variant={"outline"} disabled={!enabled} onClick={addItem(path, createDefaultValue(schema, rootSchema))}>
+              Add to {label}
+            </Button>
+          </HStack>
+        </HStack>
+      </Card.Header>
+      <Card.Body gap={4}>
+        <div className={divClassNames}>{errors}</div>
+
         {data ? (
           range(0, data.length).map((index) => {
-            const childPath = composePaths(path, `${index}`);
+            const childPath = composePaths(path, `${index}`)
             return (
-              <div key={index}>
-                <JsonFormsDispatch
-                  schema={schema}
-                  uischema={childUiSchema || uischema}
-                  path={childPath}
-                  key={childPath}
-                  renderers={renderers}
-                />
-                <div className={childControlsClass}>
-                  <button
-                    type='button'
-                    className={buttonClassUp}
-                    disabled={!enabled}
-                    aria-label={translations.upAriaLabel}
-                    onClick={() => {
-                      moveUp(path, index)();
-                    }}
-                  >
-                    {translations.up}
-                  </button>
-                  <button
-                    type='button'
-                    className={buttonClassDown}
-                    disabled={!enabled}
-                    aria-label={translations.downAriaLabel}
-                    onClick={() => {
-                      moveDown(path, index)();
-                    }}
-                  >
-                    {translations.down}
-                  </button>
-                  <button
-                    type='button'
-                    className={buttonClassDelete}
-                    disabled={!enabled}
-                    aria-label={translations.removeAriaLabel}
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          'Are you sure you wish to delete this item?'
-                        )
-                      ) {
-                        removeItems(path, [index])();
-                      }
-                    }}
-                  >
-                    {translations.removeTooltip}
-                  </button>
-                </div>
-              </div>
-            );
+              <Card.Root w={"full"} flex={1} key={index}>
+                <Card.Body>
+                  <JsonFormsDispatch schema={schema} uischema={childUiSchema || uischema} path={childPath} key={childPath} renderers={renderers} />
+                </Card.Body>
+                <Card.Footer>
+                  <Flex gap={2} className={childControlsClass}>
+                    <Button
+                      size="xs"
+                      variant={"outline"}
+                      className={buttonClassUp}
+                      disabled={!enabled}
+                      aria-label={translations.upAriaLabel}
+                      onClick={() => {
+                        moveUp(path, index)()
+                      }}
+                    >
+                      {translations.up}
+                    </Button>
+                    <Button
+                      size="xs"
+                      variant={"outline"}
+                      className={buttonClassDown}
+                      disabled={!enabled}
+                      aria-label={translations.downAriaLabel}
+                      onClick={() => {
+                        moveDown(path, index)()
+                      }}
+                    >
+                      {translations.down}
+                    </Button>
+                    <Button
+                      size="xs"
+                      variant={"outline"}
+                      className={buttonClassDelete}
+                      disabled={!enabled}
+                      aria-label={translations.removeAriaLabel}
+                      onClick={() => {
+                        if (window.confirm("Are you sure you wish to delete this item?")) {
+                          removeItems(path, [index])()
+                        }
+                      }}
+                    >
+                      {translations.removeTooltip}
+                    </Button>
+                  </Flex>
+                </Card.Footer>
+              </Card.Root>
+            )
           })
         ) : (
           <p>{translations.noDataMessage}</p>
         )}
-      </div>
-    </div>
-  );
-};
+      </Card.Body>
+    </Card.Root>
+  )
+}
 
 export const ArrayControlRenderer = ({
   schema,
@@ -171,26 +141,20 @@ export const ArrayControlRenderer = ({
   errors,
   translations,
   arraySchema,
-}: any | ArrayControlProps &
-  VanillaRendererProps & { translations: ArrayTranslations }) => {
-  const controlElement = uischema as ControlElement;
-  const labelDescription = Helpers.createLabelDescriptionFrom(
-    controlElement,
-    schema
-  );
-  const label = labelDescription.show ? labelDescription.text : '';
-  const controlClassName = `control ${Helpers.convertToValidClassName(
-    controlElement.scope
-  )}`;
-  const fieldSetClassName = getStyleAsClassName('array.layout');
-  const buttonClassName = getStyleAsClassName('array.button');
-  const childrenClassName = getStyleAsClassName('array.children');
+}: any | (ArrayControlProps & VanillaRendererProps & { translations: ArrayTranslations })) => {
+  const controlElement = uischema as ControlElement
+  const labelDescription = Helpers.createLabelDescriptionFrom(controlElement, schema)
+  const label = labelDescription.show ? labelDescription.text : ""
+  const controlClassName = `control ${Helpers.convertToValidClassName(controlElement.scope)}`
+  const fieldSetClassName = getStyleAsClassName("array.layout")
+  const buttonClassName = getStyleAsClassName("array.button")
+  const childrenClassName = getStyleAsClassName("array.children")
   const classNames: { [className: string]: string } = {
     wrapper: controlClassName,
     fieldSet: fieldSetClassName,
     button: buttonClassName,
     children: childrenClassName,
-  };
+  }
 
   return (
     <ArrayControl
@@ -215,11 +179,7 @@ export const ArrayControlRenderer = ({
       getStyle={getStyle}
       translations={translations}
     />
-  );
-};
-
-export default withVanillaControlProps(
-  withJsonFormsArrayControlProps(
-    withTranslateProps(withArrayTranslationProps(ArrayControlRenderer))
   )
-);
+}
+
+export default withVanillaControlProps(withJsonFormsArrayControlProps(withTranslateProps(withArrayTranslationProps(ArrayControlRenderer))))

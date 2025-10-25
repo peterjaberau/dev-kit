@@ -1,3 +1,4 @@
+import '@ant-design/v5-patch-for-react-19';
 import { Provider as ChakraProvider } from "./provider"
 import { Suspense } from "react"
 import "react18-json-view/src/style.css"

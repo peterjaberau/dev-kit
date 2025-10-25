@@ -7,11 +7,13 @@ import { QueryPane  } from "./query-pane"
 import { ExamplesListPane } from "./examples-list-pane"
 import { JsonFormsPane } from "./json-forms-pane"
 import { JsonTreeViewerPane } from "./json-tree-viewer"
+import { JsonFormsAntdPane } from './json-forms-antd-pane'
 
 const ExamplesListPaneLazy = memo(ExamplesListPane)
 const LazyJsonFormsPane = memo(JsonFormsPane)
 const QueryPaneLazy = memo(QueryPane)
 const LazyJsonTreeViewer = memo(JsonTreeViewerPane)
+const LazyJsonFormsAntdPane = memo(JsonFormsAntdPane)
 
 
 export function App() {
@@ -35,7 +37,8 @@ export function App() {
 
         <PanelDragger />
         <Panel>
-          <LazyJsonTreeViewer />
+          <JsonFormsAntdPane />
+          {/*<LazyJsonTreeViewer />*/}
         </Panel>
       </PanelGroup>
     </Box>

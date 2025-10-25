@@ -162,7 +162,7 @@ export const isVisible = (
   data: any,
   path: string = undefined as any,
   ajv: Ajv,
-  config: unknown
+  config?: unknown | any
 ): boolean => {
   if (uischema.rule) {
     return evalVisibility(uischema, data, path, ajv, config);
