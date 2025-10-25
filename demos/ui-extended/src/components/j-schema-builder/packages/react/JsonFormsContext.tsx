@@ -1,4 +1,4 @@
-'use client'
+
 import {
   Actions,
   ArrayControlProps,
@@ -51,12 +51,6 @@ import {
   OwnPropsOfLabel,
   LabelProps,
   mapStateToLabelProps,
-  CoreActions,
-  Middleware,
-  defaultMiddleware,
-  arrayDefaultTranslations,
-  getArrayTranslations,
-  ArrayTranslations,
 } from '#jSchemaBuilder/core';
 import debounce from 'lodash/debounce';
 import React, {
@@ -68,10 +62,9 @@ import React, {
   useMemo,
   useReducer,
   useRef,
-  useState,
 } from 'react';
 
-const initialCoreState: JsonFormsCore = {
+const initialCoreState: JsonFormsCore | any = {
   data: {},
   schema: {},
   uischema: undefined,
@@ -79,10 +72,10 @@ const initialCoreState: JsonFormsCore = {
   additionalErrors: [],
   validator: undefined,
   ajv: undefined,
-} as any;
+};
 
 export interface JsonFormsStateContext extends JsonFormsSubStates {
-  dispatch?: Dispatch<any> | any;
+  dispatch?: Dispatch<any>;
 }
 
 export const JsonFormsContext = React.createContext<JsonFormsStateContext>({
@@ -109,44 +102,32 @@ const useEffectAfterFirstRender = (
 };
 
 export const JsonFormsStateProvider = ({
-  children,
-  initState,
-  onChange,
-  middleware,
-}: any) => {
+                                         children,
+                                         initState,
+                                         onChange,
+                                       }: any) => {
   const { data, schema, uischema, ajv, validationMode, additionalErrors } =
     initState.core;
 
-  const middlewareRef = useRef<Middleware>(middleware ?? defaultMiddleware);
-  middlewareRef.current = middleware ?? defaultMiddleware;
-
-  const [core, setCore] = useState<JsonFormsCore>(() =>
-    middlewareRef.current(
+  const [core, coreDispatch] = useReducer(coreReducer, undefined, () =>
+    coreReducer(
       initState.core,
       Actions.init(data, schema, uischema, {
         ajv,
         validationMode,
         additionalErrors,
-      }),
-      coreReducer
+      })
     )
   );
-
-  useEffect(
-    () =>
-      setCore((currentCore) =>
-        middlewareRef.current(
-          currentCore,
-          Actions.updateCore(data, schema, uischema, {
-            ajv,
-            validationMode,
-            additionalErrors,
-          }),
-          coreReducer
-        )
-      ),
-    [data, schema, uischema, ajv, validationMode, additionalErrors]
-  );
+  useEffect(() => {
+    coreDispatch(
+      Actions.updateCore(data, schema, uischema, {
+        ajv,
+        validationMode,
+        additionalErrors,
+      })
+    );
+  }, [data, schema, uischema, ajv, validationMode, additionalErrors]);
 
   const [config, configDispatch] = useReducer(configReducer, undefined, () =>
     configReducer(undefined, Actions.setConfig(initState.config))
@@ -179,12 +160,6 @@ export const JsonFormsStateProvider = ({
     initState.i18n?.translateError,
   ]);
 
-  const dispatch = useCallback((action: CoreActions) => {
-    setCore((currentCore) =>
-      middlewareRef.current(currentCore, action, coreReducer)
-    );
-  }, []);
-
   const contextValue = useMemo(
     () => ({
       core,
@@ -194,7 +169,8 @@ export const JsonFormsStateProvider = ({
       uischemas: initState.uischemas,
       readonly: initState.readonly,
       i18n: i18n,
-      dispatch: dispatch,
+      // only core dispatch available
+      dispatch: coreDispatch,
     }),
     [
       core,
@@ -232,7 +208,7 @@ export const JsonFormsStateProvider = ({
    * even on low-end mobile device settings in the Chrome simulator.
    */
   const debouncedEmit = useCallback(
-    debounce((...args: any[]) => onChangeRef.current?.(...args), 10),
+    debounce((...args) => onChangeRef.current?.(...args), 10),
     []
   );
   useEffect(() => {
@@ -355,7 +331,7 @@ export const ctxDispatchToControlProps = (
 // context mappers
 
 export const ctxToAnyOfProps = (
-  ctx: JsonFormsStateContext,
+  ctx: JsonFormsStateContext | any,
   ownProps: OwnPropsOfControl
 ): CombinatorRendererProps => {
   const props = mapStateToAnyOfProps({ jsonforms: { ...ctx } }, ownProps);
@@ -367,7 +343,7 @@ export const ctxToAnyOfProps = (
 };
 
 export const ctxToOneOfProps = (
-  ctx: JsonFormsStateContext,
+  ctx: JsonFormsStateContext | any,
   ownProps: OwnPropsOfControl
 ): CombinatorRendererProps => {
   const props = mapStateToOneOfProps({ jsonforms: { ...ctx } }, ownProps);
@@ -481,9 +457,9 @@ export const withContextToJsonFormsRendererProps = (
   Component: ComponentType<JsonFormsProps>
 ): ComponentType<OwnPropsOfJsonFormsRenderer> =>
   function WithContextToJsonFormsRendererProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & JsonFormsProps | any) {
+                                                 ctx,
+                                                 props,
+                                               }: JsonFormsStateContext & JsonFormsProps | any) {
     const contextProps = ctxToJsonFormsRendererProps(ctx, props);
     return <Component {...props} {...contextProps} />;
   };
@@ -492,9 +468,9 @@ const withContextToControlProps = (
   Component: ComponentType<ControlProps>
 ): ComponentType<OwnPropsOfControl> =>
   function WithContextToControlProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & ControlProps | any) {
+                                       ctx,
+                                       props,
+                                     }: any) {
     const controlProps = ctxToControlProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
     return <Component {...props} {...controlProps} {...dispatchProps} />;
@@ -504,9 +480,9 @@ const withContextToLayoutProps: any = (
   Component: ComponentType<LayoutProps>
 ): ComponentType<OwnPropsOfJsonFormsRenderer> =>
   function WithContextToLayoutProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & LayoutProps | any) {
+                                      ctx,
+                                      props,
+                                    }: any | JsonFormsStateContext & LayoutProps) {
     const layoutProps = ctxToLayoutProps(ctx, props);
     return <Component {...props} {...layoutProps} />;
   };
@@ -515,9 +491,9 @@ const withContextToOneOfProps = (
   Component: ComponentType<CombinatorRendererProps>
 ): ComponentType<OwnPropsOfControl> =>
   function WithContextToOneOfProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & CombinatorRendererProps | any) {
+                                     ctx,
+                                     props,
+                                   }: any | JsonFormsStateContext & CombinatorRendererProps) {
     const oneOfProps = ctxToOneOfProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
     return <Component {...props} {...oneOfProps} {...dispatchProps} />;
@@ -527,9 +503,9 @@ const withContextToAnyOfProps = (
   Component: ComponentType<CombinatorRendererProps>
 ): ComponentType<OwnPropsOfControl> =>
   function WithContextToAnyOfProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & CombinatorRendererProps | any) {
+                                     ctx,
+                                     props,
+                                   }: any | JsonFormsStateContext & CombinatorRendererProps) {
     const oneOfProps = ctxToAnyOfProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
     return <Component {...props} {...oneOfProps} {...dispatchProps} />;
@@ -539,9 +515,9 @@ const withContextToAllOfProps = (
   Component: ComponentType<CombinatorRendererProps>
 ): ComponentType<OwnPropsOfControl> =>
   function WithContextToAllOfProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & CombinatorRendererProps | any) {
+                                     ctx,
+                                     props,
+                                   }: any | JsonFormsStateContext & CombinatorRendererProps) {
     const allOfProps = ctxToAllOfProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
     return <Component {...props} {...allOfProps} {...dispatchProps} />;
@@ -551,9 +527,9 @@ const withContextToDetailProps = (
   Component: ComponentType<StatePropsOfControlWithDetail>
 ): ComponentType<OwnPropsOfControl> =>
   function WithContextToDetailProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & StatePropsOfControlWithDetail | any) {
+                                      ctx,
+                                      props,
+                                    }: any | JsonFormsStateContext & StatePropsOfControlWithDetail) {
     const detailProps = ctxToControlWithDetailProps(ctx, props);
     return <Component {...props} {...detailProps} />;
   };
@@ -562,9 +538,9 @@ const withContextToArrayLayoutProps = (
   Component: ComponentType<ArrayLayoutProps>
 ): ComponentType<OwnPropsOfControl> =>
   function WithContextToArrayLayoutProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & ArrayLayoutProps | any) {
+                                           ctx,
+                                           props,
+                                         }: any | JsonFormsStateContext & ArrayLayoutProps) {
     const arrayLayoutProps = ctxToArrayLayoutProps(ctx, props);
     const dispatchProps = ctxDispatchToArrayControlProps(ctx.dispatch);
     return <Component {...props} {...arrayLayoutProps} {...dispatchProps} />;
@@ -574,9 +550,9 @@ const withContextToArrayControlProps = (
   Component: ComponentType<ArrayControlProps>
 ): ComponentType<OwnPropsOfControl> =>
   function WithContextToArrayControlProps({
-    ctx,
-    props,
-  }: JsonFormsStateContext & ArrayControlProps | any) {
+                                            ctx,
+                                            props,
+                                          }: any | JsonFormsStateContext & ArrayControlProps) {
     const stateProps = ctxToArrayControlProps(ctx, props);
     const dispatchProps = ctxDispatchToArrayControlProps(ctx.dispatch);
 
@@ -587,9 +563,9 @@ const withContextToMasterListItemProps = (
   Component: ComponentType<StatePropsOfMasterItem>
 ): ComponentType<OwnPropsOfMasterListItem> =>
   function WithContextToMasterListItemProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & StatePropsOfMasterItem) {
+                                              ctx,
+                                              props,
+                                            }: any | JsonFormsStateContext & StatePropsOfMasterItem) {
     const stateProps = ctxToMasterListItemProps(ctx, props);
     return <Component {...props} {...stateProps} />;
   };
@@ -598,9 +574,9 @@ const withContextToCellProps = (
   Component: ComponentType<CellProps>
 ): ComponentType<OwnPropsOfCell> =>
   function WithContextToCellProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & CellProps) {
+                                    ctx,
+                                    props,
+                                  }: any | JsonFormsStateContext & CellProps) {
     const cellProps = ctxToCellProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
 
@@ -611,9 +587,9 @@ const withContextToDispatchCellProps = (
   Component: ComponentType<DispatchCellProps>
 ): ComponentType<OwnPropsOfCell> =>
   function WithContextToDispatchCellProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & CellProps) {
+                                            ctx,
+                                            props,
+                                          }: any | JsonFormsStateContext & CellProps) {
     const cellProps = ctxToDispatchCellProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
 
@@ -624,9 +600,9 @@ const withContextToEnumCellProps = (
   Component: ComponentType<EnumCellProps>
 ): ComponentType<OwnPropsOfEnumCell> =>
   function WithContextToEnumCellProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & EnumCellProps) {
+                                        ctx,
+                                        props,
+                                      }: any | JsonFormsStateContext & EnumCellProps) {
     const cellProps = ctxToEnumCellProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
     return <Component {...props} {...dispatchProps} {...cellProps} />;
@@ -636,9 +612,9 @@ const withContextToEnumProps = (
   Component: ComponentType<ControlProps & OwnPropsOfEnum>
 ): ComponentType<OwnPropsOfControl & OwnPropsOfEnum> =>
   function WithContextToEnumProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & ControlProps & OwnPropsOfEnum) {
+                                    ctx,
+                                    props,
+                                  }: any | JsonFormsStateContext & ControlProps & OwnPropsOfEnum) {
     const stateProps = ctxToEnumControlProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
 
@@ -649,9 +625,9 @@ const withContextToOneOfEnumCellProps = (
   Component: ComponentType<EnumCellProps>
 ): ComponentType<OwnPropsOfEnumCell> =>
   function WithContextToOneOfEnumCellProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & EnumCellProps) {
+                                             ctx,
+                                             props,
+                                           }: any | JsonFormsStateContext & EnumCellProps) {
     const cellProps = ctxToOneOfEnumCellProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
     return <Component {...props} {...dispatchProps} {...cellProps} />;
@@ -661,9 +637,9 @@ const withContextToOneOfEnumProps = (
   Component: ComponentType<ControlProps & OwnPropsOfEnum>
 ): ComponentType<OwnPropsOfControl & OwnPropsOfEnum> =>
   function WithContextToOneOfEnumProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & ControlProps & OwnPropsOfEnum) {
+                                         ctx,
+                                         props,
+                                       }: any | JsonFormsStateContext & ControlProps & OwnPropsOfEnum) {
     const stateProps = ctxToOneOfEnumControlProps(ctx, props);
     const dispatchProps = ctxDispatchToControlProps(ctx.dispatch);
     return <Component {...props} {...dispatchProps} {...stateProps} />;
@@ -673,9 +649,9 @@ const withContextToMultiEnumProps: any = (
   Component: ComponentType<ControlProps & OwnPropsOfEnum>
 ): ComponentType<OwnPropsOfControl & OwnPropsOfEnum> =>
   function WithContextToMultiEnumProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & ControlProps & OwnPropsOfEnum) {
+                                         ctx,
+                                         props,
+                                       }: any | JsonFormsStateContext & ControlProps & OwnPropsOfEnum) {
     const stateProps = ctxToMultiEnumControlProps(ctx, props);
     const dispatchProps = ctxDispatchToMultiEnumProps(ctx.dispatch);
     return <Component {...props} {...dispatchProps} {...stateProps} />;
@@ -685,9 +661,9 @@ const withContextToLabelProps = (
   Component: ComponentType<LabelProps>
 ): ComponentType<OwnPropsOfLabel> =>
   function WithContextToLabelProps({
-    ctx,
-    props,
-  }: any | JsonFormsStateContext & LabelProps & OwnPropsOfLabel) {
+                                     ctx,
+                                     props,
+                                   }: any | JsonFormsStateContext & LabelProps & OwnPropsOfLabel) {
     const stateProps = ctxToLabelProps(ctx, props);
     return <Component {...props} {...stateProps} />;
   };
@@ -716,8 +692,8 @@ export const withJsonFormsControlProps = (
 
 export const withJsonFormsLayoutProps = <T extends LayoutProps>(
   Component: ComponentType<T>,
-  memoize = true
-): any | ComponentType<T & OwnPropsOfLayout> =>
+  memoize = true as any
+): ComponentType<T & OwnPropsOfLayout> | any =>
   withJsonFormsContext(
     withContextToLayoutProps(memoize ? React.memo(Component) : Component)
   );
@@ -780,10 +756,10 @@ export const withJsonFormsMasterListItemProps = (
     )
   );
 
-export const withJsonFormsCellProps: any = (
+export const withJsonFormsCellProps = (
   Component: ComponentType<CellProps>,
   memoize = true
-): ComponentType<OwnPropsOfCell> | any =>
+): ComponentType<OwnPropsOfCell> =>
   withJsonFormsContext(
     withContextToCellProps(memoize ? React.memo(Component) : Component)
   );
@@ -866,21 +842,4 @@ export const withTranslateProps = <P extends {}>(
     const t = ctx.i18n?.translate ?? defaultJsonFormsI18nState.translate;
 
     return <Component {...props} locale={locale} t={t} />;
-  };
-
-export const withArrayTranslationProps = <P extends ArrayLayoutProps>(
-  Component: ComponentType<P & { translations: ArrayTranslations }>
-) =>
-  function withArrayTranslatationProps(props: P & TranslateProps | any) {
-    const translations = useMemo(
-      () =>
-        getArrayTranslations(
-          props.t,
-          arrayDefaultTranslations,
-          props.i18nKeyPrefix,
-          props.label
-        ),
-      [props.t, props.i18nKeyPrefix, props.label]
-    );
-    return <Component {...props} translations={translations} />;
   };

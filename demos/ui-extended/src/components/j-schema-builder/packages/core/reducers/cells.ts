@@ -1,16 +1,23 @@
 
+
+import type { RankedTester } from '../testers';
 import {
   ADD_CELL,
   AddCellRendererAction,
   REMOVE_CELL,
   RemoveCellRendererAction,
 } from '../actions';
-import { JsonFormsCellRendererRegistryEntry, Reducer } from '../store';
+import type { Reducer } from '../util';
 
 type ValidCellReducerActions = AddCellRendererAction | RemoveCellRendererAction;
 
 export type JsonFormsCellRendererRegistryState =
   JsonFormsCellRendererRegistryEntry[];
+
+export interface JsonFormsCellRendererRegistryEntry {
+  tester: RankedTester;
+  cell: any;
+}
 
 export const cellReducer: Reducer<
   JsonFormsCellRendererRegistryState,

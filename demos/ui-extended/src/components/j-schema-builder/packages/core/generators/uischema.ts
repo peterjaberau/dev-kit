@@ -1,26 +1,43 @@
 
+
 import isEmpty from 'lodash/isEmpty';
 import startCase from 'lodash/startCase';
 import keys from 'lodash/keys';
 import {
   ControlElement,
+  isGroup,
+  isLayout,
   JsonSchema,
   LabelElement,
   Layout,
   UISchemaElement,
 } from '../models';
-import { deriveTypes, encode, isGroup, isLayout, resolveSchema } from '../util';
+import { deriveTypes, encode, resolveSchema } from '../util';
 
+/**
+ * Creates a new ILayout.
+ * @param layoutType The type of the laoyut
+ * @returns the new ILayout
+ */
 const createLayout = (layoutType: string): Layout => ({
   type: layoutType,
   elements: [],
 });
 
+/**
+ * Creates a IControlObject with the given label referencing the given ref
+ */
 export const createControlElement = (ref: string): ControlElement => ({
   type: 'Control',
   scope: ref,
 });
 
+/**
+ * Wraps the given {@code uiSchema} in a Layout if there is none already.
+ * @param uischema The ui schema to wrap in a layout.
+ * @param layoutType The type of the layout to create.
+ * @returns the wrapped uiSchema.
+ */
 const wrapInLayoutIfNecessary = (
   uischema: UISchemaElement,
   layoutType: string
@@ -35,6 +52,13 @@ const wrapInLayoutIfNecessary = (
   return uischema as Layout;
 };
 
+/**
+ * Adds the given {@code labelName} to the {@code layout} if it exists
+ * @param layout
+ *      The layout which is to receive the label
+ * @param labelName
+ *      The name of the schema
+ */
 const addLabel = (layout: Layout, labelName: string) => {
   if (!isEmpty(labelName)) {
     const fixedLabel = startCase(labelName);
@@ -51,6 +75,11 @@ const addLabel = (layout: Layout, labelName: string) => {
   }
 };
 
+/**
+ * Returns whether the given {@code jsonSchema} is a combinator ({@code oneOf}, {@code anyOf}, {@code allOf}) at the root level
+ * @param jsonSchema
+ *      the schema to check
+ */
 const isCombinator = (jsonSchema: JsonSchema): boolean => {
   return (
     !isEmpty(jsonSchema) &&
@@ -66,8 +95,8 @@ const generateUISchema = (
   currentRef: string,
   schemaName: string,
   layoutType: string,
-  rootSchema?: JsonSchema
-): UISchemaElement => {
+  rootSchema?: JsonSchema | any
+): UISchemaElement | any => {
   if (!isEmpty(jsonSchema) && jsonSchema.$ref !== undefined) {
     return generateUISchema(
       resolveSchema(rootSchema, jsonSchema.$ref, rootSchema),
@@ -88,7 +117,7 @@ const generateUISchema = (
 
   const types = deriveTypes(jsonSchema);
   if (types.length === 0) {
-    return null as any;
+    return null;
   }
 
   if (types.length > 1) {
@@ -139,8 +168,6 @@ const generateUISchema = (
     /* falls through */
     case 'integer':
     /* falls through */
-    case 'null':
-    /* falls through */
     case 'boolean': {
       const controlObject: ControlElement = createControlElement(currentRef);
       schemaElements.push(controlObject);
@@ -152,6 +179,12 @@ const generateUISchema = (
   }
 };
 
+/**
+ * Generate a default UI schema.
+ * @param {JsonSchema} jsonSchema the JSON schema to generated a UI schema for
+ * @param {string} layoutType the desired layout type for the root layout
+ *        of the generated UI schema
+ */
 export const generateDefaultUISchema = (
   jsonSchema: JsonSchema,
   layoutType = 'VerticalLayout',

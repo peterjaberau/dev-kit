@@ -1,0 +1,234 @@
+
+import React from 'react';
+import fpfilter from 'lodash/fp/filter';
+import fpmap from 'lodash/fp/map';
+import fpflow from 'lodash/fp/flow';
+import filter from 'lodash/filter';
+import join from 'lodash/join';
+import fpkeys from 'lodash/fp/keys';
+import fpstartCase from 'lodash/fp/startCase';
+import {
+  ArrayControlProps,
+  ControlElement,
+  createDefaultValue,
+  Paths,
+  RankedTester,
+  Resolve,
+  Test,
+  getControlPath,
+  encode,
+} from '#jSchemaBuilder/core';
+import {
+  DispatchCell,
+  withJsonFormsArrayControlProps,
+} from '#jSchemaBuilder/react';
+import { withVanillaControlProps } from '../util';
+import type { VanillaRendererProps } from '../index';
+import { Box, Button, Flex, Heading, Table } from '@chakra-ui/react';
+import Hidden from '../util/Hidden';
+import PageHeader from '../util/PageHeader';
+import ValidationIcon from './ValidationIcon';
+
+const { or, isObjectArrayControl, isPrimitiveArrayControl, rankWith } = Test;
+
+/**
+ * Alternative tester for an array that also checks whether the 'table'
+ * option is set.
+ * @type {RankedTester}
+ */
+export const tableArrayControlTester: RankedTester = rankWith(
+  3,
+  or(isObjectArrayControl, isPrimitiveArrayControl)
+);
+
+const renderTitle = (label: string, errors: string) => (
+  <Flex direction='row' alignItems='center'>
+    <Box key='col_1'>
+      <Heading as='h4' size='md'>
+        {label}
+      </Heading>
+    </Box>
+    <Box key='col_2' style={{ padding: '0 10px' }}>
+      <ValidationIcon id='tooltip-validation' errorMessages={errors} />
+    </Box>
+  </Flex>
+);
+
+class TableArrayControl extends React.Component<
+  ArrayControlProps & VanillaRendererProps,
+  any
+> {
+  confirmDelete = (path: string, index: number) => {
+    const p = path.substring(0, path.lastIndexOf('.'));
+    //@ts-ignore
+    this.props.removeItems(p, [index])();
+  };
+
+  render() {
+    const {
+      addItem,
+      // uischema,
+      schema,
+      rootSchema,
+      path,
+      data,
+      visible,
+      errors,
+      label,
+      getStyleAsClassName,
+      childErrors,
+      translations,
+    }: any = this.props;
+
+    const tableClass = getStyleAsClassName('array.table.table');
+    const createControlElement = (key?: string): ControlElement => ({
+      type: 'Control',
+      label: false,
+      scope: schema.type === 'object' ? `#/properties/${key}` : '#',
+    });
+
+    return (
+      <Hidden hidden={!visible}>
+        <Box w='100%'>
+          <PageHeader
+            title={renderTitle(label, errors)}
+            extra={
+              <Button onClick={addItem(path, createDefaultValue(schema))}>
+                {translations.addTooltip}
+              </Button>
+            }
+          />
+          <Box w='100%'>
+            <Table.Root className={tableClass}>
+              <Table.Header>
+                <Table.Row>
+                  {schema.properties ? (
+                    fpflow(
+                      fpkeys,
+                      fpfilter(
+                        (prop) => schema.properties[prop].type !== 'array'
+                      ),
+                      fpmap((prop) => (
+                        <Table.ColumnHeader key={prop}>
+                          {schema.properties[prop].title ?? fpstartCase(prop)}
+                        </Table.ColumnHeader>
+                      ))
+                    )(schema.properties)
+                  ) : (
+                    <Table.ColumnHeader>Items</Table.ColumnHeader>
+                  )}
+                  <Table.ColumnHeader>Valid</Table.ColumnHeader>
+                  <Table.ColumnHeader>&nbsp;</Table.ColumnHeader>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {!data || !Array.isArray(data) || data.length === 0 ? (
+                  <Table.Row>
+                    <Table.Cell>{translations.noDataMessage}</Table.Cell>
+                  </Table.Row>
+                ) : (
+                  data.map((_child, index) => {
+                    const childPath = Paths.compose(path, `${index}`);
+                    // TODO
+                    const errorsPerEntry: any[] = filter(
+                      childErrors,
+                      (error) => {
+                        const errorPath = getControlPath(error);
+                        return errorPath.startsWith(childPath);
+                      }
+                    );
+
+                    const validationClassName =
+                      getStyleAsClassName('array.validation');
+                    const errorValidationClassName = getStyleAsClassName(
+                      'array.validation.error'
+                    );
+                    const errorClassNames = errorsPerEntry
+                      ? [validationClassName]
+                          .concat(errorValidationClassName)
+                          .join(' ')
+                      : validationClassName;
+
+                    return (
+                      <Table.Row key={childPath}>
+                        {schema.properties ? (
+                          fpflow(
+                            fpkeys,
+                            fpfilter(
+                              (prop) => schema.properties[prop].type !== 'array'
+                            ),
+                            fpmap((prop) => {
+                              const childPropPath = Paths.compose(
+                                childPath,
+                                prop.toString()
+                              );
+                              return (
+                                <Table.Cell key={childPropPath}>
+                                  <DispatchCell
+                                    schema={Resolve.schema(
+                                      schema,
+                                      `#/properties/${encode(prop)}`,
+                                      rootSchema
+                                    )}
+                                    uischema={createControlElement(
+                                      encode(prop)
+                                    )}
+                                    path={childPath + '.' + prop}
+                                  />
+                                </Table.Cell>
+                              );
+                            })
+                          )(schema.properties)
+                        ) : (
+                          <Table.Cell
+                            key={Paths.compose(childPath, index.toString())}
+                          >
+                            <DispatchCell
+                              schema={schema}
+                              uischema={createControlElement()}
+                              path={childPath}
+                            />
+                          </Table.Cell>
+                        )}
+                        <Table.Cell>
+                          {errorsPerEntry ? (
+                            <span className={errorClassNames}>
+                              {join(
+                                errorsPerEntry.map((e) => e.message),
+                                ' and '
+                              )}
+                            </span>
+                          ) : (
+                            <span className={errorClassNames}>OK</span>
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Button
+                            aria-label={translations.removeAriaLabel}
+                            onClick={() => {
+                              if (
+                                window.confirm(translations.deleteDialogMessage)
+                              ) {
+                                this.confirmDelete(childPath, index);
+                              }
+                            }}
+                          >
+                            {translations.removeTooltip}
+                          </Button>
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  })
+                )}
+              </Table.Body>
+            </Table.Root>
+          </Box>
+        </Box>
+      </Hidden>
+    );
+  }
+}
+
+export default withVanillaControlProps(
+  withJsonFormsArrayControlProps(TableArrayControl)
+);

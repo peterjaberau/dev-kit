@@ -1,7 +1,8 @@
 
+
 import startCase from 'lodash/startCase';
 
-import { ControlElement, JsonSchema, LabelDescription } from '../models';
+import type { ControlElement, JsonSchema, LabelDescription } from '../models';
 import { decode } from './path';
 
 const deriveLabel = (

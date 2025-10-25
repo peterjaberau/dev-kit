@@ -1,22 +1,25 @@
-import isEmpty from "lodash/isEmpty"
-import range from "lodash/range"
+
+
+import isEmpty from 'lodash/isEmpty';
+import range from 'lodash/range';
+import { isScoped, Scopable } from '../models';
 
 export const compose = (path1: string, path2: string) => {
-  let p1 = path1
-  if (!isEmpty(path1) && !isEmpty(path2) && !path2.startsWith("[")) {
-    p1 = path1 + "."
+  let p1 = path1;
+  if (!isEmpty(path1) && !isEmpty(path2) && !path2.startsWith('[')) {
+    p1 = path1 + '.';
   }
 
   if (isEmpty(p1)) {
-    return path2
+    return path2;
   } else if (isEmpty(path2)) {
-    return p1
+    return p1;
   } else {
-    return `${p1}${path2}`
+    return `${p1}${path2}`;
   }
-}
+};
 
-export { compose as composePaths }
+export { compose as composePaths };
 
 /**
  * Convert a schema path (i.e. JSON pointer) to an array by splitting
@@ -29,16 +32,20 @@ export { compose as composePaths }
  * @param {string} schemaPath the schema path to be converted
  * @returns {string[]} an array containing only non-schema-specific segments
  */
-export const toDataPathSegments = (schemaPath: string): string[] => {
-  const s = schemaPath.replace(/(anyOf|allOf|oneOf)\/[\d]+\//g, "").replace(/(then|else)\//g, "")
-  const segments = s.split("/")
+export const toDataPathSegments: any = (schemaPath: string): string[] => {
+  const s = schemaPath
+    .replace(/(anyOf|allOf|oneOf)\/[\d]\//g, '')
+    .replace(/(then|else)\//g, '');
+  const segments = s.split('/');
 
-  const decodedSegments = segments.map(decode)
+  const decodedSegments = segments.map(decode);
 
-  const startFromRoot = decodedSegments[0] === "#" || decodedSegments[0] === ""
-  const startIndex = startFromRoot ? 2 : 1
-  return range(startIndex, decodedSegments.length, 2).map((idx) => decodedSegments[idx]) as any
-}
+  const startFromRoot = decodedSegments[0] === '#' || decodedSegments[0] === '';
+  const startIndex = startFromRoot ? 2 : 1;
+  return range(startIndex, decodedSegments.length, 2).map(
+    (idx) => decodedSegments[idx]
+  ) as any;
+};
 
 /**
  * Convert a schema path (i.e. JSON pointer) to a data path.
@@ -52,28 +59,32 @@ export const toDataPathSegments = (schemaPath: string): string[] => {
  * @returns {string} the data path
  */
 export const toDataPath = (schemaPath: string): string => {
-  return toDataPathSegments(schemaPath).join(".")
-}
+  return toDataPathSegments(schemaPath).join('.');
+};
+
+export const composeWithUi = (scopableUi: Scopable, path: string): string => {
+  if (!isScoped(scopableUi)) {
+    return path ?? '';
+  }
+
+  const segments = toDataPathSegments(scopableUi.scope);
+
+  if (isEmpty(segments)) {
+    return path ?? '';
+  }
+
+  return compose(path, segments.join('.'));
+};
 
 /**
  * Encodes the given segment to be used as part of a JSON Pointer
  *
  * JSON Pointer has special meaning for "/" and "~", therefore these must be encoded
  */
-export const encode = (segment: string) => segment?.replace(/~/g, "~0").replace(/\//g, "~1")
+export const encode = (segment: string) =>
+  segment?.replace(/~/g, '~0').replace(/\//g, '~1');
 /**
  * Decodes a given JSON Pointer segment to its "normal" representation
  */
-export const decode = (pointerSegment: string) => pointerSegment?.replace(/~1/g, "/").replace(/~0/, "~")
-
-/**
- * Transform a dotted path to a uiSchema properties path
- * @param path a dotted prop path to a schema value (i.e. articles.comment.author)
- * @return the uiSchema properties path (i.e. /properties/articles/properties/comment/properties/author)
- */
-export const getPropPath = (path: string): string => {
-  return `/properties/${path
-    .split(".")
-    .map((p) => encode(p))
-    .join("/properties/")}`
-}
+export const decode = (pointerSegment: string) =>
+  pointerSegment?.replace(/~1/g, '/').replace(/~0/, '~');

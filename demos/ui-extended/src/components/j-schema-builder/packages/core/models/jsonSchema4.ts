@@ -1,4 +1,5 @@
 
+
 export interface JsonSchema4 {
   $ref?: string;
   /////////////////////////////////////////////////

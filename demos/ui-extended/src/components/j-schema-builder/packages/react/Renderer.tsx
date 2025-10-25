@@ -1,4 +1,4 @@
-'use client'
+
 import React from 'react';
 import type { RendererProps } from '#jSchemaBuilder/core';
 
@@ -24,14 +24,15 @@ export class RendererComponent<
  *
  * @template P type of any renderer props
  */
-export type StatelessRenderer<P extends RendererProps> =
-  React.FunctionComponent<P>;
+export type StatelessRenderer<P extends RendererProps> = React.FC<
+  React.PropsWithChildren<P>
+>;
 
 /**
  * Represents a Renderer, which might either be a component or a function.
  */
 export type Renderer =
-  // TODO fix @typescript-eslint/ban-types
-  // eslint-disable-next-line @typescript-eslint/ban-types
+// TODO fix @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/ban-types
   | RendererComponent<RendererProps & any, {}>
   | StatelessRenderer<RendererProps & any>;

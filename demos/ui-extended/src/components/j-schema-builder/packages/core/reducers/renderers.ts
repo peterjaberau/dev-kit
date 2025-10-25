@@ -1,13 +1,18 @@
 
 
+import type { RankedTester } from '../testers';
 import {
   ADD_RENDERER,
   AddRendererAction,
   REMOVE_RENDERER,
   RemoveRendererAction,
 } from '../actions';
-import { Reducer } from '../store/type';
-import { JsonFormsRendererRegistryEntry } from '../store';
+import type { Reducer } from '../util';
+
+export interface JsonFormsRendererRegistryEntry {
+  tester: RankedTester;
+  renderer: any;
+}
 
 type ValidRendererReducerActions = AddRendererAction | RemoveRendererAction;
 

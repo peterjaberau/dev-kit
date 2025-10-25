@@ -4,17 +4,19 @@ import has from 'lodash/has';
 import {
   AndCondition,
   Condition,
+  JsonSchema,
   LeafCondition,
   OrCondition,
   RuleEffect,
   SchemaBasedCondition,
   Scopable,
   UISchemaElement,
-  ValidateFunctionCondition,
 } from '../models';
 import { resolveData } from './resolvers';
+import { composeWithUi } from './path';
 import type Ajv from 'ajv';
-import { composeWithUi } from './uischema';
+import { getAjv } from '../reducers';
+import type { JsonFormsState } from '../store';
 
 const isOrCondition = (condition: Condition): condition is OrCondition =>
   condition.type === 'OR';
@@ -29,34 +31,24 @@ const isSchemaCondition = (
   condition: Condition
 ): condition is SchemaBasedCondition => has(condition, 'schema');
 
-const isValidateFunctionCondition = (
-  condition: Condition
-): condition is ValidateFunctionCondition =>
-  has(condition, 'validate') &&
-  typeof (condition as ValidateFunctionCondition).validate === 'function';
-
 const getConditionScope = (condition: Scopable, path: string): string => {
   return composeWithUi(condition, path);
 };
 
 const evaluateCondition = (
   data: any,
-  uischema: UISchemaElement,
   condition: Condition,
   path: string,
-  ajv: Ajv,
-  config: unknown
+  ajv: Ajv
 ): boolean => {
   if (isAndCondition(condition)) {
     return condition.conditions.reduce(
-      (acc, cur) =>
-        acc && evaluateCondition(data, uischema, cur, path, ajv, config),
+      (acc, cur) => acc && evaluateCondition(data, cur, path, ajv),
       true
     );
   } else if (isOrCondition(condition)) {
     return condition.conditions.reduce(
-      (acc, cur) =>
-        acc || evaluateCondition(data, uischema, cur, path, ajv, config),
+      (acc, cur) => acc || evaluateCondition(data, cur, path, ajv),
       false
     );
   } else if (isLeafCondition(condition)) {
@@ -64,20 +56,7 @@ const evaluateCondition = (
     return value === condition.expectedValue;
   } else if (isSchemaCondition(condition)) {
     const value = resolveData(data, getConditionScope(condition, path));
-    if (condition.failWhenUndefined && value === undefined) {
-      return false;
-    }
     return ajv.validate(condition.schema, value) as boolean;
-  } else if (isValidateFunctionCondition(condition)) {
-    const value = resolveData(data, getConditionScope(condition, path));
-    const context = {
-      data: value,
-      fullData: data,
-      path,
-      uischemaElement: uischema,
-      config,
-    };
-    return condition.validate(context);
   } else {
     // unknown condition
     return true;
@@ -88,23 +67,21 @@ const isRuleFulfilled = (
   uischema: UISchemaElement | any,
   data: any,
   path: string,
-  ajv: Ajv,
-  config: unknown
+  ajv: Ajv
 ): boolean => {
   const condition = uischema.rule.condition;
-  return evaluateCondition(data, uischema, condition, path, ajv, config);
+  return evaluateCondition(data, condition, path, ajv);
 };
 
 export const evalVisibility = (
   uischema: UISchemaElement | any,
   data: any,
-  path: string = undefined as any,
-  ajv: Ajv,
-  config: unknown
+  path: string | any = undefined,
+  ajv: Ajv
 ): boolean => {
-  const fulfilled = isRuleFulfilled(uischema, data, path, ajv, config);
+  const fulfilled = isRuleFulfilled(uischema, data, path, ajv);
 
-  switch (uischema.rule.effect as any) {
+  switch (uischema.rule.effect) {
     case RuleEffect.HIDE:
       return !fulfilled;
     case RuleEffect.SHOW:
@@ -118,11 +95,10 @@ export const evalVisibility = (
 export const evalEnablement = (
   uischema: UISchemaElement | any,
   data: any,
-  path: string = undefined as any,
-  ajv: Ajv,
-  config: unknown
+  path: string | any = undefined,
+  ajv: Ajv
 ): boolean => {
-  const fulfilled = isRuleFulfilled(uischema, data, path, ajv, config);
+  const fulfilled = isRuleFulfilled(uischema, data, path, ajv);
 
   switch (uischema.rule.effect) {
     case RuleEffect.DISABLE:
@@ -160,12 +136,11 @@ export const hasEnableRule = (uischema: UISchemaElement): boolean => {
 export const isVisible = (
   uischema: UISchemaElement,
   data: any,
-  path: string = undefined as any,
-  ajv: Ajv,
-  config?: unknown | any
+  path: string | any = undefined,
+  ajv: Ajv
 ): boolean => {
   if (uischema.rule) {
-    return evalVisibility(uischema, data, path, ajv, config);
+    return evalVisibility(uischema, data, path, ajv);
   }
 
   return true;
@@ -174,13 +149,52 @@ export const isVisible = (
 export const isEnabled = (
   uischema: UISchemaElement,
   data: any,
-  path: string = undefined as any,
-  ajv: Ajv,
-  config: unknown
+  path: string | any = undefined,
+  ajv: Ajv
 ): boolean => {
   if (uischema.rule) {
-    return evalEnablement(uischema, data, path, ajv, config);
+    return evalEnablement(uischema, data, path, ajv);
   }
 
+  return true;
+};
+
+/**
+ * Indicates whether the given `uischema` element shall be enabled or disabled.
+ * Checks the global readonly flag, uischema rule, uischema options (including the config),
+ * the schema and the enablement indicator of the parent.
+ */
+export const isInherentlyEnabled = (
+  state: JsonFormsState,
+  ownProps: any,
+  uischema: UISchemaElement,
+  schema: (JsonSchema & { readOnly?: boolean }) | undefined,
+  rootData: any,
+  config: any
+) => {
+  if (state?.jsonforms?.readonly) {
+    return false;
+  }
+  if (uischema && hasEnableRule(uischema)) {
+    return isEnabled(uischema, rootData, ownProps?.path, getAjv(state));
+  }
+  if (typeof uischema?.options?.readonly === 'boolean') {
+    return !uischema.options.readonly;
+  }
+  if (typeof uischema?.options?.readOnly === 'boolean') {
+    return !uischema.options.readOnly;
+  }
+  if (typeof config?.readonly === 'boolean') {
+    return !config.readonly;
+  }
+  if (typeof config?.readOnly === 'boolean') {
+    return !config.readOnly;
+  }
+  if (schema?.readOnly === true) {
+    return false;
+  }
+  if (typeof ownProps?.enabled === 'boolean') {
+    return ownProps.enabled;
+  }
   return true;
 };

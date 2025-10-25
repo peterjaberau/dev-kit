@@ -80,200 +80,82 @@ const invalidSegment = (pathSegment: string) =>
   pathSegment === '#' || pathSegment === undefined || pathSegment === '';
 
 /**
- * Map for tracking schema resolution to prevent infinite recursion.
- * Key: schema object reference, Value: Set of paths being resolved from that schema
- */
-type ResolutionTrackingMap = Map<JsonSchema, Set<string>>;
-interface ResolveContext {
-  rootSchema: JsonSchema;
-  resolutionMap: ResolutionTrackingMap;
-}
-
-/**
  * Resolve the given schema path in order to obtain a subschema.
  * @param {JsonSchema} schema the root schema from which to start
  * @param {string} schemaPath the schema path to be resolved
  * @param {JsonSchema} rootSchema the actual root schema
- * @returns {JsonSchema} the resolved sub-schema or undefined
+ * @returns {JsonSchema} the resolved sub-schema
  */
-export const resolveSchema: any = (
+export const resolveSchema = (
   schema: JsonSchema,
   schemaPath: string,
   rootSchema: JsonSchema
-): JsonSchema | undefined => {
-  const result = doResolveSchema(schema, schemaPath, {
-    rootSchema,
-    resolutionMap: new Map(),
-  });
-  return result;
-};
-
-const doResolveSchema = (
-  schema: JsonSchema,
-  schemaPath: string,
-  ctx: ResolveContext
-): JsonSchema | undefined => {
-  let resolvedSchema: JsonSchema | undefined = undefined;
-  // If the schema has a $ref, we resolve it first before continuing.
-  if (schema && typeof schema.$ref === 'string') {
-    const baseSchema = resolvePath(ctx.rootSchema, schema.$ref, ctx);
-    if (baseSchema !== undefined) {
-      resolvedSchema = resolvePath(baseSchema, schemaPath, ctx);
-    }
-  }
-  // With later versions of JSON Schema, the $ref can also be used next to other properties,
-  // therefore we also try to resolve the path from the schema itself, even if it has a $ref.
-  if (resolvedSchema === undefined) {
-    resolvedSchema = resolvePath(schema, schemaPath, ctx);
-  }
-  return resolvedSchema;
-};
-
-const resolvePath = (
-  schema: JsonSchema,
-  schemaPath: string | any,
-  ctx: ResolveContext
 ): JsonSchema => {
-  let visitedPaths: Set<string> | undefined = ctx.resolutionMap.get(schema);
-  if (!visitedPaths) {
-    visitedPaths = new Set();
-    ctx.resolutionMap.set(schema, visitedPaths);
-  }
-  if (visitedPaths.has(schemaPath)) {
-    // We were already asked to resolve this path from this schema, we must be stuck in a circular reference.
+  const segments = schemaPath?.split('/').map(decode);
+  return resolveSchemaWithSegments(schema, segments, rootSchema);
+};
+
+const resolveSchemaWithSegments = (
+  schema: JsonSchema | any,
+  pathSegments: string[],
+  rootSchema: JsonSchema
+): JsonSchema | any => {
+  if (isEmpty(schema)) {
     return undefined as any;
   }
 
-  visitedPaths.add(schemaPath);
+  if (schema.$ref) {
+    schema = resolveSchema(rootSchema, schema.$ref, rootSchema);
+  }
 
-  const resolvedSchema = resolvePathSegmentsWithCombinatorFallback(
-    schema,
-    schemaPath?.split('/').map(decode),
-    ctx
-  );
-
-  visitedPaths.delete(schemaPath);
-
-  return resolvedSchema as any;
-};
-
-const resolvePathSegmentsWithCombinatorFallback = (
-  schema: JsonSchema | any,
-  pathSegments: string[],
-  ctx: ResolveContext
-): JsonSchema | undefined => {
   if (!pathSegments || pathSegments.length === 0) {
     return schema;
   }
 
-  if (isEmpty(schema)) {
-    return undefined;
-  }
-
-  const resolvedSchema = resolvePathSegments(schema, pathSegments, ctx);
-  if (resolvedSchema !== undefined) {
-    return resolvedSchema;
-  }
-
-  // If the schema is not found, try combinators
-  const subSchemas = [].concat(
-    schema.oneOf ?? [],
-    schema.allOf ?? [],
-    schema.anyOf ?? [],
-    (schema as JsonSchema7 | any).then ?? [],
-    (schema as JsonSchema7 | any).else ?? []
-  );
-
-  for (const subSchema of subSchemas as any) {
-    let resolvedSubSchema: any = subSchema;
-    // check whether the subSchema is a $ref. If it is, resolve it first.
-    //@ts-ignore
-    if (subSchema && typeof subSchema.$ref === 'string') {
-      resolvedSubSchema = doResolveSchema(ctx.rootSchema, subSchema.$ref, ctx);
-    }
-    const alternativeResolveResult = resolvePathSegmentsWithCombinatorFallback(
-      resolvedSubSchema,
-      pathSegments,
-      ctx
-    );
-    if (alternativeResolveResult) {
-      return alternativeResolveResult;
-    }
-  }
-
-  return undefined;
-};
-
-const resolvePathSegments = (
-  schema: JsonSchema,
-  pathSegments: string[],
-  ctx: ResolveContext
-): JsonSchema | undefined => {
-  if (!pathSegments || pathSegments.length === 0) {
-    return schema;
-  }
-
-  if (isEmpty(schema)) {
-    return undefined;
-  }
-
-  // perform a single step
-  const singleStepResult = resolveSingleStep(schema, pathSegments);
-
-  // Check whether resolving the next step was successful and returned a schema which has a $ref itself.
-  // In this case, we need to resolve the $ref first before continuing.
-  if (
-    singleStepResult.schema &&
-    typeof singleStepResult.schema.$ref === 'string'
-  ) {
-    singleStepResult.schema = doResolveSchema(
-      ctx.rootSchema,
-      singleStepResult.schema.$ref,
-      ctx
-    );
-  }
-
-  return resolvePathSegmentsWithCombinatorFallback(
-    singleStepResult.schema,
-    singleStepResult.remainingPathSegments,
-    ctx
-  );
-};
-
-interface ResolveSingleStepResult {
-  schema: JsonSchema | undefined;
-  remainingPathSegments: string[];
-  resolvedSegment?: string;
-}
-/**
- * Tries to resolve the next "step" of the pathSegments.
- * Often this will be a single segment, but it might be multiples ones in case there are invalid segments.
- */
-const resolveSingleStep = (
-  schema: JsonSchema,
-  pathSegments: string[]
-): ResolveSingleStepResult => {
-  if (!pathSegments || pathSegments.length === 0) {
-    return { schema, remainingPathSegments: [] };
-  }
-
-  if (isEmpty(schema)) {
-    return {
-      schema: undefined,
-      remainingPathSegments: pathSegments,
-    };
-  }
-
-  const [segment, ...remainingPathSegments]: any = pathSegments;
+  const [segment, ...remainingSegments]: any = pathSegments;
 
   if (invalidSegment(segment)) {
-    return resolveSingleStep(schema, remainingPathSegments);
+    return resolveSchemaWithSegments(schema, remainingSegments, rootSchema);
   }
 
   const singleSegmentResolveSchema = get(schema, segment);
-  return {
-    schema: singleSegmentResolveSchema,
-    remainingPathSegments,
-    resolvedSegment: segment,
-  };
+
+  const resolvedSchema = resolveSchemaWithSegments(
+    singleSegmentResolveSchema,
+    remainingSegments,
+    rootSchema
+  );
+  if (resolvedSchema) {
+    return resolvedSchema;
+  }
+
+  if (segment === 'properties' || segment === 'items') {
+    // Let's try to resolve the path, assuming oneOf/allOf/anyOf/then/else was omitted.
+    // We only do this when traversing an object or array as we want to avoid
+    // following a property which is named oneOf, allOf, anyOf, then or else.
+    let alternativeResolveResult = undefined;
+
+    const subSchemas = [].concat(
+      schema.oneOf ?? [],
+      schema.allOf ?? [],
+      schema.anyOf ?? [],
+      //@ts-ignore
+      (schema as JsonSchema7).then ?? [],
+      (schema as JsonSchema7).else ?? []
+    );
+
+    for (const subSchema of subSchemas) {
+      alternativeResolveResult = resolveSchemaWithSegments(
+        subSchema,
+        [segment, ...remainingSegments],
+        rootSchema
+      );
+      if (alternativeResolveResult) {
+        break;
+      }
+    }
+    return alternativeResolveResult;
+  }
+
+  return undefined;
 };

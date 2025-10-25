@@ -8,12 +8,14 @@ import { ExamplesListPane } from "./examples-list-pane"
 import { JsonFormsPane } from "./json-forms-pane"
 import { JsonTreeViewerPane } from "./json-tree-viewer"
 import { JsonFormsAntdPane } from './json-forms-antd-pane'
+import { JsonFormsChakraPane } from "#components/j-schema-builder/playground/json-forms-chakra-pane"
 
 const ExamplesListPaneLazy = memo(ExamplesListPane)
 const LazyJsonFormsPane = memo(JsonFormsPane)
 const QueryPaneLazy = memo(QueryPane)
 const LazyJsonTreeViewer = memo(JsonTreeViewerPane)
 const LazyJsonFormsAntdPane = memo(JsonFormsAntdPane)
+const LazyJsonFormsChakraPane = memo(JsonFormsChakraPane)
 
 
 export function App() {
@@ -30,15 +32,16 @@ export function App() {
         <Panel>
           <PanelGroup direction="vertical">
             <Panel>
-              <LazyJsonFormsPane />
+              <LazyJsonFormsChakraPane />
+              {/*<LazyJsonFormsPane />*/}
             </Panel>
           </PanelGroup>
         </Panel>
 
         <PanelDragger />
         <Panel>
-          <JsonFormsAntdPane />
-          {/*<LazyJsonTreeViewer />*/}
+          {/*<JsonFormsAntdPane />*/}
+          <LazyJsonTreeViewer />
         </Panel>
       </PanelGroup>
     </Box>

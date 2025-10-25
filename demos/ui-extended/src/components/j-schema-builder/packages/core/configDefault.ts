@@ -1,4 +1,5 @@
 
+
 export const configDefault = {
   /*
    * [text] whether to restrict the number of characters to maxLength,

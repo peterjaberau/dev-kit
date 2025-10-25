@@ -1,13 +1,12 @@
 
-import get from 'lodash/get';
+
 import {
   ADD_DEFAULT_DATA,
-  REMOVE_DEFAULT_DATA,
   RegisterDefaultDataAction,
+  REMOVE_DEFAULT_DATA,
   UnregisterDefaultDataAction,
 } from '../actions';
-import type { Reducer } from '../store/type';
-import { JsonFormsState } from '../store';
+import type { Reducer } from '../util';
 
 export interface JsonFormsDefaultDataRegistryEntry {
   schemaPath: string;
@@ -34,10 +33,6 @@ export const defaultDataReducer: Reducer<
   }
 };
 
-export const getDefaultData = (
-  state: JsonFormsState
-): JsonFormsDefaultDataRegistryEntry[] =>
-  extractDefaultData(get(state, 'jsonforms.defaultData'));
 export const extractDefaultData = (
   state: JsonFormsDefaultDataRegistryEntry[]
 ): JsonFormsDefaultDataRegistryEntry[] => state;

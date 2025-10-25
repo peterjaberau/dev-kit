@@ -1,4 +1,5 @@
 
+
 /**
  * Interface for mapping a given type to a formatted string and back.
  */
