@@ -5,21 +5,39 @@ import { mockData } from "../shared/data"
 export const currentAppMachine = setup({
   types: {} as any,
   actions: {
-    resetAction: assign(({ context, event }) => {}),
+    setCurrentExample: assign(({ context, event }) => {
+
+
+
+      context.currentExample = {
+        ...context.currentExample,
+        ...event.payload
+      }
+    }),
   },
   actors: {},
   guards: {},
 }).createMachine({
   initial: "idle",
   context: ({ input }: any) => ({
-    ...currentAppConfigDefaults,
-    ...mockData,
+    currentExample: {
+      schema: {},
+      uischema: {},
+      data: {},
+      config: {
+        restrict: false,
+        trim: false,
+        showUnfocusedDescription: false,
+        hideRequiredAsterisk: false
+
+      },
+    },
     ...input,
   }),
   states: {
     idle: {
       on: {
-        RESET: { actions: ["resetAction"] },
+        SET_CURRENT_EXAMPLE: { actions: ["setCurrentExample"] },
       },
     },
   },

@@ -4,5 +4,12 @@ export const sessionConfigDefaults = {}
 
 export const currentAppConfigDefaults = {
   schema: {},
-  uiSchema: {},
+  uischema: {},
+  data: {},
+  config: {
+    restrict: false,
+    trim: false,
+    showUnfocusedDescription: false,
+    hideRequiredAsterisk: false
+  }
 }

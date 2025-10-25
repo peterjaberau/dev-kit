@@ -308,6 +308,13 @@ export const dataCategoryListItems: any = [
     id: "root",
     name: "Root",
   },
+  // jbuilder-playground
+
+  {
+    parentId: "j-schema-builder",
+    id: "jbuilder-playground",
+    name: "Playground",
+  },
 
   {
     parentId: "j-schema-builder",

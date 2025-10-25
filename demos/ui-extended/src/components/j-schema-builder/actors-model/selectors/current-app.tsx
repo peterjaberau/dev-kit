@@ -1,12 +1,27 @@
 import { useRootActors } from "../hooks"
 import { useSelector } from "@xstate/react"
+import { useJSchemaExamples } from "./j-schema-examples"
 
 export const useCurrentApp = () => {
   const { rootCurrentAppRef: currentAppRef } = useRootActors()
 
+  const { getExampleByName } = useJSchemaExamples()
+
   const sendToCurrentApp = currentAppRef.send
   const currentAppState: any = useSelector(currentAppRef, (state) => state)
   const currentAppContext = currentAppState.context
+
+  const setCurrentExample = (name: string) => {
+    sendToCurrentApp({
+      type: 'SET_CURRENT_EXAMPLE',
+      payload: getExampleByName(name)
+    })
+  }
+  const currentExample = currentAppContext.currentExample
+
+  // const setExample = () =>
+
+
 
   return {
     currentAppRef,
@@ -14,5 +29,8 @@ export const useCurrentApp = () => {
 
     currentAppState,
     currentAppContext,
+
+    setCurrentExample,
+    currentExample
   }
 }

@@ -1,7 +1,7 @@
 import { assign, setup } from "xstate"
 import {
   data as JsonSchemaExamples
-} from '../shared/data/j-schema-exmples'
+} from '../shared/data/j-schema-examples'
 
 export const jsonSchemaExamplesMachine = setup({
   types: {} as any,
