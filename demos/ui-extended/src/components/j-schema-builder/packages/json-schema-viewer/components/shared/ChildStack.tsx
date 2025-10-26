@@ -1,7 +1,7 @@
 "use client"
 
 import { SchemaNode } from '@stoplight/json-schema-tree';
-import { Box } from '@chakra-ui/react';
+import { Box, Card } from '@chakra-ui/react';
 import type { ChangeType } from '@stoplight/types';
 import * as React from 'react';
 
@@ -38,26 +38,28 @@ export const ChildStack = React.memo(
     }
 
     return (
-      <Box
-        data-id='shared-child-stack'
-        className={className}
-        ml={ml}
-        fontSize="sm"
-        borderLeft={isRootLevel ? 'none' : '1px solid'}
-        borderLeftColor={isRootLevel ? undefined : 'border.info'}
-        data-level={currentNestingLevel}
-      >
-        {childNodes.map((childNode: SchemaNode) => (
-          <RowComponent
-            key={childNode.id}
-            schemaNode={childNode}
-            nestingLevel={currentNestingLevel + 1}
-            pl={isRootLevel ? undefined : NESTING_OFFSET}
-            parentNodeId={parentNodeId}
-            parentChangeType={parentChangeType}
-          />
-        ))}
-      </Box>
+      <Card.Body>
+          <Box
+            data-id='shared-child-stack'
+            className={className}
+            ml={ml}
+            fontSize="sm"
+            borderLeft={isRootLevel ? 'none' : '1px solid'}
+            borderLeftColor={isRootLevel ? undefined : 'border.info'}
+            data-level={currentNestingLevel}
+          >
+            {childNodes.map((childNode: SchemaNode) => (
+              <RowComponent
+                key={childNode.id}
+                schemaNode={childNode}
+                nestingLevel={currentNestingLevel + 1}
+                pl={isRootLevel ? undefined : NESTING_OFFSET}
+                parentNodeId={parentNodeId}
+                parentChangeType={parentChangeType}
+              />
+            ))}
+          </Box>
+      </Card.Body>
     );
   },
 );

@@ -9,6 +9,7 @@ import {
   SchemaNode,
   SchemaNodeKind,
 } from '@stoplight/json-schema-tree';
+import { Tag } from '@chakra-ui/react'
 import { Box } from '@chakra-ui/react';
 import * as React from 'react';
 

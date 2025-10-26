@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "oas": "^28.3.0",
     "react-error-boundary": "^6.0.0",
     "@stoplight/json": "^3.21.7",
     "@stoplight/json-schema-tree": "^4.0.0",
