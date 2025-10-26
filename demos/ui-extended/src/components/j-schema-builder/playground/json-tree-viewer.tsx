@@ -13,7 +13,7 @@ import JsonView from "react18-json-view"
 
 
 export function JsonTreeViewerPane() {
-  const { currentExample } = useCurrentApp()
+  const { currentExample, currentViewerExample } = useCurrentApp()
 
   return (
     <Pane
@@ -34,7 +34,8 @@ export function JsonTreeViewerPane() {
     >
       <JsonView
         src={{
-          ...currentExample ,
+          currentExample: currentExample ,
+          currentViewerExample: currentViewerExample
         }}
         collapsed={2}
         theme={'github'}

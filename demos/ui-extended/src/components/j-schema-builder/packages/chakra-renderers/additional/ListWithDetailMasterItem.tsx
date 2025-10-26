@@ -1,3 +1,4 @@
+"use client"
 
 import { StatePropsOfMasterItem } from '#jSchemaBuilder/core';
 import { withJsonFormsMasterListItemProps } from '#jSchemaBuilder/react';

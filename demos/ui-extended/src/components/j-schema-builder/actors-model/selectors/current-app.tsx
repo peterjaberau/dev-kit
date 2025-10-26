@@ -5,7 +5,7 @@ import { useJSchemaExamples } from "./j-schema-examples"
 export const useCurrentApp = () => {
   const { rootCurrentAppRef: currentAppRef } = useRootActors()
 
-  const { getExampleByName } = useJSchemaExamples()
+  const { getExampleByName, getViewerExampleByName } = useJSchemaExamples()
 
   const sendToCurrentApp = currentAppRef.send
   const currentAppState: any = useSelector(currentAppRef, (state) => state)
@@ -19,6 +19,15 @@ export const useCurrentApp = () => {
   }
   const currentExample = currentAppContext.currentExample
 
+
+  const setCurrentViewerExample = (name: string) => {
+    sendToCurrentApp({
+      type: 'SET_CURRENT_VIEWER_EXAMPLE',
+      payload: getViewerExampleByName(name)
+    })
+  }
+  const currentViewerExample = currentAppContext.currentViewerExample
+
   // const setExample = () =>
 
 
@@ -31,6 +40,9 @@ export const useCurrentApp = () => {
     currentAppContext,
 
     setCurrentExample,
-    currentExample
+    currentExample,
+
+    setCurrentViewerExample,
+    currentViewerExample
   }
 }

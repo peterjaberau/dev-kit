@@ -1,3 +1,4 @@
+"use client"
 
 export { BooleanCell } from './BooleanCell';
 export { DateCell } from './DateCell';

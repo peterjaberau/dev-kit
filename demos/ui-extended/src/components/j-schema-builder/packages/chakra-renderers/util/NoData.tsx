@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import { LuInfo } from 'react-icons/lu';

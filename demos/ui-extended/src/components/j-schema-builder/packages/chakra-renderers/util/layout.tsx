@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable react/display-name */
+"use client"
 
 import isEmpty from 'lodash/isEmpty';
 import React, { ComponentType } from 'react';

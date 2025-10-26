@@ -1,4 +1,4 @@
-
+"use client"
 export * from './i18nDefaults';
 export * from './layout';
 import React, { ComponentType, useMemo } from 'react';

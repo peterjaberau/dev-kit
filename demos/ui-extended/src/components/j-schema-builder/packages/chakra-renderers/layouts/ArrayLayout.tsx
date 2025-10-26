@@ -1,3 +1,4 @@
+"use client"
 
 import range from 'lodash/range';
 import React from 'react';

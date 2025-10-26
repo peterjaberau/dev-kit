@@ -5,17 +5,22 @@ import { PanelDragger } from "#components/ui/pane/dragger"
 import { Box } from "@chakra-ui/react"
 import { QueryPane  } from "./query-pane"
 import { ExamplesListPane } from "./examples-list-pane"
-import { JsonFormsPane } from "./json-forms-pane"
 import { JsonTreeViewerPane } from "./json-tree-viewer"
 import { JsonFormsAntdPane } from './json-forms-antd-pane'
+import { JsonSchemaViewerPane } from "./json-schema-viewer-pane"
+import { JsonSchemaViewerListPane } from "./json-schema-viewer-list-pane"
+
 import { JsonFormsChakraPane } from "#components/j-schema-builder/playground/json-forms-chakra-pane"
 
 const ExamplesListPaneLazy = memo(ExamplesListPane)
-const LazyJsonFormsPane = memo(JsonFormsPane)
-const QueryPaneLazy = memo(QueryPane)
-const LazyJsonTreeViewer = memo(JsonTreeViewerPane)
-const LazyJsonFormsAntdPane = memo(JsonFormsAntdPane)
 const LazyJsonFormsChakraPane = memo(JsonFormsChakraPane)
+const LazyJsonTreeViewer = memo(JsonTreeViewerPane)
+const LazyJsonSchemaViewerPane = memo(JsonSchemaViewerPane)
+const LazyJsonSchemaViewerListPane = memo(JsonSchemaViewerListPane)
+
+// const LazyJsonFormsPane = memo(JsonFormsPane)
+// const QueryPaneLazy = memo(QueryPane)
+// const LazyJsonFormsAntdPane = memo(JsonFormsAntdPane)
 
 
 export function App() {
@@ -25,14 +30,17 @@ export function App() {
     <Box height={"full"}>
       <PanelGroup direction="horizontal">
         <Panel>
-          <ExamplesListPaneLazy />
+          <LazyJsonSchemaViewerListPane />
+          {/*<ExamplesListPaneLazy />*/}
         </Panel>
         <PanelDragger />
 
         <Panel>
           <PanelGroup direction="vertical">
             <Panel>
-              <LazyJsonFormsChakraPane />
+              <LazyJsonTreeViewer />
+
+              {/*<LazyJsonFormsChakraPane />*/}
               {/*<LazyJsonFormsPane />*/}
             </Panel>
           </PanelGroup>
@@ -41,7 +49,7 @@ export function App() {
         <PanelDragger />
         <Panel>
           {/*<JsonFormsAntdPane />*/}
-          <LazyJsonTreeViewer />
+          <LazyJsonSchemaViewerPane />
         </Panel>
       </PanelGroup>
     </Box>

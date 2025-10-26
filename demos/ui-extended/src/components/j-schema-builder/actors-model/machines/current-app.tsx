@@ -9,11 +9,12 @@ export const currentAppMachine = setup({
 
 
 
-      context.currentExample = {
-        ...context.currentExample,
-        ...event.payload
-      }
+      context.currentExample = event.payload
     }),
+    setCurrentViewerExample: assign(({ context, event }) => {
+      context.currentViewerExample = event.payload
+    }),
+
   },
   actors: {},
   guards: {},
@@ -32,12 +33,16 @@ export const currentAppMachine = setup({
 
       },
     },
+    currentViewerExample: {
+
+    },
     ...input,
   }),
   states: {
     idle: {
       on: {
         SET_CURRENT_EXAMPLE: { actions: ["setCurrentExample"] },
+        SET_CURRENT_VIEWER_EXAMPLE: { actions: ["setCurrentViewerExample"] },
       },
     },
   },

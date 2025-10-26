@@ -1,4 +1,5 @@
-/* eslint-disable react/display-name */
+"use client"
+
 
 import React from 'react';
 import { CellProps, WithClassname } from '#jSchemaBuilder/core';

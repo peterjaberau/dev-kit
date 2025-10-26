@@ -1,3 +1,4 @@
+"use client"
 
 import React from 'react';
 import fpfilter from 'lodash/fp/filter';

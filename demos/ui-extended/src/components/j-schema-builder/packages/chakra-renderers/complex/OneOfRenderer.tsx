@@ -1,3 +1,4 @@
+"use client"
 
 import React, { useCallback, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
@@ -57,6 +58,7 @@ const OneOfRenderer = ({
   );
 
   const openNewTab = (newIndex: number) => {
+    //@ts-ignore
     handleChange(path, createDefaultValue(_.get(schema, ['oneOf', newIndex])));
     setSelectedIndex(newIndex);
   };

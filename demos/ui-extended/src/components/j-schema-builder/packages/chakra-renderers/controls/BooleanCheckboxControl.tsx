@@ -1,3 +1,4 @@
+"use client"
 
 import isEmpty from 'lodash/isEmpty';
 import React from 'react';

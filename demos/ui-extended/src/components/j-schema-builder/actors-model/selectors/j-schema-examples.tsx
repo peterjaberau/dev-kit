@@ -12,6 +12,10 @@ export const useJSchemaExamples = () => {
     return jSchemaExamplesContext.data.find((item: any) => item.name === name)
   }
 
+  const getViewerExampleByName = (name: string) => {
+    return jSchemaExamplesContext.dataViewer[name]
+  }
+
   return {
     jSchemaExamplesRef,
     sendToJSchemaExamples,
@@ -19,6 +23,7 @@ export const useJSchemaExamples = () => {
     jSchemaExamplesState,
     jSchemaExamplesContext,
 
-    getExampleByName
+    getExampleByName,
+    getViewerExampleByName
   }
 }

@@ -1,3 +1,4 @@
+"use client"
 
 import maxBy from 'lodash/maxBy';
 import React from 'react';
