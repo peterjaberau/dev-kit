@@ -29,14 +29,15 @@ export function App() {
   return (
     <Box height={"full"}>
       <PanelGroup direction="horizontal">
-        <Panel>
-          <LazyJsonSchemaViewerListPane />
-          {/*<ExamplesListPaneLazy />*/}
-        </Panel>
-        <PanelDragger />
 
         <Panel>
+
           <PanelGroup direction="vertical">
+            <Panel>
+              <LazyJsonSchemaViewerListPane />
+              {/*<ExamplesListPaneLazy />*/}
+            </Panel>
+            <PanelDragger />
             <Panel>
               <LazyJsonTreeViewer />
 
@@ -44,6 +45,19 @@ export function App() {
               {/*<LazyJsonFormsPane />*/}
             </Panel>
           </PanelGroup>
+        </Panel>
+
+
+
+
+
+
+
+
+        <PanelDragger />
+
+        <Panel>
+          {/*<LazyTreeComponentPane />*/}
         </Panel>
 
         <PanelDragger />

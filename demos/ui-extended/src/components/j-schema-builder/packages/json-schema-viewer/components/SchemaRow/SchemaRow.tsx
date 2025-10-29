@@ -1,10 +1,10 @@
 "use client"
 
-import { Collapsible, Card, HStack, Icon, Stack, useCollapsibleContext, Accordion } from "@chakra-ui/react"
+import { Collapsible, Code, Card, HStack, Icon, useCollapsibleContext, Accordion } from "@chakra-ui/react"
 import { LuChevronRight } from "react-icons/lu"
 
 import { isMirroredNode, isReferenceNode, isRegularNode, SchemaNode } from "@stoplight/json-schema-tree"
-import { Box, Flex, Select, VStack, NativeSelect } from "@chakra-ui/react"
+import { Box, Flex, Select, VStack, NativeSelect, Stack } from "@chakra-ui/react"
 import type { ChangeType } from "@stoplight/types"
 import { Atom } from "jotai"
 import last from "lodash/last.js"
@@ -22,7 +22,21 @@ import { Properties, useHasProperties } from "../shared/Properties"
 import { hoveredNodeAtom, isNodeHoveredAtom } from "./state"
 import { useChoices } from "./useChoices"
 import { useAtomValue, useSetAtom } from "jotai"
-;("jotai/utils")
+import {
+  SchemaRowDescription,
+  SchemaRowError,
+  SchemaRowGoToRef,
+  SchemaRowProperties,
+  SchemaRowSubPath,
+  SchemaRowTrigger,
+  SchemaRowTypeToShow,
+  SchemaRowValidation,
+  SchemaRowAnyOf,
+  SchemaRowPatternProperty,
+  SchemaRowExtension,
+  SchemaRowAddon,
+  SchemaRowChildren
+} from "./components"
 
 export interface SchemaRowProps {
   schemaNode: SchemaNode
@@ -32,14 +46,13 @@ export interface SchemaRowProps {
   parentChangeType?: ChangeType
 }
 
-export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(({ schemaNode, nestingLevel, pl, parentNodeId, parentChangeType }) => {
+export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(({ schemaNode, nestingLevel, pl, parentNodeId, parentChangeType }: any) => {
   const { defaultExpandedDepth, renderRowAddon, renderExtensionAddon, onGoToRef, hideExamples, renderRootTreeLines, nodeHasChanged, viewMode } = useJSVOptionsContext()
 
   const setHoveredNode = useSetAtom(hoveredNodeAtom)
 
   const nodeId = getNodeId(schemaNode, parentNodeId)
 
-  // @ts-expect-error originalFragment does exist...
   const originalNodeId = schemaNode.originalFragment?.$ref ? getOriginalNodeId(schemaNode, parentNodeId) : nodeId
   const mode = viewMode === "standalone" ? undefined : viewMode
   const hasChanged = nodeHasChanged?.({ nodeId: originalNodeId, mode })
@@ -84,131 +97,59 @@ export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(({ 
   }
 
   return (
-    <>
-      <Card.Root border={!isCollapsible ? 'none' : undefined  }>
+    <Box w="full" py={2}>
+      <Card.Root>
         <Card.Header
           onMouseEnter={(e: any) => {
             e.stopPropagation()
             setHoveredNode(selectedChoice.type)
           }}
+          px={2}
+          py={1}
         >
-          {/*{!isRootLevel && (*/}
-          {/*  <Box*/}
-          {/*    data-id="id-01"*/}
-          {/*  />*/}
-          {/*)}*/}
-          {/*{parentChangeType !== "added" && parentChangeType !== "removed" ? (*/}
-          {/*  <Box*/}
-          {/*    data-id="id-02"*/}
-          {/*    w={3}*/}
-          {/*    h={"full"}*/}
-          {/*    pos={"absolute"}*/}
-          {/*    left={0}*/}
-          {/*    zIndex={20}*/}
-          {/*    backgroundColor={"border.emphasized"}>*/}
-          {/*  </Box>*/}
-          {/*) : null}*/}
-
-          <VStack
-            data-id="id-03"
-            flex={1}
-            alignItems={"flex-start"}
-            // paddingLeft={3}
-            // ml={isCollapsible && !isRootLevel ? 2 : undefined}
-            // backgroundColor={isCollapsible ? 'red': undefined}
-          >
-            <Flex
+          <VStack data-id="schame-row__card-header_vstack" flex={1} alignItems={"flex-start"}>
+            <HStack
               gap={2}
-              data-id="id-03-01"
-              alignItems="center"
-              maxW="full"
               onClick={isCollapsible ? () => setExpanded(!isExpanded) : undefined}
               cursor={isCollapsible ? "pointer" : undefined}
             >
-              {isCollapsible && <Caret isExpanded={isExpanded} />}
-              <Flex alignItems="baseline" fontSize="base">
-                {schemaNode.subpath.length > 0 && shouldShowPropertyName(schemaNode) && (
-                  <Box fontFamily="mono" fontWeight="semibold">
-                    {last(schemaNode.subpath)} ??
-                  </Box>
-                )}
+              <SchemaRowTrigger isCollapsible={isCollapsible} isOpen={isExpanded} />
 
-                {choices.length === 1 && (
-                  <Types schemaNode={typeToShow} />
-                )}
+              <HStack gap={2}>
+                <SchemaRowSubPath schemaNode={schemaNode} />
+                <SchemaRowTypeToShow choices={choices} typeToShow={typeToShow} />
+                <SchemaRowGoToRef schemaNode={schemaNode} onGoToRef={onGoToRef} />
+                <SchemaRowPatternProperty schemaNode={schemaNode} />
+                <SchemaRowAnyOf choices={choices} selectedChoice={selectedChoice} onChange={(selectedIndex: any) => setSelectedChoice(choices[selectedIndex as number])} />
+              </HStack>
 
-                {onGoToRef && isReferenceNode(schemaNode) && schemaNode.external ? (
-                  <Box
-                    as="a"
-                    ml={2}
-                    cursor="pointer"
-                    color="primary-light"
-                    onClick={(e: React.MouseEvent) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      onGoToRef(schemaNode)
-                    }}
-                  >
-                    (go to ref)
-                  </Box>
-                ) : null}
+              <SchemaRowProperties required={required} deprecated={deprecated} validations={validations} />
+            </HStack>
+            <SchemaRowDescription schemaNode={schemaNode} description={description} combiner={combiner} />
+            <SchemaRowValidation schemaNode={schemaNode} hideExamples={hideExamples} />
+            <SchemaRowExtension schemaNode={schemaNode} nestingLevel={nestingLevel} vendorExtensions={vendorExtensions} renderExtensionAddon={renderExtensionAddon} hasVendorProperties={hasVendorProperties}/>
 
-                {schemaNode.subpath.length > 1 && schemaNode.subpath[0] === "patternProperties" ? (
-                  <Box ml={2} color="muted">
-                    (pattern property)
-                  </Box>
-                ) : null}
 
-                {choices.length > 1 && (
-                  <>
-                    <NativeSelect.Root aria-label="Pick a type" size="sm">
-                      <NativeSelect.Field value={String(choices.indexOf(selectedChoice))} onChange={(selectedIndex: any) => setSelectedChoice(choices[selectedIndex as number])}>
-                        {choices.map((choice: any, index: any) => (
-                          <option key={String(index)} value={String(index)}>
-                            {choice.title}
-                          </option>
-                        ))}
-                      </NativeSelect.Field>
-                      <NativeSelect.Indicator />
-                    </NativeSelect.Root>
-                  </>
-                )}
-              </Flex>
-              {hasProperties && <Divider atom={isNodeHoveredAtom(schemaNode)} />}
-              <Properties required={required} deprecated={deprecated} validations={validations} />
-            </Flex>
-            {typeof description === "string" && (!combiner || schemaNode.parent?.fragment.description !== description) && description.length > 0 && (
-              <Description value={description} />
-            )}
-            <Validations validations={isRegularNode(schemaNode) ? getValidationsFromSchema(schemaNode) : {}} hideExamples={hideExamples} />
-            {hasVendorProperties && renderExtensionAddon ? <Box>{renderExtensionAddon({ schemaNode, nestingLevel, vendorExtensions })}</Box> : null}
           </VStack>
-          <Error schemaNode={schemaNode} />
-          {renderRowAddon ? <Box>{renderRowAddon({ schemaNode, nestingLevel })}</Box> : null}
+          <SchemaRowError schemaNode={schemaNode} />
+          <SchemaRowAddon schemaNode={schemaNode} nestingLevel={nestingLevel} renderRowAddon={renderRowAddon} />
+
         </Card.Header>
 
-        {isCollapsible && isExpanded ? (
+        <SchemaRowChildren
+          schemaNode={schemaNode}
+          childNodes={childNodes}
+          currentNestingLevel={nestingLevel}
+          parentNodeId={nodeId}
+          parentChangeType={() => parentChangeType ? parentChangeType : hasChanged ? hasChanged?.type : undefined}
+          isCollapsible
+          isExpanded
 
-            <ChildStack
-              schemaNode={schemaNode}
-              childNodes={childNodes}
-              currentNestingLevel={nestingLevel}
-              parentNodeId={nodeId}
-              parentChangeType={parentChangeType ? parentChangeType : hasChanged ? hasChanged?.type : undefined}
-            />
+        />
 
-        ) : null}
       </Card.Root>
-    </>
+    </Box>
   )
 })
 
-const Divider = ({ atom }: { atom: Atom<boolean> }) => {
-  const isHovering = useAtomValue(atom)
 
-  return <Box bg={isHovering ? "canvas-200" : undefined} h="px" flex={1} mx={3} />
-}
-
-function shouldShowPropertyName(schemaNode: SchemaNode) {
-  return schemaNode.subpath.length === 2 && (schemaNode.subpath[0] === "properties" || schemaNode.subpath[0] === "patternProperties")
-}

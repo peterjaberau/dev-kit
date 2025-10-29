@@ -13,6 +13,8 @@ export function useRootActors() {
   const rootJSchemaToolsRef = getSpawnedActor(ROOT_SYSTEM_IDS.JSON_SCHEMA_TOOLS, rootRef)
   const rootJSchemaFormsRef = getSpawnedActor(ROOT_SYSTEM_IDS.JSON_SCHEMA_FORMS, rootRef)
 
+  const rootJSchemaTreeRef = getSpawnedActor(ROOT_SYSTEM_IDS.JSON_SCHEMA_TREE, rootRef)
+
   const rootJSchemaExamplesRef = getSpawnedActor(ROOT_SYSTEM_IDS.JSON_SCHEMA_EXAMPLES, rootRef)
 
 
@@ -25,6 +27,8 @@ export function useRootActors() {
     rootJSchemaStandardsRef,
     rootJSchemaToolsRef,
     rootJSchemaFormsRef,
+
+    rootJSchemaTreeRef,
 
     rootJSchemaExamplesRef,
   }

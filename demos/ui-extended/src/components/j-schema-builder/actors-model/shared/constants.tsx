@@ -9,8 +9,12 @@ export enum ROOT_SYSTEM_IDS {
   JSON_SCHEMA_TOOLS = 'json_schema_tools',
   JSON_SCHEMA_FORMS = 'json_schema_forms',
 
+  JSON_SCHEMA_TREE = 'json_schema_tree',
 
   JSON_SCHEMA_EXAMPLES = 'json_schema_examples',
+
+
+
 
 }
 

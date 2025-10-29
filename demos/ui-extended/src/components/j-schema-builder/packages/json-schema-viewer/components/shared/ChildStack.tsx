@@ -38,7 +38,6 @@ export const ChildStack = React.memo(
     }
 
     return (
-      <Card.Body>
           <Box
             data-id='shared-child-stack'
             className={className}
@@ -59,7 +58,6 @@ export const ChildStack = React.memo(
               />
             ))}
           </Box>
-      </Card.Body>
     );
   },
 );

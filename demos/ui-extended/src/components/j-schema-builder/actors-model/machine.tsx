@@ -2,7 +2,9 @@ import { assign, createMachine } from "xstate"
 import {
   appMachine, currentAppMachine, sessionMachine,
   jsonSchemaStandardsMachine, jsonSchemaToolsMachine, jsonSchemaFormsMachine,
-  jsonSchemaExamplesMachine
+  jsonSchemaTreeMachine,
+  jsonSchemaExamplesMachine,
+
 } from "./machines"
 import { ROOT_SYSTEM_IDS } from "./shared/constants"
 
@@ -15,6 +17,9 @@ export const rootMachine = createMachine({
     jsonSchemaStandards: ({ spawn }) => spawn(jsonSchemaStandardsMachine, { systemId: ROOT_SYSTEM_IDS.JSON_SCHEMA_STANDARDS }),
     jsonSchemaTools: ({ spawn }) => spawn(jsonSchemaToolsMachine, { systemId: ROOT_SYSTEM_IDS.JSON_SCHEMA_TOOLS }),
     jsonSchemaForms: ({ spawn }) => spawn(jsonSchemaFormsMachine, { systemId: ROOT_SYSTEM_IDS.JSON_SCHEMA_FORMS }),
+
+    jsonSchemaTree: ({ spawn }) => spawn(jsonSchemaTreeMachine, { systemId: ROOT_SYSTEM_IDS.JSON_SCHEMA_TREE }),
+
 
     jsonSchemaExamples: ({ spawn }) => spawn(jsonSchemaExamplesMachine, { systemId: ROOT_SYSTEM_IDS.JSON_SCHEMA_EXAMPLES }),
   }),
