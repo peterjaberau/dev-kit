@@ -14,13 +14,14 @@ export const Description: React.FunctionComponent<{ value: unknown }> = ({ value
 
   if (paragraphs.length <= 1 || showAll) {
     return (
-        <Prose
-          data-id='shared-description'
-          mx="auto" size={'md'}>
-          <Markdown>
-            {value}
-          </Markdown>
-        </Prose>
+      <Text color={'fg.muted'} lineClamp="1">
+        {value}
+      </Text>
+        // <Prose
+        //   data-id='shared-description'
+        //   mx="auto" size={'md'}>
+        //   {value}???
+        // </Prose>
     );
   }
 
@@ -29,10 +30,14 @@ export const Description: React.FunctionComponent<{ value: unknown }> = ({ value
   return (
     <>
       <Prose mx="auto" size={'md'}>
-        <Markdown>
-          {firstParagraph}
-        </Markdown>
+        {firstParagraph}??
       </Prose>
+
+      {/*<Prose mx="auto" size={'md'}>*/}
+      {/*  <Markdown>*/}
+      {/*    /!*{firstParagraph}*!/*/}
+      {/*  </Markdown>*/}
+      {/*</Prose>*/}
       {/*<Box*/}
       {/*  as={MarkdownViewer}*/}
       {/*  data-test="property-description"*/}

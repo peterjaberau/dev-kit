@@ -1,7 +1,7 @@
 "use client"
 
 import { SchemaNode } from '@stoplight/json-schema-tree';
-import { Box, Card } from '@chakra-ui/react';
+import { Box, Card, Flex } from '@chakra-ui/react';
 import type { ChangeType } from '@stoplight/types';
 import * as React from 'react';
 
@@ -38,14 +38,15 @@ export const ChildStack = React.memo(
     }
 
     return (
-          <Box
+          <Flex
+            flex={1}
+            flexDirection='column'
             data-id='shared-child-stack'
-            className={className}
-            ml={ml}
             fontSize="sm"
-            borderLeft={isRootLevel ? 'none' : '1px solid'}
-            borderLeftColor={isRootLevel ? undefined : 'border.info'}
-            data-level={currentNestingLevel}
+            w={'100%'}
+            // borderLeft={isRootLevel ? 'none' : '1px solid'}
+            // borderLeftColor={isRootLevel ? undefined : 'border.info'}
+            // data-level={currentNestingLevel}
           >
             {childNodes.map((childNode: SchemaNode) => (
               <RowComponent
@@ -57,7 +58,7 @@ export const ChildStack = React.memo(
                 parentChangeType={parentChangeType}
               />
             ))}
-          </Box>
+          </Flex>
     );
   },
 );

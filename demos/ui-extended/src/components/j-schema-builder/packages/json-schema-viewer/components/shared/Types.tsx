@@ -9,7 +9,7 @@ import {
   SchemaNode,
   SchemaNodeKind,
 } from '@stoplight/json-schema-tree';
-import { Tag } from '@chakra-ui/react'
+import { chakra } from '@chakra-ui/react'
 import { Box } from '@chakra-ui/react';
 import * as React from 'react';
 
@@ -37,21 +37,21 @@ function getTypes(schemaNode: RegularNode): Array<SchemaNodeKind | SchemaCombine
 export const Types: React.FunctionComponent<{ schemaNode: SchemaNode }> = ({ schemaNode }) => {
   if (isReferenceNode(schemaNode)) {
     return (
-      <Box
+      <chakra.span
         data-id='shared-types'
-        as="span" textOverflow="truncate" data-test="property-type-ref">
+        textOverflow="truncate" data-test="property-type-ref">
         {schemaNode.value ?? '$ref'}
-      </Box>
+      </chakra.span>
     );
   }
 
   if (isBooleanishNode(schemaNode)) {
     return (
-      <Box
+      <chakra.span
         data-id='shared-types'
-        as="span" textOverflow="truncate" color="muted" data-test="property-type">
+        textOverflow="truncate" color="fg.muted" data-test="property-type">
         {schemaNode.fragment ? 'any' : 'never'}
-      </Box>
+      </chakra.span>
     );
   }
 
@@ -64,11 +64,11 @@ export const Types: React.FunctionComponent<{ schemaNode: SchemaNode }> = ({ sch
 
   if (types.length === 0) {
     return (
-      <Box
+      <chakra.span
         data-id='shared-types'
-        as="span" textOverflow="truncate" color="muted" data-test="property-type">
+        textOverflow="truncate" color="fg.muted" data-test="property-type">
         {formats === null ? 'any' : `<${formats[1]}>`}
-      </Box>
+      </chakra.span>
     );
   }
 
@@ -82,21 +82,25 @@ export const Types: React.FunctionComponent<{ schemaNode: SchemaNode }> = ({ sch
 
     return (
       <React.Fragment key={type}>
-        <Box as="span" textOverflow="truncate" color="muted" data-test="property-type">
+        <chakra.span textOverflow="truncate" color="fg.muted" data-test="property-type">
           {printedName}
-        </Box>
+        </chakra.span>
 
         {i < length - 1 && (
-          <Box as="span" key={`${i}-sep`} color="muted">
+          <chakra.span key={`${i}-sep`} color="fg.muted">
             {' or '}
-          </Box>
+          </chakra.span>
         )}
       </React.Fragment>
     );
   });
 
-  return rendered.length > 1 ? <Box
-    data-id='shared-types'
-    textOverflow="truncate">{rendered}</Box> : <>{rendered}</>;
+  return rendered.length > 1 ? (
+    <Box data-id="shared-types" textOverflow="truncate">
+      {rendered}
+    </Box>
+  ) : (
+    <>{rendered}</>
+  )
 };
 Types.displayName = 'JsonSchemaViewer.Types';

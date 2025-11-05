@@ -1,5 +1,6 @@
-import { assign, setup } from "xstate"
+import { assign, enqueueActions, setup } from "xstate"
 import { jSchemaBuilderTools, jSchemaBuilderToolsSchema, jSchemaBuilderToolsSubSchema, jSchemaFormsUiRules, jSchemaStandardsDraft07 } from "../shared/data/j-schema"
+import { schema as jSchemaZudoku  } from '../shared/data/zudoku'
 import { pathCrumbsAtom, showPathCrumbsAtom } from "#jSchemaBuilder/json-schema-viewer/components/PathCrumbs/state"
 
 export const jsonSchemaStandardsMachine = setup({
@@ -72,15 +73,61 @@ export const jsonSchemaTreeMachine = setup({
       hideExamples: false,
     },
     components: {
+      jsonSchemaViewer: {
+        options: {
+          defaultExpandedDepth: 0,
+          viewMode: "standalone", //'read' | 'write' | 'standalone'
+          hideExamples: false,
+          skipTopLevelDescription: false,
+        },
+      },
       pathCrumbs: {
         showPathCrumbs: false,
       },
     },
+    jsonSchemaTree: null,
     ...input,
   }),
   states: {
     idle: {
-      on: {},
+      on: {
+        SCHEMA_CHANGED: {
+          actions: enqueueActions(({ enqueue, context, check, event}) => {
+            /**
+             * setSchema
+             * createJsonSchemaTree
+             */
+          })
+        }
+      },
+    },
+  },
+})
+
+
+export const jsonSchemaZudokuMachine = setup({
+  types: {} as any,
+  actions: {},
+  actors: {},
+  guards: {},
+}).createMachine({
+  initial: "idle",
+  context: ({ input }: any) => ({
+    schema: jSchemaZudoku,
+    ...input,
+  }),
+  states: {
+    idle: {
+      on: {
+        SCHEMA_CHANGED: {
+          actions: enqueueActions(({ enqueue, context, check, event}) => {
+            /**
+             * setSchema
+             * createJsonSchemaTree
+             */
+          })
+        }
+      },
     },
   },
 })

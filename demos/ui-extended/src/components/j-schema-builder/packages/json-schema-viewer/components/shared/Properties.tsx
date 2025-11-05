@@ -1,6 +1,6 @@
 "use client"
 
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { Dictionary } from '@stoplight/types';
 import * as React from 'react';
 
@@ -31,33 +31,30 @@ export const Properties: React.FunctionComponent<IProperties> = ({
   const showVisibilityValidations = viewMode === 'standalone' && !!readOnly !== !!writeOnly;
   const visibility = showVisibilityValidations ? (
     readOnly ? (
-      <Box
-        as="span" ml={2} color="muted" data-test="property-read-only">
+      <Text textStyle={'sm'} color={'fg.muted'}>
         read-only
-      </Box>
+      </Text>
+
     ) : (
-      <Box as="span" ml={2} color="muted" data-test="property-write-only">
+      <Text textStyle={'sm'} color={'fg.muted'}>
         write-only
-      </Box>
+      </Text>
+
     )
   ) : null;
 
   return (
     <>
       {deprecated ? (
-        <Box
-          data-id='shared-properties'
-          as="span" ml={2} color="warning" data-test="property-deprecated">
-          deprecated
-        </Box>
+          <Text textStyle={'sm'} color={'fg.error'}>
+            deprecated
+          </Text>
       ) : null}
       {visibility}
       {required && (
-        <Box
-          data-id='shared-properties'
-          as="span" ml={2} color="warning" data-test="property-required">
+        <Text textStyle={'sm'} color={'fg.error'}>
           required
-        </Box>
+        </Text>
       )}
     </>
   );

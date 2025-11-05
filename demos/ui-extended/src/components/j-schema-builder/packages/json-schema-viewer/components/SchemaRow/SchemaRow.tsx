@@ -35,7 +35,7 @@ import {
   SchemaRowPatternProperty,
   SchemaRowExtension,
   SchemaRowAddon,
-  SchemaRowChildren
+  SchemaRowChildren,
 } from "./components"
 
 export interface SchemaRowProps {
@@ -97,59 +97,64 @@ export const SchemaRow: React.FunctionComponent<SchemaRowProps> = React.memo(({ 
   }
 
   return (
-    <Box w="full" py={2}>
-      <Card.Root>
-        <Card.Header
+    <Flex flex={1}  pl={3} pr={isRootLevel ? 1 : 0} w="full" py={2}>
+      <Flex flexDirection='column' flex={1} position='relative' wordWrap='break-word' padding={0} alignItems={'flex-start'} justifyContent={'flex-start'}>
+        <Box
+          borderRadius='md'
+          boxShadow='sm'
+          flex={1}
+          w='full'
           onMouseEnter={(e: any) => {
             e.stopPropagation()
             setHoveredNode(selectedChoice.type)
           }}
-          px={2}
-          py={1}
+          px={3}
+          py={2}
         >
           <VStack data-id="schame-row__card-header_vstack" flex={1} alignItems={"flex-start"}>
-            <HStack
-              gap={2}
-              onClick={isCollapsible ? () => setExpanded(!isExpanded) : undefined}
-              cursor={isCollapsible ? "pointer" : undefined}
-            >
+            <HStack gap={2} w="full" onClick={isCollapsible ? () => setExpanded(!isExpanded) : undefined} cursor={isCollapsible ? "pointer" : undefined}>
               <SchemaRowTrigger isCollapsible={isCollapsible} isOpen={isExpanded} />
 
-              <HStack gap={2}>
-                <SchemaRowSubPath schemaNode={schemaNode} />
-                <SchemaRowTypeToShow choices={choices} typeToShow={typeToShow} />
-                <SchemaRowGoToRef schemaNode={schemaNode} onGoToRef={onGoToRef} />
-                <SchemaRowPatternProperty schemaNode={schemaNode} />
-                <SchemaRowAnyOf choices={choices} selectedChoice={selectedChoice} onChange={(selectedIndex: any) => setSelectedChoice(choices[selectedIndex as number])} />
+              <HStack justifyContent="space-between" flex={1} gap={2}>
+                <HStack flex={1}>
+                  <SchemaRowSubPath schemaNode={schemaNode} />
+                  <SchemaRowTypeToShow choices={choices} typeToShow={typeToShow} />
+                </HStack>
+                <HStack>
+                  <SchemaRowGoToRef schemaNode={schemaNode} onGoToRef={onGoToRef} />
+                  <SchemaRowPatternProperty schemaNode={schemaNode} />
+                  <SchemaRowAnyOf choices={choices} selectedChoice={selectedChoice} onChange={(selectedIndex: any) => setSelectedChoice(choices[selectedIndex as number])} />
+                </HStack>
               </HStack>
 
               <SchemaRowProperties required={required} deprecated={deprecated} validations={validations} />
             </HStack>
             <SchemaRowDescription schemaNode={schemaNode} description={description} combiner={combiner} />
             <SchemaRowValidation schemaNode={schemaNode} hideExamples={hideExamples} />
-            <SchemaRowExtension schemaNode={schemaNode} nestingLevel={nestingLevel} vendorExtensions={vendorExtensions} renderExtensionAddon={renderExtensionAddon} hasVendorProperties={hasVendorProperties}/>
-
-
+            <SchemaRowExtension
+              schemaNode={schemaNode}
+              nestingLevel={nestingLevel}
+              vendorExtensions={vendorExtensions}
+              renderExtensionAddon={renderExtensionAddon}
+              hasVendorProperties={hasVendorProperties}
+            />
           </VStack>
           <SchemaRowError schemaNode={schemaNode} />
           <SchemaRowAddon schemaNode={schemaNode} nestingLevel={nestingLevel} renderRowAddon={renderRowAddon} />
+        </Box>
 
-        </Card.Header>
-
-        <SchemaRowChildren
-          schemaNode={schemaNode}
-          childNodes={childNodes}
-          currentNestingLevel={nestingLevel}
-          parentNodeId={nodeId}
-          parentChangeType={() => parentChangeType ? parentChangeType : hasChanged ? hasChanged?.type : undefined}
-          isCollapsible
-          isExpanded
-
-        />
-
-      </Card.Root>
-    </Box>
+        {isExpanded && (
+          <SchemaRowChildren
+            schemaNode={schemaNode}
+            childNodes={childNodes}
+            currentNestingLevel={nestingLevel}
+            parentNodeId={nodeId}
+            parentChangeType={() => (parentChangeType ? parentChangeType : hasChanged ? hasChanged?.type : undefined)}
+            isCollapsible
+            isExpanded
+          />
+        )}
+      </Flex>
+    </Flex>
   )
 })
-
-

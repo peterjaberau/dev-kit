@@ -5,7 +5,7 @@ import last from "lodash/last"
 export const SchemaRowSubPath = ({ schemaNode }: any) => {
   return (
     schemaNode.subpath.length > 0 && shouldShowPropertyName(schemaNode) && (
-      <Text fontFamily="mono" fontWeight="semibold">
+      <Text textStyle="sm" fontWeight="semibold">
         {last(schemaNode.subpath)}
       </Text>
     )

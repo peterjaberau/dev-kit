@@ -3,6 +3,7 @@ import { ChakraProvider, defineConfig, defaultConfig, createSystem } from "@chak
 import { ThemeProvider } from "next-themes"
 import { EngineProvider } from "#machines/engine/engine.provider"
 import { globalCss } from "@chakra-ui/react/theme"
+import "@cloudscape-design/global-styles/index.css"
 import RootApp from "./_app"
 
 const themeConfig: any = defineConfig({

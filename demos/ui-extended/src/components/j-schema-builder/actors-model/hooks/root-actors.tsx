@@ -18,6 +18,9 @@ export function useRootActors() {
   const rootJSchemaExamplesRef = getSpawnedActor(ROOT_SYSTEM_IDS.JSON_SCHEMA_EXAMPLES, rootRef)
 
 
+  const rootJSchemaZudokuRef = getSpawnedActor(ROOT_SYSTEM_IDS.JSON_SCHEMA_ZUDOKU, rootRef)
+
+
   return {
     rootRef,
     rootAppRef,
@@ -31,5 +34,7 @@ export function useRootActors() {
     rootJSchemaTreeRef,
 
     rootJSchemaExamplesRef,
+
+    rootJSchemaZudokuRef,
   }
 }

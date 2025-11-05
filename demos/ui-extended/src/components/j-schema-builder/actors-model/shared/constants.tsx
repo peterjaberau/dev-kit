@@ -14,6 +14,9 @@ export enum ROOT_SYSTEM_IDS {
   JSON_SCHEMA_EXAMPLES = 'json_schema_examples',
 
 
+  JSON_SCHEMA_ZUDOKU = 'json_schema_zudoku',
+
+
 
 
 }

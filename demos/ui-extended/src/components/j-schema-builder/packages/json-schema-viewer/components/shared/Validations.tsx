@@ -2,7 +2,7 @@
 
 
 import { isRegularNode, RegularNode } from '@stoplight/json-schema-tree';
-import { Flex, HStack, Text, Wrap, Tag } from '@chakra-ui/react';
+import { Flex, HStack, Text, Wrap, Tag, Code, CodeBlock } from '@chakra-ui/react';
 import { Dictionary } from '@stoplight/types';
 import capitalize from 'lodash/capitalize.js';
 import keys from 'lodash/keys.js';
@@ -179,7 +179,7 @@ const KeyValueValidation = ({ name, values }: { name: string; values: string[] }
     <HStack color="muted" gap={2} alignItems="baseline" data-test="property-validation">
       <Text>{capitalize(name)}:</Text>
 
-      <Wrap  flex={1} style={{ gap: 4 }}>
+      <Wrap   style={{ gap: 4 }}>
         {uniq(values).map((value: any) => (
           <Value key={value} name={value} />
         ))}
@@ -189,9 +189,7 @@ const KeyValueValidation = ({ name, values }: { name: string; values: string[] }
 };
 
 const Value = ({ name }: { name: string }) => (
-  <Tag.Root px={1} variant={'subtle'} wordBreak="all" maxW="full">
-    <Tag.Label>{name}</Tag.Label>
-  </Tag.Root>
+    <Code variant="outline" wordBreak={'break-all'} p={1} fontSize={'12px'} lineHeight={'normal'} >{name}</Code>
 );
 
 export function validationCount(schemaNode: RegularNode) {

@@ -4,6 +4,7 @@ import {
   jsonSchemaStandardsMachine, jsonSchemaToolsMachine, jsonSchemaFormsMachine,
   jsonSchemaTreeMachine,
   jsonSchemaExamplesMachine,
+  jsonSchemaZudokuMachine
 
 } from "./machines"
 import { ROOT_SYSTEM_IDS } from "./shared/constants"
@@ -22,5 +23,7 @@ export const rootMachine = createMachine({
 
 
     jsonSchemaExamples: ({ spawn }) => spawn(jsonSchemaExamplesMachine, { systemId: ROOT_SYSTEM_IDS.JSON_SCHEMA_EXAMPLES }),
+
+    jsonSchemaZudokuMachine: ({ spawn }) => spawn(jsonSchemaZudokuMachine, { systemId: ROOT_SYSTEM_IDS.JSON_SCHEMA_ZUDOKU }),
   }),
 })
