@@ -13,7 +13,7 @@
     "react-lorem-ipsum": "^1.4.10",
     "@hookform/resolvers": "^5.1.1",
     "@tanstack/react-virtual": "3.13.12",
-    "recharts": "2.15.3",
+    "recharts": "^3.3.0",
     "react-use": "17.6.0",
     "react-frame-component": "5.2.7",
     "react-hook-form": "7.58.1",
