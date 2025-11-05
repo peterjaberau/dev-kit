@@ -1,7 +1,8 @@
 'use client'
-import { ActorsModelProvider } from "./actors-model/provider"
+import { ActorsModelProvider } from "./model/provider"
 
-export const AppWithActorsProvider = ({children}: any) => {
+
+export const App = ({ children }: any) => {
   return (
     <>
       <ActorsModelProvider>
@@ -10,3 +11,4 @@ export const AppWithActorsProvider = ({children}: any) => {
     </>
   )
 }
+
