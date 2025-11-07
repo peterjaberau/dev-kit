@@ -1,3 +1,4 @@
+import "./globals.css";
 import { Provider as ChakraProvider } from "./provider"
 import { Suspense } from "react"
 

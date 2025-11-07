@@ -1,10 +1,6 @@
-'use client';
+"use client"
+import Canvas from "#components/canvas/Canvas"
 
 export default function Page() {
-
-  return (
-   <>
-   layout-builder
-   </>
-  );
+  return <Canvas />
 }
