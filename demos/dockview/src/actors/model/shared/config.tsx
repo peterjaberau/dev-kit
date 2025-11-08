@@ -1,8 +1,36 @@
-export const appConfigDefaults = {}
+export const appConfigDefaults = {
+  widgetOptions: {
+    widgetTypes: [
+      {
+        label: 'Chakra',
+        value: 'chakra'
+      },
+      {
+        label: 'Chakra Pro',
+        value: 'chakra-pro'
+      },
+      {
+        label: 'Custom components',
+        value: 'custom-components'
+      },
+      {
+        label: 'Json Schema UI',
+        value: 'json-schema-ui'
+      }
+    ]
+  }
+}
 
-export const sessionConfigDefaults = {}
+export const sessionConfigDefaults = {
+  widgetSelected: {
+    widgetType: null
+  }
+
+}
 
 export const currentAppConfig = {
+
+
   configDemo: {
     panels: [
       {
@@ -111,50 +139,34 @@ export const currentAppConfig = {
         dock: {
           panels: [
             {
-              id: "domain-structure-panel",
-              component: "PlaceholderPanel",
-              title: "Domain Structure",
+              id: "scope_picker_panel_id",
+              component: "scope_picker_panel",
+              title: "Scope Picker",
               renderer: "always",
             },
             {
               // id: "monaco-editor-panel-source",
               // component: "MonacoEditorPanel",
-              id: "code-mirror-panel-source",
-              component: "PlaceholderPanel",
-              title: "Source",
+              id: "ui_previewer_panel_id",
+              component: "ui_previewer_panel",
+              title: "Ui Previewer",
               renderer: "always",
               params: {
                 scope: 'source',
               },
-              position: { referencePanel: "domain-structure-panel", direction: "right" },
+              position: { referencePanel: "scope_picker_panel_id", direction: "right" },
             },
             {
-              id: "code-mirror-panel-transformer",
-              component: "PlaceholderPanel",
-              title: "Transformer",
+              id: "code_block_panel_id",
+              component: "code_block_panel",
+              title: "Code",
               renderer: "always",
               params: {
                 scope: 'transformer',
               },
-              position: { referencePanel: "code-mirror-panel-source", direction: "right" },
+              position: { referencePanel: "ui_previewer_panel_id", direction: "right" },
             },
-            {
-              id: "code-mirror-panel-result",
-              component: "PlaceholderPanel",
-              title: "Results",
-              renderer: "always",
-              params: {
-                scope: 'result',
-              },
-              position: { referencePanel: "code-mirror-panel-transformer", direction: "right" },
-            },
-            {
-              id: "panel_node_actions",
-              component: "PlaceholderPanel",
-              title: "Actions",
-              renderer: "always",
-              position: { referencePanel: "domain-structure-panel", direction: "below" },
-            },
+
           ]
         }
       }

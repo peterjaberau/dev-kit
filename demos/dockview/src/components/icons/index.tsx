@@ -7,6 +7,14 @@ import { FaLayerGroup } from "react-icons/fa6"
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa"
 import { FiMaximize, FiMinimize } from "react-icons/fi"
 import { PiSquareSplitHorizontal as SplitHorizontal, PiSquareSplitVertical as SplitVertical } from "react-icons/pi";
+import { AiFillCode } from "react-icons/ai";
+import { FaRegFileAlt } from "react-icons/fa";
+import { MdOutlineEditNote } from "react-icons/md";
+import { LuLightbulb } from "react-icons/lu";
+import { GoTasklist } from "react-icons/go";
+import { LuArchive } from "react-icons/lu";
+import { FaRegSquareCheck } from "react-icons/fa6";
+
 
 import { Button, IconButton } from "@chakra-ui/react"
 import * as React from "react"
@@ -28,7 +36,15 @@ export const iconMapping: any = {
   download: LuDownload,
   star: LuStar,
   "split-horizontal": SplitHorizontal,
-  "split-vertical": SplitVertical
+  "split-vertical": SplitVertical,
+
+  console: AiFillCode,
+  description: FaRegFileAlt,
+  shortcut: MdOutlineEditNote,
+  solution: LuLightbulb,
+  test_cases: GoTasklist,
+  archive: LuArchive,
+  check_square: FaRegSquareCheck,
 }
 
 export const IconRender = ({ name }: { name: keyof typeof iconMapping } | any) => {

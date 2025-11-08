@@ -1,5 +1,5 @@
 import { IDockviewHeaderActionsProps } from "#modules/dockview/core"
-import { useDockPanel } from "#actors/model/selectors"
+import { useDockPanel, useDockApi } from "#actors/model/selectors"
 import * as React from "react"
 import { HStack } from "@chakra-ui/react"
 import { IconButtonRender } from "../../icons"
@@ -14,6 +14,9 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
   const { panel, id, isGroupActive, panelContainerApi, maximize, isMaximized, exitMaximized, isPopout } = useDockPanel({
     panelId: props.activePanel?.id,
   })
+
+  const { sendToDockApi } = useDockApi()
+
 
   const Component = React.useMemo(() => {
     if (!isGroupActive || !props.activePanel) {
@@ -40,21 +43,24 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
   }
 
   const splitHorizontally = () => {
-    props.containerApi.addGroup({
-      referenceGroup: props.group,
-      direction: "below",
-    });
+
+    sendToDockApi({ type: "onAddPanel", payload: { position: { referenceGroup: props.group, direction: 'below' } } })
+
   };
 
   const splitVertically = () => {
-    props.containerApi.addGroup({
-      referenceGroup: props.group,
-      direction: "right",
-    });
+    sendToDockApi({ type: "onAddPanel", payload: { position: { referenceGroup: props.group, direction: 'right' } } })
+
+
+    // props.containerApi.addGroup({
+    //   referenceGroup: props.group,
+    //   direction: "right",
+    // });
   };
 
   return (
     <HStack
+      gap={0}
       style={{
         color: "var(--dv-activegroup-hiddenpanel-tab-color)",
       }}
@@ -66,7 +72,7 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
 
       <IconButtonRender onClick={splitHorizontally} name={"split-vertical"} />
 
-      <IconButtonRender onClick={handlePopout} name={isPopout ? "exit-fullscreen" : "open-new-window"} />
+      {/*<IconButtonRender onClick={handlePopout} name={isPopout ? "exit-fullscreen" : "open-new-window"} />*/}
       {!isPopout && <IconButtonRender onClick={handleMaximization} name={isMaximized() ? "collapse" : "expand"} />}
     </HStack>
   )
