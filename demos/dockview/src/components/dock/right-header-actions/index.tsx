@@ -39,6 +39,20 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
     }
   }
 
+  const splitHorizontally = () => {
+    props.containerApi.addGroup({
+      referenceGroup: props.group,
+      direction: "below",
+    });
+  };
+
+  const splitVertically = () => {
+    props.containerApi.addGroup({
+      referenceGroup: props.group,
+      direction: "right",
+    });
+  };
+
   return (
     <HStack
       style={{
@@ -47,6 +61,10 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
     >
       {props.isGroupActive && <IconButtonRender name="star" variant="plain" />}
       {Component && <Component />}
+
+      <IconButtonRender onClick={splitVertically} name={"split-horizontal"} />
+
+      <IconButtonRender onClick={splitHorizontally} name={"split-vertical"} />
 
       <IconButtonRender onClick={handlePopout} name={isPopout ? "exit-fullscreen" : "open-new-window"} />
       {!isPopout && <IconButtonRender onClick={handleMaximization} name={isMaximized() ? "collapse" : "expand"} />}

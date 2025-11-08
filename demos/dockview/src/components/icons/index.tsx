@@ -6,6 +6,7 @@ import { MdTune, MdClose } from "react-icons/md"
 import { FaLayerGroup } from "react-icons/fa6"
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa"
 import { FiMaximize, FiMinimize } from "react-icons/fi"
+import { PiSquareSplitHorizontal as SplitHorizontal, PiSquareSplitVertical as SplitVertical } from "react-icons/pi";
 
 import { Button, IconButton } from "@chakra-ui/react"
 import * as React from "react"
@@ -26,6 +27,8 @@ export const iconMapping: any = {
   group: FaLayerGroup,
   download: LuDownload,
   star: LuStar,
+  "split-horizontal": SplitHorizontal,
+  "split-vertical": SplitVertical
 }
 
 export const IconRender = ({ name }: { name: keyof typeof iconMapping } | any) => {
