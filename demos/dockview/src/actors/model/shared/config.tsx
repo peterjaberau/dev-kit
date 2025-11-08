@@ -2,7 +2,191 @@ export const appConfigDefaults = {}
 
 export const sessionConfigDefaults = {}
 
-export const currentAppConfigDefaults = {
-  schema: {},
-  uiSchema: {},
+export const currentAppConfig = {
+  configDemo: {
+    panels: [
+      {
+        id: "panel_1",
+        component: "default",
+        renderer: "always",
+        title: "Panel 1",
+      },
+      {
+        id: "panel_2",
+        component: "default",
+        title: "Panel 2",
+        position: { referencePanel: "panel_1" },
+      },
+      {
+        id: "panel_3",
+        component: "default",
+        title: "Panel 3",
+        position: { referencePanel: "panel_1" },
+      },
+      {
+        id: "panel_4",
+        component: "default",
+        title: "Panel 4",
+        position: { referencePanel: "panel_1", direction: "right" },
+      },
+      {
+        id: "panel_5",
+        component: "default",
+        title: "Panel 5",
+        position: { referencePanel: "panel_4" },
+      },
+      {
+        id: "panel_6",
+        component: "default",
+        title: "Panel 6",
+        position: { referencePanel: "panel_5", direction: "below" },
+      },
+      {
+        id: "panel_7",
+        component: "default",
+        title: "Panel 7",
+        position: { referencePanel: "panel_6", direction: "left" },
+      },
+      {
+        id: "panel8",
+        component: "default",
+        title: "Panel 8",
+        position: { referencePanel: "panel_7", direction: "below" },
+      },
+    ]
+  },
+  domainDrivenDock: {
+    panels: [
+      {
+        id: "panel_domain_selector",
+        component: "PlaceholderPanel",
+        renderer: "always",
+        title: "Domain Selector",
+      },
+      {
+        id: "panel_domain_structure",
+        component: "PlaceholderPanel",
+        title: "Domain Structure",
+        renderer: "always",
+        position: { referencePanel: "panel_domain_selector", direction: "below" },
+      },
+
+      {
+        id: "panel_node_selected",
+        component: "PlaceholderPanel",
+        title: "Node Selected",
+        renderer: "always",
+        position: { referencePanel: "panel_domain_selector", direction: "right" },
+      },
+      {
+        id: "panel_node_specifications",
+        component: "PlaceholderPanel",
+        title: "Node Specs",
+        renderer: "always",
+        position: { referencePanel: "panel_domain_selector", direction: "right" },
+      },
+      {
+        id: "panel_node_simulator",
+        component: "PlaceholderPanel",
+        title: "Node Simulator",
+        renderer: "always",
+        position: { referencePanel: "panel_domain_structure", direction: "right" },
+      },
+      {
+        id: "panel_node_script_editor",
+        component: "PlaceholderPanel",
+        title: "Script Editor",
+        renderer: "always",
+        position: { referencePanel: "panel_domain_structure", direction: "right" },
+      },
+      //   MonacoEditorPanel
+    ],
+  },
+  domainStore: {
+    domains: [
+      "jsonata"
+    ],
+    domainConfig: {
+      jsonata: {
+        dock: {
+          panels: [
+            {
+              id: "domain-structure-panel",
+              component: "PlaceholderPanel",
+              title: "Domain Structure",
+              renderer: "always",
+            },
+            {
+              // id: "monaco-editor-panel-source",
+              // component: "MonacoEditorPanel",
+              id: "code-mirror-panel-source",
+              component: "PlaceholderPanel",
+              title: "Source",
+              renderer: "always",
+              params: {
+                scope: 'source',
+              },
+              position: { referencePanel: "domain-structure-panel", direction: "right" },
+            },
+            {
+              id: "code-mirror-panel-transformer",
+              component: "PlaceholderPanel",
+              title: "Transformer",
+              renderer: "always",
+              params: {
+                scope: 'transformer',
+              },
+              position: { referencePanel: "code-mirror-panel-source", direction: "right" },
+            },
+            {
+              id: "code-mirror-panel-result",
+              component: "PlaceholderPanel",
+              title: "Results",
+              renderer: "always",
+              params: {
+                scope: 'result',
+              },
+              position: { referencePanel: "code-mirror-panel-transformer", direction: "right" },
+            },
+            {
+              id: "panel_node_actions",
+              component: "PlaceholderPanel",
+              title: "Actions",
+              renderer: "always",
+              position: { referencePanel: "domain-structure-panel", direction: "below" },
+            },
+          ]
+        }
+      }
+    },
+    domainsStructure: {
+      jsonata: [
+        {
+          id: "demos",
+          name: "Demos",
+          children: [
+            {
+              id: "transformer",
+              name: "Transformer",
+            }
+          ]
+        },
+        {
+          id: "api-specs",
+          name: "API Specs",
+          children: [
+            { id: "operators", name: "Operators"},
+            { id: "functions", name: "Functions" }
+          ]
+        }
+      ]
+    },
+
+    nodeScriptDemos: {
+      jsonata: {
+        source: {},
+        transformer: {},
+      }
+    }
+  },
 }

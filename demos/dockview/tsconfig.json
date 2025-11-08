@@ -36,8 +36,18 @@
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
 
+      "#views/*": ["./src/views/*"],
+      "#views": ["./src/views"],
+
+
       "#app/*": ["./src/app/*"],
-      "#app": ["./src/app"]
+      "#app": ["./src/app"],
+
+      "#modules/*": ["./src/modules/*"],
+      "#modules": ["./src/modules"],
+
+      "#dockview/*": ["./src/modules/dockview/view/*"],
+      "#dockview": ["./src/modules/dockview/view"]
     }
   },
   "include": [
