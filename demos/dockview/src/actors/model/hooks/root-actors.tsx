@@ -9,10 +9,15 @@ export function useRootActors() {
   const rootSessionRef = getSpawnedActor(ROOT_SYSTEM_IDS.SESSION, rootRef)
   const rootCurrentAppRef = getSpawnedActor(ROOT_SYSTEM_IDS.CURRENT_APP, rootRef)
 
+  const rootPluginScopePickerRef = getSpawnedActor(ROOT_SYSTEM_IDS.PLUGIN_SCOPE_PICKER, rootRef)
+
+
   return {
     rootRef,
     rootAppRef,
     rootSessionRef,
     rootCurrentAppRef,
+
+    rootPluginScopePickerRef
   }
 }

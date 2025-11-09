@@ -9,3 +9,4 @@ export * from './dock-meta.selector'
 export * from './dock-panel.selector'
 
 
+export * from './plugins/plugin.scope-picker.selector'

@@ -1,4 +1,73 @@
+import { ScopePickerPlugin, UiPreviewerPlugin } from "#components/plugins"
+
+export const pluginsConfigDefaults = {
+  scopePickerPlugin: {
+    definitions: {
+      scopeOptions: [
+        {
+          label: 'Chakra',
+          value: 'chakra'
+        },
+        {
+          label: 'Chakra Pro',
+          value: 'chakra-pro'
+        },
+        {
+          label: 'Custom components',
+          value: 'custom-components'
+        },
+        {
+          label: 'Json Schema UI',
+          value: 'json-schema-ui'
+        }
+      ]
+    },
+    selections: {
+      scope: null
+    }
+  },
+  uiPreviewerPlugin: {
+    definitions: {
+      uiDemoOptions: []
+    },
+    selections: {
+      demo: null
+    }
+  },
+  codeBlockPlugin: {
+    definitions: {
+      codeBlockOptions: []
+    },
+    selections: {
+      codeBlock: null
+    }
+  }
+}
+
 export const appConfigDefaults = {
+  definitions: {
+    scopeOptions: [
+      {
+        label: 'Chakra',
+        value: 'chakra'
+      },
+      {
+        label: 'Chakra Pro',
+        value: 'chakra-pro'
+      },
+      {
+        label: 'Custom components',
+        value: 'custom-components'
+      },
+      {
+        label: 'Json Schema UI',
+        value: 'json-schema-ui'
+      }
+    ],
+    uiDemoOptions: []
+  },
+
+
   widgetOptions: {
     widgetTypes: [
       {
@@ -22,13 +91,47 @@ export const appConfigDefaults = {
 }
 
 export const sessionConfigDefaults = {
-  widgetSelected: {
+  currentSelection: {
     widgetType: null
   }
 
 }
 
 export const currentAppConfig = {
+
+  dockViewConfig: {
+    panels: [
+      {
+        id: "scope_picker_panel_id",
+        component: "scope_picker_panel",
+        title: "Scope Picker",
+        renderer: "always",
+      },
+      {
+        // id: "monaco-editor-panel-source",
+        // component: "MonacoEditorPanel",
+        id: "ui_previewer_panel_id",
+        component: "ui_previewer_panel",
+        title: "Ui Previewer",
+        renderer: "always",
+        params: {
+          scope: 'source',
+        },
+        position: { referencePanel: "scope_picker_panel_id", direction: "right" },
+      },
+      {
+        id: "code_block_panel_id",
+        component: "code_block_panel",
+        title: "Code",
+        renderer: "always",
+        params: {
+          scope: 'transformer',
+        },
+        position: { referencePanel: "ui_previewer_panel_id", direction: "right" },
+      },
+
+    ]
+  },
 
 
   configDemo: {

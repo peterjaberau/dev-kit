@@ -9,6 +9,7 @@ const defaultConfig = {
   demo: currentAppConfig.configDemo,
   domainDrivenDock: currentAppConfig.domainDrivenDock,
   domain: currentAppConfig.domainStore,
+  dockViewConfig: currentAppConfig.dockViewConfig
 }
 
 
@@ -53,18 +54,27 @@ export const currentAppMachine = setup({
     },
 
     // completion
-    addPanelCompletion: assign(({ context, event }: any) => ({
-      panels: [...context.panels, event.payload.id],
-      logLines: [...context.logLines, { text: `Panel Added ${event.payload.id}`, timestamp: new Date() }],
-    })),
-    removePanelCompletion: assign(({ context, event }: any) => ({
-      panels: context.panels.filter((p: string) => p !== event.payload.id),
-      logLines: [...context.logLines, { text: `Panel Removed ${event.payload.id}`, timestamp: new Date() }],
-    })),
-    activePanelChangeCompletion: assign(({ context, event }: any) => ({
-      activePanel: event.payload?.id,
-      logLines: [...context.logLines, { text: `Panel Activated ${event.payload?.id}`, timestamp: new Date() }],
-    })),
+    addPanelCompletion: assign(({ context, event }: any) => {
+      context = {
+        ...context,
+        panels: [...context.panels, event.payload.id],
+        logLines: [...context.logLines, { text: `Panel Added ${event.payload.id}`, timestamp: new Date() }],
+      }
+    }),
+    removePanelCompletion: assign(({ context, event }: any) => {
+      context = {
+        ...context,
+        panels: context.panels.filter((p: string) => p !== event.payload.id),
+        logLines: [...context.logLines, { text: `Panel Removed ${event.payload.id}`, timestamp: new Date() }],
+      }
+    }),
+    activePanelChangeCompletion: assign(({ context, event }: any) => {
+      context = {
+        ...context,
+        activePanel: event.payload?.id,
+        logLines: [...context.logLines, { text: `Panel Activated ${event.payload?.id}`, timestamp: new Date() }],
+      }
+    }),
     movePanelCompletion: assign(({ context, event }: any) => ({
       logLines: [...context.logLines, { text: `Panel Moved ${event.payload.panel.id}`, timestamp: new Date() }],
     })),
@@ -146,7 +156,7 @@ export const currentAppMachine = setup({
       activePanel: "",
       activeGroup: "",
       // defaultConfig: defaultConfig.domainDrivenDock,
-      defaultConfig: defaultConfig.domain.domainConfig.jsonata.dock,
+      defaultConfig: defaultConfig.dockViewConfig,
 
       //extras
       idCounter: 0,
@@ -157,6 +167,7 @@ export const currentAppMachine = setup({
         text: null,
         timestamp: null,
       },
+
 
       ...input,
     }
