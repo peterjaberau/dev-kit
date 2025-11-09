@@ -102,8 +102,8 @@ export const currentAppConfig = {
   dockViewConfig: {
     panels: [
       {
-        id: "scope_picker_panel_id",
-        component: "scope_picker_panel",
+        id: "dv_controller_panel_id",
+        component: "dv_controller_panel",
         title: "Scope Picker",
         renderer: "always",
       },
@@ -117,11 +117,11 @@ export const currentAppConfig = {
         params: {
           scope: 'source',
         },
-        position: { referencePanel: "scope_picker_panel_id", direction: "right" },
+        position: { referencePanel: "dv_controller_panel_id", direction: "right" },
       },
       {
-        id: "json_viewer_panel_id",
-        component: "json_viewer_panel",
+        id: "dv_debugger_panel_id",
+        component: "dv_debugger_panel",
         title: "Code",
         renderer: "always",
         params: {
@@ -242,8 +242,8 @@ export const currentAppConfig = {
         dock: {
           panels: [
             {
-              id: "scope_picker_panel_id",
-              component: "scope_picker_panel",
+              id: "dv_controller_panel_id",
+              component: "dv_controller_panel",
               title: "Scope Picker",
               renderer: "always",
             },
@@ -257,11 +257,11 @@ export const currentAppConfig = {
               params: {
                 scope: 'source',
               },
-              position: { referencePanel: "scope_picker_panel_id", direction: "right" },
+              position: { referencePanel: "dv_controller_panel_id", direction: "right" },
             },
             {
-              id: "json_viewer_panel_id",
-              component: "json_viewer_panel",
+              id: "dv_debugger_panel_id",
+              component: "dv_debugger_panel",
               title: "Code",
               renderer: "always",
               params: {

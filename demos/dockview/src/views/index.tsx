@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import "../styles/dock-light.css"
 
 import {
@@ -8,91 +8,18 @@ import {
   IDockviewPanelHeaderProps,
   themeReplit,
 } from "#dockview"
+import { ConfigDvComponentsMapping } from "../components/config"
 import React, { useEffect } from "react"
 
 import { LeftHeaderActions, RightHeaderActions, PrefixHeaderActions } from "#components/dock"
 
-import { Button,  Stack, Box, Flex } from "@chakra-ui/react"
-import {
-  WidgetPlaceholder,
-} from "#components/widgets"
+import { Button, Stack, Box, Flex } from "@chakra-ui/react"
+import { WidgetPlaceholder } from "#components/widgets"
 import { PaneContent } from "#components/parts"
 
-import {
-  ScopePickerPlugin,
-  UiPreviewerPlugin,
-  CodeBlockPlugin,
-  JsonViewerPlugin
-} from "#components/plugins"
+import { ScopePickerPlugin, UiPreviewerPlugin, CodeBlockPlugin, JsonViewerPlugin } from "#components/plugins"
 
 import { useDockApi, useDockPanel } from "#actors/model/selectors"
-
-
-const components = {
-  default: (props: any) => {
-    return (
-      <div
-        style={{
-          height: "100%",
-          overflow: "auto",
-          position: "relative",
-          padding: 5,
-        }}
-      >
-        <span
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%,-50%)",
-            pointerEvents: "none",
-            fontSize: "42px",
-            opacity: 0.5,
-          }}
-        >
-          {props.api.title}
-        </span>
-      </div>
-    )
-  },
-
-  PlaceholderPanel: (props: any) => {
-    return <WidgetPlaceholder />
-  },
-
-  scope_picker_panel: (props: any) => {
-    return (
-      <PaneContent>
-        <ScopePickerPlugin />
-      </PaneContent>
-    )
-  },
-
-  ui_previewer_panel: (props: any) => {
-    return (
-      <PaneContent>
-        <UiPreviewerPlugin />
-      </PaneContent>
-    )
-  },
-
-  code_block_panel: (props: any) => {
-    return (
-      <PaneContent>
-        <CodeBlockPlugin />
-      </PaneContent>
-    )
-  },
-
-  json_viewer_panel: (props: any) => {
-    return (
-      <PaneContent>
-        <JsonViewerPlugin />
-      </PaneContent>
-    )
-  },
-
-}
 
 const headerComponents = {
   default: (props: IDockviewPanelHeaderProps) => {
@@ -178,7 +105,7 @@ const Index = (props: { theme?: string }) => {
           }}
         >
           <DockviewReact
-            components={components}
+            components={ConfigDvComponentsMapping}
             defaultTabComponent={headerComponents.default}
             rightHeaderActionsComponent={RightHeaderActions}
             leftHeaderActionsComponent={LeftHeaderActions}

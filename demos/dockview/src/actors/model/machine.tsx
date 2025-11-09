@@ -1,5 +1,5 @@
 import { assign, createMachine } from "xstate"
-import { appMachine, currentAppMachine, sessionMachine, pluginScopePickerMachine } from "./machines"
+import { appMachine, currentAppMachine, sessionMachine, pluginScopePickerMachine, dvControllerMachine } from "./machines"
 import { ROOT_SYSTEM_IDS } from "./shared/constants"
 
 export const rootMachine = createMachine({
@@ -9,5 +9,6 @@ export const rootMachine = createMachine({
     currentApp: ({ spawn }: any) => spawn(currentAppMachine, { systemId: ROOT_SYSTEM_IDS.CURRENT_APP }),
 
     pluginScopePicker: ({ spawn }: any) => spawn(pluginScopePickerMachine, { systemId: ROOT_SYSTEM_IDS.PLUGIN_SCOPE_PICKER }),
+    dvControllerMachine: ({ spawn }: any) => spawn(dvControllerMachine, { systemId: ROOT_SYSTEM_IDS.PLUGIN_DV_CONTROLLER }),
   }),
 })

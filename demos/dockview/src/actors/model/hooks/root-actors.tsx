@@ -11,6 +11,8 @@ export function useRootActors() {
 
   const rootPluginScopePickerRef = getSpawnedActor(ROOT_SYSTEM_IDS.PLUGIN_SCOPE_PICKER, rootRef)
 
+  const rootDvControllerPluginRef = getSpawnedActor(ROOT_SYSTEM_IDS.PLUGIN_DV_CONTROLLER, rootRef)
+
 
   return {
     rootRef,
@@ -18,6 +20,7 @@ export function useRootActors() {
     rootSessionRef,
     rootCurrentAppRef,
 
-    rootPluginScopePickerRef
+    rootPluginScopePickerRef,
+    rootDvControllerPluginRef
   }
 }

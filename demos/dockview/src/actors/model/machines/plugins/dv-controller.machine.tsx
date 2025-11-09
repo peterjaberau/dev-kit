@@ -12,23 +12,12 @@ const config = {
     { label: "Close Panel", value: "close-panel" },
     { label: "Maximize Panel", value: "maximize-panel" },
     { label: "Minimize Panel", value: "minimize-panel" },
-    { label: "Marketing", value: "marketing" },
-    { label: "Sales", value: "sales" },
-    { label: "Engineering", value: "engineering" },
-    { label: "Design", value: "design" },
-    { label: "Product", value: "product" },
-    { label: "Customer Support", value: "support" },
-    { label: "Finance", value: "finance" },
-    { label: "Human Resources", value: "hr" },
-    { label: "Operations", value: "operations" },
-    { label: "Research", value: "research" },
-    { label: "Legal", value: "legal" },
-    { label: "Business Development", value: "business-dev" },
+
   ],
-  defaultValue: "marketing"
+  defaultValue: null
 }
 
-export const pluginScopePickerMachine = setup({
+export const dvControllerMachine = setup({
   types: {} as any,
   actions: {
     load: assign(({ context, event }) => {
@@ -39,6 +28,16 @@ export const pluginScopePickerMachine = setup({
       const { value = null } = event.payload || {}
       context.value = value
     }),
+    addPanel: assign(({ context, event }) => {}),
+    addPanelTab: assign(({ context, event }) => {}),
+    addNestedPanel: assign(({ context, event }) => {}),
+    addGroup: assign(({ context, event }) => {}),
+    splitHorizontally: assign(({ context, event }) => {}),
+    splitVertically: assign(({ context, event }) => {}),
+    getPanelInfo: assign(({ context, event }) => {}),
+    closePanel: assign(({ context, event }) => {}),
+    maximizePanel: assign(({ context, event }) => {}),
+    minimizePanel: assign(({ context, event }) => {}),
   },
   actors: {},
   guards: {},
@@ -64,6 +63,16 @@ export const pluginScopePickerMachine = setup({
     ready: {
       on: {
         VALUE_CHANGE: { actions: ["setValue"] },
+        ADD_PANEL_REQUEST: { actions: ["addPanel"] },
+        ADD_PANEL_TAB_REQUEST: { actions: ["addPanelTab"] },
+        ADD_NESTED_PANEL_REQUEST: { actions: ["addNestedPanel"] },
+        ADD_GROUP_REQUEST: { actions: ["addGroup"] },
+        SPLIT_HORIZONTAL_REQUEST: { actions: ["splitHorizontally"] },
+        SPLIT_VERTICAL_REQUEST: { actions: ["splitVertically"] },
+        PANEL_INFO_REQUEST: { actions: ["getPanelInfo"] },
+        CLOSE_PANEL_REQUEST: { actions: ["closePanel"] },
+        MAXIMIZE_PANEL_REQUEST: { actions: ["maximizePanel"] },
+        MINIMIZE_PANEL_REQUEST: { actions: ["minimizePanel"] },
       },
     },
   },

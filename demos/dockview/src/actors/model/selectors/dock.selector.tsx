@@ -3,7 +3,15 @@ import { useCurrentApp } from "./current-app.selector"
 export const useDock = () => {
   const { currentAppRef, sendToCurrentApp, currentAppState, currentAppContext } = useCurrentApp()
 
-  const dockViewContext = currentAppContext
+
+  const dockDebugger = {
+    dockSelector: {
+      state: currentAppState.toJSON(),
+      snapshot: currentAppRef.getSnapshot().toJSON(),
+      stateValue: currentAppState.value,
+      status: currentAppState.status
+    }
+  }
 
   return {
     dockRef: currentAppRef,
@@ -11,7 +19,7 @@ export const useDock = () => {
 
     dockState: currentAppState,
     dockContext: currentAppContext,
+    dockDebugger
 
-    dockViewContext
   }
 }
