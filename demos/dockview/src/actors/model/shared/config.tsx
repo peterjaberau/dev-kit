@@ -120,8 +120,8 @@ export const currentAppConfig = {
         position: { referencePanel: "scope_picker_panel_id", direction: "right" },
       },
       {
-        id: "code_block_panel_id",
-        component: "code_block_panel",
+        id: "json_viewer_panel_id",
+        component: "json_viewer_panel",
         title: "Code",
         renderer: "always",
         params: {
@@ -260,8 +260,8 @@ export const currentAppConfig = {
               position: { referencePanel: "scope_picker_panel_id", direction: "right" },
             },
             {
-              id: "code_block_panel_id",
-              component: "code_block_panel",
+              id: "json_viewer_panel_id",
+              component: "json_viewer_panel",
               title: "Code",
               renderer: "always",
               params: {

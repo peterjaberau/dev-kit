@@ -8,11 +8,9 @@ export const useCurrentApp = () => {
 
   const currentAppState: any = useSelector(currentAppRef, (state) => state)
 
-
   const currentAppContext = currentAppState.context
 
   const sendToCurrentApp = currentAppRef.send
-
 
   return {
     currentAppRef,

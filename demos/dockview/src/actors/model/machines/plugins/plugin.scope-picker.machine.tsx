@@ -26,7 +26,6 @@ export const pluginScopePickerMachine = setup({
       context.defaultValue = config.defaultValue
     }),
     setValue: assign(({ context, event }) => {
-      console.log('---valuechange----', event)
       const { value = null } = event.payload || {}
       context.value = value
     }),

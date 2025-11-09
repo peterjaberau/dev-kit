@@ -10,3 +10,4 @@ export * from './dock-panel.selector'
 
 
 export * from './plugins/plugin.scope-picker.selector'
+export * from './plugins/plugin.json-viewer.selector'

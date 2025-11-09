@@ -21,7 +21,8 @@ import { PaneContent } from "#components/parts"
 import {
   ScopePickerPlugin,
   UiPreviewerPlugin,
-  CodeBlockPlugin
+  CodeBlockPlugin,
+  JsonViewerPlugin
 } from "#components/plugins"
 
 import { useDockApi, useDockPanel } from "#actors/model/selectors"
@@ -79,6 +80,14 @@ const components = {
     return (
       <PaneContent>
         <CodeBlockPlugin />
+      </PaneContent>
+    )
+  },
+
+  json_viewer_panel: (props: any) => {
+    return (
+      <PaneContent>
+        <JsonViewerPlugin />
       </PaneContent>
     )
   },
