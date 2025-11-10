@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { currentUserInitialState } from "./currentUser.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const currentUserMachine = setup({
   types: {} as any,
@@ -16,6 +17,7 @@ export const currentUserMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...currentUserInitialState,
+    ...getFromMock().currentUser,
     ...input,
   }),
   states: {

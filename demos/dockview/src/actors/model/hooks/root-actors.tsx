@@ -56,8 +56,8 @@ export function useRootActors() {
     currentAppLayoutInfoActorRef,
 
     //other modules actors
-    configActorRef,
     builderInfoActorRef,
+    configActorRef,
     resourceActorRef,
     currentUserActorRef,
     teamActorRef,

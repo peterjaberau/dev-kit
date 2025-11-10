@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { teamInitialState } from "./team.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const teamMachine = setup({
   types: {} as any,
@@ -31,6 +32,7 @@ export const teamMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...teamInitialState,
+    ...getFromMock().team,
     ...input,
   }),
   states: {

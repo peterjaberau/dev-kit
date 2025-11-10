@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { configInitialState } from "./config.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const configMachine = setup({
   types: {} as any,
@@ -38,6 +39,7 @@ export const configMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...configInitialState,
+    ...getFromMock().config,
     ...input,
   }),
   states: {

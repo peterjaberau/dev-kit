@@ -4,6 +4,7 @@ import { has, set } from "lodash"
 import { executionInitialState } from "./execution.defaults"
 // import { CUSTOM_STORAGE_PREFIX } from "#illa/utils/storage"
 // import { isObject } from "#illa/utils/typeHelper"
+import { getFromMock } from "#actors/mock"
 
 export const executionMachine = setup({
   types: {} as any,
@@ -175,6 +176,7 @@ export const executionMachine = setup({
 }).createMachine({
   context: ({ input }: any) => ({
     ...executionInitialState,
+    ...getFromMock().currentApp.executionTree,
     ...input,
   }),
   initial: "idle",

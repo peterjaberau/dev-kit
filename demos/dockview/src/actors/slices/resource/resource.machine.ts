@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { resourceInitialState } from "./resource.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const resourceMachine = setup({
   types: {} as any,
@@ -16,6 +17,7 @@ export const resourceMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...resourceInitialState,
+    ...getFromMock().resource,
     ...input,
   }),
   states: {

@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { actionInitialState } from "./action.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const actionMachine = setup({
   types: {} as any,
@@ -22,6 +23,7 @@ export const actionMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...actionInitialState,
+    ...getFromMock().currentApp.action,
     ...input,
   }),
   states: {

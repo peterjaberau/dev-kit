@@ -1,6 +1,7 @@
 import { assign, setup } from "xstate"
 import { componentsInitialState } from "./components.defaults"
 // import { searchComponentFromMap } from "./components.selector"
+import { getFromMock } from "#actors/mock"
 
 export const componentsMachine = setup({
   types: {} as any,
@@ -92,6 +93,7 @@ export const componentsMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...componentsInitialState,
+    ...getFromMock().currentApp.components,
     ...input,
   }),
   states: {

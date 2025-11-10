@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { builderInfoInitialState } from "./builderInfo.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const builderInfoMachine = setup({
   types: {} as any,
@@ -13,6 +14,7 @@ export const builderInfoMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...builderInfoInitialState,
+    ...getFromMock().builderInfo,
     ...input,
   }),
   states: {

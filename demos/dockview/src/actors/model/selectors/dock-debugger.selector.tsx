@@ -1,6 +1,7 @@
 import { useDock } from "./dock.selector"
 import { usePluginDvController } from "#actors/model/selectors"
 import { componentsSelector, executionSelector, configSelector } from "#actors/slices"
+import { rootSelector } from "#actors/selector"
 
 
 export const useDockDebugger = () => {
@@ -11,8 +12,11 @@ export const useDockDebugger = () => {
   const { configContext } = configSelector()
   const { executionContext } = executionSelector()
 
+  const { root } = rootSelector()
+
 
   const dockDebugger = {
+    root: root,
     builder: {
       componentsContext,
       configContext,

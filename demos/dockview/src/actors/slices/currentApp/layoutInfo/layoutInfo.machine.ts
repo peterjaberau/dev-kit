@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { layoutInfoInitialState } from "./layoutInfo.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const layoutInfoMachine = setup({
   types: {} as any,
@@ -16,6 +17,7 @@ export const layoutInfoMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...layoutInfoInitialState,
+    ...getFromMock().currentApp.layoutInfo,
     ...input,
   }),
   states: {

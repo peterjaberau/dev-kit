@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { dashboardAppInitialState } from "./appInfo.defaults"
+import { getFromMock } from "#actors/mock"
 
 export const appInfoMachine = setup({
   types: {} as any,
@@ -16,6 +17,7 @@ export const appInfoMachine = setup({
   initial: "idle",
   context: ({ input }: any) => ({
     ...dashboardAppInitialState,
+    ...getFromMock().currentApp.appInfo,
     ...input,
   }),
   states: {
