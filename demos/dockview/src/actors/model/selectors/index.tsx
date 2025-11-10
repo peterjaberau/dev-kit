@@ -1,6 +1,6 @@
 export * from './app.selector'
 export * from './session.selector'
-export * from './current-app.selector'
+export * from './current-app-example.selector'
 
 export * from './dock.selector'
 export * from './dock-api.selector'
@@ -14,3 +14,5 @@ export * from './plugins/plugin.json-viewer.selector'
 
 export * from './plugins/dv-controller.selector'
 export * from './dock-debugger.selector'
+
+

@@ -1,13 +1,27 @@
 import { useDock } from "./dock.selector"
 import { usePluginDvController } from "#actors/model/selectors"
+import { componentsSelector, executionSelector, configSelector } from "#actors/slices"
 
 
 export const useDockDebugger = () => {
   const { dockState, dockContext, dockRef, sendToDock } = useDock()
   const {dvControllerPluginState, dvControllerPluginContext, dvControllerPluginRef} = usePluginDvController()
 
+  const { componentsContext } = componentsSelector()
+  const { configContext } = configSelector()
+  const { executionContext } = executionSelector()
+
 
   const dockDebugger = {
+    builder: {
+      componentsContext,
+      configContext,
+      executionContext
+    },
+
+
+
+
     dock: {
       state: dockState.toJSON(),
       snapshot: dockRef.getSnapshot().toJSON(),

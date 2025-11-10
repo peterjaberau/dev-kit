@@ -2,7 +2,7 @@
 export enum ROOT_SYSTEM_IDS {
   APP = 'app',
   SESSION = 'session',
-  CURRENT_APP = 'current_app',
+  CURRENT_APP_EXAMPLE = 'current_app_example',
 
 
   PLUGIN_DV_CONTROLLER = 'plugin_dv_controller',

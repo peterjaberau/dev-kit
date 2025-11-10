@@ -1,19 +1,19 @@
 import { assign, setup } from "xstate"
-import { currentAppConfig } from "../shared/config"
+import { currentAppExampleConfig } from "../shared/config"
 import {
   applyDefaultLayout,
   dockviewApiEvents
 } from "../actions"
 
 const defaultConfig = {
-  demo: currentAppConfig.configDemo,
-  domainDrivenDock: currentAppConfig.domainDrivenDock,
-  domain: currentAppConfig.domainStore,
-  dockViewConfig: currentAppConfig.dockViewConfig
+  demo: currentAppExampleConfig.configDemo,
+  domainDrivenDock: currentAppExampleConfig.domainDrivenDock,
+  domain: currentAppExampleConfig.domainStore,
+  dockViewConfig: currentAppExampleConfig.dockViewConfig
 }
 
 
-export const currentAppMachine = setup({
+export const currentAppExampleMachine = setup({
   types: {
     context: {} as any,
     events: {} as any,
@@ -148,6 +148,7 @@ export const currentAppMachine = setup({
   initial: "waitingForApi",
   context: ({ input }: any) => {
     return {
+      nodes: [],
 
       panels: [],
       groups: [],
@@ -178,7 +179,9 @@ export const currentAppMachine = setup({
         "onReady": {
           target: "ready",
           actions: assign({
-            api: ({ event }) => event.api,
+            api: ({ event }) => {
+              return event.api
+            },
           }),
         },
       },

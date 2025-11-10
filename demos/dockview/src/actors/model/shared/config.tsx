@@ -97,7 +97,7 @@ export const sessionConfigDefaults = {
 
 }
 
-export const currentAppConfig = {
+export const currentAppExampleConfig = {
 
   dockViewConfig: {
     panels: [
@@ -106,6 +106,9 @@ export const currentAppConfig = {
         component: "dv_controller_panel",
         title: "Scope Picker",
         renderer: "always",
+        params: {
+          modelRef: 'SCOPE_PICKER_MODEL'
+        },
       },
       {
         // id: "monaco-editor-panel-source",

@@ -1,24 +1,24 @@
-import { useCurrentApp } from "./current-app.selector"
+import { useCurrentAppExample } from "./current-app-example.selector"
 
 export const useDock = () => {
-  const { currentAppRef, sendToCurrentApp, currentAppState, currentAppContext } = useCurrentApp()
+  const { currentAppExampleRef, sendToCurrentAppExample, currentAppExampleState, currentAppExampleContext } = useCurrentAppExample()
 
 
   const dockDebugger = {
     dockSelector: {
-      state: currentAppState.toJSON(),
-      snapshot: currentAppRef.getSnapshot().toJSON(),
-      stateValue: currentAppState.value,
-      status: currentAppState.status
+      state: currentAppExampleState.toJSON(),
+      snapshot: currentAppExampleRef.getSnapshot().toJSON(),
+      stateValue: currentAppExampleState.value,
+      status: currentAppExampleState.status
     }
   }
 
   return {
-    dockRef: currentAppRef,
-    sendToDock: sendToCurrentApp,
+    dockRef: currentAppExampleRef,
+    sendToDock: sendToCurrentAppExample,
 
-    dockState: currentAppState,
-    dockContext: currentAppContext,
+    dockState: currentAppExampleState,
+    dockContext: currentAppExampleContext,
     dockDebugger
 
   }

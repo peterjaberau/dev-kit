@@ -1,5 +1,5 @@
 import { useSelector } from "@xstate/react"
-import { ActorsModelContext } from "../provider"
+import { ActorsModelContext } from "../../provider"
 
 export function useRoot() {
   const rootRef = ActorsModelContext.useActorRef()
