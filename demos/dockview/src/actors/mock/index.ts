@@ -1,3 +1,140 @@
+export const widgetConfigMap = {
+  SWITCH_WIDGET: {
+    config: {
+      displayName: "switch",
+      widgetName: "switch",
+      type: "SWITCH_WIDGET",
+      icon: null,
+      sessionType: "SELECT",
+      keywords: ["Switch"],
+      resizeDirection: "resizeDirection",
+      version: 0,
+      defaults: {
+        label: "Label",
+        labelAlign: "left",
+        labelPosition: "left",
+        labelWidth: "{{33}}",
+        labelFull: "{{true}}",
+        colorScheme: "blue",
+        hidden: "{{false}}",
+      },
+    },
+    panelConfig: [
+      {
+        id: "switch-basic",
+        groupName: "Basic",
+        children: [
+          {
+            id: 'switch-basic-defaultValue',
+            labelName: "Default value",
+            labelDesc: null,
+            attrName: "value",
+            setterType: "INPUT_SETTER",
+            expectedType: "Boolean",
+            placeholder: "{{false}}",
+          },
+        ],
+      },
+      {
+        id: "switch-label",
+        groupName: "Label",
+        children: [
+          {
+            id: 'switch-label-label',
+            labelName: "Label",
+            labelDesc: null,
+            attrName: "label",
+            setterType: "INPUT_SETTER",
+            expectedType: "String",
+          },
+          {
+            id: 'switch-label-caption',
+            labelName: "Caption",
+            labelDesc: null,
+            attrName: "labelCaption",
+            setterType: "INPUT_SETTER",
+            expectedType: "String",
+          },
+          {
+            id: 'select-label-hidden',
+            labelName: "Hidden",
+            labelDesc: null,
+            attrName: "labelHidden",
+            setterType: "DYNAMIC_SWITCH_SETTER",
+            useCustomLayout: true,
+          },
+          {
+            id: 'switch-label-caption',
+            labelName: "Caption",
+            labelDesc: null,
+            attrName: "labelCaption",
+            setterType: "INPUT_SETTER",
+            expectedType: "String",
+          },
+          {
+            id: 'switch-label-position',
+            labelName: "Position",
+            labelDesc: null,
+            attrName: "labelPosition",
+            setterType: "RADIO_GROUP_SETTER",
+            bindAttrName: ["labelHidden"],
+            shown: (value: any) => !value,
+            expectedType: "String",
+            options: [
+              { label: "Left", value: "left" },
+              { label: "Right", value: "right" },
+            ],
+          },
+          {
+            id: "switch-label-alignment",
+            labelName: "Align",
+            attrName: "labelAlign",
+            setterType: "RADIO_GROUP_SETTER",
+            bindAttrName: ["labelHidden"],
+            shown: (value: any) => !value,
+            options: [
+              {
+                label: "Left",
+                value: "left",
+              },
+              {
+                label: "Right",
+                value: "right",
+              },
+            ],
+          },
+        ],
+      }
+    ],
+    eventHandlerConfig: {},
+    widget: {}
+  },
+  RADIO_GROUP_WIDGET: {
+    config: {},
+    panelConfig: {},
+    eventHandlerConfig: {},
+    widget: {}
+  },
+  CONTAINER_WIDGET: {
+    config: {},
+    panelConfig: {},
+    eventHandlerConfig: {},
+    widget: {}
+  },
+  BUTTON_WIDGET: {
+    config: {},
+    panelConfig: {},
+    eventHandlerConfig: {},
+    widget: {}
+  },
+  LIST_WIDGET: {
+    config: {},
+    panelConfig: {},
+    eventHandlerConfig: {},
+    widget: {}
+  }
+}
+
 export const mockEmpty = {
   config: {
     selectedComponents: [],
