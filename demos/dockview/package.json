@@ -11,6 +11,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "react-rnd": "^10.5.2",
+    "react-use": "17.6.0",
     "react-use-measure": "^2.1.7",
     "@cloudflare/workers-types": "^4.20251106.1",
     "@opennextjs/cloudflare": "^1.11.1",

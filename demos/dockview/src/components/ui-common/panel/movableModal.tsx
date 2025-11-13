@@ -33,7 +33,7 @@ export const MovableModal: FC<MovableModalProps> = (props) => {
           pointerEvents: 'auto',
           opacity: 1,
         }}
-        minWidth={400}
+        minWidth={350}
         minHeight={263}
         bounds="window"
       >

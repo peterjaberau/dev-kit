@@ -1,10 +1,23 @@
 import { useDock } from "./dock.selector"
+import { useNodeManager } from "./node-manager.selector"
 import { usePluginDvController } from "#actors/model/selectors"
 import { componentsSelector, executionSelector, configSelector } from "#actors/slices"
 import { rootSelector } from "#actors/selector"
-
+import { useRootActors } from "#actors/model/hooks/root-actors"
+import {
+  useApp,
+  useSession,
+  useCurrentAppExample,
+} from "#actors/model/selectors"
 
 export const useDockDebugger = () => {
+  const { appRef } = useApp()
+  const { sessionRef } = useSession()
+  const { currentAppExampleRef } = useCurrentAppExample()
+  // const { nodeManagerState, nodeManagerContext, nodeManagerRef } = useNodeManager( )
+
+
+
   const { dockState, dockContext, dockRef, sendToDock } = useDock()
   const {dvControllerPluginState, dvControllerPluginContext, dvControllerPluginRef} = usePluginDvController()
 
@@ -16,34 +29,18 @@ export const useDockDebugger = () => {
 
 
   const dockDebugger = {
-    root: root,
-    builder: {
-      componentsContext,
-      configContext,
-      executionContext
-    },
-
-
-
-
-    dock: {
-      state: dockState.toJSON(),
-      snapshot: dockRef.getSnapshot().toJSON(),
-      stateValue: dockState.value,
-      status: dockState.status,
-      context: dockContext,
-    },
-    dvController: {
-      state: dvControllerPluginState.toJSON(),
-      snapshot: dvControllerPluginRef.getSnapshot().toJSON(),
-      stateValue: dvControllerPluginState.value,
-      status: dvControllerPluginState.status,
-      context: dvControllerPluginContext,
-    }
+    app: appRef.getPersistedSnapshot(),
+    session: sessionRef.getPersistedSnapshot(),
+    currentAppExample: currentAppExampleRef.getSnapshot().toJSON(),
+    // nodeManager: nodeManagerRef.getPersistedSnapshot(),
+    dock: dockRef.getSnapshot().toJSON(),
+    ...root.builder,
   }
 
   return {
-    dockDebugger
+
+
+    dockDebugger,
 
   }
 }

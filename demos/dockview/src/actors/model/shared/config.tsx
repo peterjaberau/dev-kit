@@ -97,6 +97,43 @@ export const sessionConfigDefaults = {
 
 }
 
+export const nodeManagerConfig = {
+  nodes: [
+    {
+      id: "node_1",
+      view: {
+        type: 'DOCK_PANEL',
+        component: "default",
+        title: "Node 1",
+        renderer: "always",
+      },
+      model: {}
+    },
+    {
+      id: "node_2",
+      view: {
+        type: 'DOCK_PANEL',
+        component: "default",
+        title: "Node 2",
+        renderer: "always",
+        position: { referencePanel: "node_1", direction: "right" },
+      },
+      model: {}
+    },
+    {
+      id: "node_3",
+      view: {
+        type: 'DOCK_PANEL',
+        component: "default",
+        title: "Node 3",
+        renderer: "always",
+        position: { referencePanel: "node_2", direction: "right" },
+      },
+      model: {}
+    }
+  ]
+}
+
 export const currentAppExampleConfig = {
 
   dockViewConfig: {

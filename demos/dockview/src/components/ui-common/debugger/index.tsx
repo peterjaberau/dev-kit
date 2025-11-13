@@ -1,30 +1,35 @@
 "use client"
-import { MovableModal } from "#app/components/panel/movableModal"
+import { useState } from 'react'
+import { MovableModal } from "#components/ui-common/panel/movableModal"
 import JsonView from "react18-json-view"
-import { useRootActor } from "#state-actors/hooks/useRootActor"
-import { rootActorSelector } from "#state-actors/rootActor.selector"
+import { useDockDebugger } from "#actors/model/selectors"
+
+
+
 
 export default function Debugger(props: any) {
-  // const { rootContext } = useRootActor()
-  const { root, rootRef, rootState, rootContext } = rootActorSelector()
+  const { dockDebugger } = useDockDebugger()
+  const [position, setPosition] = useState(() => {
+    const width = 500;
+    const height = 600;
+    const padding = 100; // distance from the right edge
+    const x = window.innerWidth - width - padding;
+    const y = 100;
+
+    return { x, y, width, height };
+  });
+
+
   const { onClose, ...rest } = props
 
   return (
     <MovableModal
-      defaultPosition={{
-        x: 100,
-        y: 100,
-        width: 700,
-        height: 800,
-      }}
+      defaultPosition={position}
       title={"Debugger"}
       bodyContent={
         <JsonView
           src={{
-            root,
-            rootRef,
-            rootState,
-            rootContext
+            ...dockDebugger
           }}
           collapsed={1}
           theme="github"

@@ -9,33 +9,47 @@ import {
 import { WidgetPlaceholder } from "#components/widgets"
 import { PaneContent } from "#components/parts/pane-content"
 import React from "react"
+import { Container, HStack, RadioCard } from "@chakra-ui/react"
+import "react18-json-view/src/style.css"
+import JsonView from "react18-json-view"
 
 
 export const ConfigDvComponentsMapping = {
   default: (props: any) => {
     return (
-      <div
-        style={{
-          height: "100%",
-          overflow: "auto",
-          position: "relative",
-          padding: 5,
-        }}
-      >
-        <span
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%,-50%)",
-            pointerEvents: "none",
-            fontSize: "42px",
-            opacity: 0.5,
-          }}
-        >
-          {props.api.title}
-        </span>
-      </div>
+      <Container fluid w="full" h="full" p={3}>
+        <JsonView
+          src={props.params}
+          collapsed={1}
+          theme="github"
+          displaySize
+          displayArrayIndex
+          style={{ fontSize: 13, fontWeight: "bold" }}
+        />
+      </Container>
+
+      // <div
+      //   style={{
+      //     height: "100%",
+      //     overflow: "auto",
+      //     position: "relative",
+      //     padding: 5,
+      //   }}
+      // >
+      //   <span
+      //     style={{
+      //       position: "absolute",
+      //       top: "50%",
+      //       left: "50%",
+      //       transform: "translate(-50%,-50%)",
+      //       pointerEvents: "none",
+      //       fontSize: "42px",
+      //       opacity: 0.5,
+      //     }}
+      //   >
+      //     {props.api.title}
+      //   </span>
+      // </div>
     )
   },
 

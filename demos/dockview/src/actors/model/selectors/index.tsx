@@ -2,6 +2,8 @@ export * from './app.selector'
 export * from './session.selector'
 export * from './current-app-example.selector'
 
+export * from './node-manager.selector'
+
 export * from './dock.selector'
 export * from './dock-api.selector'
 export * from './dock-group.selector'

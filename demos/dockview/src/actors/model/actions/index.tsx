@@ -48,7 +48,7 @@ export const dockviewApiEvents = fromCallback(({ sendBack, input }) => {
   const disposables = defineDockDisposables({ api, sendBack})
 
   loadLayoutFromLocalStorage({ api, key: 'dv-demo-state'});
-  applyDefaultLayout({ api, defaultConfig})
+  // applyDefaultLayout({ api, defaultConfig})
 
   return cleanupDockDisposables({ disposables })
 

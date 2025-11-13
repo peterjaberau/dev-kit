@@ -14,6 +14,7 @@ export function useRootActors() {
   const rootDvControllerPluginRef = getSpawnedActor(ROOT_SYSTEM_IDS.PLUGIN_DV_CONTROLLER, rootRef)
 
 
+  const rootNodeManagerRef = getSpawnedActor(ROOT_SYSTEM_IDS.NODE_MANAGER, rootRef)
 
 
   /*
@@ -41,6 +42,8 @@ export function useRootActors() {
     rootAppRef,
     rootSessionRef,
     rootCurrentAppExampleRef,
+
+    rootNodeManagerRef,
 
     rootPluginScopePickerRef,
     rootDvControllerPluginRef,

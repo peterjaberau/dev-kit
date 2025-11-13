@@ -1,17 +1,16 @@
-import { assign, setup } from "xstate"
+import { assign, enqueueActions, fromPromise, setup, spawnChild } from "xstate"
 import { currentAppExampleConfig } from "../shared/config"
-import {
-  applyDefaultLayout,
-  dockviewApiEvents
-} from "../actions"
+import { applyDefaultLayout, dockviewApiEvents } from "../actions"
+import { builderInfoMachine } from "#actors/slices"
+import { CONSTANT_SYSTEM_ACTOR_IDS } from "#actors/constants"
+import { nodeManagerMachine } from "./node.machine"
 
 const defaultConfig = {
   demo: currentAppExampleConfig.configDemo,
   domainDrivenDock: currentAppExampleConfig.domainDrivenDock,
   domain: currentAppExampleConfig.domainStore,
-  dockViewConfig: currentAppExampleConfig.dockViewConfig
+  dockViewConfig: currentAppExampleConfig.dockViewConfig,
 }
-
 
 export const currentAppExampleMachine = setup({
   types: {
@@ -19,16 +18,18 @@ export const currentAppExampleMachine = setup({
     events: {} as any,
   } as any,
   actions: {
+    setApi: assign(({ context, event }: any) => {
+      context.api = event.api
+    }),
+
     addPanel: ({ context, event }: any) => {
-
-      const idCounter = context.idCounter + 1;
-      context.idCounter = idCounter;
-
+      const idCounter = context.idCounter + 1
+      context.idCounter = idCounter
 
       const id = event.playload?.id || `id_${Date.now().toString()}`
       const component = event.payload?.nested ? "nested" : "default"
       const title = event.payload?.title || `Tab ${idCounter}`
-      const renderer = event.payload?.renderer || 'always'
+      const renderer = event.payload?.renderer || "always"
       const position = event.payload?.position || undefined
 
       // context.api?.addPanel({
@@ -44,14 +45,31 @@ export const currentAppExampleMachine = setup({
         component: component,
         title: title,
         renderer: renderer,
-        ...(position && { position: position })
+        ...(position && { position: position }),
       })
-
-
     },
     addGroup: ({ context }) => {
       context.api?.addGroup()
     },
+    spawnNodeManager: assign(({context, event, self, spawn}) => {
+      const { api } = event;
+
+      const nodeManagerRef = spawn("nodeManagerMachine", {
+        input: {
+          api
+        },
+      });
+
+      context.nodeManagerRef = nodeManagerRef
+
+      console.log('---spawnNodeManager---', {
+        api,
+        nodeManagerRef
+      })
+
+    }),
+
+
 
     // completion
     addPanelCompletion: assign(({ context, event }: any) => {
@@ -105,7 +123,7 @@ export const currentAppExampleMachine = setup({
       if (api) {
         try {
           api.clear()
-          applyDefaultLayout({ api, defaultConfig})
+          applyDefaultLayout({ api, defaultConfig })
         } catch (err) {
           console.error("failed to reset layout", err)
         } finally {
@@ -133,13 +151,10 @@ export const currentAppExampleMachine = setup({
         }
       }
     },
-
-
-
-
   },
   actors: {
     dockviewApiEvents,
+    nodeManagerMachine
   },
   guards: {
     // gapCheck: ({ context, event }) => {},
@@ -148,6 +163,8 @@ export const currentAppExampleMachine = setup({
   initial: "waitingForApi",
   context: ({ input }: any) => {
     return {
+      nodeManagerRef: null,
+
       nodes: [],
 
       panels: [],
@@ -169,20 +186,23 @@ export const currentAppExampleMachine = setup({
         timestamp: null,
       },
 
-
       ...input,
     }
   },
   states: {
     waitingForApi: {
       on: {
-        "onReady": {
+        onReady: {
           target: "ready",
-          actions: assign({
-            api: ({ event }) => {
-              return event.api
-            },
+          actions: enqueueActions(({ enqueue, context, event }) => {
+            enqueue("setApi")
+            enqueue("spawnNodeManager")
           }),
+          // actions: assign({
+          //   api: ({ event }) => {
+          //     return event.api
+          //   },
+          // }),
         },
       },
     },
@@ -197,15 +217,14 @@ export const currentAppExampleMachine = setup({
         onAddGroup: { actions: { type: "addGroup" } },
 
         // completion events
-        "onDidAddPanel": { actions: { type: "addPanelCompletion" } },
-        "onDidRemovePanel": { actions: { type: "removePanelCompletion" } },
-        "onDidActivePanelChange": { actions: { type: "activePanelChangeCompletion" } },
-        "onDidMovePanel": { actions: { type: "movePanelCompletion" } },
-        "onDidAddGroup": { actions: { type: "addGroupCompletion" } },
-        "onDidRemoveGroup": { actions: { type: "removeGroupCompletion" } },
-        "onDidActiveGroupChange": { actions: { type: "activeGroupChangeCompletion" } },
-        "onDidMaximizedGroupChange": { actions: { type: "maximizedGroupChangeCompletion" } },
-
+        onDidAddPanel: { actions: { type: "addPanelCompletion" } },
+        onDidRemovePanel: { actions: { type: "removePanelCompletion" } },
+        onDidActivePanelChange: { actions: { type: "activePanelChangeCompletion" } },
+        onDidMovePanel: { actions: { type: "movePanelCompletion" } },
+        onDidAddGroup: { actions: { type: "addGroupCompletion" } },
+        onDidRemoveGroup: { actions: { type: "removeGroupCompletion" } },
+        onDidActiveGroupChange: { actions: { type: "activeGroupChangeCompletion" } },
+        onDidMaximizedGroupChange: { actions: { type: "maximizedGroupChangeCompletion" } },
 
         onResetLayout: { actions: { type: "resetLayout" } },
         onClearLayout: { actions: { type: "clearLayout" } },

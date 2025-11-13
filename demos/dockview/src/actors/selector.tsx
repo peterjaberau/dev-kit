@@ -1,4 +1,6 @@
 
+
+
 import { builderInfoSelector } from "./slices/builderInfo/builderInfo.selector"
 import { configSelector } from "./slices/config/config.selector"
 import { currentAppSelector } from "./slices/currentApp/currentApp.selector"
@@ -8,6 +10,8 @@ import { teamSelector } from "./slices/userInfo/team/team.selector"
 
 
 export const rootSelector = () => {
+
+
   const { builderInfoContext } = builderInfoSelector()
   const { configContext } = configSelector()
 
@@ -18,12 +22,14 @@ export const rootSelector = () => {
 
   return {
     root: {
-      builderInfo: builderInfoContext,
-      config: configContext,
-      currentApp: currentApp,
-      resource: resourceContext,
-      currentUser: currentUserContext,
-      team: teamContext,
+      builder: {
+        builderInfo: builderInfoContext,
+        config: configContext,
+        currentApp: currentApp,
+        resource: resourceContext,
+        currentUser: currentUserContext,
+        team: teamContext,
+      }
     },
   }
 }

@@ -4,6 +4,8 @@ export enum ROOT_SYSTEM_IDS {
   SESSION = 'session',
   CURRENT_APP_EXAMPLE = 'current_app_example',
 
+  NODE_MANAGER = 'node_manager',
+
 
   PLUGIN_DV_CONTROLLER = 'plugin_dv_controller',
 

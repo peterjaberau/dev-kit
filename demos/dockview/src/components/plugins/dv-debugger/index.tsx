@@ -16,7 +16,7 @@ export const DvDebuggerPlugin = memo(() => {
           ...dockDebugger,
 
         }}
-        collapsed={2}
+        collapsed={1}
         theme="github"
         displaySize
         displayArrayIndex
