@@ -16,6 +16,8 @@ export function useRootActors() {
 
   const rootNodeManagerRef = getSpawnedActor(ROOT_SYSTEM_IDS.NODE_MANAGER, rootRef)
 
+  const rootPatternRef = getSpawnedActor(ROOT_SYSTEM_IDS.PATTERN, rootRef)
+
 
   /*
   currentApp actors
@@ -44,6 +46,7 @@ export function useRootActors() {
     rootCurrentAppExampleRef,
 
     rootNodeManagerRef,
+    rootPatternRef,
 
     rootPluginScopePickerRef,
     rootDvControllerPluginRef,

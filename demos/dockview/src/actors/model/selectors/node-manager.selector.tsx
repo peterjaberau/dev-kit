@@ -1,9 +1,10 @@
+'use client'
 import { useRootActors } from "../hooks"
 import { useSelector } from "@xstate/react"
 
 export const useNodeManager = () => {
-  const { rootNodeManagerRef: nodeManagerRef } = useRootActors()
 
+  const { rootNodeManagerRef: nodeManagerRef } = useRootActors()
 
   const nodeManagerState: any = useSelector(nodeManagerRef, (state) => state)
 

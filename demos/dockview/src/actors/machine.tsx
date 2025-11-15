@@ -1,5 +1,5 @@
 import { assign, createMachine } from "xstate"
-import { appMachine, currentAppExampleMachine, sessionMachine, pluginScopePickerMachine, dvControllerMachine } from "./model/machines"
+import { appMachine, currentAppExampleMachine, sessionMachine, pluginScopePickerMachine, dvControllerMachine, patternMachine } from "./model/machines"
 import { builderInfoMachine } from "./slices/builderInfo/builderInfo.machine"
 import { configMachine } from "./slices/config/config.machine"
 import { resourceMachine } from "./slices/resource/resource.machine"
@@ -19,6 +19,7 @@ import { CONSTANT_SYSTEM_ACTOR_IDS } from './constants'
 
 export const rootMachine = createMachine({
   entry: assign({
+    pattern: ({ spawn }: any) => spawn(patternMachine, { systemId: ROOT_SYSTEM_IDS.PATTERN }),
     app: ({ spawn }: any) => spawn(appMachine, { systemId: ROOT_SYSTEM_IDS.APP }),
     session: ({ spawn }: any) => spawn(sessionMachine, { systemId: ROOT_SYSTEM_IDS.SESSION }),
     currentAppExample: ({ spawn }: any) => spawn(currentAppExampleMachine, { systemId: ROOT_SYSTEM_IDS.CURRENT_APP_EXAMPLE }),

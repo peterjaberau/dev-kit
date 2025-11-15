@@ -1,5 +1,4 @@
 import { useDock } from "./dock.selector"
-import { useNodeManager } from "./node-manager.selector"
 import { usePluginDvController } from "#actors/model/selectors"
 import { componentsSelector, executionSelector, configSelector } from "#actors/slices"
 import { rootSelector } from "#actors/selector"
@@ -8,12 +7,15 @@ import {
   useApp,
   useSession,
   useCurrentAppExample,
+  useNodeManager
 } from "#actors/model/selectors"
 
 export const useDockDebugger = () => {
   const { appRef } = useApp()
   const { sessionRef } = useSession()
   const { currentAppExampleRef } = useCurrentAppExample()
+  const { nodeManagerRef, nodeManagerContext } = useNodeManager()
+
   // const { nodeManagerState, nodeManagerContext, nodeManagerRef } = useNodeManager( )
 
 
@@ -32,7 +34,7 @@ export const useDockDebugger = () => {
     app: appRef.getPersistedSnapshot(),
     session: sessionRef.getPersistedSnapshot(),
     currentAppExample: currentAppExampleRef.getSnapshot().toJSON(),
-    // nodeManager: nodeManagerRef.getPersistedSnapshot(),
+    nodeManager: nodeManagerRef.getSnapshot().toJSON(),
     dock: dockRef.getSnapshot().toJSON(),
     ...root.builder,
   }

@@ -1,16 +1,16 @@
 "use client"
 import { map } from "lodash"
-import { useCurrentAppExample } from "./current-app-example.selector"
+import { useNodeManager } from "./node-manager.selector"
 
 // https://dockview.dev/docs/api/dockview/overview
 export function useDockApi() {
-  const { currentAppExampleRef, sendToCurrentAppExample, currentAppExampleState, currentAppExampleContext } = useCurrentAppExample()
+  const { nodeManagerRef, sendToNodeManager, nodeManagerState, nodeManagerContext } = useNodeManager()
 
-  const dockApiRef = currentAppExampleRef
+  const dockApiRef = nodeManagerRef
 
-  const dockApiState: any = currentAppExampleState
-  const dockApiContext = currentAppExampleContext
-  const sendToDockApi = sendToCurrentAppExample
+  const dockApiState: any = nodeManagerState
+  const dockApiContext = nodeManagerContext
+  const sendToDockApi = sendToNodeManager
 
   const api = dockApiContext.api
 

@@ -19,7 +19,7 @@ import { PaneContent } from "#components/parts"
 
 import { ScopePickerPlugin, UiPreviewerPlugin, CodeBlockPlugin, JsonViewerPlugin } from "#components/plugins"
 
-import { useDockApi, useDockPanel } from "#actors/model/selectors"
+import { useDockApi, useDockPanel, useNodeManager } from "#actors/model/selectors"
 
 const headerComponents = {
   default: (props: IDockviewPanelHeaderProps) => {
@@ -33,11 +33,12 @@ const headerComponents = {
 
 const Index = (props: { theme?: string }) => {
   const { sendToDockApi, api, extras } = useDockApi()
+  const { sendToNodeManager } = useNodeManager()
   const [showLogs, setShowLogs] = React.useState<boolean>(false)
   const [debug, setDebug] = React.useState<boolean>(false)
 
   const onReady = (event: DockviewReadyEvent) => {
-    sendToDockApi({ type: "onReady", api: event.api })
+    sendToNodeManager({ type: "onReady", api: event.api })
   }
 
   return (

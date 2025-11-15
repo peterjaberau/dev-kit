@@ -6,6 +6,8 @@ export enum ROOT_SYSTEM_IDS {
 
   NODE_MANAGER = 'node_manager',
 
+  PATTERN = 'pattern',
+
 
   PLUGIN_DV_CONTROLLER = 'plugin_dv_controller',
 

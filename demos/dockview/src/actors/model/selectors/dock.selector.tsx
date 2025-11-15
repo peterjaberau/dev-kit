@@ -1,24 +1,25 @@
-import { useCurrentAppExample } from "./current-app-example.selector"
+import { useNodeManager } from "./node-manager.selector"
+
 
 export const useDock = () => {
-  const { currentAppExampleRef, sendToCurrentAppExample, currentAppExampleState, currentAppExampleContext } = useCurrentAppExample()
+  const { nodeManagerRef, sendToNodeManager, nodeManagerState, nodeManagerContext } = useNodeManager()
 
 
   const dockDebugger = {
     dockSelector: {
-      state: currentAppExampleState.toJSON(),
-      snapshot: currentAppExampleRef.getSnapshot().toJSON(),
-      stateValue: currentAppExampleState.value,
-      status: currentAppExampleState.status
+      state: nodeManagerState.toJSON(),
+      snapshot: nodeManagerRef.getSnapshot().toJSON(),
+      stateValue: nodeManagerState.value,
+      status: nodeManagerState.status
     }
   }
 
   return {
-    dockRef: currentAppExampleRef,
-    sendToDock: sendToCurrentAppExample,
+    dockRef: nodeManagerRef,
+    sendToDock: sendToNodeManager,
 
-    dockState: currentAppExampleState,
-    dockContext: currentAppExampleContext,
+    dockState: nodeManagerState,
+    dockContext: nodeManagerContext,
     dockDebugger
 
   }
