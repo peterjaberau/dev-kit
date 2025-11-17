@@ -1,67 +1,95 @@
 import { assign, enqueueActions, raise, setup } from "xstate"
 
 export const patternMachine = setup({
+
   types: {
     context: {} as any,
     events: {} as any,
   } as any,
+
   actions: {
+    handleInitiateInstance: assign(({ context }) => {
+      console.log('----handleInitiateInstance---')
+      context.instance.isInitiated = true
+    }),
     // ready state handlers
     handleEventCreate: assign(({ context }) => {
-      return {
-        ...context,
-        isReady: true,
-      }
+      console.log('----handleEventCreate---')
+
     }),
     handleEventTerminate: assign(({ context }) => {
-      return {
-        ...context,
-        isReady: true,
-      }
+      console.log('----handleEventTerminate---')
     }),
 
     // creating state handlers
-    handleStartCreating: assign(({ context }) => ({
-      ...context,
-      isCreating: true,
-      isCreated: false,
-      isReady: false,
-      isTerminating: false,
-    })),
-    handleProcessCreating: assign(({ context }) => ({
-      ...context,
-      isCreating: true,
-    })),
+    handleStartCreating: assign(({ context }) => {
+      console.log('----handleStartCreating---')
+    }),
+    handleProcessCreating: assign(({ context }) => {
+      console.log('----handleProcessCreating---')
+    }),
+
+    handleCompleteCreating: assign(({ context }) => {
+      context.instance.isCreated = true
+      console.log('----handleCompleteCreating---')
+    }),
 
     // terminating state handlers
     handleStartTerminating: assign(({ context }) => {
-      return {
-        ...context,
-        isTerminating: true,
-        isReady: false,
-      }
+      console.log('----handleStartTerminating---')
     }),
     handleProcessTerminating: assign(({ context }) => {
-      return {
-        ...context,
-        isTerminating: true,
-      }
+      console.log('----handleProcessTerminating---')
     }),
   },
+
+  guards: {
+    // autoCreate on initiation
+    isAutoCreate: (({ context }) => {
+      return context.config.autoCreate && context.instance.isCreated === false
+    }),
+    // automatically move between the creating states
+    isAutomateCreation: (({ context }) => {
+      return context.config.automateCreation || context.config.autoCreate
+    }),
+    // automatically move between the termination states
+    isAutomateTermination: (({ context }) => {
+      return context.config.automateTermination
+    }),
+    isInstance: (({ context }) => {
+      return context.instance.isInitiated
+    }),
+  },
+
 }).createMachine({
-  initial: "ready",
+  initial: "initiating",
   context: ({ input }) => {
     return {
-      isCreating: false,
-      isCreated: false,
-      isTerminating: false,
-      isReady: false,
+      config: {
+        autoCreate: true,
+        automateCreation: true,
+        automateTermination: true
+      },
+      instance: {
+        isInitiated: false,
+        isCreated: false,
+      },
       ...input,
     }
   },
   states: {
 
+    initiating: {
+      entry: ['handleInitiateInstance'],
+      always: {
+        target: "ready",
+      }
+    },
+
     ready: {
+      entry: enqueueActions(({ context, enqueue, check, event}) => {
+        if (check({ type: 'isAutoCreate' })) enqueue.raise({ type: 'CREATE'})
+      }),
       tags: ["canCreate", "canTerminate"],
       on: {
         CREATE: {
@@ -79,6 +107,9 @@ export const patternMachine = setup({
       initial: "start",
       states: {
         start: {
+          entry: enqueueActions(({ context, enqueue, check, event}) => {
+            if (check({ type: 'isAutomateCreation' })) enqueue.raise({ type: 'START'})
+          }),
           tags: ["canStart", "canComplete"],
           on: {
             START: {
@@ -91,6 +122,9 @@ export const patternMachine = setup({
           },
         },
         process: {
+          entry: enqueueActions(({ context, enqueue, check, event}) => {
+            if (check({ type: 'isAutomateCreation' })) enqueue.raise({ type: 'PROCESS'})
+          }),
           tags: ["canProcess", "canComplete"],
           on: {
             PROCESS: {
@@ -103,6 +137,7 @@ export const patternMachine = setup({
           },
         },
         complete: {
+          entry: ["handleCompleteCreating"],
           type: "final",
         },
       },
@@ -115,6 +150,9 @@ export const patternMachine = setup({
       initial: "start",
       states: {
         start: {
+          entry: enqueueActions(({ context, enqueue, check, event}) => {
+            if (check({ type: 'isAutomateTermination' })) enqueue.raise({ type: 'START'})
+          }),
           tags: ["canStart", "canComplete"],
           on: {
             START: {
@@ -127,6 +165,9 @@ export const patternMachine = setup({
           },
         },
         process: {
+          entry: enqueueActions(({ context, enqueue, check, event}) => {
+            if (check({ type: 'isAutomateTermination' })) enqueue.raise({ type: 'PROCESS'})
+          }),
           tags: ["canProcess", "canComplete"],
           on: {
             PROCESS: {

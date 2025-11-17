@@ -17,6 +17,7 @@ import JsonView from "react18-json-view"
 export const ConfigDvComponentsMapping = {
   default: (props: any) => {
     return (
+      <PaneContent>
       <Container fluid w="full" h="full" p={3}>
         <JsonView
           src={props.params}
@@ -27,6 +28,7 @@ export const ConfigDvComponentsMapping = {
           style={{ fontSize: 13, fontWeight: "bold" }}
         />
       </Container>
+      </PaneContent>
 
       // <div
       //   style={{

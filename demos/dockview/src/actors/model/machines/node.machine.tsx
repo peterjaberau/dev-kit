@@ -10,8 +10,6 @@ const defaultConfig = {
   dockViewConfig: currentAppExampleConfig.dockViewConfig,
 }
 
-
-
 export const nodeMachine = setup({
   types: {} as any,
   actions: {
@@ -31,7 +29,7 @@ export const nodeMachine = setup({
           input: context.input,
         },
       }
-      console.log("---view----", view)
+      // console.log("---view----", view)
 
       api?.addPanel(view)
 
@@ -100,7 +98,7 @@ export const nodeManagerMachine: any = setup({
   types: {} as any,
   actions: {
     setApi: assign(({ context, event }: any) => {
-      console.log("---event-----", event)
+      // console.log("---event-----", event)
       context.api = event.api
       context.status.isReady = true
     }),
@@ -269,7 +267,7 @@ export const nodeManagerMachine: any = setup({
         onReady: {
           target: "ready",
           actions: enqueueActions(({ enqueue, context, event }) => {
-            console.log("-----node.machine ready-----")
+            // console.log("-----node.machine ready-----")
             enqueue("setApi")
 
             enqueue("createNodes")
