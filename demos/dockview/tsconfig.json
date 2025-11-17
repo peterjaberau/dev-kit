@@ -46,6 +46,25 @@
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
 
+      "#xflows-plugin-react/*": ["./src/orchestrator/packages/plugin-react/*"],
+      "#xflows-plugin-react": ["./src/orchestrator/packages/plugin-react"],
+
+      "#xflows-plugins/*": ["./src/orchestrator/packages/plugins/*"],
+      "#xflows-plugins": ["./src/orchestrator/packages/plugins"],
+
+      "#xflows-plugin-http/*": ["./src/orchestrator/packages/plugin-http/*"],
+      "#xflows-plugin-http": ["./src/orchestrator/packages/plugin-http"],
+
+      "#xflows-core/*": ["./src/orchestrator/packages/core/*"],
+      "#xflows-core": ["./src/orchestrator/packages/core"],
+
+      "#xflows-renderer-core/*": ["./src/orchestrator/packages/renderer-core/*"],
+      "#xflows-renderer-core": ["./src/orchestrator/packages/renderer-core"],
+
+
+      "#orchestrator/*": ["./src/orchestrator/*"],
+      "#orchestrator": ["./src/orchestrator"],
+
       "#dockview/*": ["./src/modules/dockview/view/*"],
       "#dockview": ["./src/modules/dockview/view"]
     }

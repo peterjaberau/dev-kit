@@ -67,7 +67,7 @@ const Index = (props: { theme?: string }) => {
         "--dv-separator-border": "#transparent",
         "--dv-paneview-header-border-color": "#333",
 
-        "--dv-group-view-background-color": "#ebeced",
+        "--dv-group-view-background-color": "colors.transparent",
 
         "--dv-activegroup-visiblepanel-tab-background-color": "#f0f1f2",
         "--dv-activegroup-hiddenpanel-tab-background-color": "#fcfcfc",
@@ -78,6 +78,8 @@ const Index = (props: { theme?: string }) => {
         "--dv-inactivegroup-hiddenpanel-tab-background-color": "#fcfcfc",
         "--dv-inactivegroup-visiblepanel-tab-color": "#333",
         "--dv-inactivegroup-hiddenpanel-tab-color": "#333",
+
+        "--dv-groupview-border-radius": "radii.none",
 
         "--dv-groupview-tabs-and-actions-container-tab-hover-background-color": "#e4e5e6",
         "--dv-groupview-content-container-background-color": "#fcfcfc",
