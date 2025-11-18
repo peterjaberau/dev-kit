@@ -1,57 +1,46 @@
-import { useState, useMemo } from 'react';
-import type React from 'react';
-import { useFlow } from '#xflows-plugin-react';
-import demoFlow from '../flows/demo-flow.json';
-import ViewRenderer from './ViewRenderer';
-import FlowDebugger from './FlowDebugger';
-import type { ViewConfig, FlowConfig } from '#xflows-core';
+import { useState, useMemo } from "react"
+import type React from "react"
+import { useFlow } from "#xflows-plugin-react"
+import demoFlow from "../flows/demo-flow.json"
+import ViewRenderer from "./ViewRenderer"
+import FlowDebugger from "./FlowDebugger"
+import type { ViewConfig, FlowConfig } from "#xflows-core"
+import { Container, HStack, Button, Box, Card, Fieldset, Field } from "@chakra-ui/react"
 
 const FlowDemo: React.FC = () => {
-  const [showDebugger, setShowDebugger] = useState(false);
+  const [showDebugger, setShowDebugger] = useState(false)
 
   // Stabilize the flow config reference
-  const stableFlowConfig = useMemo(() => demoFlow as FlowConfig, []);
+  const stableFlowConfig = useMemo(() => demoFlow as FlowConfig, [])
 
   // Use the flow hook
-  const { state, send, view, context } = useFlow(stableFlowConfig);
+  const { state, send, view, context } = useFlow(stableFlowConfig)
 
   const handleEvent = (event: string, data?: unknown) => {
-    send(event, data);
-  };
+    send(event, data)
+  }
 
   const handleBack = () => {
-    send('BACK');
-  };
+    send("BACK")
+  }
 
   const handleNext = (data?: unknown) => {
-    if (data === 'CALL_API') {
-      send('CALL_API');
+    if (data === "CALL_API") {
+      send("CALL_API")
     } else {
-      send('NEXT', data);
+      send("NEXT", data)
     }
-  };
+  }
 
   return (
-    <div className="xflows-container">
-      <div className="demo-controls">
-        <button
-          type="button"
-          className="xflows-button secondary"
-          onClick={() => setShowDebugger(!showDebugger)}
-        >
-          {showDebugger ? 'Hide' : 'Show'} Debugger
-        </button>
-      </div>
+    <Container>
+      <HStack w={"full"} justifyContent={"flex-end"}>
+        <Button onClick={() => setShowDebugger(!showDebugger)}>{showDebugger ? "Hide" : "Show"} Debugger</Button>
+      </HStack>
 
-      {showDebugger && (
-        <FlowDebugger
-          state={state}
-          context={context}
-          currentStep={state.value as string}
-        />
-      )}
+      {showDebugger && <FlowDebugger state={state} context={context} currentStep={state.value as string} />}
 
-      <div className="xflows-step">
+      <Box borderRadius='md' p={2} boxShadow={'md'}>
         <ViewRenderer
           view={view as ViewConfig}
           context={context}
@@ -59,9 +48,9 @@ const FlowDemo: React.FC = () => {
           onBack={handleBack}
           onEvent={handleEvent}
         />
-      </div>
-    </div>
-  );
-};
+      </Box>
+    </Container>
+  )
+}
 
-export default FlowDemo;
+export default FlowDemo

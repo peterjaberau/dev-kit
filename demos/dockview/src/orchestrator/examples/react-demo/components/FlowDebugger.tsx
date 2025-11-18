@@ -1,29 +1,36 @@
-import React from 'react';
+"use client"
+import React from "react"
+import { Card } from "@chakra-ui/react"
+import JsonView from "react18-json-view"
 
 interface FlowDebuggerProps {
-  state: any;
-  context: any;
-  currentStep: string;
+  state: any
+  context: any
+  currentStep: string
 }
 
 const FlowDebugger: React.FC<FlowDebuggerProps> = ({ state, context, currentStep }) => {
   return (
-    <div className="flow-debugger">
-      <h3>Flow Debugger</h3>
-      <div className="debug-section">
-        <h4>Current State</h4>
-        <pre>{JSON.stringify(state, null, 2)}</pre>
-      </div>
-      <div className="debug-section">
-        <h4>Context</h4>
-        <pre>{JSON.stringify(context, null, 2)}</pre>
-      </div>
-      <div className="debug-section">
-        <h4>Current Step</h4>
-        <code>{currentStep}</code>
-      </div>
-    </div>
-  );
-};
+    <Card.Root>
+      <Card.Header>
+        <Card.Title>Flow Debugger</Card.Title>
+      </Card.Header>
+      <Card.Body>
+        <JsonView
+          src={{
+            "Current State": state,
+            Context: context,
+            "Current Step": currentStep,
+          }}
+          collapsed={1}
+          theme="github"
+          displaySize
+          displayArrayIndex
+          style={{ fontSize: 13, fontWeight: "bold" }}
+        />
+      </Card.Body>
+    </Card.Root>
+  )
+}
 
-export default FlowDebugger;
+export default FlowDebugger

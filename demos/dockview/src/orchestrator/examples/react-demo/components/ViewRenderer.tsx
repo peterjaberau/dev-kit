@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ViewConfig } from '#xflows-core';
+import { Container, HStack, Button, Box, Card, Fieldset, Field, Stack } from "@chakra-ui/react"
 
 interface ViewRendererProps {
   view: ViewConfig | undefined;
@@ -139,10 +140,13 @@ const ViewRenderer: React.FC<ViewRendererProps> = ({
   );
 
   return (
+    <Fieldset.Root>
+      <Stack>
+        {view.title &&  <Fieldset.Legend>{view.title}</Fieldset.Legend>}
+        {view.message && <Fieldset.HelperText>{view.message}</Fieldset.HelperText>}
+      </Stack>
     <div className="view-container">
-      {view.title && <h2>{view.title}</h2>}
-      {view.subtitle && <h3>{view.subtitle}</h3>}
-      {view.message && <p className="view-message">{view.message}</p>}
+
 
       {view.type === 'form' ? (
         <form onSubmit={handleSubmit} className="xflows-form">
@@ -177,6 +181,7 @@ const ViewRenderer: React.FC<ViewRendererProps> = ({
         </div>
       )}
     </div>
+    </Fieldset.Root>
   );
 };
 
