@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react';
 
 interface StateInspectorProps {
@@ -26,7 +27,7 @@ export function StateInspector({ flow }: StateInspectorProps) {
 
     return (
       <div key={nodeKey} className="text-sm" style={{ marginLeft: `${level * 16}px` }}>
-        <div 
+        <div
           className={`flex items-center py-1 cursor-pointer hover:bg-gray-100 rounded ${
             isSelected ? 'bg-blue-50 text-blue-700' : ''
           } ${path === 'states' ? 'font-medium' : ''}`}
@@ -49,13 +50,13 @@ export function StateInspector({ flow }: StateInspectorProps) {
           <span className="text-blue-600">{key}:</span>
           {!hasChildren && (
             <span className="ml-2 text-gray-600">
-              {typeof value === 'string' ? `"${value}"` : 
+              {typeof value === 'string' ? `"${value}"` :
                typeof value === 'boolean' ? (value ? 'true' : 'false') :
                JSON.stringify(value)}
             </span>
           )}
         </div>
-        
+
         {isExpanded && hasChildren && (
           <div>
             {Object.entries(value).map(([subKey, subValue]) =>
@@ -83,7 +84,7 @@ export function StateInspector({ flow }: StateInspectorProps) {
                 <span className="mx-2 text-gray-400">→</span>
                 <span className="text-green-600 font-mono">{targetStr}</span>
               </div>
-            ) as JSX.Element;
+            );
           })}
         </div>
       </div>
@@ -101,7 +102,7 @@ export function StateInspector({ flow }: StateInspectorProps) {
     }
 
     const state = flow.states[selectedState];
-    
+
     return (
       <div className="space-y-4">
         <div>
@@ -176,7 +177,7 @@ export function StateInspector({ flow }: StateInspectorProps) {
               </span>
             </div>
           )}
-          
+
           {/* Regular States */}
           <div className="flex flex-wrap gap-1 justify-center">
             {states.filter(s => s !== initialState && !finalStates.includes(s)).map(state => (
@@ -187,7 +188,7 @@ export function StateInspector({ flow }: StateInspectorProps) {
               </span>
             ))}
           </div>
-          
+
           {/* Final States */}
           {finalStates.length > 0 && (
             <div className="flex flex-wrap gap-1 justify-center">

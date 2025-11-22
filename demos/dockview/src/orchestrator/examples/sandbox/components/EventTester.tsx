@@ -1,5 +1,6 @@
+'use client'
 import React, { useState, useEffect } from 'react';
-
+import { SimpleGrid, GridItem, Box, chakra, Button, Flex, Stack, HStack } from "@chakra-ui/react"
 interface EventTesterProps {
   flow: any;
 }
@@ -15,7 +16,7 @@ export function EventTester({ flow }: EventTesterProps) {
   useEffect(() => {
     // Extract available events from flow states
     const availableEvents = new Set<string>();
-    
+
     if (flow?.states) {
       Object.values(flow.states).forEach((state: any) => {
         if (state.on) {
@@ -26,14 +27,14 @@ export function EventTester({ flow }: EventTesterProps) {
       });
     }
 
-    const eventList = Array.from(availableEvents).map(name => ({
+    const eventList: any = Array.from(availableEvents).map(name => ({
       id: name.toLowerCase().replace(/\s+/g, '-'),
       name,
       payload: undefined
     }));
 
     setEvents(eventList);
-    
+
     // Set first event as selected
     if (eventList.length > 0 && !selectedEvent) {
       setSelectedEvent(eventList[0].name);
@@ -43,16 +44,16 @@ export function EventTester({ flow }: EventTesterProps) {
   const sendEvent = (eventName: string, payload?: any) => {
     const timestamp = Date.now();
     const result = Math.random() > 0.1 ? 'success' : 'error'; // Mock result
-    
+
     const newHistory = {
       event: eventName,
       payload,
       timestamp,
       result
     };
-    
+
     setEventHistory(prev => [newHistory, ...prev.slice(0, 9)]); // Keep last 10
-    
+
     // Dispatch to parent
     console.log('Sending event:', { event: eventName, payload });
   };
@@ -67,7 +68,7 @@ export function EventTester({ flow }: EventTesterProps) {
         alert('Invalid JSON payload');
         return;
       }
-      
+
       sendEvent(customEvent.trim(), payload);
       setCustomEvent('');
       setCustomPayload('');
@@ -75,7 +76,7 @@ export function EventTester({ flow }: EventTesterProps) {
   };
 
   const generateRandomPayload = (eventName: string) => {
-    const generators = {
+    const generators: any = {
       'NEXT': () => ({ step: Math.floor(Math.random() * 10) + 1 }),
       'BACK': () => ({ reason: 'user_cancelled' }),
       'ERROR': () => ({ error: 'Mock error', code: 'ERR_MOCK' }),
@@ -84,188 +85,441 @@ export function EventTester({ flow }: EventTesterProps) {
       'SUBMIT': () => ({ formData: { email: 'test@example.com', agreeToTerms: true } }),
       'RETRY': () => ({ attempts: Math.floor(Math.random() * 3) + 1 })
     };
-    
+
     const generator = generators[eventName];
     return generator ? generator() : { timestamp: Date.now() };
   };
 
   const renderEventPreview = (eventName: string) => {
     const payload = generateRandomPayload(eventName);
-    
+
     return (
-      <div className="mt-2 text-xs bg-gray-50 p-2 rounded border">
-        <div className="font-medium text-gray-600 mb-1">Example Payload:</div>
-        <pre className="text-gray-700">{JSON.stringify(payload, null, 2)}</pre>
-      </div>
+      <chakra.div
+        css={{
+          marginTop: 2,
+          fontSize: 'xs',
+          backgroundColor: 'gray.50',
+          padding: 2,
+          borderRadius: 'md',
+          border: '1px solid',
+          borderColor: 'gray.200',
+        }}
+        >
+        <chakra.div
+          css={{
+            fontWeight: 'medium',
+            color: 'gray.600',
+            marginBottom: 1,
+          }}
+       >Example Payload:</chakra.div>
+        <chakra.pre
+          css={{
+            color: 'gray.700',
+          }}
+          >{JSON.stringify(payload, null, 2)}</chakra.pre>
+      </chakra.div>
     );
   };
 
   const renderEventHistory = () => {
     if (eventHistory.length === 0) {
       return (
-        <div className="text-center text-gray-500 py-8">
-          <p className="text-lg mb-2">📜</p>
-          <p>No events sent yet</p>
-        </div>
+        <chakra.div
+          css={{
+            textAlign: 'center',
+            color: 'gray.500',
+            paddingY: 8,
+          }}
+
+        >
+          <chakra.p
+            css={{
+              fontSize: 'lg',
+              marginBottom: 2,
+            }}
+            >📜</chakra.p>
+          <chakra.p>No events sent yet</chakra.p>
+        </chakra.div>
       );
     }
 
     return (
-      <div className="space-y-2">
+      <chakra.div
+        css={{
+          gapX: 2
+        }}
+        >
         {eventHistory.map((entry, index) => (
-          <div 
+          <chakra.div
             key={index}
-            className={`p-2 rounded border text-sm ${
-              entry.result === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
-            }`}
+            css={{
+              padding: 2,
+              borderRadius: 'full',
+              border: '1px solid',
+              borderColor: entry.result === 'success' ? 'green.200' : 'red.200',
+              backgroundColor: entry.result === 'success' ? 'green.50' : 'red.50',
+              fontSize: 'sm',
+
+            }}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <span className={`text-xs px-2 py-0.5 rounded ${
-                  entry.result === 'success' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
-                }`}>
+            <chakra.div
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+             >
+              <chakra.div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gapX: 2,
+                }}
+               >
+                <chakra.span
+                  css={{
+                    fontSize: 'xs',
+                    paddingX: 2,
+                    paddingY: 0.5,
+                    borderRadius: 'full',
+                    backgroundColor: entry.result === 'success' ? 'green.200' : 'red.200',
+                    color: entry.result === 'success' ? 'green.800' : 'red.800',
+
+                  }}
+
+                 >
                   {entry.result === 'success' ? '✓' : '✗'}
-                </span>
-                <span className="font-medium text-gray-700">{entry.event}</span>
-              </div>
-              <span className="text-xs text-gray-500">
+                </chakra.span>
+                <chakra.span
+                  css={{
+                    fontWeight: 'medium',
+                    color: 'gray.700',
+                  }}
+                  >{entry.event}</chakra.span>
+              </chakra.div>
+              <chakra.span
+                css={{
+                  fontSize: 'xs',
+                  color: 'gray.500',
+                }}
+               >
                 {new Date(entry.timestamp).toLocaleTimeString()}
-              </span>
-            </div>
-            
+              </chakra.span>
+            </chakra.div>
+
             {entry.payload && (
-              <div className="mt-1 text-xs">
-                <pre className="text-gray-600 bg-white p-1 rounded max-h-20 overflow-auto">
+              <chakra.div
+                css={{
+                  marginTop: 1,
+                  fontSize: 'xs',
+                }}
+                >
+                <chakra.pre
+                  css={{
+                    color: 'gray.600',
+                    backgroundColor: 'white',
+                    padding: 1,
+                    borderRadius: 'full',
+                    maxHeight: 20,
+                    overflow: 'auto',
+
+                  }}
+                 >
                   {JSON.stringify(entry.payload, null, 2)}
-                </pre>
-              </div>
+                </chakra.pre>
+              </chakra.div>
             )}
-          </div>
+          </chakra.div>
         ))}
-      </div>
+      </chakra.div>
     );
   };
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <chakra.div
+      css={{
+        height: 'full',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'white',
+      }}
+      >
       {/* Event Tester Toolbar */}
-      <div className="border-b px-4 py-2 bg-gray-50">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700">⚡ Event Tester</span>
-          <div className="flex space-x-2">
-            <button
+      <chakra.div
+        css={{
+          borderBottom: '1px solid',
+          borderColor: 'gray.200',
+          paddingX: 4,
+          paddingY: 2,
+          backgroundColor: 'gray.50',
+        }}
+        >
+        <chakra.div
+          css={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+          >
+          <chakra.span
+            css={{
+              fontSize: 'sm',
+              fontWeight: 'medium',
+              color: 'gray.700',
+            }}
+            >⚡ Event Tester</chakra.span>
+          <chakra.div
+            css={{
+              display: 'flex',
+              gapX: 2,
+            }}
+            >
+            <Button
               onClick={() => setIsPlaying(!isPlaying)}
-              className={`px-2 py-1 text-xs rounded ${
-                isPlaying ? 'bg-red-200 text-red-700' : 'bg-green-200 text-green-700'
-              }`}
+              colorPalette={isPlaying ? 'red' : 'green'}
+              variant={'solid'}
+              size={'sm'}
             >
               {isPlaying ? '⏸️ Stop' : '▶️ Auto'}
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setEventHistory([])}
-              className="px-2 py-1 text-xs bg-gray-200 rounded hover:bg-gray-300"
+              size={'sm'}
             >
               🗑️ Clear
-            </button>
-          </div>
-        </div>
-      </div>
+            </Button>
+          </chakra.div>
+        </chakra.div>
+      </chakra.div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-auto p-4 space-y-6">
+      <Box flex={1} overflow={'auto'} p={4} gapY={6} >
         {/* Available Events */}
-        <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3">🎯 Available Events</h3>
-          <div className="grid grid-cols-2 gap-2">
+        <chakra.div>
+          <chakra.h3 css={{
+            fontSize: 'sm',
+            fontWeight: 'medium',
+            color: 'gray.700',
+            marginBottom: 3,
+          }} >🎯 Available Events</chakra.h3>
+          <SimpleGrid columns={2} gap={2}>
             {events.map(event => (
-              <div key={event.id} className={`p-3 rounded border cursor-pointer transition-colors ${
-                selectedEvent === event.name 
-                  ? 'bg-blue-50 border-blue-200' 
-                  : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-              }`}
+              <chakra.div key={event.id}
+                          css={{
+                            padding: 3,
+                            borderRadius: 'full',
+                            border: '1px solid',
+                            cursor: 'pointer',
+                            transitionProperty: 'colors',
+                            backgroundColor: selectedEvent === event.name ? 'blue.50' : 'gray.50',
+                            borderColor: selectedEvent === event.name ? 'blue.200' : 'gray.200',
+                            '_hover': {
+                              backgroundColor: selectedEvent === event.name ? 'blue.50' : 'gray.100',
+                            },
+
+                          }}
+
               onClick={() => setSelectedEvent(event.name)}
               >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-700">{event.name}</span>
-                  <button
+                <HStack alignItems={'center'} justifyContent={'space-between'}>
+                  <chakra.span
+                    css={{
+                      fontWeight: 'medium',
+                      color: 'gray.700',
+                    }}
+                    >{event.name}</chakra.span>
+                  <Button
                     onClick={(e) => {
                       e.stopPropagation();
                       const payload = generateRandomPayload(event.name);
                       sendEvent(event.name, payload);
                     }}
-                    className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                    size={'sm'}
+
                   >
                     Send
-                  </button>
-                </div>
+                  </Button>
+                </HStack>
                 {renderEventPreview(event.name)}
-              </div>
+              </chakra.div>
             ))}
-          </div>
-        </div>
+          </SimpleGrid>
+        </chakra.div>
 
         {/* Custom Event */}
-        <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3">🎯 Custom Events</h3>
-          <form onSubmit={handleCustomEventSubmit} className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+        <chakra.div>
+          <chakra.h3
+            css={{
+              fontSize: 'sm',
+              fontWeight: 'medium',
+              color: 'gray.700',
+              marginBottom: 3,
+            }}
+            >🎯 Custom Events</chakra.h3>
+          <chakra.form onSubmit={handleCustomEventSubmit} css={{ gapY: 3}}>
+            <chakra.div>
+              <chakra.label
+
+                css={{
+                  display: 'block',
+                  fontSize: 'sm',
+                  fontWeight: 'medium',
+                  color: 'gray.700',
+                  marginBottom: 1,
+                }}
+                >
                 Custom Event Name
-              </label>
-              <input
+              </chakra.label>
+              <chakra.input
                 type="text"
                 value={customEvent}
                 onChange={(e) => setCustomEvent(e.target.value)}
                 placeholder="e.g., CUSTOM_ACTION"
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                css={{
+                  width: 'full',
+                  paddingX: 3,
+                  paddingY: 2,
+                  border: '1px solid',
+                  borderColor: 'gray.300',
+                  borderRadius: 'md',
+                  _focus: {
+                    ring: '2px',
+                    ringColor: 'blue.500',
+                    borderColor: 'blue.500',
+                  },
+                }}
               />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            </chakra.div>
+
+            <chakra.div>
+              <chakra.label
+
+                css={{
+                  display: 'block',
+                  fontSize: 'sm',
+                  fontWeight: 'medium',
+                  color: 'gray.700',
+                  marginBottom: 1,
+                }}
+                >
                 Event Payload (JSON)
-              </label>
-              <textarea
+              </chakra.label>
+              <chakra.textarea
                 value={customPayload}
                 onChange={(e) => setCustomPayload(e.target.value)}
                 placeholder='{"key": "value"}'
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono focus:ring-blue-500 focus:border-blue-500"
+                css={{
+                  width: 'full',
+                  paddingX: 3,
+                  paddingY: 2,
+                  border: '1px solid',
+                  borderColor: 'gray.300',
+                  borderRadius: 'md',
+                  fontFamily: 'monospace',
+                  fontSize: 'sm',
+                  _focus: {
+                    ring: '2px',
+                    ringColor: 'blue.500',
+                    borderColor: 'blue.500',
+                  },
+                }}
+
               />
-            </div>
-            
-            <button
+            </chakra.div>
+
+            <Button
               type="submit"
-              className="w-full px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+              css={{
+                width: 'full',
+                borderRadius: 'full',
+              }}
+
             >
               🚀 Send Custom Event
-            </button>
-          </form>
-        </div>
+            </Button>
+          </chakra.form>
+        </chakra.div>
 
         {/* Event History */}
-        <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3">📜 Event History</h3>
-          <div className="bg-gray-50 rounded p-3 max-h-48 overflow-auto">
+        <chakra.div>
+          <chakra.h3
+            css={{
+              fontSize: 'sm',
+              fontWeight: 'medium',
+              color: 'gray.700',
+              marginBottom: 3,
+            }}
+            >📜 Event History</chakra.h3>
+          <chakra.div
+            css={{
+              backgroundColor: 'gray.50',
+              borderRadius: 'full',
+              maxHeight: 48,
+              overflow: 'auto'
+            }}
+
+            >
             {renderEventHistory()}
-          </div>
-        </div>
-      </div>
+          </chakra.div>
+        </chakra.div>
+      </Box>
 
       {/* Event Tester Status */}
-      <div className="border-t px-4 py-2 bg-gray-50">
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <div className="flex items-center space-x-4">
+      <chakra.div
+        css={{
+          borderTop: '1px solid',
+          borderColor: 'gray.200',
+          paddingX: 4,
+          paddingY: 2,
+          backgroundColor: 'gray.50',
+        }}
+
+        >
+        <chakra.div
+          css={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: 'sm',
+            color: 'gray.600',
+          }}
+
+          >
+          <chakra.div
+            css={{
+              display: 'flex',
+              alignItems: 'center',
+              gapX: 4,
+            }}
+
+            >
             <span>⚡ Events: {events.length}</span>
             <span>📜 History: {eventHistory.length}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">
+          </chakra.div>
+          <chakra.div
+            css={{
+              display: 'flex',
+              alignItems: 'center',
+              gapX: 2,
+            }}
+
+            >
+            <chakra.span
+              css={{
+                fontSize: 'xs',
+                paddingX: 2,
+                paddingY: 0.5,
+                borderRadius: 'full',
+                backgroundColor: 'green.200',
+                color: 'green.800',
+              }}
+              >
               Ready ✓
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+            </chakra.span>
+          </chakra.div>
+        </chakra.div>
+      </chakra.div>
+    </chakra.div>
   );
 }

@@ -1,28 +1,44 @@
+'use client'
 import React from 'react';
-
+import { Flex, Box, chakra } from '@chakra-ui/react'
 interface ToolbarProps {
   children: React.ReactNode;
   className?: string;
+  css?: any
 }
 
-export function Toolbar({ children, className = '' }: ToolbarProps) {
+export function Toolbar({ children, className = '', css=undefined }: ToolbarProps) {
   return (
-    <div className={`bg-white border-b px-6 py-3 ${className}`}>
+    <Box css={{
+      borderBottom: '1px solid',
+      borderBottomColor: 'bg.panel',
+      px: 6,
+      py: 3,
+      ...css
+    }} >
       {children}
-    </div>
+    </Box>
   );
 }
 
 interface ToolbarGroupProps {
   children: React.ReactNode;
   className?: string;
+  css?: any
 }
 
-export function ToolbarGroup({ children, className = '' }: ToolbarGroupProps) {
+export function ToolbarGroup({ children, className = '', css=undefined }: ToolbarGroupProps) {
   return (
-    <div className={`flex items-center space-x-4 ${className}`}>
+    <chakra.div
+      css={{
+        display: 'flex',
+        alignItems: 'center',
+        gapX: 4,
+        ...css
+      }}
+      >
       {children}
-    </div>
+    </chakra.div>
   );
 }
 
@@ -32,43 +48,81 @@ interface ToolbarButtonProps {
   active?: boolean;
   variant?: 'primary' | 'secondary' | 'debug';
   className?: string;
+  css?: any
 }
 
-export function ToolbarButton({ 
-  children, 
-  onClick, 
-  active = false, 
+export function ToolbarButton({
+  children,
+  onClick,
+  active = false,
   variant = 'primary',
-  className = '' 
+  className = '', css=undefined
 }: ToolbarButtonProps) {
-  const baseClasses = 'px-3 py-1.5 text-sm font-medium rounded-md transition-colors';
-  
+
   const variantClasses = {
-    primary: active 
-      ? 'bg-white text-blue-600 shadow-sm' 
-      : 'text-gray-700 hover:text-gray-900',
-    secondary: active 
-      ? 'bg-white text-blue-600 shadow-sm' 
-      : 'text-gray-500 hover:text-gray-700',
-    debug: active 
-      ? 'bg-white text-blue-600 shadow-sm' 
-      : 'text-gray-500 hover:text-gray-700'
+    primary: active
+      ? {
+          backgroundColor: 'white',
+          color: 'blue.600',
+          boxShadow: 'sm',
+      }
+      : {
+          color: 'gray.700',
+          _hover: { color: 'gray.900' },
+      },
+    secondary: active
+      ? {
+          backgroundColor: 'white',
+          color: 'blue.600',
+          boxShadow: 'sm',
+      }
+      : {
+          color: 'gray.500',
+          _hover: { color: 'gray.700' },
+      },
+    debug: active
+      ? {
+          backgroundColor: 'white',
+          color: 'blue.600',
+          boxShadow: 'sm',
+      }
+      : {
+          color: 'gray.500',
+          _hover: { color: 'gray.700' },
+      }
   };
 
   return (
-    <button
+    <chakra.button
       onClick={onClick}
-      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
+      css={{
+        paddingX: 3,
+        paddingY: 1.5,
+        fontSize: 'sm',
+        fontWeight: 'medium',
+        borderRadius: 'md',
+        transitionProperty: 'colors',
+        ...variantClasses[variant],
+        ...css,
+      }}
     >
       {children}
-    </button>
+    </chakra.button>
   );
 }
 
 interface ToolbarSeparatorProps {
   className?: string;
+  css?: any
 }
 
-export function ToolbarSeparator({ className = '' }: ToolbarSeparatorProps) {
-  return <div className={`w-px bg-gray-300 mx-1 ${className}`} />;
+export function ToolbarSeparator({ className = '', css=undefined }: ToolbarSeparatorProps) {
+  return <chakra.div
+    css={{
+      width: '1px',
+      backgroundColor: 'gray.300',
+      marginX: 1
+    }}
+
+     />;
 }

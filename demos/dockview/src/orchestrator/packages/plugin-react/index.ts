@@ -6,7 +6,7 @@
 export * from './hooks/use-flow';
 
 // Components
-// export * from './components/flow-component';
+export * from './components/flow-component';
 
 // Renderers
 export * from './renderers/view-renderer';

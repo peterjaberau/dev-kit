@@ -1,7 +1,7 @@
 /**
  * Flow Orchestrator
  * Main class that orchestrates complex flow processes from JSON definitions to XState machines
- * 
+ *
  * Features:
  * - Defensive validation of input data
  * - Comprehensive error handling and logging
@@ -58,15 +58,15 @@ class SilentLogger implements Logger {
   info(_message: string, _context?: Record<string, unknown>): void {
     // Silent - no logging
   }
-  
+
   warn(_message: string, _context?: Record<string, unknown>): void {
     // Silent - no logging
   }
-  
+
   error(_message: string, _context?: Record<string, unknown>): void {
     // Silent - no logging
   }
-  
+
   debug(_message: string, _context?: Record<string, unknown>): void {
     // Silent - no logging
   }
@@ -78,15 +78,15 @@ class ConsoleLogger implements Logger {
     // biome-ignore lint/suspicious/noConsoleLog: <explanation>
     console.log(`[XFlows] INFO: ${message}`, context || '');
   }
-  
+
   warn(message: string, context?: Record<string, unknown>): void {
     console.warn(`[XFlows] WARN: ${message}`, context || '');
   }
-  
+
   error(message: string, context?: Record<string, unknown>): void {
     console.error(`[XFlows] ERROR: ${message}`, context || '');
   }
-  
+
   debug(message: string, context?: Record<string, unknown>): void {
     console.debug(`[XFlows] DEBUG: ${message}`, context || '');
   }
@@ -110,15 +110,15 @@ export class FlowOrchestrator {
     if (obj === null || typeof obj !== 'object') {
       return obj;
     }
-    
+
     if (obj instanceof Date) {
       return new Date(obj.getTime()) as unknown as T;
     }
-    
+
     if (Array.isArray(obj)) {
       return [...obj.map(item => this.deepClone(item))] as unknown as T;
     }
-    
+
     return { ...obj } as T;
   }
 
@@ -130,9 +130,9 @@ export class FlowOrchestrator {
    * Orchestrate flow configuration to XState machine with comprehensive validation
    */
   orchestrate(flowConfig: unknown): ReturnType<typeof createMachine> {
-    this.logger.info('Starting flow orchestration', { 
+    this.logger.info('Starting flow orchestration', {
       configType: typeof flowConfig,
-      hasId: !!(flowConfig as Record<string, unknown>)?.id 
+      hasId: !!(flowConfig as Record<string, unknown>)?.id
     });
 
     try {
@@ -151,14 +151,15 @@ export class FlowOrchestrator {
       }
 
       const config = flowConfig as FlowConfig;
-      
+
       // Use the config directly since it's already validated
       const mergedConfig = config;
-      
-      this.logger.info('Flow configuration validated successfully', { 
+
+      this.logger.info('Flow configuration validated successfully', {
         flowId: mergedConfig.id,
-        stepsCount: mergedConfig.steps.length 
+        stepsCount: mergedConfig.steps.length
       });
+
 
       // Step 2: Validate flow structure
       const structureValidation = this.validateFlowStructure(mergedConfig);
@@ -171,8 +172,8 @@ export class FlowOrchestrator {
 
       // Step 3: Create XState machine
       const machine = this.createMachine(mergedConfig);
-      
-      this.logger.info('Flow orchestration completed successfully', { 
+
+      this.logger.info('Flow orchestration completed successfully', {
         flowId: mergedConfig.id,
         statesCount: machine.config.states ? Object.keys(machine.config.states).length : 0
       });
@@ -180,11 +181,11 @@ export class FlowOrchestrator {
       return machine;
 
     } catch (error) {
-      this.logger.error('Flow orchestration failed', { 
+      this.logger.error('Flow orchestration failed', {
         error: error instanceof Error ? error.message : 'Unknown error',
         errorType: error instanceof Error ? error.constructor.name : typeof error
       });
-      
+
       throw error;
     }
   }
@@ -261,7 +262,7 @@ export class FlowOrchestrator {
         }
 
         const stepObj = step as Record<string, unknown>;
-        
+
         if (!stepObj.id || typeof stepObj.id !== 'string') {
           errors.push(`Step at index ${index} must have a string "id" field`);
         }
@@ -366,14 +367,14 @@ export class FlowOrchestrator {
     if (typeof navigation === 'string') {
       return navigation;
     }
-    
+
     if (navigation && typeof navigation === 'object') {
       if (Array.isArray(navigation)) {
         return navigation[0]?.target || null;
       }
       return (navigation as NavigationConfig).target || null;
     }
-    
+
     return null;
   }
 
@@ -388,8 +389,8 @@ export class FlowOrchestrator {
         acc[step.id] = this.createStepState(step, config);
         this.logger.debug(`Created state for step: ${step.id}`);
       } catch (error) {
-        this.logger.error(`Failed to create state for step: ${step.id}`, { 
-          error: error instanceof Error ? error.message : 'Unknown error' 
+        this.logger.error(`Failed to create state for step: ${step.id}`, {
+          error: error instanceof Error ? error.message : 'Unknown error'
         });
         throw new ConfigurationError(
           `Failed to create state for step "${step.id}": ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -481,7 +482,7 @@ export class FlowOrchestrator {
 
     for (const [semanticEvent, config] of Object.entries(navigation)) {
       const xstateEvent = eventMapping[semanticEvent] || semanticEvent;
-      
+
       try {
       if (typeof config === 'string') {
         events[xstateEvent] = config;
@@ -522,7 +523,7 @@ export class FlowOrchestrator {
       }
 
       const hookObj = hook as Record<string, unknown>;
-      
+
       if (!hookObj.id || typeof hookObj.id !== 'string') {
         throw new ConfigurationError(`Hook at index ${index} must have a string "id" field`);
       }

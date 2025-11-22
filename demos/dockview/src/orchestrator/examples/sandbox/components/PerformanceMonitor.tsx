@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 
 export function PerformanceMonitor() {
@@ -71,7 +72,7 @@ export function PerformanceMonitor() {
                 const height = (point.renderTime / maxRenderTime) * 100;
                 return (
                   <div key={index} className="flex flex-col flex-1">
-                    <div 
+                    <div
                       className={`w-full rounded-t ${
                         getMetricColor(point.renderTime, thresholds.renderTime) === 'text-red-600'
                           ? 'bg-red-400' 
@@ -104,7 +105,7 @@ export function PerformanceMonitor() {
                 const height = (point.memoryUsage / maxMemory) * 100;
                 return (
                   <div key={index} className="flex flex-col flex-1">
-                    <div 
+                    <div
                       className={`w-full rounded-t ${
                         getMetricColor(point.memoryUsage, thresholds.memoryUsage) === 'text-red-600'
                           ? 'bg-red-400' 
@@ -133,7 +134,7 @@ export function PerformanceMonitor() {
 
   const renderAlerts = () => {
     const alerts = [];
-    
+
     if (metrics.renderTime > thresholds.renderTime) {
       alerts.push({
         type: 'warning',
@@ -141,7 +142,7 @@ export function PerformanceMonitor() {
         metric: 'renderTime'
       });
     }
-    
+
     if (metrics.memoryUsage > thresholds.memoryUsage) {
       alerts.push({
         type: 'error',
@@ -149,7 +150,7 @@ export function PerformanceMonitor() {
         metric: 'memoryUsage'
       });
     }
-    
+
     if (metrics.updateCount > thresholds.updateCount && metrics.updateCount % 100 === 0) {
       alerts.push({
         type: 'info',

@@ -1,5 +1,6 @@
+'use client'
 import React from 'react';
-
+import { chakra } from "@chakra-ui/react"
 interface SelectProps {
   value: string;
   onChange: (value: string) => void;
@@ -10,9 +11,11 @@ interface SelectProps {
   }>;
   placeholder?: string;
   className?: string;
+  style?: any
+  css?: any
 }
 
-export function Select({ value, onChange, options, placeholder = 'Select...', className = '' }: SelectProps) {
+export function Select({ value, onChange, options, placeholder = 'Select...', className = '', style=undefined, css = undefined }: SelectProps) {
   const groupedOptions = options.reduce((acc, option) => {
     const group = option.group || 'default';
     if (!acc[group]) acc[group] = [];
@@ -21,10 +24,28 @@ export function Select({ value, onChange, options, placeholder = 'Select...', cl
   }, {} as Record<string, typeof options>);
 
   return (
-    <select
+    <chakra.select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={`px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-md hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors ${className}`}
+      css={{
+        paddingX: 3,
+        paddingY: 1.5,
+        fontSize: 'sm',
+        backgroundColor: 'white',
+        border: '1px solid',
+        borderColor: 'gray.300',
+        borderRadius: 'md',
+        _hover: {
+          borderColor: 'gray.400',
+        },
+        _focus: {
+          borderColor: 'blue.500',
+          boxShadow: '0 0 0 1px var(--chakra-colors-blue-500)',
+        },
+        transitionProperty: 'colors',
+        ...css
+      }}
+      style={style}
     >
       <option value="">{placeholder}</option>
       {Object.entries(groupedOptions).map(([group, groupOptions]) => (
@@ -36,6 +57,6 @@ export function Select({ value, onChange, options, placeholder = 'Select...', cl
           ))}
         </optgroup>
       ))}
-    </select>
+    </chakra.select>
   );
 }

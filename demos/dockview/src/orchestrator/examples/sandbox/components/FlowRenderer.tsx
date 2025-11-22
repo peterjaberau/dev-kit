@@ -1,9 +1,41 @@
-import { useState, useEffect, useCallback } from 'react';
-import { FlowComponent } from '@xflows/plugin-react';
-import type { FlowConfig } from '@xflows/core';
+'use client'
+import { useState, useEffect, useCallback, useMemo } from "react"
+import { FlowComponent } from '#xflows-plugin-react';
+import type { FlowConfig } from '#xflows-core';
 
 interface FlowRendererProps {
-  flow: unknown;
+  flow: any;
+}
+
+const emptyFlow: any = {
+  id: 'empty',
+  name: 'Empty Flow',
+  initialStep: 'welcome',
+  context: {},
+  steps: [
+    {
+      id: 'welcome',
+      name: 'Welcome',
+      view: {
+        type: 'display',
+        title: 'Welcome',
+        message: 'No flow loaded'
+      },
+      navigation: {
+        onNext: 'complete'
+      }
+    },
+    {
+      id: 'complete',
+      name: 'Complete',
+      view: {
+        type: 'success',
+        title: 'Complete',
+        message: 'Flow completed'
+      },
+      navigation: {}
+    }
+  ]
 }
 
 export function FlowRenderer({ flow }: FlowRendererProps) {
@@ -12,43 +44,22 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
   const [error, setError] = useState<string | null>(null);
   const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null);
 
+  // Stabilize the flow config reference
+  // const stableFlowConfig = useMemo(() => demoFlow as FlowConfig, []);
+  // Use the flow hook
+  // const { state, send, view, context } = useFlow(stableFlowConfig);
+
+
   // Convert old flow format to new FlowConfig format
   const convertToFlowConfig = useCallback((oldFlow: unknown): FlowConfig => {
+
+
     if (!oldFlow || typeof oldFlow !== 'object') {
-      return {
-        id: 'empty',
-        name: 'Empty Flow',
-        initialStep: 'welcome',
-        context: {},
-        steps: [
-          {
-            id: 'welcome',
-            name: 'Welcome',
-            view: {
-              type: 'display',
-              title: 'Welcome',
-              message: 'No flow loaded'
-            },
-            navigation: {
-              onNext: 'complete'
-            }
-          },
-          {
-            id: 'complete',
-            name: 'Complete',
-            view: {
-              type: 'success',
-              title: 'Complete',
-              message: 'Flow completed'
-            },
-            navigation: {}
-          }
-        ]
-      };
+      return flow;
     }
 
     const flowObj = oldFlow as Record<string, unknown>;
-    
+
     // Convert XState machine format to FlowConfig format
     const states = flowObj.states as Record<string, unknown> || {};
     const steps = Object.entries(states).map(([id, state]) => {
@@ -56,7 +67,7 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
       const meta = stateObj.meta as Record<string, unknown> || {};
       const view = meta.view as Record<string, unknown> || {};
       const on = stateObj.on as Record<string, unknown> || {};
-      
+
       return {
         id,
         name: id.charAt(0).toUpperCase() + id.slice(1),
@@ -75,6 +86,12 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
       };
     });
 
+
+    console.log('Converted steps:', {
+      flowObj, steps
+    });
+
+
     return {
       id: (flowObj.id as string) || 'converted-flow',
       name: (flowObj.name as string) || 'Converted Flow',
@@ -84,24 +101,25 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
     };
   }, []);
 
+
   useEffect(() => {
     if (!flow) return;
 
     try {
       setError(null);
       const startTime = performance.now();
-      
-      const convertedFlow = convertToFlowConfig(flow);
+
+      const convertedFlow = flow;
       setFlowConfig(convertedFlow);
       setCurrentState(convertedFlow.initialStep);
       setRenderTime(performance.now() - startTime);
-      
+
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to convert flow';
       setError(errorMessage);
       console.error('Flow conversion error:', err);
     }
-  }, [flow, convertToFlowConfig]);
+  }, [flow]);
 
   if (error) {
     return (
@@ -115,7 +133,7 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
             </div>
             <h3 className="text-xl font-semibold text-red-800 mb-2">Render Error</h3>
             <p className="text-red-600 mb-4">{error}</p>
-            <button 
+            <button
               type="button"
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
@@ -143,7 +161,7 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
               State: <span className="font-mono font-medium">{currentState || 'None'}</span>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <div className="text-xs text-gray-500">
               {renderTime.toFixed(2)}ms
@@ -156,7 +174,7 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
       <div className="flex-1 overflow-auto p-6 bg-gray-50">
         {flowConfig ? (
           <div className="max-w-2xl mx-auto">
-            <FlowComponent 
+            <FlowComponent
               flowConfig={flowConfig}
               className="flow-renderer"
             />

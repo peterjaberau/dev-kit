@@ -1,3 +1,4 @@
+'use client'
 import { useState, useEffect } from 'react';
 
 interface TestingHelperProps {
@@ -5,9 +6,9 @@ interface TestingHelperProps {
   onApproachChange: (approach: 'approach-1' | 'approach-2') => void;
 }
 
-export const TestingHelper: React.FC<TestingHelperProps> = ({ 
-  approach, 
-  onApproachChange 
+export const TestingHelper: React.FC<TestingHelperProps> = ({
+  approach,
+  onApproachChange
 }) => {
   const [testState, setTestState] = useState({
     isLoading: false,
@@ -38,7 +39,7 @@ export const TestingHelper: React.FC<TestingHelperProps> = ({
     }
   ];
 
-  const [currentScenario, setCurrentScenario] = useState(testScenarios[0]);
+  const [currentScenario, setCurrentScenario]: any = useState(testScenarios[0]);
 
   // Auto-follow scenario
   useEffect(() => {
@@ -105,10 +106,10 @@ export const TestingHelper: React.FC<TestingHelperProps> = ({
         {testState.isLoading && (
           <div className="mt-1">
             <div className="w-full bg-gray-200 rounded-full h-1">
-              <div 
-                className="bg-blue-500 h-1 rounded-full transition-all duration-300" 
-                style={{ 
-                  width: `${((testState.currentStep - 1) / testState.totalSteps) * 100}%` 
+              <div
+                className="bg-blue-500 h-1 rounded-full transition-all duration-300"
+                style={{
+                  width: `${((testState.currentStep - 1) / testState.totalSteps) * 100}%`
                 }}
               />
             </div>
@@ -163,7 +164,7 @@ export const TestingHelper: React.FC<TestingHelperProps> = ({
         >
           ▶️ Run Test
         </button>
-        
+
         {testState.isLoading && (
           <button
             type="button"

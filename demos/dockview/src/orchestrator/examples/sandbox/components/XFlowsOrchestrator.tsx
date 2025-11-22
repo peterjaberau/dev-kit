@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { createHeadlessHost, Services } from '@xflows/core';
+import { createHeadlessHost, Services } from '#xflows-core';
 import { createReactRenderer, asReactView } from '@xflows/adapter-react';
 import type { ViewRegistry } from '@xflows/renderer-core';
 
 // Import existing flow definitions
+import { flowExamples } from "../examples/index"
 import salesFlow from '@examples/sales-flow.json';
 
 // Create view components
@@ -102,7 +103,7 @@ export function XFlowsOrchestrator() {
 
     // Create mock services
     const services: Services = {
-      http: async (config, ctx) => {
+      http: async (config: any, ctx: any) => {
         console.log('HTTP Service:', config, ctx);
         return { success: true, data: config.url };
       },
@@ -131,11 +132,11 @@ export function XFlowsOrchestrator() {
     };
 
     // Create orchestrator
-    const host = createHeadlessHost(salesFlow, { services, apis });
-    
+    const host = createHeadlessHost(flowExamples.salesFlow, { services, apis });
+
     // Set up actor
     const actor = host.spawnActor();
-    
+
     // Subscribe to state changes
     actor.subscribe((snapshot) => {
       const state = snapshot.value;
@@ -198,28 +199,28 @@ export function XFlowsOrchestrator() {
         <div className="bg-white rounded-lg shadow">
           <div className="p-6">
             <h3 className="text-lg font-medium mb-4">Active Flow Node</h3>
-            
+
             {currentNodeId.includes('quote.start') && (
-              <QuoteStartView 
-                nodeId={currentNodeId} 
-                contextSlice={contextSlice} 
-                send={() => {}} 
+              <QuoteStartView
+                nodeId={currentNodeId}
+                contextSlice={contextSlice}
+                send={() => {}}
               />
             )}
-            
+
             {currentNodeId.includes('coverage') && (
-              <CoverageView 
-                nodeId={currentNodeId} 
-                contextSlice={contextSlice} 
-                send={() => {}} 
+              <CoverageView
+                nodeId={currentNodeId}
+                contextSlice={contextSlice}
+                send={() => {}}
               />
             )}
-            
+
             {currentNodeId.includes('summary') && (
-              <SummaryView 
-                nodeId={currentNodeId} 
-                contextSlice={contextSlice} 
-                send={() => {}} 
+              <SummaryView
+                nodeId={currentNodeId}
+                contextSlice={contextSlice}
+                send={() => {}}
               />
             )}
           </div>

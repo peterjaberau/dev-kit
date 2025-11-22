@@ -1,55 +1,98 @@
+'use client'
 import React from 'react';
+import { chakra } from "@chakra-ui/react"
 
 interface StatusBarProps {
   children: React.ReactNode;
   className?: string;
+  css?: any
 }
 
-export function StatusBar({ children, className = '' }: StatusBarProps) {
+export function StatusBar({ children, className = '', css = undefined }: StatusBarProps) {
   return (
-    <div className={`bg-white border-t border-gray-200 px-6 py-2 ${className}`}>
-      <div className="flex items-center justify-between text-sm text-gray-600">
+    <chakra.div
+      css={{
+        backgroundColor: 'white',
+        borderTop: '1px solid',
+        borderColor: 'gray.200',
+        paddingX: 6,
+        paddingY: 2,
+        ...css
+      }}
+      >
+      <chakra.div
+        css={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontSize: 'sm',
+          color: 'gray.600',
+        }}
+        >
         {children}
-      </div>
-    </div>
+      </chakra.div>
+    </chakra.div>
   );
 }
 
 interface StatusItemProps {
   children: React.ReactNode;
   className?: string;
+  css?: any
 }
 
-export function StatusItem({ children, className = '' }: StatusItemProps) {
+export function StatusItem({ children, className = '', css = undefined }: StatusItemProps) {
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
+    <chakra.div
+      css={{
+        display: 'flex',
+        alignItems: 'center',
+        gapX: 2,
+        ...css
+      }}
+
+      >
       {children}
-    </div>
+    </chakra.div>
   );
 }
 
 interface StatusLabelProps {
   children: React.ReactNode;
   className?: string;
+  css?: any
 }
 
-export function StatusLabel({ children, className = '' }: StatusLabelProps) {
+export function StatusLabel({ children, className = '', css = undefined }: StatusLabelProps) {
   return (
-    <span className={`font-medium ${className}`}>
+    <chakra.span
+      css={{
+        fontSize: 'medium',
+        ...css
+      }}
+      >
       {children}
-    </span>
+    </chakra.span>
   );
 }
 
 interface StatusValueProps {
   children: React.ReactNode;
   className?: string;
+  css?: any
 }
 
-export function StatusValue({ children, className = '' }: StatusValueProps) {
+export function StatusValue({ children, className = '', css = undefined }: StatusValueProps) {
   return (
-    <span className={`font-mono text-sm ${className}`}>
+    <chakra.span
+      css={{
+        fontFamily: 'monospace',
+        fontSize: 'sm',
+        ...css
+      }}
+
+      >
       {children}
-    </span>
+    </chakra.span>
   );
 }

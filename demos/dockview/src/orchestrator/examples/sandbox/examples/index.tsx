@@ -1,29 +1,73 @@
-export const flowExamples: any = {
-  basicDemo: {
-    "id": "basicDemo",
+
+
+export const flowExamples: any = [
+  {
+    "id": "basic-demo",
     "name": "Basic Demo Flow",
     "version": "1.0.0",
     "description": "Simple user registration flow",
-    "initialStep": "personal-info",
+    "initialStep": "welcome",
     "context": {
-      "user": {},
-      "errors": []
+      "user": null,
+      "stepData": {},
+      "errors": [],
+      "ui": {
+        "isLoading": false,
+        "currentStep": "welcome"
+      }
+    },
+    "actions": {
+      "assignStepData": {
+        "type": "assign",
+        "target": "stepData",
+        "value": "{{event.data}}"
+      },
+      "assignError": {
+        "type": "assign",
+        "target": "errors",
+        "value": "{{event.error}}"
+      },
+      "logStep": {
+        "type": "log",
+        "message": "User completed step: {{event.step}}"
+      }
     },
     "steps": [
       {
-        "id": "personal-info",
-        "name": "Personal Information",
+        "id": "welcome",
+        "name": "Welcome to XFlows",
+        "view": {
+          "type": "display",
+          "title": "Welcome to XFlows!",
+          "subtitle": "React Demo Application",
+          "message": "This demo showcases the complete XFlows framework with React integration, form handling, API calls, and state management.",
+          "actions": [
+            {
+              "type": "button",
+              "label": "Get Started",
+              "event": "START_DEMO"
+            }
+          ]
+        },
+        "navigation": {
+          "onNext": "user-info",
+          "START_DEMO": "user-info"
+        }
+      },
+      {
+        "id": "user-info",
+        "name": "User Information",
         "view": {
           "type": "form",
-          "title": "Personal Information",
-          "subtitle": "Please provide your basic information",
+          "title": "User Information",
+          "subtitle": "Tell us about yourself",
           "fields": [
             {
               "name": "firstName",
               "type": "text",
               "label": "First Name",
-              "required": true,
               "placeholder": "Enter your first name",
+              "required": true,
               "validation": {
                 "minLength": 2,
                 "maxLength": 50
@@ -33,8 +77,8 @@ export const flowExamples: any = {
               "name": "lastName",
               "type": "text",
               "label": "Last Name",
-              "required": true,
               "placeholder": "Enter your last name",
+              "required": true,
               "validation": {
                 "minLength": 2,
                 "maxLength": 50
@@ -44,79 +88,150 @@ export const flowExamples: any = {
               "name": "email",
               "type": "email",
               "label": "Email Address",
+              "placeholder": "Enter your email",
               "required": true,
-              "placeholder": "Enter your email address"
+              "validation": {
+                "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+              }
             }
           ],
           "actions": [
-            { "type": "submit", "label": "Continue", "event": "NEXT" },
-            { "type": "button", "label": "Back", "event": "BACK" }
+            {
+              "type": "submit",
+              "label": "Continue",
+              "event": "SUBMIT_USER_INFO"
+            },
+            {
+              "type": "button",
+              "label": "Back",
+              "event": "GO_BACK"
+            }
+          ]
+        },
+        "navigation": {
+          "onNext": "preferences",
+          "onBack": "welcome",
+          "BACK": "welcome",
+          "SUBMIT_USER_INFO": "preferences",
+          "GO_BACK": "welcome"
+        }
+      },
+      {
+        "id": "preferences",
+        "name": "Preferences",
+        "view": {
+          "type": "form",
+          "title": "Preferences",
+          "subtitle": "Customize your experience",
+          "fields": [
+            {
+              "name": "theme",
+              "type": "select",
+              "label": "Theme Preference",
+              "required": true,
+              "options": [
+                { "value": "light", "label": "Light" },
+                { "value": "dark", "label": "Dark" },
+                { "value": "auto", "label": "Auto" }
+              ]
+            },
+            {
+              "name": "notifications",
+              "type": "checkbox",
+              "label": "Enable Notifications",
+              "required": false
+            },
+            {
+              "name": "newsletter",
+              "type": "checkbox",
+              "label": "Subscribe to Newsletter",
+              "required": false
+            }
+          ],
+          "actions": [
+            {
+              "type": "submit",
+              "label": "Save Preferences",
+              "event": "SAVE_PREFERENCES"
+            },
+            {
+              "type": "button",
+              "label": "Back",
+              "event": "GO_BACK"
+            }
+          ]
+        },
+        "navigation": {
+          "onNext": "api-demo",
+          "onBack": "user-info",
+          "BACK": "user-info",
+          "SAVE_PREFERENCES": "api-demo",
+          "GO_BACK": "user-info"
+        }
+      },
+      {
+        "id": "api-demo",
+        "name": "API Demo",
+        "view": {
+          "type": "display",
+          "title": "API Integration Demo",
+          "subtitle": "Simulating API call",
+          "message": "This step demonstrates how XFlows handles async operations and API calls. Click the button to simulate an API request.",
+          "actions": [
+            {
+              "type": "button",
+              "label": "Simulate API Call",
+              "event": "CALL_API"
+            },
+            {
+              "type": "button",
+              "label": "Back",
+              "event": "GO_BACK"
+            }
           ]
         },
         "hooks": {
           "after": [
             {
-              "id": "save-personal-info",
-              "type": "assign",
-              "target": "user.personalInfo",
-              "value": "{{event.data}}"
+              "id": "simulate-api-call",
+              "type": "delay",
+              "duration": 2000,
+              "onError": "ignore"
             }
           ]
         },
         "navigation": {
-          "onNext": "verify-email",
-          "onBack": "welcome"
+          "onNext": "complete",
+          "onBack": "preferences",
+          "BACK": "preferences",
+          "CALL_API": "complete"
         }
       },
       {
-        "id": "verify-email",
-        "name": "Email Verification",
-        "view": {
-          "type": "display",
-          "title": "Verify Your Email",
-          "message": "We've sent a verification link to {{context.user.personalInfo.email}}",
-          "actions": [
-            { "type": "button", "label": "Resend Email", "event": "RESEND" },
-            { "type": "button", "label": "I've Verified", "event": "EMAIL_VERIFIED" },
-            { "type": "button", "label": "Back", "event": "BACK" }
-          ]
-        },
-        "invoke": {
-          "id": "send-verification",
-          "src": "httpClient",
-          "input": {
-            "endpoint": "/api/send-verification",
-            "method": "POST",
-            "body": "{{context.user.personalInfo.email}}"
-          },
-          "onDone": {
-            "target": "verification-sent"
-          },
-          "onError": {
-            "target": "error-step"
-          }
-        },
-        "navigation": {
-          "onNext": "success",
-          "onBack": "personal-info"
-        }
-      },
-      {
-        "id": "success",
-        "name": "Registration Complete",
+        "id": "complete",
+        "name": "Setup Complete",
         "view": {
           "type": "success",
-          "title": "Registration Complete!",
-          "message": "Welcome to our platform!",
-          "template": "Hello {{context.user.personalInfo.firstName}}!",
+          "title": "Demo Complete!",
+          "subtitle": "XFlows React Integration",
+          "message": "You've successfully completed the XFlows demo! This showcases form handling, state management, navigation, and API integration.",
           "actions": [
-            { "type": "button", "label": "Continue", "event": "NEXT" }
+            {
+              "type": "button",
+              "label": "Start Over",
+              "event": "RESTART_DEMO"
+            }
           ]
+        },
+        "navigation": {
+          "onNext": "welcome",
+          "RESTART_DEMO": "welcome"
         }
       }
     ]
+
   },
-  ecommerceCheckout: {
+  {
     "id": "ecommerce-checkout",
     "initial": "browse",
     "context": {
@@ -350,7 +465,7 @@ export const flowExamples: any = {
       }
     }
   },
-  insuranceQuote: {
+  {
     "id": "insurance-quote",
     "initial": "personal-info",
     "context": {
@@ -684,7 +799,7 @@ export const flowExamples: any = {
       }
     }
   },
-  salesFlow: {
+  {
     "id": "salesFlow",
     "initial": "quote.start",
     "context": {
@@ -734,4 +849,4 @@ export const flowExamples: any = {
       }
     }
   }
-}
+]

@@ -9,37 +9,29 @@ export const patternMachine = setup({
 
   actions: {
     handleInitiateInstance: assign(({ context }) => {
-      console.log('----handleInitiateInstance---')
       context.instance.isInitiated = true
     }),
     // ready state handlers
     handleEventCreate: assign(({ context }) => {
-      console.log('----handleEventCreate---')
 
     }),
     handleEventTerminate: assign(({ context }) => {
-      console.log('----handleEventTerminate---')
     }),
 
     // creating state handlers
     handleStartCreating: assign(({ context }) => {
-      console.log('----handleStartCreating---')
     }),
     handleProcessCreating: assign(({ context }) => {
-      console.log('----handleProcessCreating---')
     }),
 
     handleCompleteCreating: assign(({ context }) => {
       context.instance.isCreated = true
-      console.log('----handleCompleteCreating---')
     }),
 
     // terminating state handlers
     handleStartTerminating: assign(({ context }) => {
-      console.log('----handleStartTerminating---')
     }),
     handleProcessTerminating: assign(({ context }) => {
-      console.log('----handleProcessTerminating---')
     }),
   },
 
@@ -90,7 +82,7 @@ export const patternMachine = setup({
       entry: enqueueActions(({ context, enqueue, check, event}) => {
         if (check({ type: 'isAutoCreate' })) enqueue.raise({ type: 'CREATE'})
       }),
-      tags: ["canCreate", "canTerminate"],
+      tags: ["canTerminate"],
       on: {
         CREATE: {
           target: "creating",

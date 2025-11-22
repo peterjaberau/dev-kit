@@ -1,7 +1,9 @@
+'use client'
 import React from 'react';
 import { MainToolbar } from '../toolbars/MainToolbar';
 import { FlowStatusBar } from '../toolbars/StatusBar';
 import { Layout, LayoutHeader, LayoutContent, LayoutFooter } from '../ui';
+import { Badge } from '@chakra-ui/react'
 
 interface LayoutManagerProps {
   children: React.ReactNode;

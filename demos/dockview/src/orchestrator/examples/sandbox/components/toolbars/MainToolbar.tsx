@@ -1,5 +1,7 @@
+'use client'
+import { chakra, Flex } from '@chakra-ui/react'
+import { Select, Toolbar, ToolbarGroup, ToolbarButton, ToolbarSeparator } from '../ui';
 
-import { Select, Toolbar, ToolbarGroup, ToolbarButton, ToolbarSeparator } from 'components/ui';
 
 interface MainToolbarProps {
   selectedPanel: string;
@@ -46,10 +48,10 @@ export function MainToolbar({
 
   return (
     <Toolbar>
-      <div className="flex items-center justify-between">
+      <Flex alignItems={'center'} justifyContent={'space-between'}>
         <ToolbarGroup>
           {/* Main Tools */}
-          <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+          <Flex gapX={1} bgColor={'bg.subtle'} borderRadius={'md'} p={1}>
             {mainTools.map((tool) => (
               <ToolbarButton
                 key={tool.id}
@@ -60,9 +62,9 @@ export function MainToolbar({
                 {tool.icon} {tool.label}
               </ToolbarButton>
             ))}
-            
+
             <ToolbarSeparator />
-            
+
             {debugTools.map((tool) => (
               <ToolbarButton
                 key={tool.id}
@@ -73,32 +75,34 @@ export function MainToolbar({
                 {tool.icon} {tool.label}
               </ToolbarButton>
             ))}
-          </div>
-          
+          </Flex>
+
           {/* Error Display */}
           {flowError && (
-            <div className="flex items-center space-x-2 px-3 py-1 bg-red-100 text-red-700 rounded-md text-sm">
-              <span>⚠️</span>
-              <span>{flowError}</span>
-            </div>
+            <Flex alignItems={'center'} gapX={2} py={1} px={3} bgColor={'bg.error'} color={'fg.error'} borderRadius={'md'} fontSize={'sm'}>
+              <chakra.span>⚠️</chakra.span>
+              <chakra.span>{flowError}</chakra.span>
+            </Flex>
           )}
         </ToolbarGroup>
 
         <ToolbarGroup>
           {/* Example Selector */}
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">Examples:</label>
+          <Flex alignItems="center" gapX={2}>
+            <chakra.label fontSize={'sm'} fontWeight={'medium'} color={'fg.info'}>Examples:</chakra.label>
             <Select
               value={selectedExample}
               onChange={onExampleChange}
               options={examples}
               placeholder="Choose example..."
-              className="min-w-[200px]"
+              style={{
+                minWidth: '200px'
+              }}
             />
-          </div>
+          </Flex>
 
           {/* Layout Controls */}
-          <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+          <Flex gapX={1} borderRadius={'lg'} p={1}>
             {layoutOptions.map((layout) => (
               <ToolbarButton
                 key={layout.id}
@@ -110,7 +114,7 @@ export function MainToolbar({
                 {layout.icon}
               </ToolbarButton>
             ))}
-          </div>
+          </Flex>
 
           {/* Action Buttons */}
           <ToolbarButton
@@ -128,7 +132,7 @@ export function MainToolbar({
             🚀 Export
           </ToolbarButton>
         </ToolbarGroup>
-      </div>
+      </Flex>
     </Toolbar>
   );
 }

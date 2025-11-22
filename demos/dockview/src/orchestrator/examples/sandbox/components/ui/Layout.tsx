@@ -1,47 +1,88 @@
+'use client'
 import React from 'react';
-
+import { chakra } from "@chakra-ui/react"
 interface LayoutProps {
   children: React.ReactNode;
   className?: string;
+  css?: any
 }
 
-export function Layout({ children, className = '' }: LayoutProps) {
+export function Layout({ children, className = '', css = undefined }: LayoutProps) {
   return (
-    <div className={`flex flex-col h-full bg-gray-100 ${className}`}>
+    <chakra.div
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        backgroundColor: 'gray.100',
+        ...css,
+      }}
+      >
       {children}
-    </div>
+    </chakra.div>
   );
 }
 
-export function LayoutHeader({ children, className = '' }: LayoutProps) {
+export function LayoutHeader({ children, className = '', css = undefined }: LayoutProps) {
   return (
-    <header className={`bg-white border-b border-gray-200 ${className}`}>
+    <chakra.header
+      css={{
+        backgroundColor: 'bg.panel',
+        borderColor: 'gray.200',
+        borderBottom: '1px solid',
+      }}
+      >
       {children}
-    </header>
+    </chakra.header>
   );
 }
 
-export function LayoutContent({ children, className = '' }: LayoutProps) {
+export function LayoutContent({ children, className = '', css = undefined }: LayoutProps) {
   return (
-    <main className={`flex-1 overflow-hidden ${className}`}>
+    <chakra.main
+
+      css={{
+
+        flex: 1,
+        overflow: 'hidden',
+        ...css,
+      }}
+      >
       {children}
-    </main>
+    </chakra.main>
   );
 }
 
-export function LayoutFooter({ children, className = '' }: LayoutProps) {
+export function LayoutFooter({ children, className = '', css = undefined }: LayoutProps) {
   return (
-    <footer className={`bg-white border-t border-gray-200 px-6 py-2 ${className}`}>
+    <chakra.footer
+      css={{
+        backgroundColor: 'bg.panel',
+        borderColor: 'gray.200',
+        borderTop: '1px solid',
+        paddingX: 6,
+        paddingY: 2,
+        ...css,
+      }}
+      >
       {children}
-    </footer>
+    </chakra.footer>
   );
 }
 
-export function SplitLayout({ children, className = '' }: LayoutProps) {
+export function SplitLayout({ children, className = '', css = undefined }: LayoutProps) {
   return (
-    <div className={`flex h-full ${className}`}>
+    <chakra.div
+      css={{
+
+        display: 'flex',
+        height: '100%',
+        ...css
+
+      }}
+      >
       {children}
-    </div>
+    </chakra.div>
   );
 }
 
@@ -49,19 +90,34 @@ interface SplitPanelProps {
   children: React.ReactNode;
   className?: string;
   size?: '1/3' | '1/2' | '2/3' | 'flex-1';
+  css?: any
 }
 
-export function SplitPanel({ children, className = '', size = 'flex-1' }: SplitPanelProps) {
+export function SplitPanel({ children, className = '', size = 'flex-1', css = undefined }: SplitPanelProps) {
   const sizeClasses = {
-    '1/3': 'w-1/3',
-    '1/2': 'w-1/2',
-    '2/3': 'w-2/3',
-    'flex-1': 'flex-1'
+    '1/3': "33%",
+    '1/2': "50%",
+    '2/3': "66%",
+    'flex-1': 'full',
+    33: "33%",
+    50: "50%",
+    66: "66%",
+    1: "full"
   };
 
   return (
-    <div className={`${sizeClasses[size]} border-r border-gray-200 last:border-r-0 ${className}`}>
+    <chakra.div
+    css={{
+      width: sizeClasses[size],
+      borderColor: 'gray.200',
+      borderRight: '1px solid',
+      _last: {
+        borderRight: '0px',
+      },
+      ...css,
+    }}
+      >
       {children}
-    </div>
+    </chakra.div>
   );
 }

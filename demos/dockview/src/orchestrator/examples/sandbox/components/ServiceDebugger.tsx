@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 
 export function ServiceDebugger() {
@@ -6,7 +7,7 @@ export function ServiceDebugger() {
     { name: 'validateInput', type: 'http', status: 'working' },
     { name: 'saveData', type: 'http', status: 'working' }
   ]);
-  
+
   const [requests, setRequests] = useState<Array<{
     service: string,
     method: string,
@@ -23,7 +24,7 @@ export function ServiceDebugger() {
     const methods = ['GET', 'POST', 'PUT', 'DELETE'];
     const services = ['getUserData', 'validateInput', 'saveData'];
     const statuses = [200, 201, 400, 404, 500];
-    
+
     const newRequest = {
       service: services[Math.floor(Math.random() * services.length)],
       method: methods[Math.floor(Math.random() * methods.length)],
@@ -32,8 +33,8 @@ export function ServiceDebugger() {
       time: Math.random() * 1000 + 50,
       timestamp: Date.now()
     };
-    
-    setRequests(prev => [newRequest, ...prev.slice(0, 19)]); // Keep last 20
+
+    setRequests((prev: any) => [newRequest, ...prev.slice(0, 19)]); // Keep last 20
   };
 
   useEffect(() => {
@@ -81,7 +82,7 @@ export function ServiceDebugger() {
             <div className="space-y-2 text-sm">
               <div><span className="text-blue-600">Name:</span> {service.name}</div>
               <div><span className="text-blue-600">Type:</span> {service.type}</div>
-              <div><span className="text-blue-600">Status:</span> 
+              <div><span className="text-blue-600">Status:</span>
                 <span className={`ml-2 px-2 py-0.5 rounded text-xs ${getStatusColor(service.status)}`}>
                   {service.status}
                 </span>
@@ -169,7 +170,7 @@ export function ServiceDebugger() {
           <h3 className="text-sm font-medium text-gray-700 mb-3">📡 Registered Services</h3>
           <div className="grid grid-cols-3 gap-3">
             {services.map(service => (
-              <div 
+              <div
                 key={service.name}
                 className={`p-3 rounded border cursor-pointer transition-colors ${
                   selectedService === service.name 

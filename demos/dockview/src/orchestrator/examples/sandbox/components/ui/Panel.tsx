@@ -1,58 +1,112 @@
-import React from 'react';
+'use client'
+import React from "react"
+import { chakra } from "@chakra-ui/react"
 
 interface PanelProps {
-  children: React.ReactNode;
-  className?: string;
-  title?: string;
-  actions?: React.ReactNode;
+  children: React.ReactNode
+  className?: string
+  title?: string
+  actions?: React.ReactNode
+  css?: any
 }
 
-export function Panel({ children, className = '', title, actions }: PanelProps) {
+export function Panel({ children, className = "", title, actions, css = undefined }: PanelProps) {
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg overflow-hidden ${className}`}>
+    <chakra.div
+      css={{
+        backgroundColor: "bg.panel",
+        borderColor: "gray.200",
+        border: "1px solid",
+        borderRadius: "lg",
+        overflow: "hidden",
+        ...css,
+      }}
+    >
       {(title || actions) && (
-        <div className="bg-gray-50 border-b border-gray-200 px-4 py-3">
-          <div className="flex items-center justify-between">
+        <chakra.div
+          css={{
+            backgroundColor: "gray.50",
+            borderBottom: "1px solid",
+            borderColor: "gray.200",
+            paddingX: 4,
+            paddingY: 3,
+          }}
+        >
+          <chakra.div
+            css={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             {title && (
-              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+              <chakra.h3
+                css={{
+                  fontSize: "lg",
+                  fontWeight: "semibold",
+                  color: "gray.900",
+                }}
+              >
+                {title}
+              </chakra.h3>
             )}
             {actions && (
-              <div className="flex items-center space-x-2">
+              <chakra.div
+                css={{
+                  display: "flex",
+                  alignItems: "center",
+                  gapX: 2,
+                }}
+              >
                 {actions}
-              </div>
+              </chakra.div>
             )}
-          </div>
-        </div>
+          </chakra.div>
+        </chakra.div>
       )}
-      <div className="p-4">
-        {children}
-      </div>
-    </div>
-  );
+      <chakra.div p={4}>{children}</chakra.div>
+    </chakra.div>
+  )
 }
 
 interface PanelHeaderProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
+  css?: any
 }
 
-export function PanelHeader({ children, className = '' }: PanelHeaderProps) {
+export function PanelHeader({ children, className = "", css = undefined }: PanelHeaderProps) {
   return (
-    <div className={`bg-gray-50 border-b border-gray-200 px-4 py-3 ${className}`}>
+    <chakra.div
+      css={{
+        backgroundColor: "gray.50",
+        borderBottom: "1px solid",
+        borderColor: "gray.200",
+        paddingX: 4,
+        paddingY: 3,
+        ...css,
+      }}
+    >
       {children}
-    </div>
-  );
+    </chakra.div>
+  )
 }
 
 interface PanelContentProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
+  css?: any
 }
 
-export function PanelContent({ children, className = '' }: PanelContentProps) {
+export function PanelContent({ children, className = "", css = undefined }: PanelContentProps) {
   return (
-    <div className={`p-4 ${className}`}>
+    <chakra.div
+      css={{
+        p: 4,
+        ...css,
+      }}
+    >
       {children}
-    </div>
-  );
+    </chakra.div>
+  )
 }

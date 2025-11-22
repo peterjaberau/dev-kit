@@ -8,11 +8,15 @@ export const usePattern = () => {
   const patternContext = patternState?.context || {}
   const sendToPattern = patternRef?.send
 
+  // states: initiating, ready
   const canCreate = patternState?.hasTag("canCreate")
   const canTerminate = patternState?.hasTag("canTerminate")
+
+  // states: creating, terminating
   const canStart = patternState?.hasTag("canStart")
   const canProcess = patternState?.hasTag("canProcess")
   const canComplete = patternState?.hasTag("canComplete")
+
   const stateCan = {
     canCreate,
     canTerminate,
@@ -30,6 +34,11 @@ export const usePattern = () => {
     isInstanceCreated: patternContext?.instance.isCreated,
   }
 
+  const config = patternContext?.config || {}
+
+
+
+  const isInitiating = patternState?.matches("initiating")
   const isReady = patternState?.matches("ready")
   const isCreating = patternState?.matches("creating")
   const isTerminating = patternState?.matches("terminating")
@@ -43,6 +52,32 @@ export const usePattern = () => {
   const isTerminatingComplete = patternState?.matches("creating.complete")
 
   const fireEvent = (type: any) => sendToPattern({ type: type })
+
+
+  const canState = {
+    canCreate,
+    canTerminate,
+    canStart,
+    canProcess,
+    canComplete,
+  }
+
+  const isState = {
+    isInitiating,
+    isReady,
+    isCreating,
+    isTerminating,
+    isCreatingStart,
+    isCreatingProcess,
+    isCreatingComplete,
+    isTerminatingStart,
+    isTerminatingProcess,
+    isTerminatingComplete,
+  }
+
+  const allowState = {
+    allowCreate: canCreate && !guard.isAutoCreate,
+  }
 
   const stateStatus = {
     isReady,
@@ -73,5 +108,11 @@ export const usePattern = () => {
     stateStatus,
     stateCan,
     allowed,
+
+    canState,
+    isState,
+    allowState,
+
+    config
   }
 }
