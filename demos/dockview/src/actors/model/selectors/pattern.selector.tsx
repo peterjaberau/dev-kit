@@ -1,4 +1,5 @@
 "use client"
+import { getSimplePaths, getShortestPaths, getPathsFromEvents, toDirectedGraph } from '@xstate/graph'
 import { useRootActors } from "../hooks"
 import { useSelector } from "@xstate/react"
 
@@ -95,6 +96,30 @@ export const usePattern = () => {
     allowCreate: canCreate && !guard.isAutoCreate,
   }
 
+  const info = {
+    stateNames: Object?.keys(patternRef?.logic?.states) || [],
+    actionNames: Object?.keys(patternRef?.logic?.implementations?.actions) || [],
+    events: patternRef?.logic?.events || [],
+    systemId: patternRef?.systemId,
+    sessionId: patternRef?.sessionId,
+    id: patternRef?.id,
+  }
+
+  const graph = {
+    simplePaths: getSimplePaths(patternRef?.logic),
+    shortestPaths: getShortestPaths(patternRef?.logic),
+    pathsFromEvents: getPathsFromEvents(patternRef?.logic, [
+      { type: 'CREATE' },
+      { type: 'TERMINATE' },
+      { type: 'xstate.done.state.(machine).creating' },
+      { type: 'START' },
+      { type: 'PROCESS' },
+      { type: 'COMPLETE' },
+      { type: 'xstate.done.state.(machine).terminating' },
+    ]),
+    directedGraph: toDirectedGraph(patternRef?.logic),
+  }
+
   return {
     patternRef,
     sendToPattern,
@@ -113,6 +138,8 @@ export const usePattern = () => {
     isState,
     allowState,
 
-    config
+    config,
+    info,
+    graph
   }
 }

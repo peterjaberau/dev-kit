@@ -1,4 +1,4 @@
-import { assign, enqueueActions, raise, setup } from "xstate"
+import { assign, enqueueActions, raise, setup, createMachine, sendTo } from "xstate"
 import { currentAppExampleConfig, nodeManagerConfig } from "#actors/model/shared/config"
 import { applyDefaultLayout, dockviewApiEvents } from "#actors/model/actions"
 // import { currentAppExampleMachine } from "./current-app.machine"
@@ -13,11 +13,9 @@ const defaultConfig = {
 export const nodeMachine = setup({
   types: {} as any,
   actions: {
-    createView: assign(({ context, event, self }) => {
-      const api = context.input.api
+    addPanelPayload: assign(({ context }) => {
       const node = context.input.node
-
-      const view = {
+      context.view = {
         id: node.id,
         component: node.view.component,
         title: node.view.title,
@@ -29,23 +27,16 @@ export const nodeMachine = setup({
           input: context.input,
         },
       }
-      // console.log("---view----", view)
-
-      api?.addPanel(view)
-
-      context.view = view
     }),
-    createViewRenderer: ({ context }) => {
-      const view = context.view
+    addPanel: ({ context }) => {
       const api = context.input.api
-
-      api?.addPanel(view)
+      api?.addPanel(context.view)
     },
   },
   actors: {},
   guards: {},
 }).createMachine({
-  initial: "Initiating",
+  initial: "initiating",
   context: ({ input, self }: any) => {
     return {
       parentRef: self,
@@ -58,41 +49,273 @@ export const nodeMachine = setup({
     }
   },
   states: {
-    Initiating: {
+    initiating: {
+      entry: enqueueActions(({ enqueue }) => {
+        enqueue("addPanelPayload")
+        enqueue("addPanel")
+      }),
       always: {
-        target: "CreatingView",
+        target: "idle",
       },
     },
-
-    CreatingView: {
-      entry: enqueueActions(({ enqueue }) => {
-        enqueue("createView")
-        raise({ type: "createView.completed" })
-      }),
-      on: {
-        "createView.completed": {
-          target: "CreatingViewRenderer",
-        },
-      },
-    },
-
-    CreatingViewRenderer: {
-      entry: enqueueActions(({ enqueue }) => {
-        enqueue("createViewRenderer")
-        raise({ type: "createViewRenderer.completed" })
-      }),
-      on: {
-        "createViewRenderer.completed": {
-          target: "idle",
-        },
-      },
-    },
-
     idle: {
       on: {},
     },
   },
 })
+
+export const nodeApiDockMachine = setup({
+  actions: {
+    handleResetLayout: ({ context }) => {
+      const { api, defaultConfig } = context
+      if (api) {
+        try {
+          api.clear()
+          applyDefaultLayout({ api, defaultConfig })
+        } catch (err) {
+          console.error("failed to reset layout", err)
+        } finally {
+          localStorage.removeItem("dv-demo-state")
+        }
+      }
+    },
+    handleClearLayout: ({ context }) => {
+      context.api?.clear()
+    },
+    handleSaveLayout: ({ context }) => {
+      if (context.api) {
+        const state = context.api.toJSON()
+        localStorage.setItem("dv-demo-state", JSON.stringify(state))
+      }
+    },
+    handleLoadLayout: ({ context }) => {
+      const state = localStorage.getItem("dv-demo-state")
+      if (state && context.api) {
+        try {
+          context.api.fromJSON(JSON.parse(state))
+        } catch (err) {
+          console.error("failed to load state", err)
+          localStorage.removeItem("dv-demo-state")
+        }
+      }
+    },
+  },
+  actors: {
+    dockviewApiEvents,
+  },
+}).createMachine({
+  initial: "idle",
+  context: ({ input }: any) => {
+    return {
+      defaultConfig: { panels: [] },
+      api: input.api,
+    }
+  },
+  states: {
+    initiating: {
+      invoke: {
+        id: "dockviewApiEvents",
+        src: "dockviewApiEvents",
+        input: ({ context }) => ({ api: context.api, defaultConfig: context.defaultConfig }),
+        onDone: {
+          target: "idle",
+        },
+      },
+    },
+    idle: {
+      on: {
+        onResetLayout: {
+          actions: ["handleResetLayout"],
+        },
+        onClearLayout: {
+          actions: ["handleClearLayout"],
+        },
+        onSaveLayout: {
+          actions: ["handleSaveLayout"],
+        },
+        onLoadLayout: {
+          actions: ["handleLoadLayout"],
+        },
+      },
+    },
+  },
+})
+
+export const nodeDockPanelMachine = setup({
+  types: {} as any,
+  actions: {
+    prepareAddPanelPayload: assign(({ context }) => {
+      const node = context.input.node
+      context.view = {
+        id: node.id,
+        component: node.view.component,
+        title: node.view.title,
+        renderer: node.view.renderer,
+        position: node.view.position,
+        params: {
+          id: node.id,
+          parentRef: context.parentRef,
+          input: context.input,
+        },
+      }
+    }),
+    handleAddPanel: ({ context }) => {
+      const api = context.input.api
+      api?.addPanel(context.view)
+    },
+  },
+  actors: {},
+  guards: {},
+}).createMachine({
+  initial: "idle",
+  context: ({ input, self }: any) => {
+    return {
+      parentRef: self,
+      view: null,
+      model: {},
+      input: {
+        api: input.api,
+        node: input.node,
+      },
+    }
+  },
+  states: {
+    idle: {
+      entry: enqueueActions(({ enqueue }) => {
+        enqueue("prepareAddPanelPayload")
+        enqueue("handleAddPanel")
+      }),
+      on: {
+        addPanelCompletion: {},
+        removePanelCompletion: {},
+        activePanelChangeCompletion: {},
+        movePanelCompletion: {},
+      },
+    },
+  },
+})
+
+export const dockAdapterMachine = setup({
+  actions: {
+    handleSpawnDockApi: assign(({ context, event, spawn }) => {
+      spawn("nodeApiDockMachine", {
+        id: "dock-api",
+        input: { api: event.api },
+      })
+    }),
+
+    handleSpawnDockPanels: assign(({ context, spawn }) => {
+      nodeManagerConfig.nodes.map((item: any) => {
+        const spawnedNode = spawn("nodeDockPanelMachine", {
+          id: item.id,
+          // systemId: item.id,
+          input: {
+            node: item,
+            api: context.api,
+          },
+        })
+        // context.nodesRef.push(spawnedNode)
+      })
+    }),
+
+  },
+  actors: {
+    nodeApiDockMachine,
+    nodeDockPanelMachine,
+  },
+}).createMachine({
+  initial: "initiating",
+  context: ({ input }: any) => {
+    return {
+      api: input.api,
+    }
+  },
+  states: {
+    initiating: {
+      on: {
+        onReady: {
+          target: "idle",
+
+          actions: enqueueActions(({ enqueue, context, event }) => {
+            enqueue("handleSpawnDockApi")
+            enqueue("handleSpawnDockPanels")
+          }),
+        },
+      },
+    },
+    idle: {
+      entry: [
+
+      ],
+      on: {
+        onAddPanel: {
+          // spawn panel machine
+        },
+        onAddGroup: {
+          // spawn group machine
+        },
+        onDidAddPanel: {},
+        onDidRemovePanel: {},
+        onDidActivePanelChange: {},
+        onDidMovePanel: {},
+        onDidAddGroup: {},
+        onDidRemoveGroup: {},
+        onDidActiveGroupChange: {},
+        onDidMaximizedGroupChange: {},
+        onResetLayout: {
+          actions: sendTo("nodeApiDockMachine", "onResetLayout"),
+        },
+        onClearLayout: {},
+        onSaveLayout: {},
+        onLoadLayout: {},
+      },
+    },
+  },
+})
+
+export const nodeDockGroupMachine = setup({
+  types: {} as any,
+  actions: {
+    addGroup: ({ context }) => {
+      const api = context.input.api
+      api?.addGroup()
+    },
+  },
+  actors: {},
+  guards: {},
+}).createMachine({
+  initial: "initiating",
+  context: ({ input, self }: any) => {
+    return {
+      parentRef: self,
+      view: null,
+      model: {},
+      input: {
+        api: input.api,
+      },
+    }
+  },
+  states: {
+    initiating: {
+      entry: enqueueActions(({ enqueue }) => {
+        enqueue("addGroup")
+      }),
+      always: {
+        target: "idle",
+      },
+    },
+    idle: {
+      on: {
+        addGroupCompletion: {},
+        removeGroupCompletion: {},
+        activeGroupChangeCompletion: {},
+        maximizedGroupChangeCompletion: {},
+      },
+    },
+  },
+})
+
+
 
 export const nodeManagerMachine: any = setup({
   types: {} as any,
@@ -248,7 +471,7 @@ export const nodeManagerMachine: any = setup({
 
       activePanel: "",
       activeGroup: "",
-      defaultConfig: defaultConfig.dockViewConfig,
+      defaultConfig: currentAppExampleConfig.dockViewConfig,
       idCounter: 0,
       debug: false,
       logLines: [],
