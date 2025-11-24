@@ -3,6 +3,7 @@ export * from './session.selector'
 export * from './current-app-example.selector'
 
 export * from './node-manager.selector'
+export * from './dock-adapter.selector'
 
 export * from './pattern.selector'
 

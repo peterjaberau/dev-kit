@@ -5,10 +5,13 @@ import * as React from "react"
 import { useDockApi } from "#actors/model/selectors"
 
 export const LeftHeaderActions = (props: IDockviewHeaderActionsProps) => {
-  const { sendToDockApi } = useDockApi()
+  const { sendToDockApi, sendToDockAdapter } = useDockApi()
 
   const onClick = () => {
     sendToDockApi({ type: "onAddPanel", payload: { position: { referenceGroup: props.group.id } } })
+    sendToDockAdapter({ type: "onAddPanel", payload: { position: { referenceGroup: props.group.id } } })
+
+
   }
 
   return (

@@ -1,10 +1,12 @@
 "use client"
 import { map } from "lodash"
 import { useNodeManager } from "./node-manager.selector"
+import { useDockAdapter } from "./dock-adapter.selector"
 
 // https://dockview.dev/docs/api/dockview/overview
 export function useDockApi() {
   const { nodeManagerRef, sendToNodeManager, nodeManagerState, nodeManagerContext } = useNodeManager()
+  const { dockAdapterRef, sendToDockAdapter, dockAdapterState, dockAdapterContext } = useDockAdapter()
 
   const dockApiRef = nodeManagerRef
 
@@ -50,6 +52,8 @@ export function useDockApi() {
     dockApiState,
     dockApiContext,
     sendToDockApi,
+
+    sendToDockAdapter,
 
     api,
     meta,

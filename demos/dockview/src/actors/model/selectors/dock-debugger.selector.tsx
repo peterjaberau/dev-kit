@@ -7,7 +7,8 @@ import {
   useApp,
   useSession,
   useCurrentAppExample,
-  useNodeManager
+  useNodeManager,
+  useDockAdapter
 } from "#actors/model/selectors"
 
 export const useDockDebugger = () => {
@@ -15,6 +16,7 @@ export const useDockDebugger = () => {
   const { sessionRef } = useSession()
   const { currentAppExampleRef } = useCurrentAppExample()
   const { nodeManagerRef, nodeManagerContext } = useNodeManager()
+  const { dockAdapterRef, dockAdapterContext } = useDockAdapter()
 
   // const { nodeManagerState, nodeManagerContext, nodeManagerRef } = useNodeManager( )
 
@@ -35,6 +37,7 @@ export const useDockDebugger = () => {
     session: sessionRef.getPersistedSnapshot(),
     currentAppExample: currentAppExampleRef.getSnapshot().toJSON(),
     nodeManager: nodeManagerRef.getSnapshot().toJSON(),
+    dockAdapter: dockAdapterRef.getSnapshot().toJSON(),
     dock: dockRef.getSnapshot().toJSON(),
     ...root.builder,
   }

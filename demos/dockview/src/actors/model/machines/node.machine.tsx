@@ -204,7 +204,7 @@ export const dockAdapterMachine = setup({
       })
     }),
 
-    handleSpawnDockPanels: assign(({ context, spawn }) => {
+    handleSpawnDockPanels: assign(({ context,  spawn }) => {
       nodeManagerConfig.nodes.map((item: any) => {
         const spawnedNode = spawn("nodeDockPanelMachine", {
           id: item.id,
@@ -218,6 +218,28 @@ export const dockAdapterMachine = setup({
       })
     }),
 
+    handleAddPanel: assign(({ context, event, spawn }) => {
+      const api = context.api
+      const id = Math.random().toString()
+      spawn("nodeDockPanelMachine", {
+        id: id,
+        // systemId: item.id,
+        input: {
+          node: {
+            id: id,
+            view: {
+              type: 'DOCK_PANEL',
+              component: "default",
+              title: "Node " + id,
+              renderer: "always",
+              position: event?.payload?.position || undefined,
+            },
+          },
+          api: context.api,
+        },
+      })
+    }),
+
   },
   actors: {
     nodeApiDockMachine,
@@ -227,7 +249,8 @@ export const dockAdapterMachine = setup({
   initial: "initiating",
   context: ({ input }: any) => {
     return {
-      api: input.api,
+      api: null,
+      ...input,
     }
   },
   states: {
@@ -244,11 +267,9 @@ export const dockAdapterMachine = setup({
       },
     },
     idle: {
-      entry: [
-
-      ],
       on: {
         onAddPanel: {
+          actions: ['handleAddPanel'],
           // spawn panel machine
         },
         onAddGroup: {

@@ -6,6 +6,8 @@ export enum ROOT_SYSTEM_IDS {
 
   NODE_MANAGER = 'node_manager',
 
+  DOCK_ADAPTER = 'dock_adapter',
+
   PATTERN = 'pattern',
 
 
