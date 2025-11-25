@@ -1,5 +1,5 @@
 import { IDockviewHeaderActionsProps } from "#modules/dockview/core"
-import { useDockPanel, useDockApi, useDockAdapter } from "#actors/model/selectors"
+import { useDockPanel,  useDockAdapter } from "#actors/model/selectors"
 import * as React from "react"
 import { HStack } from "@chakra-ui/react"
 import { IconButtonRender } from "../../icons"
@@ -16,7 +16,7 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
   })
 
   // const { sendToDockApi } = useDockApi()
-  const { sendToDockApi } = useDockAdapter()
+  const { sendToDockAdapter } = useDockAdapter()
 
 
   const Component = React.useMemo(() => {
@@ -45,12 +45,12 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
 
   const splitHorizontally = () => {
 
-    sendToDockApi({ type: "onAddPanel", payload: { position: { referenceGroup: props.group, direction: 'below' } } })
+    sendToDockAdapter({ type: "onAddPanel", payload: { position: { referenceGroup: props.group, direction: 'below' } } })
 
   };
 
   const splitVertically = () => {
-    sendToDockApi({ type: "onAddPanel", payload: { position: { referenceGroup: props.group, direction: 'right' } } })
+    sendToDockAdapter({ type: "onAddPanel", payload: { position: { referenceGroup: props.group, direction: 'right' } } })
 
 
     // props.containerApi.addGroup({

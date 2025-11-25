@@ -1,5 +1,4 @@
 "use client"
-import { useDockApi } from "./dock-api.selector"
 import { useDockAdapter } from "./dock-adapter.selector"
 
 // https://dockview.dev/docs/api/dockview/panelApi

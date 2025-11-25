@@ -167,18 +167,16 @@ export const nodeDockPanelMachine = setup({
     },
 
     handleRemovePanel: ({ context, event }) => {
-
-      console.log('---handleRemovePanel----', {event})
+      console.log("---handleRemovePanel----", { event })
 
       const { api } = event.payload
 
-      console.log('--- handleRemovePanel----', api)
+      console.log("--- handleRemovePanel----", api)
 
       api.close()
 
       // const api = context.input.apiRef.getSnapshot().context?.api
       // api?.panel.close();
-
     },
   },
   actors: {},
@@ -205,8 +203,8 @@ export const nodeDockPanelMachine = setup({
       }),
       on: {
         onTerminate: {
-          actions: ['handleRemovePanel'],
-          target: ['terminate']
+          actions: ["handleRemovePanel"],
+          target: ["terminate"],
         },
         onDidActivePanelChange: {},
         addPanelCompletion: {},
@@ -215,14 +213,12 @@ export const nodeDockPanelMachine = setup({
         activePanelChangeCompletion: {},
         movePanelCompletion: {},
       },
-
     },
     terminate: {
-      type: 'final'
-    }
+      type: "final",
+    },
   },
 })
-
 
 export const nodeDockGroupMachine = setup({
   types: {} as any,
@@ -275,10 +271,8 @@ export const dockAdapterMachine = setup({
       })
       context.apiRef = spawnedApiRef
     }),
-
     handleSpawnDockPanels: enqueueActions(({ context, enqueue, event }) => {
       nodeManagerConfig.nodes.forEach((item: any) => {
-
         enqueue.spawnChild("nodeDockPanelMachine", {
           id: item.id,
           systemId: item.id,
@@ -288,38 +282,19 @@ export const dockAdapterMachine = setup({
             apiRef: context.apiRef,
           },
         })
-
-
-        // context.nodesRef.push(spawnedNode)
       })
     }),
-
-    handleSpawnDockPanels1: assign(({ context,  spawn }) => {
-      nodeManagerConfig.nodes.map((item: any) => {
-        spawn("nodeDockPanelMachine", {
-          id: item.id,
-          systemId: item.id,
-          input: {
-            node: item,
-            api: context.api,
-            apiRef: context.apiRef,
-          },
-        })
-        // context.nodesRef.push(spawnedNode)
-      })
-    }),
-
-    handleAddPanel: assign(({ context, event, spawn }) => {
+    handleAddPanel: enqueueActions(({ context, enqueue, event }: any) => {
       const api = context.api
       const id = Math.random().toString()
-      spawn("nodeDockPanelMachine", {
+      enqueue.spawnChild("nodeDockPanelMachine", {
         id: id,
         // systemId: item.id,
         input: {
           node: {
             id: id,
             view: {
-              type: 'DOCK_PANEL',
+              type: "DOCK_PANEL",
               component: "default",
               title: "Node " + id,
               renderer: "always",
@@ -331,36 +306,20 @@ export const dockAdapterMachine = setup({
         },
       })
     }),
-
-    handleRemovePanel1: assign(({ context, event, spawn }) => {
-
-      const panelId = event.payload.params.id
-      const panelRef = event.payload.params.parentRef
-      const api = event.payload.api
-
-      panelRef.send({
-        type: 'onTerminate',
-        payload: {
-          api
-        },
-      })
-
-    }),
-
     handleRemovePanel: enqueueActions(({ context, event, enqueue }: any) => {
       const panelId = event.payload.params.id
       const panelRef = event.payload.params.parentRef
       const api = event.payload.api
 
-
       enqueue.sendTo(panelRef, {
-        type: 'onTerminate',
+        type: "onTerminate",
         payload: {
-          api
+          api,
         },
       })
 
-    })
+      enqueue.stopChild(panelRef.id)
+    }),
   },
   actors: {
     nodeApiDockMachine,
@@ -391,13 +350,12 @@ export const dockAdapterMachine = setup({
     },
     idle: {
       on: {
-        onAddPanel: { actions: ['handleAddPanel'] },
+        onAddPanel: { actions: ["handleAddPanel"] },
         onRemovePanel: {
-          actions: ['handleRemovePanel']
+          actions: ["handleRemovePanel"],
         },
         onAddGroup: {},
         onRemoveGroup: {},
-
 
         onDidActiveGroupChange: {},
         onDidActivePanelChange: {},
@@ -418,19 +376,14 @@ export const dockAdapterMachine = setup({
         onWillDrop: {},
         onWillShowOverlay: {},
 
-
         onCloseAllGroups: {},
         onDispose: {},
-
-
 
         // panel
         addPanelCompletion: {},
         activePanelChangeCompletion: {},
         movePanelCompletion: {},
         removePanelCompletion: {},
-
-
 
         onClearLayout: {},
         onSaveLayout: {},
@@ -439,7 +392,6 @@ export const dockAdapterMachine = setup({
     },
   },
 })
-
 
 export const nodeManagerMachine: any = setup({
   types: {} as any,
