@@ -12,17 +12,25 @@ import React from "react"
 import { Container, HStack, RadioCard } from "@chakra-ui/react"
 import "react18-json-view/src/style.css"
 import JsonView from "react18-json-view"
+import { useDockPanel } from "#actors/model/selectors"
 
 
 export const ConfigDvComponentsMapping = {
   default: (props: any) => {
-    console.log("Default panel props:", props)
+    const dockPanel = useDockPanel(props.params.parentRef.id)
 
     return (
       <PaneContent>
       <Container fluid w="full" h="full" p={3}>
         <JsonView
-          src={props.params}
+          src={{
+            ...props.params,
+            dockPanel,
+            panelRefInfo: {
+              snapshot: props.params.parentRef.getSnapshot()?.toJSON()
+            }
+
+          }}
           collapsed={1}
           theme="github"
           displaySize

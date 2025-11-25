@@ -1,4 +1,4 @@
-import { assign, enqueueActions, raise, setup, createMachine, sendTo } from "xstate"
+import { assign, enqueueActions, raise, setup, createMachine, sendTo, stopChild, spawnChild } from "xstate"
 import { currentAppExampleConfig, nodeManagerConfig } from "#actors/model/shared/config"
 import { applyDefaultLayout, dockviewApiEvents } from "#actors/model/actions"
 // import { currentAppExampleMachine } from "./current-app.machine"
@@ -160,8 +160,25 @@ export const nodeDockPanelMachine = setup({
       }
     }),
     handleAddPanel: ({ context }) => {
-      const api = context.input.api
-      api?.addPanel(context.view)
+      const api = context.input.apiRef.getSnapshot().context?.api
+      if (api) {
+        api?.addPanel(context.view)
+      }
+    },
+
+    handleRemovePanel: ({ context, event }) => {
+
+      console.log('---handleRemovePanel----', {event})
+
+      const { api } = event.payload
+
+      console.log('--- handleRemovePanel----', api)
+
+      api.close()
+
+      // const api = context.input.apiRef.getSnapshot().context?.api
+      // api?.panel.close();
+
     },
   },
   actors: {},
@@ -174,6 +191,7 @@ export const nodeDockPanelMachine = setup({
       view: null,
       model: {},
       input: {
+        apiRef: input?.apiRef,
         api: input.api,
         node: input.node,
       },
@@ -186,113 +204,25 @@ export const nodeDockPanelMachine = setup({
         enqueue("handleAddPanel")
       }),
       on: {
+        onTerminate: {
+          actions: ['handleRemovePanel'],
+          target: ['terminate']
+        },
+        onDidActivePanelChange: {},
         addPanelCompletion: {},
+        onDidRemovePanel: {},
         removePanelCompletion: {},
         activePanelChangeCompletion: {},
         movePanelCompletion: {},
       },
+
     },
-  },
-})
-
-export const dockAdapterMachine = setup({
-  actions: {
-    handleSpawnDockApi: assign(({ context, event, spawn }) => {
-      spawn("nodeApiDockMachine", {
-        id: "dock-api",
-        input: { api: event.api },
-      })
-    }),
-
-    handleSpawnDockPanels: assign(({ context,  spawn }) => {
-      nodeManagerConfig.nodes.map((item: any) => {
-        const spawnedNode = spawn("nodeDockPanelMachine", {
-          id: item.id,
-          // systemId: item.id,
-          input: {
-            node: item,
-            api: context.api,
-          },
-        })
-        // context.nodesRef.push(spawnedNode)
-      })
-    }),
-
-    handleAddPanel: assign(({ context, event, spawn }) => {
-      const api = context.api
-      const id = Math.random().toString()
-      spawn("nodeDockPanelMachine", {
-        id: id,
-        // systemId: item.id,
-        input: {
-          node: {
-            id: id,
-            view: {
-              type: 'DOCK_PANEL',
-              component: "default",
-              title: "Node " + id,
-              renderer: "always",
-              position: event?.payload?.position || undefined,
-            },
-          },
-          api: context.api,
-        },
-      })
-    }),
-
-  },
-  actors: {
-    nodeApiDockMachine,
-    nodeDockPanelMachine,
-  },
-}).createMachine({
-  initial: "initiating",
-  context: ({ input }: any) => {
-    return {
-      api: null,
-      ...input,
+    terminate: {
+      type: 'final'
     }
   },
-  states: {
-    initiating: {
-      on: {
-        onReady: {
-          target: "idle",
-
-          actions: enqueueActions(({ enqueue, context, event }) => {
-            enqueue("handleSpawnDockApi")
-            enqueue("handleSpawnDockPanels")
-          }),
-        },
-      },
-    },
-    idle: {
-      on: {
-        onAddPanel: {
-          actions: ['handleAddPanel'],
-          // spawn panel machine
-        },
-        onAddGroup: {
-          // spawn group machine
-        },
-        onDidAddPanel: {},
-        onDidRemovePanel: {},
-        onDidActivePanelChange: {},
-        onDidMovePanel: {},
-        onDidAddGroup: {},
-        onDidRemoveGroup: {},
-        onDidActiveGroupChange: {},
-        onDidMaximizedGroupChange: {},
-        onResetLayout: {
-          actions: sendTo("nodeApiDockMachine", "onResetLayout"),
-        },
-        onClearLayout: {},
-        onSaveLayout: {},
-        onLoadLayout: {},
-      },
-    },
-  },
 })
+
 
 export const nodeDockGroupMachine = setup({
   types: {} as any,
@@ -335,7 +265,180 @@ export const nodeDockGroupMachine = setup({
     },
   },
 })
+// spawnedApiRef?.getSnapshot()?.context?.api
+export const dockAdapterMachine = setup({
+  actions: {
+    handleSpawnDockApi: assign(({ context, event, spawn }) => {
+      const spawnedApiRef = spawn("nodeApiDockMachine", {
+        id: "dock-api",
+        input: { api: event.api },
+      })
+      context.apiRef = spawnedApiRef
+    }),
 
+    handleSpawnDockPanels: enqueueActions(({ context, enqueue, event }) => {
+      nodeManagerConfig.nodes.forEach((item: any) => {
+
+        enqueue.spawnChild("nodeDockPanelMachine", {
+          id: item.id,
+          systemId: item.id,
+          input: {
+            node: item,
+            api: context.api,
+            apiRef: context.apiRef,
+          },
+        })
+
+
+        // context.nodesRef.push(spawnedNode)
+      })
+    }),
+
+    handleSpawnDockPanels1: assign(({ context,  spawn }) => {
+      nodeManagerConfig.nodes.map((item: any) => {
+        spawn("nodeDockPanelMachine", {
+          id: item.id,
+          systemId: item.id,
+          input: {
+            node: item,
+            api: context.api,
+            apiRef: context.apiRef,
+          },
+        })
+        // context.nodesRef.push(spawnedNode)
+      })
+    }),
+
+    handleAddPanel: assign(({ context, event, spawn }) => {
+      const api = context.api
+      const id = Math.random().toString()
+      spawn("nodeDockPanelMachine", {
+        id: id,
+        // systemId: item.id,
+        input: {
+          node: {
+            id: id,
+            view: {
+              type: 'DOCK_PANEL',
+              component: "default",
+              title: "Node " + id,
+              renderer: "always",
+              position: event?.payload?.position || undefined,
+            },
+          },
+          api: context.api,
+          apiRef: context.apiRef,
+        },
+      })
+    }),
+
+    handleRemovePanel1: assign(({ context, event, spawn }) => {
+
+      const panelId = event.payload.params.id
+      const panelRef = event.payload.params.parentRef
+      const api = event.payload.api
+
+      panelRef.send({
+        type: 'onTerminate',
+        payload: {
+          api
+        },
+      })
+
+    }),
+
+    handleRemovePanel: enqueueActions(({ context, event, enqueue }: any) => {
+      const panelId = event.payload.params.id
+      const panelRef = event.payload.params.parentRef
+      const api = event.payload.api
+
+
+      enqueue.sendTo(panelRef, {
+        type: 'onTerminate',
+        payload: {
+          api
+        },
+      })
+
+    })
+  },
+  actors: {
+    nodeApiDockMachine,
+    nodeDockPanelMachine,
+  },
+}).createMachine({
+  initial: "initiating",
+  context: ({ input, self }: any) => {
+    return {
+      api1: null,
+      parentRef: self,
+      apiRef: null,
+      api: null,
+      ...input,
+    }
+  },
+  states: {
+    initiating: {
+      on: {
+        onReady: {
+          target: "idle",
+          actions: enqueueActions(({ enqueue, context, event }) => {
+            enqueue("handleSpawnDockApi")
+            enqueue("handleSpawnDockPanels")
+          }),
+        },
+      },
+    },
+    idle: {
+      on: {
+        onAddPanel: { actions: ['handleAddPanel'] },
+        onRemovePanel: {
+          actions: ['handleRemovePanel']
+        },
+        onAddGroup: {},
+        onRemoveGroup: {},
+
+
+        onDidActiveGroupChange: {},
+        onDidActivePanelChange: {},
+        onDidAddGroup: {},
+        onDidAddPanel: {},
+        onDidDrop: {},
+        onDidLayoutChange: {},
+        onDidLayoutFromJSON: {},
+        onDidMaximizedGroupChange: {},
+        onDidMovePanel: {},
+        onDidRemoveGroup: {},
+        onDidRemovePanel: {},
+
+        onUnhandledDragOverEvent: {},
+
+        onWillDragGroup: {},
+        onWillDragPanel: {},
+        onWillDrop: {},
+        onWillShowOverlay: {},
+
+
+        onCloseAllGroups: {},
+        onDispose: {},
+
+
+
+        // panel
+        addPanelCompletion: {},
+        activePanelChangeCompletion: {},
+        movePanelCompletion: {},
+        removePanelCompletion: {},
+
+
+
+        onClearLayout: {},
+        onSaveLayout: {},
+        onLoadLayout: {},
+      },
+    },
+  },
+})
 
 
 export const nodeManagerMachine: any = setup({

@@ -1,3 +1,4 @@
+'use client'
 import { useDock } from "./dock.selector"
 import { usePluginDvController } from "#actors/model/selectors"
 import { componentsSelector, executionSelector, configSelector } from "#actors/slices"
@@ -16,7 +17,8 @@ export const useDockDebugger = () => {
   const { sessionRef } = useSession()
   const { currentAppExampleRef } = useCurrentAppExample()
   const { nodeManagerRef, nodeManagerContext } = useNodeManager()
-  const { dockAdapterRef, dockAdapterContext } = useDockAdapter()
+  const dockAdapter = useDockAdapter()
+
 
   // const { nodeManagerState, nodeManagerContext, nodeManagerRef } = useNodeManager( )
 
@@ -37,7 +39,7 @@ export const useDockDebugger = () => {
     session: sessionRef.getPersistedSnapshot(),
     currentAppExample: currentAppExampleRef.getSnapshot().toJSON(),
     nodeManager: nodeManagerRef.getSnapshot().toJSON(),
-    dockAdapter: dockAdapterRef.getSnapshot().toJSON(),
+    dockAdapter,
     dock: dockRef.getSnapshot().toJSON(),
     ...root.builder,
   }

@@ -1,5 +1,5 @@
 import { IDockviewHeaderActionsProps } from "#modules/dockview/core"
-import { useDockPanel, useDockApi } from "#actors/model/selectors"
+import { useDockPanel, useDockApi, useDockAdapter } from "#actors/model/selectors"
 import * as React from "react"
 import { HStack } from "@chakra-ui/react"
 import { IconButtonRender } from "../../icons"
@@ -15,7 +15,8 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
     panelId: props.activePanel?.id,
   })
 
-  const { sendToDockApi } = useDockApi()
+  // const { sendToDockApi } = useDockApi()
+  const { sendToDockApi } = useDockAdapter()
 
 
   const Component = React.useMemo(() => {

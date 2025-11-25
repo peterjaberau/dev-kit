@@ -1,9 +1,12 @@
 "use client"
 import { useDockApi } from "./dock-api.selector"
+import { useDockAdapter } from "./dock-adapter.selector"
 
 // https://dockview.dev/docs/api/dockview/panelApi
 export const useDockPanel = ({ panelId }: any) => {
-  const { getPanel, activePanelId }: any = useDockApi()
+  // const { getPanel, activePanelId }: any = useDockApi()
+
+  const { getPanel, activePanelId }: any = useDockAdapter()
 
   const panel = getPanel(panelId)
   const panelApi = panel?.api

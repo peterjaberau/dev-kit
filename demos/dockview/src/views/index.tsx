@@ -10,10 +10,11 @@ import {
 } from "#dockview"
 import { ConfigDvComponentsMapping } from "../components/config"
 import React, { useEffect } from "react"
+import { LuX } from "react-icons/lu"
 
 import { LeftHeaderActions, RightHeaderActions, PrefixHeaderActions } from "#components/dock"
 
-import { Button, Stack, Box, Flex } from "@chakra-ui/react"
+import { Button, ButtonGroup, IconButton, Stack, Box, Flex, HStack } from "@chakra-ui/react"
 import { WidgetPlaceholder } from "#components/widgets"
 import { PaneContent } from "#components/parts"
 
@@ -23,11 +24,26 @@ import { useDockApi, useDockPanel, useNodeManager, useDockAdapter } from "#actor
 
 const headerComponents = {
   default: (props: IDockviewPanelHeaderProps) => {
+    const { sendToDockAdapter } = useDockAdapter()
+
     const onContextMenu = (event: React.MouseEvent) => {
       event.preventDefault()
       alert("context menu")
     }
-    return <DockviewDefaultTab onContextMenu={onContextMenu} {...props} />
+
+    return (
+      <ButtonGroup size="sm" variant="outline" attached>
+        <Button variant="outline">{props.api.title}</Button>
+        <IconButton variant="outline"
+          onClick={() => sendToDockAdapter({ type: 'onRemovePanel', payload: props})}
+        >
+          <LuX />
+        </IconButton>
+      </ButtonGroup>
+
+    )
+
+    // return <DockviewDefaultTab onContextMenu={onContextMenu} {...props} />
   },
 }
 
@@ -39,7 +55,7 @@ const Index = (props: { theme?: string }) => {
   const [debug, setDebug] = React.useState<boolean>(false)
 
   const onReady = (event: DockviewReadyEvent) => {
-    sendToNodeManager({ type: "onReady", api: event.api })
+    // sendToNodeManager({ type: "onReady", api: event.api })
     sendToDockAdapter({ type: "onReady", api: event.api })
   }
 
