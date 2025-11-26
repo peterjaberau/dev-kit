@@ -8,11 +8,11 @@ export function useDockApi() {
   const { nodeManagerRef, sendToNodeManager, nodeManagerState, nodeManagerContext } = useNodeManager()
   const { dockAdapterRef, sendToDockAdapter, dockAdapterState, dockAdapterContext } = useDockAdapter()
 
-  const dockApiRef = nodeManagerRef
+  const dockApiRef = dockAdapterRef
 
-  const dockApiState: any = nodeManagerState
-  const dockApiContext = nodeManagerContext
-  const sendToDockApi = sendToNodeManager
+  const dockApiState: any = dockAdapterState
+  const dockApiContext = dockAdapterContext
+  const sendToDockApi = sendToDockAdapter
 
   const api = dockApiContext.api
 

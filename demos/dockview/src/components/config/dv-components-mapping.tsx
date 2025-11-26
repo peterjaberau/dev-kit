@@ -13,11 +13,14 @@ import { Container, HStack, RadioCard } from "@chakra-ui/react"
 import "react18-json-view/src/style.css"
 import JsonView from "react18-json-view"
 import { useDockPanel } from "#actors/model/selectors"
+import { useDockViewPanel } from "#actors/model/machines/dock-view"
 
 
 export const ConfigDvComponentsMapping = {
   default: (props: any) => {
-    const dockPanel = useDockPanel(props.params.parentRef.id)
+    // const dockPanel = useDockPanel(props.params.parentRef.id)
+
+    const dockViewPanel = useDockViewPanel(props.params.parentRef.id)
 
     return (
       <PaneContent>
@@ -25,7 +28,7 @@ export const ConfigDvComponentsMapping = {
         <JsonView
           src={{
             ...props.params,
-            dockPanel,
+            dockViewPanel,
             panelRefInfo: {
               snapshot: props.params.parentRef.getSnapshot()?.toJSON()
             }

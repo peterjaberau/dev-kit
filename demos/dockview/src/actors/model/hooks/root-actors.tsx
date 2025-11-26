@@ -2,6 +2,7 @@ import { useRoot } from "./root"
 import { getSpawnedActor } from "./utils"
 import { ROOT_SYSTEM_IDS } from "../shared/constants"
 import { CONSTANT_SYSTEM_ACTOR_IDS } from "#actors/constants"
+import { DOCK_VIEW_ENUM } from "#actors/model/machines/dock-view"
 
 export function useRootActors() {
   const { rootRef } = useRoot()
@@ -20,6 +21,9 @@ export function useRootActors() {
 
 
   const rootPatternRef = getSpawnedActor(ROOT_SYSTEM_IDS.PATTERN, rootRef)
+
+
+  const rootDockViewAdapterRef = getSpawnedActor(DOCK_VIEW_ENUM.ADAPTER_ID, rootRef)
 
 
   /*
@@ -50,6 +54,7 @@ export function useRootActors() {
 
     rootNodeManagerRef,
     rootDockAdapterRef,
+    rootDockViewAdapterRef,
     rootPatternRef,
 
     rootPluginScopePickerRef,

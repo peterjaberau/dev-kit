@@ -12,12 +12,15 @@ import {
   useDockAdapter
 } from "#actors/model/selectors"
 
+import { useDockViewAdapter } from "#actors/model/machines/dock-view"
+
 export const useDockDebugger = () => {
   const { appRef } = useApp()
   const { sessionRef } = useSession()
   const { currentAppExampleRef } = useCurrentAppExample()
   const { nodeManagerRef, nodeManagerContext } = useNodeManager()
   const dockAdapter = useDockAdapter()
+  const dockViewAdapter = useDockViewAdapter()
 
 
   // const { nodeManagerState, nodeManagerContext, nodeManagerRef } = useNodeManager( )
@@ -40,6 +43,7 @@ export const useDockDebugger = () => {
     currentAppExample: currentAppExampleRef.getSnapshot().toJSON(),
     nodeManager: nodeManagerRef.getSnapshot().toJSON(),
     dockAdapter,
+    dockViewAdapter,
     dock: dockRef.getSnapshot().toJSON(),
     ...root.builder,
   }

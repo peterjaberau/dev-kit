@@ -1,5 +1,6 @@
 import { IDockviewHeaderActionsProps } from "#modules/dockview/core"
 import { useDockPanel,  useDockAdapter } from "#actors/model/selectors"
+import { useDockViewPanel, useDockViewAdapter } from "#actors/model/machines/dock-view"
 import * as React from "react"
 import { HStack } from "@chakra-ui/react"
 import { IconButtonRender } from "../../icons"
@@ -11,7 +12,11 @@ const DockGroupControlsComponents: Record<string, React.FC> = {
 }
 
 export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
-  const { panel, id, isGroupActive, panelContainerApi, maximize, isMaximized, exitMaximized, isPopout } = useDockPanel({
+  // const { panel, id, isGroupActive, panelContainerApi, maximize, isMaximized, exitMaximized, isPopout } = useDockPanel({
+  //   panelId: props.activePanel?.id,
+  // })
+
+  const { panel, id, isGroupActive, panelContainerApi, maximize, isMaximized, exitMaximized, isPopout } = useDockViewPanel({
     panelId: props.activePanel?.id,
   })
 

@@ -1,0 +1,8 @@
+export enum DOCK_VIEW_ENUM {
+  LOCAL_STORAGE_IDENTIFIER = 'dv-demo-state',
+  ADAPTER_ID = 'dock-view-adapter',
+  API_ID = 'dock-view-api',
+
+
+  EVENT_ON_REMOVE_PANEL = "onRemovePanel",
+}

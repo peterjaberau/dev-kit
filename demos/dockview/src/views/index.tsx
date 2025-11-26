@@ -21,10 +21,12 @@ import { PaneContent } from "#components/parts"
 import { ScopePickerPlugin, UiPreviewerPlugin, CodeBlockPlugin, JsonViewerPlugin } from "#components/plugins"
 
 import { useDockApi, useDockPanel, useNodeManager, useDockAdapter } from "#actors/model/selectors"
+import { useDockViewAdapter, useDockViewApi } from "#actors/model/machines/dock-view"
 
 const headerComponents = {
   default: (props: IDockviewPanelHeaderProps) => {
-    const { sendToDockAdapter } = useDockAdapter()
+    const { sendToDockViewAdapter } = useDockViewAdapter()
+
 
     const onContextMenu = (event: React.MouseEvent) => {
       event.preventDefault()
@@ -35,7 +37,7 @@ const headerComponents = {
       <ButtonGroup size="sm" variant="outline" attached>
         <Button variant="outline">{props.api.title}</Button>
         <IconButton variant="outline"
-          onClick={() => sendToDockAdapter({ type: 'onRemovePanel', payload: props})}
+          onClick={() => sendToDockViewAdapter({ type: 'onRemovePanel', payload: props})}
         >
           <LuX />
         </IconButton>
@@ -51,12 +53,18 @@ const Index = (props: { theme?: string }) => {
   const { sendToDockApi, api, extras } = useDockApi()
   const { sendToNodeManager } = useNodeManager()
   const { sendToDockAdapter } = useDockAdapter()
+
+
+  const { sendToDockApi: sendToDockViewApi, api: dockViewApi, extras: dockViewExtras } = useDockViewApi()
+  const { sendToDockViewAdapter } = useDockViewAdapter()
+
   const [showLogs, setShowLogs] = React.useState<boolean>(false)
   const [debug, setDebug] = React.useState<boolean>(false)
 
   const onReady = (event: DockviewReadyEvent) => {
     // sendToNodeManager({ type: "onReady", api: event.api })
-    sendToDockAdapter({ type: "onReady", api: event.api })
+    // sendToDockAdapter({ type: "onReady", api: event.api })
+    sendToDockViewAdapter({ type: "onReady", api: event.api })
   }
 
   return (
