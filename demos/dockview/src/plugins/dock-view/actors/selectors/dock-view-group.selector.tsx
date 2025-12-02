@@ -1,6 +1,6 @@
 "use client"
 import { map } from "lodash"
-import { useDockViewApi } from "./dock-view-api.selector"
+import { useDockViewApi } from "."
 
 export const useDockViewGroup = ({ groupId }: any) => {
   const { getGroup, activeGroupId }: any = useDockViewApi()

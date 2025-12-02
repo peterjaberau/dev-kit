@@ -2,7 +2,7 @@
 import { useRootActors } from "#actors/model/hooks"
 import { useSelector } from "@xstate/react"
 import { map, omit } from "lodash"
-import { DOCK_VIEW_ENUM } from '..'
+import { DOCK_VIEW_ENUM } from '#plugin-dock-view'
 
 
 

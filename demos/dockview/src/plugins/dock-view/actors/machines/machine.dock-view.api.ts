@@ -1,5 +1,5 @@
 import { setup } from "xstate"
-import { applyDefaultLayout, handleDisposables } from '../lib'
+import { applyDefaultLayout, handleDisposables } from '#plugin-dock-view'
 
 export const dockViewApiMachine = setup({
   actions: {

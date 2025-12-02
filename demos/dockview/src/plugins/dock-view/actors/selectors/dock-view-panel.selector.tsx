@@ -1,5 +1,5 @@
 "use client"
-import { useDockViewAdapter } from "./dock-view-adapter.selector"
+import { useDockViewAdapter } from "."
 
 // https://dockview.dev/docs/api/dockview/panelApi
 export const useDockViewPanel = ({ panelId }: any) => {

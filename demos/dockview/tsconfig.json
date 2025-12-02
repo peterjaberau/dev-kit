@@ -66,7 +66,16 @@
       "#orchestrator": ["./src/orchestrator"],
 
       "#dockview/*": ["./src/modules/dockview/view/*"],
-      "#dockview": ["./src/modules/dockview/view"]
+      "#dockview": ["./src/modules/dockview/view"],
+
+      "#plugin-dock-view/*": ["./src/plugins/dock-view/*"],
+      "#plugin-dock-view": ["./src/plugins/dock-view"],
+
+      "#plugin-shared/*": ["./src/plugins/shared/*"],
+      "#plugin-shared": ["./src/plugins/shared"],
+
+      "#plugins/*": ["./src/plugins/*"],
+      "#plugins": ["./src/plugins"]
     }
   },
   "include": [

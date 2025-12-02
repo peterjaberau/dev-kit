@@ -1,14 +1,12 @@
 "use client"
 import { map } from "lodash"
-import { useDockViewAdapter } from "./dock-view-adapter.selector"
+import { useDockViewAdapter } from "."
 
 // https://dockview.dev/docs/api/dockview/overview
 export function useDockViewApi() {
   const { dockViewAdapterRef, sendToDockViewAdapter, dockViewAdapterContext, dockViewAdapterState } = useDockViewAdapter()
 
   const dockApiRef = dockViewAdapterRef
-
-  console.log('---dockViewAdapterRef---', dockViewAdapterRef)
 
   const dockApiState: any = dockViewAdapterState
   const dockApiContext = dockViewAdapterContext

@@ -1,5 +1,5 @@
 'use client'
-import { useDockViewApi } from "./dock-view-api.selector"
+import { useDockViewApi } from "."
 
 export function useDockViewMeta() {
   const { activeGroupId, activePanelId, meta } = useDockViewApi()

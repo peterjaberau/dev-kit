@@ -1,8 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { dockViewAdapterConfig } from "#actors/model/shared/config"
-import { dockViewApiMachine } from "./machine.dock-view.api"
-import { dockViewPanelMachine } from "./machine.dock-view.panel"
-import { DOCK_VIEW_ENUM } from ".."
+import { dockViewApiMachine, dockViewPanelMachine } from "."
+import { DOCK_VIEW_ENUM } from "#plugin-dock-view"
 
 export const dockViewAdapterMachine = setup({
   actions: {
