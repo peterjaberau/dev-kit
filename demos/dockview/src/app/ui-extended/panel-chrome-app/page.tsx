@@ -4,6 +4,16 @@ import { Panel } from "#components/ui-extended/panel-chrome/panel"
 
 
 const panelConfig = {
+  collapse: {
+    collapsible: true,
+    collapsed: false
+  },
+  warning: {
+    show: true,
+    tooltip: 'Warning content'
+  },
+
+
   menu: {
     items: [
       { label: "Ascending", value: "asc", onClick: () => console.log('asc!!!') },
@@ -12,9 +22,25 @@ const panelConfig = {
   },
   toolbar: {
     items: [
-      { type: 'button', label: "Ascending", value: "asc", onClick: () => console.log('asc!!!') },
-      { type: 'link', label: "Descending", value: "desc", onClick: () => console.log('desc!!!') },
-      { type: 'toggle', label: "Descending", value: "desc", onClick: () => console.log('desc!!!') },
+      {
+        type: 'button',
+        label: "Button",
+        onClick: () => console.log('Button!!!') ,
+        props: {
+          variant: 'solid'
+        }
+      },
+      {
+        type: 'link',
+        label: "Link",
+        href: "#",
+
+      },
+      {
+        type: 'toggle',
+        label: "Toggle",
+        props: {}
+      },
     ]
   }
 }
@@ -22,11 +48,13 @@ const panelConfig = {
 export default function Page() {
 
   return (
-    <Container width='1000px' backgroundColor='bg.emphasized'>
+    <Container width='1000px' backgroundColor='bg.panel' boxShadow={'sm'} p={4} mt={10} borderRadius={'sm'}>
       <Panel
+        collapse={panelConfig.collapse}
         title={'default title'}
         toolbar={panelConfig.toolbar.items}
         menu={panelConfig.menu.items}
+        warning={panelConfig.warning}
       />
     </Container>
   );

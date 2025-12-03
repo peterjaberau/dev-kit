@@ -2,11 +2,11 @@
 import { Button } from "@chakra-ui/react"
 import { Toggle } from "@dev-kit/components"
 
-export const ActionItemToggle = ({ text, variant, icon, onClick }: any) => {
+export const ActionItemToggle = ({ label, props, icon }: any) => {
   return (
-    <Button size="sm" variant={variant || "ghost"} onClick={onClick}>
+    <Button size="sm" variant={props?.variant || "outline"} >
       {icon && icon}
-      {text && text}
+      {label && label}
     </Button>
   )
 }
