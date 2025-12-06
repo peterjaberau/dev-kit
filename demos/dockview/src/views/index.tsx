@@ -50,12 +50,12 @@ const headerComponents = {
 }
 
 const Index = (props: { theme?: string }) => {
-  const { sendToDockApi, api, extras } = useDockApi()
-  const { sendToNodeManager } = useNodeManager()
-  const { sendToDockAdapter } = useDockAdapter()
-
-
-  const { sendToDockApi: sendToDockViewApi, api: dockViewApi, extras: dockViewExtras } = useDockViewApi()
+  // const { sendToDockApi, api, extras } = useDockApi()
+  // const { sendToNodeManager } = useNodeManager()
+  // const { sendToDockAdapter } = useDockAdapter()
+  //
+  //
+  // const { sendToDockApi: sendToDockViewApi, api: dockViewApi, extras: dockViewExtras } = useDockViewApi()
   const { sendToDockViewAdapter } = useDockViewAdapter()
 
   const [showLogs, setShowLogs] = React.useState<boolean>(false)
@@ -143,81 +143,6 @@ const Index = (props: { theme?: string }) => {
             theme={themeReplit}
           />
         </Flex>
-
-        {showLogs && (
-          <Box
-            css={{
-              width: "400px",
-              backgroundColor: "black",
-              color: "white",
-              overflow: "hidden",
-              fontFamily: "monospace",
-              marginLeft: "10px",
-              flexShrink: 0,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box style={{ flexGrow: 1, overflow: "auto" }}>
-              {extras.logLines.map((line: any, i: number) => {
-                return (
-                  <Box
-                    style={{
-                      height: "30px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      fontSize: "13px",
-                      display: "flex",
-                      alignItems: "center",
-
-                      backgroundColor: line.backgroundColor,
-                    }}
-                    key={i}
-                  >
-                    <span
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        minWidth: "20px",
-                        maxWidth: "20px",
-                        color: "gray",
-                        borderRight: "1px solid gray",
-                        marginRight: "4px",
-                        paddingLeft: "4px",
-                        height: "100%",
-                      }}
-                    >
-                      {extras.logLines.length - i}
-                    </span>
-                    <span>
-                      {line.timestamp && (
-                        <span
-                          style={{
-                            fontSize: "0.7em",
-                            padding: "0px 2px",
-                          }}
-                        >
-                          {line.timestamp.toISOString().substring(11, 23)}
-                        </span>
-                      )}
-                      <span>{line.text}</span>
-                    </span>
-                  </Box>
-                )
-              })}
-            </Box>
-            <div
-              style={{
-                padding: "4px",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              <button onClick={() => {}}>Clear</button>
-            </div>
-          </Box>
-        )}
       </Flex>
     </Stack>
   )
