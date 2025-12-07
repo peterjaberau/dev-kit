@@ -6,3 +6,4 @@ build
 *.hbs
 /apps/interactive-doc/src/demos/dockview/main/controls.tsx
 /apps/interactive-doc/src/demos/dockview/main/debugPanel.tsx
+/demos/dockview/src/actor-kit/createAccessToken.ts

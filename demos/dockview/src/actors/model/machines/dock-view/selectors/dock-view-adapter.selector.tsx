@@ -30,13 +30,23 @@ export const useDockViewAdapter = () => {
   const dockApiState: any = useSelector(dockApiRef, (state) => state)
   const dockApiContext = dockApiState?.context
   const sendToDockApi = dockApiRef?.send
-  const dockApi = dockApiContext?.api
+  // const dockApi = dockApiContext?.api
+  const dockApi = dockApiContext?.model?.api
 
 
   // panels
   const dockPanelNames = dockChildrenNames.filter((name) => name !== DOCK_VIEW_ENUM.API_ID)
   const dockPanelRefs = dockPanelNames.map((name) => dockChildren[name])
 
+  const dockPanelRef = (panelId: any) => {
+
+    // console.log('dockChildren', dockChildren);
+
+    if (dockChildren) {
+      return dockChildren[panelId] ?? null
+    }
+    return null
+  }
 
   // metadata
   const meta = {
@@ -72,9 +82,7 @@ export const useDockViewAdapter = () => {
     logLines: dockApiContext?.logLines
   }
 
-
   // event handlers
-
 
   return {
     // base
@@ -97,6 +105,7 @@ export const useDockViewAdapter = () => {
     //panels
     dockPanelNames,
     dockPanelRefs,
+    dockPanelRef,
 
     // metadata
     meta,

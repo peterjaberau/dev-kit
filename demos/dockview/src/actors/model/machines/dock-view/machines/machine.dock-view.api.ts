@@ -4,7 +4,8 @@ import { applyDefaultLayout, handleDisposables } from '../lib'
 export const dockViewApiMachine = setup({
   actions: {
     handleResetLayout: ({ context }) => {
-      const { api, defaultConfig } = context
+      const { defaultConfig } = context
+      const { api } = context?.model
       if (api) {
         try {
           api.clear()
@@ -17,17 +18,17 @@ export const dockViewApiMachine = setup({
       }
     },
     handleClearLayout: ({ context }) => {
-      context.api?.clear()
+      context.model?.api?.clear()
     },
     handleSaveLayout: ({ context }) => {
-      if (context.api) {
-        const state = context.api.toJSON()
+      if (context?.model?.api) {
+        const state = context?.model?.api.toJSON()
         localStorage.setItem("dv-demo-state", JSON.stringify(state))
       }
     },
     handleLoadLayout: ({ context }) => {
       const state = localStorage.getItem("dv-demo-state")
-      if (state && context.api) {
+      if (state && context?.model?.api) {
         try {
           context.api.fromJSON(JSON.parse(state))
         } catch (err) {
@@ -42,10 +43,23 @@ export const dockViewApiMachine = setup({
   },
 }).createMachine({
   initial: "idle",
-  context: ({ input }: any) => {
+  context: ({ input, self }: any) => {
     return {
+      refs: {
+        internal: {
+          self: self,
+          parent: input?.refs?.internal?.parent || null,
+        },
+        external: {
+          api: self,
+        }
+      },
+      props: {},
+      view: {},
+      model: {
+        api: input?.model?.api,
+      },
       defaultConfig: { panels: [] },
-      api: input.api,
     }
   },
   states: {

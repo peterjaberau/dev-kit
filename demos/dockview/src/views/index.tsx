@@ -15,18 +15,12 @@ import { LuX } from "react-icons/lu"
 import { LeftHeaderActions, RightHeaderActions, PrefixHeaderActions } from "#components/dock"
 
 import { Button, ButtonGroup, IconButton, Stack, Box, Flex, HStack } from "@chakra-ui/react"
-import { WidgetPlaceholder } from "#components/widgets"
-import { PaneContent } from "#components/parts"
-
-import { ScopePickerPlugin, UiPreviewerPlugin, CodeBlockPlugin, JsonViewerPlugin } from "#components/plugins"
-
-import { useDockApi, useDockPanel, useNodeManager, useDockAdapter } from "#actors/model/selectors"
-import { useDockViewAdapter, useDockViewApi } from "#actors/model/machines/dock-view"
+import { useDockViewAdapter, useDockViewPanel } from "#actors/model/machines/dock-view"
 
 const headerComponents = {
   default: (props: IDockviewPanelHeaderProps) => {
     const { sendToDockViewAdapter } = useDockViewAdapter()
-
+    const { panelRef, panelContext, panelApi, id: panelId } = useDockViewPanel({ panelId: props.api.id })
 
     const onContextMenu = (event: React.MouseEvent) => {
       event.preventDefault()
@@ -36,13 +30,22 @@ const headerComponents = {
     return (
       <ButtonGroup size="sm" variant="outline" attached>
         <Button variant="outline">{props.api.title}</Button>
-        <IconButton variant="outline"
-          onClick={() => sendToDockViewAdapter({ type: 'onRemovePanel', payload: props})}
+        <IconButton
+          variant="outline"
+          onClick={() =>
+            sendToDockViewAdapter({
+              type: "onRemovePanel",
+              payload: {
+                panelRef,
+                panelId,
+                panelApi
+              },
+            })
+          }
         >
           <LuX />
         </IconButton>
       </ButtonGroup>
-
     )
 
     // return <DockviewDefaultTab onContextMenu={onContextMenu} {...props} />

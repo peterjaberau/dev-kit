@@ -1,11 +1,17 @@
 "use client"
 import { useDockViewAdapter } from "./dock-view-adapter.selector"
+import { useSelector } from "@xstate/react"
 
 // https://dockview.dev/docs/api/dockview/panelApi
 export const useDockViewPanel = ({ panelId }: any) => {
   // const { getPanel, activePanelId }: any = useDockApi()
 
-  const { getPanel, activePanelId }: any = useDockViewAdapter()
+  const { getPanel, activePanelId, dockPanelRef: panelRef }: any = useDockViewAdapter()
+
+  const panelState: any = useSelector(panelRef(panelId), (state) => state)
+  const panelContext = panelState?.context
+  const sendToPanel = panelRef?.send
+
 
   const panel = getPanel(panelId)
   const panelApi = panel?.api
@@ -37,6 +43,14 @@ export const useDockViewPanel = ({ panelId }: any) => {
 
 
   return {
+    panelRef,
+    panelState,
+    panelContext,
+    sendToPanel,
+
+    panelApi,
+
+
     isPopout: panelApi?.location.type === 'popout',
     panel: panel,
     panelContainerApi,
@@ -66,23 +80,6 @@ export const useDockViewPanel = ({ panelId }: any) => {
     updateParameters: (parameters: any) => panel?.api.updateParameters(parameters),
     focus: () => panel?.focus(),
 
-    /*
- onActiveChange: {},
-  onDidActiveChange: {},
-  onDidActiveGroupChange: {},
-  onDidConstraintsChange: {},
-  onDidConstraintsChangeInternal: {},
-  onDidDimensionsChange: {},
-  onDidFocusChange: {},
-  onDidGroupChange: {},
-  onDidLocationChange: {},
-  onDidParametersChange: {},
-  onDidRendererChange: {},
-  onDidSizeChange: {},
-  onDidTitleChange: {},
-  onDidVisibilityChange: {},
-  onWillFocus: {},
-  onWillVisibilityChange: {},
-     */
+
   }
 }

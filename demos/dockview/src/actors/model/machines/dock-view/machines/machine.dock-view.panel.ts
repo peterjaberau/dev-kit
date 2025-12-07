@@ -3,34 +3,21 @@ import { assign, enqueueActions, setup } from "xstate"
 export const dockViewPanelMachine = setup({
   types: {} as any,
   actions: {
-    prepareAddPanelPayload: assign(({ context }) => {
-      const node = context.input.node
-      context.view = {
-        id: node.id,
-        component: node.view.component,
-        title: node.view.title,
-        renderer: node.view.renderer,
-        position: node.view.position,
-        params: {
-          id: node.id,
-          parentRef: context.parentRef,
-          input: context.input,
-        },
-      }
-    }),
     handleAddPanel: ({ context }) => {
-      const api = context.input.apiRef.getSnapshot().context?.api
+      const api = context?.model?.api
+      const view = {
+        id: context.view.id,
+        ...context.view.view,
+      }
+      // const api = context.input.apiRef.getSnapshot().context?.api
       if (api) {
-        api?.addPanel(context.view)
+        api?.addPanel(view)
       }
     },
 
     handleRemovePanel: ({ context, event }) => {
       const { api } = event.payload
       api.close()
-
-      // const api = context.input.apiRef.getSnapshot().context?.api
-      // api?.panel.close();
     },
   },
   actors: {},
@@ -39,20 +26,37 @@ export const dockViewPanelMachine = setup({
   initial: "idle",
   context: ({ input, self }: any) => {
     return {
-      parentRef: self,
-      view: null,
-      model: {},
-      input: {
-        apiRef: input?.apiRef,
-        api: input.api,
-        node: input.node,
+      refs: {
+        internal: {
+          self: self,
+          parent: input?.refs?.internal?.parent || null,
+        },
+        external: {
+          api: input?.refs?.external?.api || null,
+        },
+      },
+      props: {
+        ...input?.props,
+      },
+      view: {
+        id: input?.view?.id,
+        view: {
+          type: input?.view?.view?.type,
+          component: input?.view?.view?.component || "default",
+          title: input?.view?.view?.title || "Panel",
+          renderer: input?.view?.view?.renderer || "always",
+          position: input?.view?.view?.position || undefined,
+          params: input?.view?.view?.params || {},
+        },
+      },
+      model: {
+        api: input?.model?.api,
       },
     }
   },
   states: {
     idle: {
       entry: enqueueActions(({ enqueue }) => {
-        enqueue("prepareAddPanelPayload")
         enqueue("handleAddPanel")
       }),
       on: {

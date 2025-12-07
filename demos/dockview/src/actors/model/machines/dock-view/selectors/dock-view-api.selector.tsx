@@ -8,13 +8,13 @@ export function useDockViewApi() {
 
   const dockApiRef = dockViewAdapterRef
 
-  console.log('---dockViewAdapterRef---', dockViewAdapterRef)
 
   const dockApiState: any = dockViewAdapterState
   const dockApiContext = dockViewAdapterContext
   const sendToDockApi = sendToDockViewAdapter
 
-  const api = dockApiContext.api
+  // const api = dockApiContext.api
+  const api = dockApiContext?.model.api
 
   const activeGroupId= api?.activeGroup?.id
   const activePanelId= api?.activePanel?.id
@@ -41,10 +41,10 @@ export function useDockViewApi() {
 
 
   const extras = {
-    showLogs: dockApiContext.showLogs,
-    debug: dockApiContext.debug,
-    pending: dockApiContext.pending,
-    logLines: dockApiContext.logLines
+    // showLogs: dockApiContext.showLogs,
+    // debug: dockApiContext.debug,
+    // pending: dockApiContext.pending,
+    // logLines: dockApiContext.logLines
   }
 
   return {

@@ -20,7 +20,8 @@ export const ConfigDvComponentsMapping = {
   default: (props: any) => {
     // const dockPanel = useDockPanel(props.params.parentRef.id)
 
-    const dockViewPanel = useDockViewPanel(props.params.parentRef.id)
+
+    const dockViewPanel = useDockViewPanel(props.api.id)
 
     return (
       <PaneContent>
@@ -30,7 +31,10 @@ export const ConfigDvComponentsMapping = {
             ...props.params,
             dockViewPanel,
             panelRefInfo: {
-              snapshot: props.params.parentRef.getSnapshot()?.toJSON()
+              panelState: dockViewPanel.panelState,
+              panelContext: dockViewPanel.panelContext,
+              id: props.api.id
+              // snapshot: props.params.parentRef.getSnapshot()?.toJSON()
             }
 
           }}

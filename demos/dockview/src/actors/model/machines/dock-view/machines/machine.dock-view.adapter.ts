@@ -6,61 +6,103 @@ import { DOCK_VIEW_ENUM } from ".."
 
 export const dockViewAdapterMachine = setup({
   actions: {
-    handleSpawnDockApi: assign(({ context, event, spawn }) => {
+    handleSpawnDockApi: assign(({ context, event, spawn, self }) => {
       const spawnedApiRef = spawn("dockViewApiMachine", {
-        id: DOCK_VIEW_ENUM.ADAPTER_ID,
-        input: { api: event.api },
+        id: DOCK_VIEW_ENUM.API_ID,
+        input: {
+          refs: {
+            internal: {
+              parent: self,
+            },
+          },
+          props: {},
+          view: {},
+          model: {
+            api: event?.api || null,
+          },
+        },
       })
-      context.apiRef = spawnedApiRef
+
+      context.refs.external.api = spawnedApiRef
+      context.model.api = event?.api || null
+
     }),
-    handleSpawnDockPanels: enqueueActions(({ context, enqueue, event }) => {
+    handleSpawnDockPanels: enqueueActions(({ context, enqueue, event, self }) => {
       dockViewAdapterConfig.nodes.forEach((item: any) => {
         enqueue.spawnChild("dockViewPanelMachine", {
           id: item.id,
           systemId: item.id,
           input: {
-            node: item,
-            api: context.api,
-            apiRef: context.apiRef,
+            refs: {
+              internal: {
+                parent: self,
+              },
+              external: {
+                api: context?.refs?.external?.api || null,
+              },
+            },
+            props: {},
+            view: {
+              id: item.id,
+              view: {
+                ...item.view,
+              },
+            },
+            model: {
+              api: context?.model?.api || null,
+            },
+
+
           },
         })
       })
     }),
-    handleAddPanel: enqueueActions(({ context, enqueue, event }: any) => {
-      const api = context.api
+    handleAddPanel: enqueueActions(({ context, enqueue, event, self }: any) => {
+
+      const api = context?.model?.api
       const id = Math.random().toString()
       enqueue.spawnChild("dockViewPanelMachine", {
         id: id,
         // systemId: item.id,
         input: {
-          node: {
+          refs: {
+            internal: {
+              parent: self
+            },
+            external: {
+              api: context?.refs?.external?.api || null,
+            }
+          },
+          props: {},
+          view: {
             id: id,
             view: {
               type: "DOCK_PANEL",
               component: "default",
               title: "Node " + id,
               renderer: "always",
+              params: {},
               position: event?.payload?.position || undefined,
             },
           },
-          api: context.api,
-          apiRef: context.apiRef,
+          model: {
+            api: context?.model?.api || null,
+          },
+
         },
       })
     }),
     handleRemovePanel: enqueueActions(({ context, event, enqueue }: any) => {
-      const panelId = event.payload.params.id
-      const panelRef = event.payload.params.parentRef
-      const api = event.payload.api
+      const { panelRef, panelId, panelApi } = event.payload
 
-      enqueue.sendTo(panelRef, {
+      enqueue.sendTo(panelRef(panelId), {
         type: "onTerminate",
         payload: {
-          api,
+          api: panelApi,
         },
       })
 
-      enqueue.stopChild(panelRef.id)
+      enqueue.stopChild(panelId)
     }),
   },
   actors: {
@@ -71,10 +113,20 @@ export const dockViewAdapterMachine = setup({
   initial: "initiating",
   context: ({ input, self }: any) => {
     return {
-      parentRef: self,
-      apiRef: null,
-      api: null,
-      ...input,
+      refs: {
+        internal: {
+          self: self,
+          parent: input?.refs?.internal?.parent || null,
+        },
+        external: {
+          api: null
+        }
+      },
+      props: {},
+      view: {},
+      model: {
+        api: null
+      },
     }
   },
   states: {
