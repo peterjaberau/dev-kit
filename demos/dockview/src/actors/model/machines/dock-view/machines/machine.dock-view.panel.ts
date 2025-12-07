@@ -12,12 +12,21 @@ export const dockViewPanelMachine = setup({
       // const api = context.input.apiRef.getSnapshot().context?.api
       if (api) {
         api?.addPanel(view)
+
+        context.model.panelApi = api.getPanel(view.id)?.api
+
+
+      //   dockApi?.getPanel(id)
       }
     },
 
     handleRemovePanel: ({ context, event }) => {
-      const { api } = event.payload
-      api.close()
+      // const { api } = event.payload
+      // api.close()
+
+      context.model?.panelApi.close()
+
+
     },
   },
   actors: {},
@@ -51,6 +60,7 @@ export const dockViewPanelMachine = setup({
       },
       model: {
         api: input?.model?.api,
+        panelApi: null,
       },
     }
   },

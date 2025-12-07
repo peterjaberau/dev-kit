@@ -25,7 +25,6 @@ export const dockViewAdapterMachine = setup({
 
       context.refs.external.api = spawnedApiRef
       context.model.api = event?.api || null
-
     }),
     handleSpawnDockPanels: enqueueActions(({ context, enqueue, event, self }) => {
       dockViewAdapterConfig.nodes.forEach((item: any) => {
@@ -51,14 +50,11 @@ export const dockViewAdapterMachine = setup({
             model: {
               api: context?.model?.api || null,
             },
-
-
           },
         })
       })
     }),
     handleAddPanel: enqueueActions(({ context, enqueue, event, self }: any) => {
-
       const api = context?.model?.api
       const id = Math.random().toString()
       enqueue.spawnChild("dockViewPanelMachine", {
@@ -67,11 +63,11 @@ export const dockViewAdapterMachine = setup({
         input: {
           refs: {
             internal: {
-              parent: self
+              parent: self,
             },
             external: {
               api: context?.refs?.external?.api || null,
-            }
+            },
           },
           props: {},
           view: {
@@ -88,20 +84,15 @@ export const dockViewAdapterMachine = setup({
           model: {
             api: context?.model?.api || null,
           },
-
         },
       })
     }),
     handleRemovePanel: enqueueActions(({ context, event, enqueue }: any) => {
-      const { panelRef, panelId, panelApi } = event.payload
-
-      enqueue.sendTo(panelRef(panelId), {
+      const { panelId } = event.payload
+      const panelRef = context.refs.internal.self.getSnapshot().children[panelId]
+      enqueue.sendTo(panelRef, {
         type: "onTerminate",
-        payload: {
-          api: panelApi,
-        },
       })
-
       enqueue.stopChild(panelId)
     }),
   },
@@ -119,13 +110,13 @@ export const dockViewAdapterMachine = setup({
           parent: input?.refs?.internal?.parent || null,
         },
         external: {
-          api: null
-        }
+          api: null,
+        },
       },
       props: {},
       view: {},
       model: {
-        api: null
+        api: null,
       },
     }
   },

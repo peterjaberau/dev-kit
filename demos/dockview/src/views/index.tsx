@@ -1,5 +1,6 @@
 "use client"
 import "../styles/dock-light.css"
+import { dockViewCssVariables } from "./styles"
 
 import {
   DockviewDefaultTab,
@@ -9,6 +10,7 @@ import {
   themeReplit,
 } from "#dockview"
 import { ConfigDvComponentsMapping } from "../components/config"
+import { DockViewPanels } from "./components/dock-view-panels"
 import React, { useEffect } from "react"
 import { LuX } from "react-icons/lu"
 
@@ -20,7 +22,7 @@ import { useDockViewAdapter, useDockViewPanel } from "#actors/model/machines/doc
 const headerComponents = {
   default: (props: IDockviewPanelHeaderProps) => {
     const { sendToDockViewAdapter } = useDockViewAdapter()
-    const { panelRef, panelContext, panelApi, id: panelId } = useDockViewPanel({ panelId: props.api.id })
+    const { id: panelId } = useDockViewPanel({ panelId: props.api.id })
 
     const onContextMenu = (event: React.MouseEvent) => {
       event.preventDefault()
@@ -36,9 +38,7 @@ const headerComponents = {
             sendToDockViewAdapter({
               type: "onRemovePanel",
               payload: {
-                panelRef,
                 panelId,
-                panelApi
               },
             })
           }
@@ -47,83 +47,18 @@ const headerComponents = {
         </IconButton>
       </ButtonGroup>
     )
-
-    // return <DockviewDefaultTab onContextMenu={onContextMenu} {...props} />
   },
 }
 
 const Index = (props: { theme?: string }) => {
-  // const { sendToDockApi, api, extras } = useDockApi()
-  // const { sendToNodeManager } = useNodeManager()
-  // const { sendToDockAdapter } = useDockAdapter()
-  //
-  //
-  // const { sendToDockApi: sendToDockViewApi, api: dockViewApi, extras: dockViewExtras } = useDockViewApi()
   const { sendToDockViewAdapter } = useDockViewAdapter()
 
-  const [showLogs, setShowLogs] = React.useState<boolean>(false)
-  const [debug, setDebug] = React.useState<boolean>(false)
-
   const onReady = (event: DockviewReadyEvent) => {
-    // sendToNodeManager({ type: "onReady", api: event.api })
-    // sendToDockAdapter({ type: "onReady", api: event.api })
     sendToDockViewAdapter({ type: "onReady", api: event.api })
   }
 
   return (
-    <Stack
-      css={{
-        "--dv-paneview-active-outline-color": "dodgerblue",
-        "--dv-tabs-and-actions-container-font-size": "13px",
-        "--dv-tabs-and-actions-container-height": "38px",
-        "--dv-drag-over-background-color": "#53595d80",
-        "--dv-drag-over-border-color": "transparent",
-        "--dv-tabs-container-scrollbar-color": "#888",
-        "--dv-icon-hover-background-color": "#5a5d5e4f",
-        "--dv-floating-box-shadow": "8px 8px 8px 0px #53595d80",
-        "--dv-overlay-z-index": 999,
-        // "--dv-tab-font-size": "inherit",
-        // "--dv-border-radius": "0px",
-        // "--dv-tab-margin": 0,
-        "--dv-sash-color": "#cfd1d3",
-        "--dv-active-sash-color": "#babbbb",
-        "--dv-active-sash-transition-duration": ".1s",
-        "--dv-active-sash-transition-delay": "0.5s",
-
-        "--dv-scrollbar-background-color": "#00000040",
-        "--dv-tabs-and-actions-container-background-color": "colors.bg.panel",
-        "--dv-tab-divider-color": "transparent",
-        "--dv-separator-border": "#transparent",
-        "--dv-paneview-header-border-color": "#333",
-
-        "--dv-group-view-background-color": "colors.transparent",
-
-        // "--dv-activegroup-visiblepanel-tab-background-color": "#f0f1f2",
-        "--dv-activegroup-hiddenpanel-tab-background-color": "#fcfcfc",
-        "--dv-activegroup-visiblepanel-tab-color": "#333",
-        "--dv-activegroup-hiddenpanel-tab-color": "#333",
-
-        "--dv-inactivegroup-visiblepanel-tab-background-color": "#f0f1f2",
-        "--dv-inactivegroup-hiddenpanel-tab-background-color": "#fcfcfc",
-        "--dv-inactivegroup-visiblepanel-tab-color": "#333",
-        "--dv-inactivegroup-hiddenpanel-tab-color": "#333",
-
-        "--dv-groupview-border-radius": "radii.none",
-
-        "--dv-groupview-tabs-and-actions-container-tab-hover-background-color": "#e4e5e6",
-        "--dv-groupview-content-container-background-color": "#fcfcfc",
-        "--dv-groupview-active-group-border": "1px solid",
-        "--dv-groupview-active-group-border-color": "#80808059",
-        "--dv-groupview-inactive-group-border": "1px solid",
-        "--dv-groupview-inactive-group-border-color": "#0000",
-
-        height: "100vh",
-        position: "relative",
-        background: "bg.emphasized",
-        flex: 1,
-        p: 2,
-      }}
-    >
+    <Stack css={dockViewCssVariables}>
       <Flex
         css={{
           flexGrow: 1,
@@ -137,7 +72,7 @@ const Index = (props: { theme?: string }) => {
           }}
         >
           <DockviewReact
-            components={ConfigDvComponentsMapping}
+            components={DockViewPanels}
             defaultTabComponent={headerComponents.default}
             rightHeaderActionsComponent={RightHeaderActions}
             leftHeaderActionsComponent={LeftHeaderActions}
