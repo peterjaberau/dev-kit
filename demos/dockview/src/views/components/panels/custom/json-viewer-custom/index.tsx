@@ -1,17 +1,13 @@
 import { Container } from "@chakra-ui/react"
 import JsonView from "react18-json-view"
 import React from "react"
-import { useDockViewPanel } from "#actors/model/machines/dock-view"
+import { useDockViewPanel } from "#modules/dockview/actors/selectors"
 
 const Index = (props: any) => {
 
   const { props: extraProps = null } = props;
 
-  console.log("Rendering PanelCustomJsonViewer", extraProps)
-
-
   const dockViewPanel = useDockViewPanel(extraProps.api.id)
-
 
   return (
     <Container fluid w="full" h="full" p={3}>

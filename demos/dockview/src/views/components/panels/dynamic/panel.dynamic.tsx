@@ -3,7 +3,7 @@ import { Wrap, Highlight, Input, Stack, TreeView, createTreeCollection, useFilte
 import { useState } from "react"
 import { LuFile, LuFolder } from "react-icons/lu"
 import { PanelDynamicSelectScope } from "./panel.dynamic.select-scope"
-import { useDynamicPanelLab } from "#actors/model/machines/dynamic-panels"
+import { useDynamicPanelLab } from "#modules/dockview/actors/selectors"
 import { ScrollAreaWrapper } from "../../common"
 import { PanelDynamicRendered } from "./panel.dynamic.rendered"
 

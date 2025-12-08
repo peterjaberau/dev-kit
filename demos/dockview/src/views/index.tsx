@@ -9,15 +9,15 @@ import {
   IDockviewPanelHeaderProps,
   themeReplit,
 } from "#dockview"
-import { ConfigDvComponentsMapping } from "../components/config"
 import { DockViewPanels } from "./components/dock-view-panels"
 import React, { useEffect } from "react"
 import { LuX } from "react-icons/lu"
 
-import { LeftHeaderActions, RightHeaderActions, PrefixHeaderActions } from "#components/dock"
+import { LeftHeaderActions, RightHeaderActions, PrefixHeaderActions } from "./components/header"
 
 import { Button, ButtonGroup, IconButton, Stack, Box, Flex, HStack } from "@chakra-ui/react"
-import { useDockViewAdapter, useDockViewPanel } from "#actors/model/machines/dock-view"
+import { useDockViewAdapter, useDockViewPanel } from "#modules/dockview/actors/selectors"
+
 
 const headerComponents = {
   default: (props: IDockviewPanelHeaderProps) => {

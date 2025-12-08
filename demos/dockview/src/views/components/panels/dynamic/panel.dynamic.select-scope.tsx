@@ -3,7 +3,7 @@ import { Wrap, Highlight, Input, Stack, TreeView, createTreeCollection, useFilte
 import { useState } from "react"
 import { LuFile, LuFolder } from "react-icons/lu"
 import { ScrollAreaWrapper } from "../../common"
-import { useDynamicPanelLab } from "#actors/model/machines/dynamic-panels"
+import { useDynamicPanelLab } from "#modules/dockview/actors/selectors"
 
 export const PanelDynamicSelectScope = (props: any) => {
   const { inScopeState, scopeContext, sendToDynamicPanelLab } = useDynamicPanelLab()
