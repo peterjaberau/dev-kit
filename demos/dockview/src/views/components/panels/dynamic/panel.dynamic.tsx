@@ -5,24 +5,26 @@ import { LuFile, LuFolder } from "react-icons/lu"
 import { PanelDynamicSelectScope } from "./panel.dynamic.select-scope"
 import { useDynamicPanelLab } from "#actors/model/machines/dynamic-panels"
 import { ScrollAreaWrapper } from "../../common"
+import { PanelDynamicRendered } from "./panel.dynamic.rendered"
 
 export const PanelDynamic = (props: any) => {
   const [currentState, setCurrentState] = useState(null)
-
   const { inScopeState, inScopedState, scopeContext, scopedContext, sendToDynamicPanelLab } = useDynamicPanelLab()
 
   return (
     <>
       {inScopeState && (
-        <>
-          <PanelDynamicSelectScope/>
-          {/*<Button onClick={() => sendToDynamicPanelLab({ type: "SELECT_SCOPE" })}>SELECT SCOPE</Button>*/}
-        </>
+        <PanelDynamicSelectScope />
       )}
       {inScopedState && (
         <>
-          <div>scoped panel</div>
-          <Button onClick={() => sendToDynamicPanelLab({ type: "BACK_TO_SCOPE" })}>BACK_TO_SCOPE</Button>
+          <PanelDynamicRendered
+            toolbar={
+              <Button size={'sm'} onClick={() => sendToDynamicPanelLab({ type: "BACK_TO_SCOPE" })}>BACK_TO_SCOPE</Button>
+            }
+            id={scopedContext.targetPanel}
+            props={props}
+          />
         </>
       )}
     </>

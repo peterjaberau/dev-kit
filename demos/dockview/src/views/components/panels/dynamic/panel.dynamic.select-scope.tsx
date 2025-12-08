@@ -28,138 +28,13 @@ export const PanelDynamicSelectScope = (props: any) => {
     setExpanded(nextCollection.getBranchValues())
   }
 
-  const getFirstNode = collection.getFirstNode()
-  const getLastNode = collection.getLastNode()
-  const getNextNodePanels = collection.getNextNode("panels")
-  const getNextNodeDefault = collection.getNextNode("default")
-  const getNextNodeSrc = collection.getNextNode("src")
-  const getPreviousNodePanels = collection.getPreviousNode("panels")
-  const getPreviousNodeDefault = collection.getPreviousNode("default")
-  const getPreviousNodeSrc = collection.getPreviousNode("src")
-  const getParentNodesPanels = collection.getParentNodes("panels")
-  const getParentNodesDefault = collection.getParentNodes("default")
-  const getParentNodesSrc = collection.getParentNodes("src")
-  const findNodePanels: any = collection.findNode("panels")
-  const findNodeDefault: any = collection.findNode("default")
-  const findNodeSrc: any = collection.findNode("src")
-  const isBranchNodePanels = collection.isBranchNode(findNodePanels)
-  const isBranchNodeDefault = collection.isBranchNode(findNodeDefault)
-  const isBranchNodeSrc = collection.isBranchNode(findNodeSrc)
-  const getIndexPathPanels = collection.getIndexPath("panels")
-  const getIndexPathDefault = collection.getIndexPath("default")
-  const getIndexPathSrc = collection.getIndexPath("src")
-
-  const flatNodesUtils = collection.flatten()
-  const flatNodesSrc = collection.flatten(findNodeSrc)
-
-  const allValues = collection.getValues()
-  const depthPanels = collection.getDepth("panels")
-  const depthDefault = collection.getDepth("default")
-  const depthSrc = collection.getDepth("src")
-
-  const handleClick = (e: any) => {
-    console.log(e)
-  }
-
   return (
-    <Stack gap="3" w="full" h="full" px={4} py={4}>
-      <Stack>
-        <Input placeholder="Search for tools & files" onChange={(e) => search(e.target.value)} />
-      </Stack>
-      <Stack>
-        <Wrap w={"full"}>
-          <Button size="xs" onClick={() => handleClick(collection)}>
-            collection
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getFirstNode)}>
-            firstNode
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getFirstNode)}>
-            lastNode
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getNextNodePanels)}>
-            next panels
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getNextNodeDefault)}>
-            next default
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getNextNodeSrc)}>
-            next src
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getPreviousNodePanels)}>
-            previous panels
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getPreviousNodeDefault)}>
-            previous default
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getPreviousNodeSrc)}>
-            previous src
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getParentNodesPanels)}>
-            parent panels
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getParentNodesDefault)}>
-            parent default
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getParentNodesSrc)}>
-            parent src
-          </Button>
-
-          <Button size="xs" onClick={() => handleClick(findNodePanels)}>
-            findNode panels
-          </Button>
-          <Button size="xs" onClick={() => handleClick(findNodeDefault)}>
-            findNode default
-          </Button>
-          <Button size="xs" onClick={() => handleClick(findNodeSrc)}>
-            findNode src
-          </Button>
-
-          <Button size="xs" onClick={() => handleClick(isBranchNodePanels)}>
-            isBranch panels
-          </Button>
-          <Button size="xs" onClick={() => handleClick(isBranchNodeDefault)}>
-            isBranch default
-          </Button>
-          <Button size="xs" onClick={() => handleClick(isBranchNodeSrc)}>
-            isBranch src
-          </Button>
-
-          <Button size="xs" onClick={() => handleClick(getIndexPathPanels)}>
-            indexPath panels
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getIndexPathDefault)}>
-            indexPath default
-          </Button>
-          <Button size="xs" onClick={() => handleClick(getIndexPathSrc)}>
-            indexPath src
-          </Button>
-
-          <Button size="xs" onClick={() => handleClick(flatNodesUtils)}>
-            flatNodesUtils
-          </Button>
-          <Button size="xs" onClick={() => handleClick(flatNodesSrc)}>
-            flatNodes Src
-          </Button>
-
-          <Button size="xs" onClick={() => handleClick(allValues)}>
-            allValues
-          </Button>
-          <Button size="xs" onClick={() => handleClick(depthPanels)}>
-            depth panels
-          </Button>
-          <Button size="xs" onClick={() => handleClick(depthDefault)}>
-            depth default
-          </Button>
-          <Button size="xs" onClick={() => handleClick(depthSrc)}>
-            depth Src
-          </Button>
-        </Wrap>
+    <Stack gap={0}  w="full" h="full">
+      <Stack px={4} pt={3}>
+          <Input placeholder="Search for tools & files" onChange={(e) => search(e.target.value)} />
       </Stack>
 
       <ScrollAreaWrapper>
-        <Stack>Selected: {selectedValue}</Stack>
-
         <TreeView.Root
           defaultExpandedValue={["panels"]}
           collection={collection}
@@ -167,14 +42,13 @@ export const PanelDynamicSelectScope = (props: any) => {
           selectedValue={selectedValue}
           onExpandedChange={(details) => setExpanded(details.expandedValue)}
           onSelectionChange={(details) => {
-
             const selectedNode = collection.findNode(details.selectedValue[0])
             const isBranch = collection.isBranchNode(selectedNode)
             if (isBranch) {
               // Prevent selecting branches
               return
             }
-            sendToDynamicPanelLab({ type: "SELECTION_CHANGE", payload: {selectedValue: details.selectedValue}})
+            sendToDynamicPanelLab({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
           }}
         >
           <TreeView.Tree>
@@ -209,3 +83,130 @@ export const PanelDynamicSelectScope = (props: any) => {
   )
 }
 
+/*
+
+const getFirstNode = collection.getFirstNode()
+  const getLastNode = collection.getLastNode()
+  const getNextNodePanels = collection.getNextNode("panels")
+  const getNextNodeDefault = collection.getNextNode("default")
+  const getNextNodeSrc = collection.getNextNode("src")
+  const getPreviousNodePanels = collection.getPreviousNode("panels")
+  const getPreviousNodeDefault = collection.getPreviousNode("default")
+  const getPreviousNodeSrc = collection.getPreviousNode("src")
+  const getParentNodesPanels = collection.getParentNodes("panels")
+  const getParentNodesDefault = collection.getParentNodes("default")
+  const getParentNodesSrc = collection.getParentNodes("src")
+  const findNodePanels: any = collection.findNode("panels")
+  const findNodeDefault: any = collection.findNode("default")
+  const findNodeSrc: any = collection.findNode("src")
+  const isBranchNodePanels = collection.isBranchNode(findNodePanels)
+  const isBranchNodeDefault = collection.isBranchNode(findNodeDefault)
+  const isBranchNodeSrc = collection.isBranchNode(findNodeSrc)
+  const getIndexPathPanels = collection.getIndexPath("panels")
+  const getIndexPathDefault = collection.getIndexPath("default")
+  const getIndexPathSrc = collection.getIndexPath("src")
+
+  const flatNodesUtils = collection.flatten()
+  const flatNodesSrc = collection.flatten(findNodeSrc)
+
+  const allValues = collection.getValues()
+  const depthPanels = collection.getDepth("panels")
+  const depthDefault = collection.getDepth("default")
+  const depthSrc = collection.getDepth("src")
+
+  const handleClick = (e: any) => {
+    console.log(e)
+  }
+
+ <Stack>
+         <Wrap w={"full"}>
+           <Button size="xs" onClick={() => handleClick(collection)}>
+             collection
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getFirstNode)}>
+             firstNode
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getFirstNode)}>
+             lastNode
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getNextNodePanels)}>
+             next panels
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getNextNodeDefault)}>
+             next default
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getNextNodeSrc)}>
+             next src
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getPreviousNodePanels)}>
+             previous panels
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getPreviousNodeDefault)}>
+             previous default
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getPreviousNodeSrc)}>
+             previous src
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getParentNodesPanels)}>
+             parent panels
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getParentNodesDefault)}>
+             parent default
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getParentNodesSrc)}>
+             parent src
+           </Button>
+
+           <Button size="xs" onClick={() => handleClick(findNodePanels)}>
+             findNode panels
+           </Button>
+           <Button size="xs" onClick={() => handleClick(findNodeDefault)}>
+             findNode default
+           </Button>
+           <Button size="xs" onClick={() => handleClick(findNodeSrc)}>
+             findNode src
+           </Button>
+
+           <Button size="xs" onClick={() => handleClick(isBranchNodePanels)}>
+             isBranch panels
+           </Button>
+           <Button size="xs" onClick={() => handleClick(isBranchNodeDefault)}>
+             isBranch default
+           </Button>
+           <Button size="xs" onClick={() => handleClick(isBranchNodeSrc)}>
+             isBranch src
+           </Button>
+
+           <Button size="xs" onClick={() => handleClick(getIndexPathPanels)}>
+             indexPath panels
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getIndexPathDefault)}>
+             indexPath default
+           </Button>
+           <Button size="xs" onClick={() => handleClick(getIndexPathSrc)}>
+             indexPath src
+           </Button>
+
+           <Button size="xs" onClick={() => handleClick(flatNodesUtils)}>
+             flatNodesUtils
+           </Button>
+           <Button size="xs" onClick={() => handleClick(flatNodesSrc)}>
+             flatNodes Src
+           </Button>
+
+           <Button size="xs" onClick={() => handleClick(allValues)}>
+             allValues
+           </Button>
+           <Button size="xs" onClick={() => handleClick(depthPanels)}>
+             depth panels
+           </Button>
+           <Button size="xs" onClick={() => handleClick(depthDefault)}>
+             depth default
+           </Button>
+           <Button size="xs" onClick={() => handleClick(depthSrc)}>
+             depth Src
+           </Button>
+         </Wrap>
+       </Stack>
+
+ */

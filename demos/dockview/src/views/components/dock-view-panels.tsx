@@ -23,7 +23,7 @@ export const DockViewPanels = {
 
   dynamic: (props: any) => {
     return (
-      <PanelDynamic />
+      <PanelDynamic props={props} />
 
       // <PanelDynamicSelectScope {...props} />
     )

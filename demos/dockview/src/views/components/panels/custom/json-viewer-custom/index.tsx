@@ -3,23 +3,26 @@ import JsonView from "react18-json-view"
 import React from "react"
 import { useDockViewPanel } from "#actors/model/machines/dock-view"
 
-export const PanelCustomJsonViewer = (props: any) => {
+const Index = (props: any) => {
+
+  const { props: extraProps = null } = props;
+
+  console.log("Rendering PanelCustomJsonViewer", extraProps)
 
 
-  const dockViewPanel = useDockViewPanel(props.api.id)
+  const dockViewPanel = useDockViewPanel(extraProps.api.id)
 
 
   return (
     <Container fluid w="full" h="full" p={3}>
       <JsonView
         src={{
-          ...props.params,
+          ...extraProps.params,
           dockViewPanel,
           panelRefInfo: {
             panelState: dockViewPanel.panelState,
             panelContext: dockViewPanel.panelContext,
-            id: props.api.id,
-            // snapshot: props.params.parentRef.getSnapshot()?.toJSON()
+            id: extraProps.api.id,
           },
         }}
         collapsed={1}
@@ -31,3 +34,5 @@ export const PanelCustomJsonViewer = (props: any) => {
     </Container>
   )
 }
+
+export default Index
