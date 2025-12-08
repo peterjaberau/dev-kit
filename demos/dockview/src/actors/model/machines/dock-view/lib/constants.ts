@@ -4,5 +4,11 @@ export enum DOCK_VIEW_ENUM {
   API_ID = 'dock-view-api',
 
 
+
+  DYNAMIC_PANEL_LAB_ACTOR_ID = "dynamic-panel-lab-actor",
+
   EVENT_ON_REMOVE_PANEL = "onRemovePanel",
+
+
+
 }

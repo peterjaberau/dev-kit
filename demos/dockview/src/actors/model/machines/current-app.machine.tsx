@@ -2,6 +2,7 @@ import { assign, enqueueActions, setup } from "xstate"
 import { nodeManagerMachine, dockAdapterMachine } from "./node.machine"
 import { ROOT_SYSTEM_IDS } from "#actors/model/shared/constants"
 import { DOCK_VIEW_ENUM, dockViewAdapterMachine } from "./dock-view"
+import { dynamicPanelLabMachine } from "./dynamic-panels/machines"
 
 export const currentAppExampleMachine = setup({
   types: {
@@ -24,11 +25,17 @@ export const currentAppExampleMachine = setup({
         systemId: DOCK_VIEW_ENUM.ADAPTER_ID,
       })
     }),
+    spawnDynamicPanelLab: assign(({ context, spawn }) => {
+      context.dynamicPanelLabRef = spawn("dynamicPanelLabMachine", {
+        systemId: DOCK_VIEW_ENUM.DYNAMIC_PANEL_LAB_ACTOR_ID,
+      })
+    }),
   },
   actors: {
     nodeManagerMachine,
     dockAdapterMachine,
-    dockViewAdapterMachine
+    dockViewAdapterMachine,
+    dynamicPanelLabMachine
   },
   guards: {},
 }).createMachine({
@@ -37,6 +44,7 @@ export const currentAppExampleMachine = setup({
       nodeManagerRef: null,
       dockAdapterRef: null,
       dockViewAdapterRef: null,
+      dynamicPanelLabRef: null,
       ...input,
     }
   },
@@ -44,5 +52,6 @@ export const currentAppExampleMachine = setup({
     enqueue("spawnNodeManager")
     enqueue("spawnDockAdapter")
     enqueue("spawnDockViewAdapter")
+    enqueue("spawnDynamicPanelLab")
   }),
 })

@@ -10,7 +10,8 @@ import {
   PanelBaseJsonViewer,
 } from "./panels/base"
 import { PanelCustomJsonViewer } from "./panels/custom/panel.custom.json-viewer"
-
+import { PanelDynamic, PanelDynamicSelectScope } from "./panels/dynamic"
+// PanelWrapperDockview
 export const DockViewPanels = {
   default: (props: any) => {
     return (
@@ -20,7 +21,15 @@ export const DockViewPanels = {
     )
   },
 
-  placeholderPanel: (props: any) => {
+  dynamic: (props: any) => {
+    return (
+      <PanelDynamic />
+
+      // <PanelDynamicSelectScope {...props} />
+    )
+  },
+
+  placeholder: (props: any) => {
     return (
       <PanelWrapperDockview>
         <PanelBasePlaceholder />
@@ -28,7 +37,7 @@ export const DockViewPanels = {
     )
   },
 
-  codePanel: (props: any) => {
+  code: (props: any) => {
     return (
       <PanelWrapperDockview>
         <PanelBaseCode />
@@ -36,7 +45,7 @@ export const DockViewPanels = {
     )
   },
 
-  rendererPanel: (props: any) => {
+  renderer: (props: any) => {
     return (
       <PanelWrapperDockview>
         <PanelBaseRenderer />
@@ -44,7 +53,7 @@ export const DockViewPanels = {
     )
   },
 
-  emptyPanel: (props: any) => {
+  empty: (props: any) => {
     return (
       <PanelWrapperDockview>
         <PanelBaseEmpty />
@@ -52,7 +61,7 @@ export const DockViewPanels = {
     )
   },
 
-  aiChatPanel: (props: any) => {
+  "ai-chat": (props: any) => {
     return (
       <PanelWrapperDockview>
         <PanelBaseAiChat />
@@ -60,7 +69,7 @@ export const DockViewPanels = {
     )
   },
 
-  jsonViewerPanel: (props: any) => {
+  "json-viewer": (props: any) => {
     return (
       <PanelWrapperDockview>
         <PanelBaseJsonViewer />

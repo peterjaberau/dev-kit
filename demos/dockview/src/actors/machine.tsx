@@ -12,7 +12,6 @@ import { componentsMachine } from "./slices/currentApp/components/components.mac
 import { executionMachine } from "./slices/currentApp/executionTree/execution.machine"
 import { layoutInfoMachine } from "./slices/currentApp/layoutInfo/layoutInfo.machine"
 
-import { nodeManagerMachine } from './model/machines/node.machine'
 
 import { ROOT_SYSTEM_IDS } from "./model/shared/constants"
 import { CONSTANT_SYSTEM_ACTOR_IDS } from './constants'

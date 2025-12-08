@@ -24,6 +24,7 @@ export function useRootActors() {
 
 
   const rootDockViewAdapterRef = getSpawnedActor(DOCK_VIEW_ENUM.ADAPTER_ID, rootRef)
+  const rootDynamicPanelLabRef = getSpawnedActor(DOCK_VIEW_ENUM.DYNAMIC_PANEL_LAB_ACTOR_ID, rootRef)
 
 
   /*
@@ -55,6 +56,7 @@ export function useRootActors() {
     rootNodeManagerRef,
     rootDockAdapterRef,
     rootDockViewAdapterRef,
+    rootDynamicPanelLabRef,
     rootPatternRef,
 
     rootPluginScopePickerRef,

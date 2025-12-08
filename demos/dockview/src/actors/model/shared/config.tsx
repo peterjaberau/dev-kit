@@ -103,7 +103,7 @@ export const dockViewAdapterConfig = {
       id: "panel_1",
       view: {
         type: 'DOCK_PANEL',
-        component: "default",
+        component: "dynamic",
         title: "Panel 1",
         renderer: "always",
       },

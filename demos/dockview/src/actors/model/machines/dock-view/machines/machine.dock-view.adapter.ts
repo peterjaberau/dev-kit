@@ -1,4 +1,6 @@
 import { assign, enqueueActions, setup } from "xstate"
+import { generateSlug } from "random-word-slugs"
+
 import { dockViewAdapterConfig } from "#actors/model/shared/config"
 import { dockViewApiMachine } from "./machine.dock-view.api"
 import { dockViewPanelMachine } from "./machine.dock-view.panel"
@@ -56,7 +58,9 @@ export const dockViewAdapterMachine = setup({
     }),
     handleAddPanel: enqueueActions(({ context, enqueue, event, self }: any) => {
       const api = context?.model?.api
-      const id = Math.random().toString()
+
+      const totalPanels = (api?.totalPanels || 0) + 1
+      const id = "panel_" + totalPanels
       enqueue.spawnChild("dockViewPanelMachine", {
         id: id,
         // systemId: item.id,
@@ -75,7 +79,7 @@ export const dockViewAdapterMachine = setup({
             view: {
               type: "DOCK_PANEL",
               component: "default",
-              title: "Node " + id,
+              title: "Panel " + totalPanels,
               renderer: "always",
               params: {},
               position: event?.payload?.position || undefined,
