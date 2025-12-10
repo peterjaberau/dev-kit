@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { MovableModal } from "#components/ui-common/panel/movableModal"
 import JsonView from "react18-json-view"
-import { useDockDebugger } from "#actors/model/selectors"
+import { useDockViewDebugger } from "#modules/dockview/actors/selectors"
 
 
 
@@ -10,7 +10,7 @@ import { useDockDebugger } from "#actors/model/selectors"
 
 
 export default function Debugger(props: any) {
-  const { dockDebugger } = useDockDebugger()
+  const { dockViewDebugger } = useDockViewDebugger()
   const [position, setPosition] = useState(() => {
     const width = 500;
     const height = 600;
@@ -31,7 +31,7 @@ export default function Debugger(props: any) {
       bodyContent={
         <JsonView
           src={{
-            ...dockDebugger
+            ...dockViewDebugger
           }}
           collapsed={1}
           theme="github"

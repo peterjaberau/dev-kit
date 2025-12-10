@@ -1,4 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
+import { dynamicPanelViewMachine } from "./views/machine.view.dynamic-panel"
+import { DOCK_VIEW_ENUM } from "#modules/dockview/actors/lib"
+
 
 export const dockViewPanelMachine = setup({
   types: {} as any,
@@ -20,6 +23,13 @@ export const dockViewPanelMachine = setup({
       }
     },
 
+    spawnDynamicPanelView: assign(({ context, spawn }) => {
+      context.refs.relations.view = spawn("dynamicPanelViewMachine", {
+        systemId: context.view?.id + "_view",
+      })
+    }),
+
+
     handleRemovePanel: ({ context, event }) => {
       // const { api } = event.payload
       // api.close()
@@ -29,7 +39,9 @@ export const dockViewPanelMachine = setup({
 
     },
   },
-  actors: {},
+  actors: {
+    dynamicPanelViewMachine
+  },
   guards: {},
 }).createMachine({
   initial: "idle",
@@ -43,6 +55,10 @@ export const dockViewPanelMachine = setup({
         external: {
           api: input?.refs?.external?.api || null,
         },
+        relations: {
+          view: null,
+        }
+
       },
       props: {
         ...input?.props,
@@ -68,6 +84,7 @@ export const dockViewPanelMachine = setup({
     idle: {
       entry: enqueueActions(({ enqueue }) => {
         enqueue("handleAddPanel")
+        enqueue("spawnDynamicPanelView")
       }),
       on: {
         onTerminate: {

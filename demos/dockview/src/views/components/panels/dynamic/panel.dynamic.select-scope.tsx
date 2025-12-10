@@ -2,12 +2,31 @@
 import { Wrap, Highlight, Input, Stack, TreeView, createTreeCollection, useFilter, Button } from "@chakra-ui/react"
 import { useState } from "react"
 import { LuFile, LuFolder } from "react-icons/lu"
-import { ScrollAreaWrapper } from "../../common"
+import { ScrollAreaWrapper, CollapseWrapper } from "../../common"
 import { useDynamicPanelLab } from "#modules/dockview/actors/selectors"
+import { useDockViewPanel } from "#modules/dockview/actors/selectors"
+import JsonViewer from "../base/json-viewer"
 
 export const PanelDynamicSelectScope = (props: any) => {
-  const { inScopeState, scopeContext, sendToDynamicPanelLab } = useDynamicPanelLab()
-  const { collection: initialCollection, defaultExpanded, expandedValue, selectedValue, filter }: any = scopeContext
+  // const { inScopeState, scopeContext, sendToDynamicPanelLab } = useDynamicPanelLab()
+
+  const { panelViewScopeContext, panelViewScopedContext, sendToPanelView } = useDockViewPanel({
+    panelId: props.props.api.id,
+  })
+
+  // const { collection: initialCollection, defaultExpanded, expandedValue, selectedValue, filter }: any = scopeContext
+  const {
+    collection: initialCollection,
+    defaultExpanded,
+    expandedValue,
+    selectedValue,
+    filter,
+  }: any = panelViewScopeContext
+
+  // console.log('PanelDynamicSelectScope', {
+  //   panelViewContext: panelViewContext.scope,
+  //   scopeContext,
+  // })
 
   const [collection, setCollection] = useState(initialCollection)
   const [expanded, setExpanded] = useState<string[]>(["panels"])
@@ -29,10 +48,16 @@ export const PanelDynamicSelectScope = (props: any) => {
   }
 
   return (
-    <Stack gap={0}  w="full" h="full">
+    <Stack gap={0} w="full" h="full">
       <Stack px={4} pt={3}>
-          <Input placeholder="Search for tools & files" onChange={(e) => search(e.target.value)} />
+        <Input placeholder="Search for tools & files" onChange={(e) => search(e.target.value)} />
+
+        <CollapseWrapper title={`Inspect ${props?.props?.api?.id}`}>
+          <JsonViewer props={{ ...props?.props }} />
+        </CollapseWrapper>
       </Stack>
+
+      {panelViewScopedContext.targetPanel && panelViewScopedContext.targetPanel}
 
       <ScrollAreaWrapper>
         <TreeView.Root
@@ -42,13 +67,19 @@ export const PanelDynamicSelectScope = (props: any) => {
           selectedValue={selectedValue}
           onExpandedChange={(details) => setExpanded(details.expandedValue)}
           onSelectionChange={(details) => {
+
             const selectedNode = collection.findNode(details.selectedValue[0])
+
+
+
             const isBranch = collection.isBranchNode(selectedNode)
             if (isBranch) {
               // Prevent selecting branches
               return
             }
-            sendToDynamicPanelLab({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
+            // sendToDynamicPanelLab({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
+            console.log('---details----', details.selectedValue)
+            sendToPanelView({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
           }}
         >
           <TreeView.Tree>

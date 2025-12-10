@@ -1,28 +1,28 @@
 "use client"
-import { Wrap, Highlight, Input, Stack, TreeView, createTreeCollection, useFilter, Button } from "@chakra-ui/react"
+import { Button } from "@chakra-ui/react"
 import { useState } from "react"
-import { LuFile, LuFolder } from "react-icons/lu"
 import { PanelDynamicSelectScope } from "./panel.dynamic.select-scope"
-import { useDynamicPanelLab } from "#modules/dockview/actors/selectors"
-import { ScrollAreaWrapper } from "../../common"
 import { PanelDynamicRendered } from "./panel.dynamic.rendered"
+import { useDockViewPanel } from "#modules/dockview/actors/selectors"
 
 export const PanelDynamic = (props: any) => {
-  const [currentState, setCurrentState] = useState(null)
-  const { inScopeState, inScopedState, scopeContext, scopedContext, sendToDynamicPanelLab } = useDynamicPanelLab()
+  const { inPanelViewScopeState, inPanelViewScopedState, panelViewScopeContext, panelViewScopedContext, sendToPanelView } = useDockViewPanel({
+    panelId: props.props.api.id,
+  })
+
 
   return (
     <>
-      {inScopeState && (
-        <PanelDynamicSelectScope />
-      )}
-      {inScopedState && (
+      {inPanelViewScopeState && <PanelDynamicSelectScope {...props} />}
+      {inPanelViewScopedState && (
         <>
           <PanelDynamicRendered
             toolbar={
-              <Button size={'sm'} onClick={() => sendToDynamicPanelLab({ type: "BACK_TO_SCOPE" })}>BACK_TO_SCOPE</Button>
+              <Button size={"sm"} onClick={() => sendToPanelView({ type: "BACK_TO_SCOPE" })}>
+                BACK_TO_SCOPE
+              </Button>
             }
-            id={scopedContext.targetPanel}
+            id={panelViewScopedContext.targetPanel}
             props={props}
           />
         </>

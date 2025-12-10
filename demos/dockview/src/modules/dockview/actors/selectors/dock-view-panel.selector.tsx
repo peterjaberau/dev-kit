@@ -1,6 +1,7 @@
 "use client"
 import { useDockViewAdapter } from "./dock-view-adapter.selector"
 import { useSelector } from "@xstate/react"
+import { createTreeCollection } from "@chakra-ui/react"
 
 // https://dockview.dev/docs/api/dockview/panelApi
 export const useDockViewPanel = ({ panelId }: any) => {
@@ -30,16 +31,32 @@ export const useDockViewPanel = ({ panelId }: any) => {
   const title = panel?.title
 
 
-  //from panel.api
-  // const height = panelApi?.height
-  // const isActive = panelApi?.isActive
-  // const isDisposed = panelApi?.isDisposed
-  // const isFocused = panelApi?.isFocused
-  // const isGroupActive = panelApi?.isGroupActive
-  // const isVisible = panelApi?.isVisible
-  // const location = panelApi?.location
-  // const renderer = panelApi?.renderer
-  // const width = panelApi?.width
+  // Panel View
+  const panelViewRef = panelContext?.refs?.relations?.view
+  const panelViewState: any = useSelector(panelViewRef, (state) => state)
+  const panelViewContext = panelViewState?.context
+  const sendToPanelView = panelViewRef?.send
+
+  const inPanelViewScopeState = panelViewState?.matches("scope") || false
+  const inPanelViewScopedState = panelViewState?.matches("scoped") || false
+
+
+
+  const panelViewScopeContext = {
+    collection: createTreeCollection<any>({
+      nodeToValue: (node) => node.id,
+      nodeToString: (node) => node.name,
+      rootNode: panelViewContext?.scope?.collection || {},
+    }),
+    defaultExpanded: ["panels"],
+    selectedValue: [],
+    filter: {
+      sensitivity: "base",
+    }
+  }
+
+
+  const panelViewScopedContext = panelViewContext?.scoped || {}
 
 
   return {
@@ -47,6 +64,15 @@ export const useDockViewPanel = ({ panelId }: any) => {
     panelState,
     panelContext,
     sendToPanel,
+
+    panelViewRef,
+    panelViewState,
+    panelViewContext,
+    sendToPanelView,
+    inPanelViewScopeState,
+    inPanelViewScopedState,
+    panelViewScopeContext,
+    panelViewScopedContext,
 
     panelApi,
 

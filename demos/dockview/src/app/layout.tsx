@@ -1,4 +1,5 @@
 import "react18-json-view/src/style.css"
+import "./globals.css"
 import { Provider as ChakraProvider } from "./provider"
 import { DebuggerTrigger } from "#components/ui-common/debugger/debugger-trigger"
 import { PlaygroundTrigger } from "#components/ui-common/playground/playground-trigger"
