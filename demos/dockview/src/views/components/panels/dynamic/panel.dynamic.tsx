@@ -13,7 +13,7 @@ export const PanelDynamic = (props: any) => {
 
   return (
     <>
-      {inPanelViewScopeState && <PanelDynamicSelectScope {...props} />}
+      {inPanelViewScopeState && <PanelDynamicSelectScope {...props.props} />}
       {inPanelViewScopedState && (
         <>
           <PanelDynamicRendered
@@ -23,7 +23,7 @@ export const PanelDynamic = (props: any) => {
               </Button>
             }
             id={panelViewScopedContext.targetPanel}
-            props={props}
+            props={props.props}
           />
         </>
       )}

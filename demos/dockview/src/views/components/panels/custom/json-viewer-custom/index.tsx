@@ -4,21 +4,22 @@ import React from "react"
 import { useDockViewPanel } from "#modules/dockview/actors/selectors"
 
 const Index = (props: any) => {
+  const { id, api, params } = props
 
-  const { props: extraProps = null } = props;
+  const dockViewPanel: any = useDockViewPanel({ panelId: id })
 
-  const dockViewPanel = useDockViewPanel(extraProps.api.id)
+
 
   return (
     <Container fluid w="full" h="full" p={3}>
       <JsonView
         src={{
-          ...extraProps.params,
+          ...params,
           dockViewPanel,
           panelRefInfo: {
             panelState: dockViewPanel.panelState,
             panelContext: dockViewPanel.panelContext,
-            id: extraProps.api.id,
+            id: id,
           },
         }}
         collapsed={1}

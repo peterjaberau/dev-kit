@@ -1,10 +1,24 @@
-import { Center } from "@chakra-ui/react"
 
-const Index = () => {
+
+import { Center, Stack } from "@chakra-ui/react"
+import { PanelDebugger } from "../../custom/panel-debugger"
+import { useDockViewPanel } from "#modules/dockview/actors/selectors"
+
+const Index = (props: any) => {
+  const { panelViewScopeContext, panelViewScopedContext, sendToPanelView } = useDockViewPanel({
+    panelId: props.id,
+  })
+
   return (
-    <Center w='full' h='full' minH='200px'>
-      Panel Base Placeholder
-    </Center>
+    <Stack w="full" h="full" minH="200px">
+      <PanelDebugger
+        id={props?.id}
+        data={{
+          scoped: panelViewScopedContext,
+        }}
+      />
+      <Center>Panel Base Placeholder</Center>
+    </Stack>
   )
 }
 export default Index

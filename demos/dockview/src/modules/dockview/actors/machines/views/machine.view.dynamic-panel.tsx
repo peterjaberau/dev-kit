@@ -43,16 +43,9 @@ export const dynamicPanelViewMachine = setup({
   actions: {
     handleSelectScope: assign(({ context, event }) => {}),
     handleSelectionChange: assign(({ context, event }) => {
-
-
       const { selectedValue } = event.payload;
       context.scope.selectedValue = selectedValue;
       context.scoped.targetPanel = selectedValue[0] || null;
-
-      console.log('--handleSelectionChange---', {
-        ...event,
-        targetPanel: context.scoped.targetPanel
-      })
 
     }),
 

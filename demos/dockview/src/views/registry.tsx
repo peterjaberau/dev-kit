@@ -32,15 +32,12 @@ export const getComponentByID = (id: string, withCache: boolean, props?: any) =>
     setLoading(true)
   }, [])
 
-  return () => loading && <Component {...props} />
+  return () => loading && <Component id={id} {...props} />
 }
 
 export const ComponentRenderer = (props: { id: string; withCache?: boolean; [key: string]: any }) => {
   const { id, withCache = false, props: extraProps = null, ...rest } = props
   const ComponentRendered = getComponentByID(id, withCache, extraProps)
 
-  console.log('--ComponentRenderer--', {
-    extraProps
-  } )
   return <ComponentRendered key={id} {...rest} />
 }

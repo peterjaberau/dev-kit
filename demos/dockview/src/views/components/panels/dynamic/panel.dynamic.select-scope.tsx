@@ -11,7 +11,7 @@ export const PanelDynamicSelectScope = (props: any) => {
   // const { inScopeState, scopeContext, sendToDynamicPanelLab } = useDynamicPanelLab()
 
   const { panelViewScopeContext, panelViewScopedContext, sendToPanelView } = useDockViewPanel({
-    panelId: props.props.api.id,
+    panelId: props.api.id,
   })
 
   // const { collection: initialCollection, defaultExpanded, expandedValue, selectedValue, filter }: any = scopeContext
@@ -23,10 +23,6 @@ export const PanelDynamicSelectScope = (props: any) => {
     filter,
   }: any = panelViewScopeContext
 
-  // console.log('PanelDynamicSelectScope', {
-  //   panelViewContext: panelViewContext.scope,
-  //   scopeContext,
-  // })
 
   const [collection, setCollection] = useState(initialCollection)
   const [expanded, setExpanded] = useState<string[]>(["panels"])
@@ -52,8 +48,8 @@ export const PanelDynamicSelectScope = (props: any) => {
       <Stack px={4} pt={3}>
         <Input placeholder="Search for tools & files" onChange={(e) => search(e.target.value)} />
 
-        <CollapseWrapper title={`Inspect ${props?.props?.api?.id}`}>
-          <JsonViewer props={{ ...props?.props }} />
+        <CollapseWrapper title={`Inspect ${props?.api?.id}`}>
+          <JsonViewer props={{ ...props }} />
         </CollapseWrapper>
       </Stack>
 
@@ -69,9 +65,6 @@ export const PanelDynamicSelectScope = (props: any) => {
           onSelectionChange={(details) => {
 
             const selectedNode = collection.findNode(details.selectedValue[0])
-
-
-
             const isBranch = collection.isBranchNode(selectedNode)
             if (isBranch) {
               // Prevent selecting branches

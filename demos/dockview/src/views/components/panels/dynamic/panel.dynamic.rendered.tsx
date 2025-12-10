@@ -7,6 +7,8 @@ export const PanelDynamicRendered = (props: any) => {
 
   const { id, toolbar = null, props: extraProps = null } = props
 
+
+
   return (
     <Stack gap="3" w="full" h="full">
       {toolbar && (
@@ -15,7 +17,7 @@ export const PanelDynamicRendered = (props: any) => {
             {toolbar}
           </HStack>
           <HStack justifyContent="flex-end">
-            {extraProps?.props?.api?.id}
+            {extraProps?.api?.id}
           </HStack>
 
         </Stack>
