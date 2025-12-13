@@ -5,7 +5,6 @@ import { createTreeCollection } from "@chakra-ui/react"
 
 // https://dockview.dev/docs/api/dockview/panelApi
 export const useDockViewPanel = ({ panelId }: any) => {
-  // const { getPanel, activePanelId }: any = useDockApi()
 
   const { getPanel, activePanelId, dockPanelRef: panelRef }: any = useDockViewAdapter()
 

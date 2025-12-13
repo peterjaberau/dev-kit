@@ -3,18 +3,14 @@ import { Wrap, Highlight, Input, Stack, TreeView, createTreeCollection, useFilte
 import { useState } from "react"
 import { LuFile, LuFolder } from "react-icons/lu"
 import { ScrollAreaWrapper, CollapseWrapper } from "../../common"
-import { useDynamicPanelLab } from "#modules/dockview/actors/selectors"
 import { useDockViewPanel } from "#modules/dockview/actors/selectors"
 import JsonViewer from "../base/json-viewer"
 
 export const PanelDynamicSelectScope = (props: any) => {
-  // const { inScopeState, scopeContext, sendToDynamicPanelLab } = useDynamicPanelLab()
-
   const { panelViewScopeContext, panelViewScopedContext, sendToPanelView } = useDockViewPanel({
     panelId: props.api.id,
   })
 
-  // const { collection: initialCollection, defaultExpanded, expandedValue, selectedValue, filter }: any = scopeContext
   const {
     collection: initialCollection,
     defaultExpanded,

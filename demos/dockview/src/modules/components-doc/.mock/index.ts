@@ -3925,3 +3925,18 @@ export const pluginsDirectory = [
     authorContact: "",
   },
 ]
+
+
+/*
+  - profile: what is the component about
+  - schema: what is the component schema
+  - config: how the component can be configured
+  - controls: how the user can use the component
+  - state: what are the different state of the component when it's used
+  - presets: presets of different state of the component
+
+ */
+
+
+
+

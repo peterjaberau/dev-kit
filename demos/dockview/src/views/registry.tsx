@@ -12,6 +12,7 @@ const registryMeta: any = {
   'placeholder': dynamic(() => import("#views/components/panels/base/placeholder"), { ssr: false }),
   'renderer': dynamic(() => import("#views/components/panels/base/renderer"), { ssr: false }),
   'json-viewer-custom': dynamic(() => import("#views/components/panels/custom/json-viewer-custom"), { ssr: false }),
+  'canvas-illa': dynamic(() => import("#views/components/panels/custom/canvas-illa"), { ssr: false }),
 }
 
 export const registryComponentsObj = (id: any) => {
