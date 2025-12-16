@@ -20,7 +20,7 @@ interface JSONSchemaEditorState {
 }
 
 /**
- * JSONSchema功能组件
+ * JSON Schema functional components
  * @param props
  * @constructor
  */
@@ -32,7 +32,7 @@ export default class JSONSchemaEditor extends React.PureComponent<
     super(props);
 
     this.state = {
-      schemaStore: new (JSONStore.schemaStore as any)(), // 初始化一份schemaStore
+      schemaStore: new (JSONStore.schemaStore as any)(), // Initialize a schemaStore
     };
   }
 
@@ -47,9 +47,9 @@ export default class JSONSchemaEditor extends React.PureComponent<
     );
 
     if (element) {
-      ReactDOM.render(renderContent, element); // 挂载到指定位置
+      ReactDOM.render(renderContent, element); // Mount to the specified location
       return null;
     }
-    return renderContent; // 直接输出dom元素
+    return renderContent; // Directly output DOM element
   }
 }

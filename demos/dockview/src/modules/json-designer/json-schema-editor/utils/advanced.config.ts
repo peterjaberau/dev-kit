@@ -1,96 +1,132 @@
-import { BASE_TYPE, CONTAINER_TYPE } from '../data/TypeList';
+import {
+  objClone as _objClone,
+  isEqual as _isEqual,
+} from '@wibetter/json-utils';
 
-/** 默认值（default）
- *  根据type判断是否显示默认配置项
- *  11种基础类型组件（input、boolean、 date、date-time、 time、 url、 textarea、number、color、radio、 select）
- *  3种特殊类型组件（Json、CodeArea、htmlArea）
- * */
-export function isNeedDefaultOption(curType: string) {
-  const supportedTypeList = [...BASE_TYPE, 'json', 'codearea', 'htmlarea'];
-  return supportedTypeList.indexOf(curType) > -1;
+/** Performs a deep copy of JavaScript object data to avoid data linkage */
+export function objClone(targetObj: any) {
+  // const newObj = JSON.stringify(targetObj);
+  // return JSON.parse(newObj);
+  return _objClone(targetObj);
 }
 
-export function hasOptions(curType: string) {
-  const supportedTypeList = ['select', 'radio'];
-  return supportedTypeList.indexOf(curType) > -1;
+/** Compare two JSON data sets to see if they are equal */
+export function isEqual(targetObj: any, nextTargetObj: any) {
+  // return JSON.stringify(targetObj) === JSON.stringify(nextTargetObj);
+  return _isEqual(targetObj, nextTargetObj);
 }
 
-/** 输入提示（placeholder）
- *  根据 type 判断是否显示输入提示配置项
- *  input、 date、date-time、 time、 url、 textarea、Json、CodeArea、htmlArea合计9种类型组件支持
- * */
-export function isNeedPlaceholderOption(curType: string) {
-  const supportedTypeList = [
-    'input',
-    'url',
-    'textarea',
-    'text-editor',
-    'date',
-    'date-time',
-    'time',
-    'json',
-    'codearea',
-    'htmlarea',
-  ];
-  return supportedTypeList.indexOf(curType) > -1;
+/** Check if the current property exists /** Check if the current property exists */
+/*Note: This is to identify boolean type values.*/
+export function hasProperties(targetProperties: any) {
+  let hasProperties = false;
+  if (targetProperties !== undefined) {
+    // "", 0, and false are all considered to be existing properties.
+    hasProperties = true;
+  }
+  return hasProperties;
 }
 
-/** 是否支持配置成条件字段（conditionProps）
- *  根据type判断是否显示是否只读配置项
- *  radio、boolean、number、string等类型的数值可以设置为条件字段
- * */
-export function isNeedConditionOption(curType: string) {
-  const supportedTypeList = [
-    'boolean',
-    'input',
-    'number',
-    'color',
-    'url',
-    'radio',
-    'select',
-    'date',
-    'date-time',
-    'time',
-    'input-image',
-  ];
-  return supportedTypeList.indexOf(curType) > -1;
+/** Determine if an element is a primitive type based on its className. */
+/* Basic element types: input, boolean, date, date-time, time, url,
+*  textarea、number、 radio、 select、color、quantity
+*/
+export function isBaseSchemaElem(elemClassName: string) {
+  let isBaseSchema = false;
+  if (
+    elemClassName.indexOf('input-schema') >= 0 ||
+    elemClassName.indexOf('boolean-schema') >= 0 ||
+    elemClassName.indexOf('date-schema') >= 0 ||
+    elemClassName.indexOf('date-time-schema') >= 0 ||
+    elemClassName.indexOf('time-schema') >= 0 ||
+    elemClassName.indexOf('url-schema') >= 0 ||
+    elemClassName.indexOf('textarea-schema') >= 0 ||
+    elemClassName.indexOf('number-schema') >= 0 ||
+    elemClassName.indexOf('radio-schema') >= 0 ||
+    elemClassName.indexOf('select-schema') >= 0 ||
+    elemClassName.indexOf('color-schema') >= 0 ||
+    elemClassName.indexOf('quantity-schema') >= 0
+  ) {
+    isBaseSchema = true;
+  }
+  return isBaseSchema;
 }
 
-/** 是否支持只读配置（readOnly）
- *  根据format判断是否显示是否只读配置项
- *  input、number、 date、date-time、 time、 url、 textarea、Json、CodeArea、htmlArea合计9种类型组件支持
- * */
-export function isNeedReadOnlyOption(curType: string) {
-  const supportedTypeList = [
-    ...BASE_TYPE,
-    'quantity',
-    'text-editor',
-    'json',
-    'codearea',
-    'htmlarea',
-  ];
-  return supportedTypeList.indexOf(curType) > -1;
+/** Determine if an element is a container type based on its className. */
+/* Container type elements: func, style, data, object
+* Primarily used to determine whether clicking "Add" on the current element adds a child element or a sibling node. For container types, clicking "Add" adds a child node.
+* Note: Array type fields have only one fixed item attribute and cannot have additional child elements added.
+*/
+export function isBoxSchemaElem(elemClassName: string) {
+  let isBoxSchema = false;
+  if (
+    elemClassName.indexOf('func-schema') >= 0 ||
+    elemClassName.indexOf('style-schema') >= 0 ||
+    elemClassName.indexOf('data-schema') >= 0 ||
+    elemClassName.indexOf('object-schema') >= 0
+  ) {
+    isBoxSchema = true;
+  }
+  return isBoxSchema;
 }
 
-/** 是否必填（isRequired）
- *  根据format判断是否显示是否只读配置项
- *  input、 date、date-time、 time、 url、 textarea、Json、CodeArea、htmlArea合计9种类型组件支持
- * */
-export function isNeedIsRequiredOption(curType: string) {
-  const supportedTypeList = [
-    ...BASE_TYPE,
-    'quantity',
-    'text-editor',
-    'json',
-    'codearea',
-    'htmlarea',
-  ];
-  return supportedTypeList.indexOf(curType) > -1;
+/**
+ * Determine if it is an array type
+ */
+export function isArray(curObj: any) {
+  let isArray = false;
+  if (Object.prototype.toString.call(curObj).slice(8, -1) === 'Array') {
+    isArray = true;
+  }
+  return isArray;
 }
 
-/** 用于显示控制 showCodeViewBtn
- * */
-export function isNeedCodeViewOption(curType: string) {
-  const supportedTypeList = [...CONTAINER_TYPE, 'array'];
-  return supportedTypeList.indexOf(curType) > -1;
+/**
+ * Determine if it is an object type
+ */
+export function isObject(curObj: any) {
+  let isObject = false;
+  if (Object.prototype.toString.call(curObj).slice(8, -1) === 'Object') {
+    isObject = true;
+  }
+  return isObject;
+}
+
+/**
+ * Determine if it is a function type
+ */
+export function isFunction(curObj: any) {
+  let isFunction = false;
+  if (Object.prototype.toString.call(curObj).slice(8, -1) === 'Function') {
+    isFunction = true;
+  }
+  return isFunction;
+}
+
+/**
+ * Cache data in sessionStorage
+ */
+export function saveWebCacheData(cacheKey: string, targetSourceIndex: string) {
+  if (window.sessionStorage) {
+    window.sessionStorage.setItem(cacheKey, targetSourceIndex);
+  }
+}
+
+/**
+ * Read previously cached data from sessionStorage
+ */
+export function getWebCacheData(cacheKey: string): string | null | undefined {
+  if (window.sessionStorage) {
+    return window.sessionStorage.getItem(cacheKey);
+  }
+  return undefined;
+}
+
+/**
+ * Delete previously cached data from sessionStorage
+ */
+export function deleteWebCacheData(cacheKey: string) {
+  if (window.sessionStorage) {
+    return window.sessionStorage.removeItem(cacheKey);
+  }
 }

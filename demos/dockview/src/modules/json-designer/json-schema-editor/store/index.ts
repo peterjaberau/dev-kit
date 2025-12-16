@@ -1,5 +1,5 @@
 import JSONSchemaStore from './JSONSchemaStore';
-// 非单例模式
+// Non-singleton pattern
 const JSONStore = {
   schemaStore: JSONSchemaStore,
 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-// JSON Schema 相关类型
+// JSON Schema related types
 export interface JSONSchema {
   type: string;
   title?: string;
@@ -16,7 +16,7 @@ export interface JSONSchema {
   [key: string]: any;
 }
 
-// Store 类型
+// Store type
 export interface SchemaStore {
   pageScreen?: string;
   [key: string]: any;
@@ -43,7 +43,7 @@ export interface StoresInterface {
   JSONEditorStore: JSONStore;
 }
 
-// 组件通用 Props
+// Component General Props
 export interface BaseRendererProps {
   parentType: string;
   jsonKey?: string;
