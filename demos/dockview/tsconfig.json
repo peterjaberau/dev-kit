@@ -27,6 +27,9 @@
       "@/*": ["./*"],
       "~/*": ["./public/*"],
 
+      "#rui/*": ["./src/rui/*"],
+      "#rui": ["./src/rui/"],
+
       "#actor-kit/*": ["./src/actor-kit/*"],
       "#actor-kit": ["./src/actor-kit/"],
 
