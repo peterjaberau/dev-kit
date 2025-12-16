@@ -6,25 +6,25 @@ import BaseFormSchema from '$components/BaseFormSchema/index';
 import SelectFormSchema from '$components/SelectFormSchema/index';
 import { BaseRendererProps } from '$types/index';
 
-/** 渲染当前字段的表单项（Tree的单项内容） */
+/** Renders the form field for the current field (the content of a single item in the Tree) */
 const getTreeNodeTitleCont = (params: BaseRendererProps) => (
   <BaseFormSchema {...params} />
 );
 
-/** 渲染dataSelect在的内容 */
+/** Render the content of dataSelect */
 const getTypeSelectCont = (params: BaseRendererProps) => (
   <SelectFormSchema {...params} />
 );
 
-/** Event类型渲染组件 */
+/** Event type rendering component */
 const EventSchema = (props: BaseRendererProps) => {
   const { jsonKey, indexRoute, nodeKey, targetJsonSchema } = props;
   const curType = targetJsonSchema.type;
   const typeJsonObj = targetJsonSchema.properties.type || {};
-  // 注册类型事件的数据对象
+  // Data object for registering type events
   const registerJsonObj = targetJsonSchema.properties.register || {};
   const actionFuncJsonObj = targetJsonSchema.properties.actionFunc || {};
-  // 触发事件类型的数据对象
+  // Data object of the event type
   const triggerJsonObj = targetJsonSchema.properties.trigger || {};
   const eventDataJsonObj = targetJsonSchema.properties.eventData || {};
 

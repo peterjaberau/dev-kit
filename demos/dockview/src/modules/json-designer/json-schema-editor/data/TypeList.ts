@@ -1,130 +1,231 @@
-/** 11种基础类型 */
+/** 11 basic data types */
 export const BASE_TYPE = [
   'input',
+
   'boolean',
+
   'number',
+
   'color',
+
   'url',
+
   'textarea',
+
   'radio',
+
   'select',
+
   'cascader',
+
   'checkboxes',
+
   'date',
+
   'date-time',
+
   'time',
+
   'input-image',
+
 ];
 
-// 固有容器类型
+// Inherent container type
 export const Fixed_CONTAINER_TYPE = [
   'datasource',
+
   'event',
+
   'dynamic-data',
+
   'api',
+
 ];
 
-// 当前容器类型
+// Current container type
 export const CONTAINER_TYPE = ['object', ...Fixed_CONTAINER_TYPE];
 
-/** 10种高级类型 */
+/** 10 advanced data types */
 export const HIGH_TYPE = [
   'quantity',
+
   'box-style',
+
   'padding-margin',
+
   'text-editor',
+
   'json',
+
   'codearea',
+
   'htmlarea',
+
   'array',
+
   ...CONTAINER_TYPE,
+
 ];
 
-/** 所有类型，包含基础类型和高级类型 */
+/** All types, including basic and advanced types */
+
 export const ALL_TYPE = [...BASE_TYPE, ...HIGH_TYPE];
 
-// 对象类型可选项
+// Optional object type
+
 export const OBJECT_TYPE = [
+
   'input',
+
   'number',
+
   'radio',
+
   'select',
+
   'cascader',
+
   'boolean',
+
   'color',
+
   'url',
+
   'textarea',
+
   'date',
+
   'date-time',
+
   'time',
+
   'input-image',
+
   'text-editor',
+
   'checkboxes',
+
   'object',
+
   'array',
+
   'box-style',
+
   'padding-margin',
+
   'api',
+
 ];
 
-// 数组类型可用子项类型
+// Array type with available sub-item types
+
 export const ARRAY_ITEM_TYPE = [
   'object',
+
   'array',
+
   'input',
+
   'number',
+
   'select',
+
   'cascader',
+
   'color',
+
   'url',
+
   'date',
+
   'date-time',
+
   'time',
+
   'input-image',
+
 ];
 
-// radio单选类型可选项
+// Radio single-select type options
+
 export const RADIO_TYPE = ['string'];
 
-// select多选类型可选项
+// Select multiple-select type options
+
 export const SELECT_TYPE = ['string'];
 
-// 类型清单
+// Type list
+
 export const TypeList = {
+
   object: ALL_TYPE,
+
   array: ARRAY_ITEM_TYPE,
+
   radio: RADIO_TYPE,
+
   select: SELECT_TYPE,
+
   all: ALL_TYPE,
+
 };
 
-// 类型说明
+// Type description
+
 export const TypeInfoList = {
-  input: '字符串/单行文本',
-  boolean: 'Boolean/开关',
-  number: 'Number数值',
-  color: '颜色数值',
-  url: 'URL数值',
-  textarea: '多行文本',
-  radio: '单选',
-  select: '下拉选择/多选',
-  cascader: '级联选择',
-  checkboxes: '多选框',
-  date: '日期',
-  'date-time': '日期时间',
-  time: '时间',
-  'input-image': '图片上传',
-  quantity: '数值单位设置',
-  'box-style': '盒子模型/边距设置',
-  'padding-margin': '边距设置',
-  'text-editor': '富文本内容',
-  json: 'json内容',
-  codearea: 'code内容',
-  htmlarea: 'html内容',
-  object: '对象(Object)',
-  array: '数组(Array)',
-  datasource: '静态数据源(旧版)',
-  event: '事件(旧版)',
-  'dynamic-data': '动态数据源(旧版)',
-  api: 'API 配置',
+
+  input: 'String/Single-line text',
+
+  boolean: 'Boolean/Switch',
+
+  number: 'Number value',
+
+  color: 'Color value',
+
+  url: 'URL value',
+
+  textarea: 'Multi-line text',
+
+  radio: 'Single selection',
+
+  select: 'Dropdown selection/Multi-select',
+
+  cascader: 'Cascading selection',
+
+  checkboxes: 'Multi-select boxes',
+
+  date: 'Date',
+
+  'date-time': 'Date and time',
+
+  time: 'Time',
+
+  'input-image': 'Image upload',
+
+  quantity: 'Unit setting',
+
+  'box-style': 'Box model/Margin setting',
+
+  'padding-margin': 'Margin settings',
+
+  'text-editor': 'Rich text content',
+
+  json: 'JSON content',
+
+  codearea: 'Code content',
+
+  htmlarea: 'HTML content',
+
+  object: 'Object',
+
+  array: 'Array',
+
+  datasource: 'Static data source (legacy)',
+
+  event: 'Event (legacy)',
+
+  'dynamic-data': 'Dynamic data source (legacy)',
+
+  api: 'API configuration',
+
 };

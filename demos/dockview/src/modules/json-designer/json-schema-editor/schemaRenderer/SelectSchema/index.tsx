@@ -5,13 +5,13 @@ import BaseFormSchema from '$components/BaseFormSchema/index';
 import OptionSchema from '$components/OptionSchema/index';
 import { BaseRendererProps } from '$types/index';
 
-/** 渲染当前字段的表单项（Tree的单项内容） */
+/** Renders the form field for the current field (the content of a single item in the Tree) */
 const getTreeNodeTitleCont = (params: any) => <BaseFormSchema {...params} />;
 
-/** 渲染options中的元素 */
+/** Render the elements in options */
 const optionItemRender = (params: any) => <OptionSchema {...params} />;
 
-/** Select类型渲染组件 */
+/** Select type rendering component */
 const SelectSchema = (props: BaseRendererProps) => {
   const { jsonKey, indexRoute, nodeKey, targetJsonSchema } = props;
   const curType = targetJsonSchema.type;
@@ -33,10 +33,10 @@ const SelectSchema = (props: BaseRendererProps) => {
       {options &&
         options.length > 0 &&
         options.map((optionItem: any, optionIndex: number) => {
-          /** 1. 获取当前选项label和value */
+          /** 1. Get the label and value of the current option */
           const optionLabel = optionItem.label || optionItem.name;
           const optionValue = optionItem.value;
-          /** 2. 获取当前选项元素的id，用于做唯一标识 */
+          /** 2. Get the ID of the current option element for unique identification */
           const optionNodeKey = `${nodeKey}${curType}-${optionLabel}`;
 
           return (

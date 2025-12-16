@@ -3,14 +3,14 @@ import { inject, observer } from 'mobx-react';
 import { Input, message, Select, Tooltip } from 'antd';
 const { Option } = Select;
 import { PlusOutlined, CloseOutlined, CopyOutlined } from '@ant-design/icons';
-import { isArray, isObject, isString } from '@wibetter/json-utils';
+import { isArray , isObject , isString } from ' @wibetter / json - utils ' ;
 import { BaseRendererProps } from '$types/index';
 import './index.scss';
 
 class OptionSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.onAddBtnEvent = this.onAddBtnEvent.bind(this);
     this.onCopyBtnEvent = this.onCopyBtnEvent.bind(this);
     this.onDeleteBtnEvent = this.onDeleteBtnEvent.bind(this);
@@ -18,22 +18,22 @@ class OptionSchema extends React.PureComponent<BaseRendererProps> {
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
-  /** 选项Label变动事件处理器 */
+  /** Option Label Change Event Handler */
   handleLabelChange = (event: any) => {
     const { isExitOptionLabel, updateOptionLabel } =
-      this.props.schemaStore || {};
+    this.props.schemaStore || {};
     const { value } = event.target;
     const { indexRoute, optionIndex, optionLabel } = this.props;
     if (value !== optionLabel) {
       if (isExitOptionLabel(indexRoute, value)) {
-        message.warning('对不起，存在相同的Label值，请重新设置。');
+        message.warning('Sorry, a label value already exists. Please set it again.');
       } else {
         updateOptionLabel(indexRoute, optionIndex, value);
       }
     }
   };
 
-  /** 选项数值变动事件处理器 */
+  /** Option value change event handler */
   handleValueChange = (event: any) => {
     const { updateOptionValue } = this.props.schemaStore || {};
     const { value } = event.target;
@@ -44,7 +44,7 @@ class OptionSchema extends React.PureComponent<BaseRendererProps> {
         try {
           curValue = JSON.parse(curValue);
         } catch (error) {
-          console.warn('option 数值转换失败：', curValue);
+          console.warn('option value conversion failed:', curValue);
           curValue = optionValue;
         }
       }
@@ -52,33 +52,33 @@ class OptionSchema extends React.PureComponent<BaseRendererProps> {
     }
   };
 
-  /** 新增选择项 */
+  /** Add new options */
   onAddBtnEvent = () => {
     const { addOptionItem } = this.props.schemaStore || {};
     const { indexRoute, optionIndex } = this.props;
-    addOptionItem(indexRoute, optionIndex); // 新增枚举值
+    addOptionItem(indexRoute, optionIndex); // Add an enumeration value
   };
 
-  /** 复制功能 */
+  /** Copy function */
   onCopyBtnEvent = () => {
     const { copyOptionItem } = this.props.schemaStore || {};
     const { indexRoute, optionIndex } = this.props;
     copyOptionItem(indexRoute, optionIndex); // copy枚举值
   };
 
-  /** 删除字段项 */
+  /** Delete field item */
   onDeleteBtnEvent = () => {
     const { getSchemaByIndexRoute, deleteOptionItem } =
-      this.props.schemaStore || {};
+    this.props.schemaStore || {};
     const { indexRoute, optionIndex } = this.props;
     // const itemJSONObj = getSchemaByIndexRoute(indexRoute);
-    deleteOptionItem(indexRoute, optionIndex); // 删除指定位置的枚举值
+    deleteOptionItem(indexRoute, optionIndex); // Deletes the enumeration value at the specified position.
 
     /*
     if (itemJSONObj.options && itemJSONObj.options.length > 1) {
-      deleteOptionItem(indexRoute, optionIndex); // 删除指定位置的枚举值
+      deleteOptionItem(indexRoute, optionIndex); // Deletes the enumeration value at the specified position.
     } else {
-      message.warning('删除失败，至少保留一个可选项。');
+      message.warning('Deletion failed; at least one option must be retained.');
     }
     */
   };
@@ -115,19 +115,19 @@ class OptionSchema extends React.PureComponent<BaseRendererProps> {
           />
         </div>
         <div className="operate-item">
-          <Tooltip title="删除">
+          <Tooltip title="Delete">
             <CloseOutlined
               className="operate-btn delete-operate"
               onClick={this.onDeleteBtnEvent}
             />
           </Tooltip>
-          <Tooltip title="新增可选项">
+          <Tooltip title="Add optional">
             <PlusOutlined
               className="operate-btn"
               onClick={this.onAddBtnEvent}
             />
           </Tooltip>
-          <Tooltip title="复制">
+          <Tooltip title="Copy">
             <CopyOutlined
               className="operate-btn"
               onClick={this.onCopyBtnEvent}

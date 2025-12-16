@@ -6,37 +6,37 @@ import BaseFormSchema from '$components/BaseFormSchema/index';
 import SelectFormSchema from '$components/SelectFormSchema/index';
 import { BaseRendererProps } from '$types/index';
 
-/** 渲染当前字段的表单项（Tree的单项内容） */
+/** Renders the form field for the current field (the content of a single item in the Tree) */
 const getTreeNodeTitleCont = (params: BaseRendererProps) => (
   <BaseFormSchema {...params} />
 );
 
-// 选择不同的数据源类型，则展示不同的data内容(均为不可编辑状态)
+// Selecting different data source types will display different data content (all of which are non-editable).
 const typeSelectData = {
   local: {
     type: 'json',
-    title: '本地json数据',
-    default: '{}', // 默认值
-    placeholder: '请输入静态json数据', // 输入提示
+    title: 'Local JSON Data',
+    default: '{}', // Default value
+    placeholder: 'Please enter static JSON data', // Input prompt
     isRequired: true,
-    description: '用于设置本地的静态json数据',
+    Description: 'Used to set local static JSON data',
   },
   remote: {
     type: 'url',
-    title: '远程json数据',
-    default: 'http://xxx', // 默认值
-    placeholder: '请输入远程json数据源地址', // 输入提示
+    title: 'Remote JSON Data',
+    default: 'http://xxx', // Default value
+    placeholder: 'Please enter the address of the remote JSON data source', // Input prompt
     isRequired: true,
-    description: '用于设置获取元素数据的请求地址',
+    Description: 'Used to set the request address for retrieving element data',
   },
 };
 
-/** 渲染dataSelect在的内容 */
+/** Render the content of dataSelect */
 const getTypeSelectCont = (params: BaseRendererProps) => (
   <SelectFormSchema {...params} />
 );
 
-/** DataSource类型渲染组件 */
+/** DataSource type rendering component */
 const DataSourceSchema = (props: BaseRendererProps) => {
   const { jsonKey, indexRoute, nodeKey, targetJsonSchema } = props;
   const curType = targetJsonSchema.type;

@@ -5,7 +5,7 @@ const { TreeNode } = Tree;
 import BaseFormSchema from '$components/BaseFormSchema/index';
 import { BaseRendererProps } from '$types/index';
 
-/** ApiSchema 类型渲染组件 */
+/** ApiSchema type rendering component */
 const ApiSchema = (props: BaseRendererProps) => {
   const { jsonKey, indexRoute, nodeKey, targetJsonSchema } = props;
   const curType = targetJsonSchema.type;

@@ -27,7 +27,7 @@ import 'rc-switch/assets/index.css';
 import './index.scss';
 
 /**
- * 高级配置面板
+ Advanced Configuration Panel
  */
 
 interface AdvanceConfigProps {
@@ -42,22 +42,22 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
   constructor(props: AdvanceConfigProps) {
     super(props);
 
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (curKey: string, newVal: any) => {
     const { editSchemaData } = this.props.schemaStore || {};
     const { indexRoute, jsonKey, targetJsonSchema } = this.props;
-    if (targetJsonSchema[curKey] === newVal) return; // title值未改变则直接跳出
+    if (targetJsonSchema[curKey] === newVal) return; // If the title value hasn't changed, exit immediately.
     const newSchemaData: any = {};
     newSchemaData[curKey] = newVal;
-    // jsonKey是当前字段项的key，curKey是当前字段对象的属性key
+    // jsonKey is the key of the current field item, and curKey is the property key of the current field object.
     editSchemaData(indexRoute, jsonKey, newSchemaData);
   };
 
-  /** 根据当前类型显示对应的输入组件 */
+  /** Display the corresponding input component based on the current type */
   renderDefaultContent = (
     curType: string,
     targetJsonSchema: any,
@@ -114,7 +114,7 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           {options &&
             options.length > 0 &&
             options.map((item: any, optionIndex: number) => {
-              /** 2. 获取当前元素的id，用于做唯一标识 */
+              /** 2. Get the ID of the current element, used as a unique identifier */
               const optionNodeKey = `${nodeKey}-options-${optionIndex}`;
               return (
                 <Radio value={item.value} key={optionNodeKey}>
@@ -147,7 +147,7 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
         <TextArea
           style={{ display: 'inline-block' }}
           rows={4}
-          placeholder={`请输入${targetJsonSchema.title}的默认值`}
+          placeholder={`Please enter the default value for ${targetJsonSchema.title}`}
           defaultValue={targetJsonSchema.default}
           onPressEnter={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
             const { value } = event.target as HTMLTextAreaElement;
@@ -164,7 +164,7 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
       return (
         <InputNumber
           style={{ display: 'inline-block' }}
-          placeholder={`请输入${targetJsonSchema.title}的默认值`}
+          placeholder={`Please enter the default value for ${targetJsonSchema.title}`}
           defaultValue={targetJsonSchema.default}
           onChange={(newVal) => {
             this.handleValueChange('default', newVal);
@@ -172,11 +172,11 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
         />
       );
     }
-    // 其他都默认以input控件进行录入
+    // All other input methods are assumed to use input controls for data entry.
     return (
       <Input
         style={{ display: 'inline-block' }}
-        placeholder={`请输入${targetJsonSchema.title}的默认值`}
+        placeholder={`Please enter the default value for ${targetJsonSchema.title}`}
         defaultValue={targetJsonSchema.default}
         onPressEnter={(event: React.KeyboardEvent<HTMLInputElement>) => {
           const { value } = event.target as HTMLInputElement;
@@ -193,14 +193,14 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
   render() {
     const { nodeKey, indexRoute, targetJsonSchema } = this.props;
     const curType = targetJsonSchema.type;
-    // 判断当前是否是条件字段
+    // Determine if the current condition field is correct
     let isConditionProp = targetJsonSchema.isConditionProp;
 
-    /** 默认值需要进行细分
-     *  输入形式的基础类型组件（input、boolean、 date、date-time、 time、 url、number），以input表单形式让用户填充；
-     *  textarea和3种特殊类型组件（Json、CodeArea、htmlArea），以textarea表单形式让用户填充；
-     *  color选择类型，以type=color的颜色取值控件让用户选择；
-     *  radio、 select选择类型，以其自身在JSONEditor中的展示让用户选择默认值；
+    /** Default values ​​need to be further subdivided
+     * Basic input type components (input, boolean, date, date-time, time, url, number) are provided for users to fill in as input forms;
+     * Textarea and three special component types (Json, CodeArea, htmlArea) allow users to fill in textarea forms.
+     * The color selection type is provided by a color value control with type=color, allowing the user to choose the color.
+     * Radio and select selection types allow users to choose default values ​​through their own display in the JSONEditor;
      * */
 
     return (
@@ -212,10 +212,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'设置为条件字段后，其他字段可根据其数值变化进行实时联动'}
+                title={'When set as a conditional field, other fields can react in real time based on changes in their values'}
                 placement="top"
               >
-                <span className="title-text">条件字段</span>
+                <span className="title-text">Conditional Fields</span>
               </Tooltip>
             </div>
             <div className="content-item">
@@ -243,10 +243,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'开启多选后，select下拉列表支持选择多个选项。'}
+                title={'With multi-select enabled, the select dropdown list supports selecting multiple options.'}
                 placement="top"
               >
-                <span className="title-text">支持多选</span>
+                Supports multiple selections.
               </Tooltip>
             </div>
             <div className="content-item">
@@ -257,8 +257,8 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
                 <RcSwitch
                   style={{ display: 'inline-block' }}
                   defaultChecked={targetJsonSchema.multiple ?? false}
-                  checkedChildren="多选"
-                  unCheckedChildren="单选"
+                  checkedChildren="Multiple selections"
+                  unCheckedChildren="Single Selection"
                   onChange={(checked) => {
                     this.handleValueChange('multiple', checked);
                   }}
@@ -273,8 +273,8 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
             key={`${nodeKey}-defaultActiveFirstOption`}
           >
             <div className="element-title">
-              <Tooltip title={'是否默认高亮第一个选项。'} placement="top">
-                <span className="title-text">选中第一项</span>
+              <Tooltip title={'Should the first option be highlighted by default?'} placement="top">
+                Select the first item.
               </Tooltip>
             </div>
             <div className="content-item">
@@ -287,8 +287,8 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
                   defaultChecked={
                     targetJsonSchema.defaultActiveFirstOption ?? false
                   }
-                  checkedChildren="开启"
-                  unCheckedChildren="关闭"
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
                   onChange={(checked) => {
                     this.handleValueChange('defaultActiveFirstOption', checked);
                   }}
@@ -304,10 +304,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'当前属性设置为只读后，用户不能对其进行任何编辑操作'}
+                title={'With the current attribute set to read-only, users cannot perform any editing operations on it'}
                 placement="top"
               >
-                <span className="title-text">是否只读</span>
+                Is it read-only?
               </Tooltip>
             </div>
             <div className="content-item">
@@ -333,11 +333,11 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
             <div className="element-title">
               <Tooltip
                 title={
-                  '当前属性设置为必填项后，如果用户没有给其设置数值，则会进行标红提示。'
+                  'If a current attribute is set as required, it will be highlighted in red if the user does not assign a value to it.'
                 }
                 placement="top"
               >
-                <span className="title-text">是否必填项</span>
+                Is this field required?
               </Tooltip>
             </div>
             <div className="content-item">
@@ -359,7 +359,7 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           <div className="wide-screen-element-warp" key={`${nodeKey}-default`}>
             <div className="element-title">
               <Tooltip placement="top">
-                <span className="title-text">默认值</span>
+                <span className="title-text">Default value</span>
               </Tooltip>
             </div>
             <div className="content-item">
@@ -376,18 +376,18 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'开启后，选中选项时，其数值会带上当前选项的label数值。'}
+                title={'When enabled, when an option is selected, its value will include the label value of the current option.'}
                 placement="top"
               >
-                <span className="title-text">附带label数值</span>
+                <span className="title-text">Includes label values</span>
               </Tooltip>
             </div>
             <div className="content-item">
               <RcSwitch
                 style={{ display: 'inline-block' }}
                 defaultChecked={targetJsonSchema.withLabel ?? false}
-                checkedChildren="开启"
-                unCheckedChildren="关闭"
+                checkedChildren="On"
+                unCheckedChildren="Off"
                 onChange={(checked) => {
                   this.handleValueChange('withLabel', checked);
                 }}
@@ -402,7 +402,7 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'用于添加 级联选择 组件的 options 数据。'}
+                title={'Options data used to add cascading selection components.'}
                 placement="top"
               >
                 <span className="title-text">options 配置</span>
@@ -425,17 +425,17 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
         >
           <div className="element-title">
             <Tooltip
-              title={'字段描述内容将作为Title的补充信息提供给用户'}
+              title={'Field descriptions will be provided to users as supplementary information to the Title'}
               placement="top"
             >
-              <span className="title-text">字段描述</span>
+              <span className="title-text">Field Description</span>
             </Tooltip>
           </div>
           <div className="content-item">
             <div className="form-item-box">
               <Input
                 style={{ display: 'inline-block' }}
-                placeholder={`请输入${targetJsonSchema.title}的字段描述`}
+                placeholder={`Please enter the field description for ${targetJsonSchema.title}`}
                 defaultValue={targetJsonSchema.description}
                 onPressEnter={(
                   event: React.KeyboardEvent<HTMLInputElement>,
@@ -454,10 +454,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
         <div className="wide-screen-element-warp" key={`${nodeKey}-showKey`}>
           <div className="element-title">
             <Tooltip
-              title={'开启后，在JSONEditor端会展示当前Key值，以便增加辨识度。'}
+              title={'When enabled, the current key value will be displayed in the JSONEditor to increase recognizability.'}
               placement="top"
             >
-              <span className="title-text">展示Key值</span>
+              <span className="title-text">Display Key Value</span>
             </Tooltip>
           </div>
           <div className="content-item">
@@ -481,17 +481,17 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'输入提示内容将作为输入区域的提示信息展示给用户'}
+                title={'The input prompt will be displayed to the user as a prompt in the input area'}
                 placement="top"
               >
-                <span className="title-text">输入提示</span>
+                <span className="title-text">Input Prompt</span>
               </Tooltip>
             </div>
             <div className="content-item">
               <div className="form-item-box">
                 <Input
                   style={{ display: 'inline-block' }}
-                  placeholder={`请输入${targetJsonSchema.title}的输入提示`}
+                  placeholder={`Please enter the input prompt for ${targetJsonSchema.title}`}
                   defaultValue={targetJsonSchema.placeholder}
                   onPressEnter={(
                     event: React.KeyboardEvent<HTMLInputElement>,
@@ -517,10 +517,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'开启后支持添加可选项，并支持 autoComplete。'}
+                title={'Enabled this feature supports adding optional items and autoComplete.'}
                 placement="top"
               >
-                <span className="title-text">开启可选项</span>
+                Enable optional content.
               </Tooltip>
             </div>
             <div className="content-item">
@@ -528,8 +528,8 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
                 <RcSwitch
                   style={{ display: 'inline-block' }}
                   defaultChecked={targetJsonSchema.autoComplete ?? false}
-                  checkedChildren="开启"
-                  unCheckedChildren="关闭"
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
                   onChange={(checked) => {
                     this.handleValueChange('autoComplete', checked);
                   }}
@@ -544,7 +544,7 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
             key={`${nodeKey}-autoComplete-options`}
           >
             <div className="element-title">
-              <span className="title-text">可选项</span>
+              <span className="title-text">Optional</span>
             </div>
             <div className="content-item">
               <JsonView
@@ -552,7 +552,7 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
                 onChange={(newJsonData) => {
                   if (!isArray(newJsonData)) {
                     message.warning(
-                      '可选项数据格式不正确，可选项数据格式必须为数组格式。',
+                      'The optional data format is incorrect. Optional data must be in array format.'
                     );
                     return;
                   }
@@ -570,10 +570,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
           >
             <div className="element-title">
               <Tooltip
-                title={'用于控制是否显示源码模式切换按钮，默认显示'}
+                title={'Used to control whether the source code mode switch button is displayed; it is displayed by default'}
                 placement="top"
               >
-                <span className="title-text">源码模式</span>
+                Source Code Mode
               </Tooltip>
             </div>
             <div className="content-item">
@@ -599,10 +599,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
             >
               <div className="element-title">
                 <Tooltip
-                  title={'设置最小值后，用户输入的数值必须大于当前最小值'}
+                  title={'After setting the minimum value, the value entered by the user must be greater than the current minimum value'}
                   placement="top"
                 >
-                  <span className="title-text">最小值</span>
+                  Minimum value
                 </Tooltip>
               </div>
               <div className="content-item">
@@ -630,10 +630,10 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
             >
               <div className="element-title">
                 <Tooltip
-                  title={'设置最大值后，用户输入的数值必须大于当前最大值'}
+                  title={'After setting the maximum value, the value entered by the user must be greater than the current maximum value'}
                   placement="top"
                 >
-                  <span className="title-text">最大值</span>
+                  Maximum value
                 </Tooltip>
               </div>
               <div className="content-item">
@@ -659,100 +659,100 @@ class AdvanceConfig extends React.PureComponent<AdvanceConfigProps> {
         )}
         {getExpectType(curType) === 'array' && (
           <>
-            <div
-              className="wide-screen-element-warp"
-              key={`${nodeKey}-minimum-child`}
-            >
-              <div className="element-title">
-                <Tooltip title={'用于限制数据项最小个数'} placement="top">
-                  <span className="title-text">最小数据项</span>
-                </Tooltip>
-              </div>
-              <div className="content-item">
-                <div className="form-item-box">
-                  <InputNumber
-                    style={{ display: 'inline-block' }}
-                    defaultValue={targetJsonSchema['minimum-child']}
-                    onChange={(newVal) => {
-                      this.handleValueChange('minimum-child', newVal);
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="wide-screen-element-warp"
-              key={`${nodeKey}-maximum-child`}
-            >
-              <div className="element-title">
-                <Tooltip title={'用于限制数据项最多个数'} placement="top">
-                  <span className="title-text">最多数据项</span>
-                </Tooltip>
-              </div>
-              <div className="content-item">
-                <div className="form-item-box">
-                  <InputNumber
-                    style={{ display: 'inline-block' }}
-                    defaultValue={targetJsonSchema['maximum-child']}
-                    onChange={(newVal) => {
-                      this.handleValueChange('maximum-child', newVal);
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-        <div className="wide-screen-element-warp" key={`${nodeKey}-onShow`}>
-          <div className="element-title">
-            <Tooltip
-              title={
-                '用于设置显隐表达式（onShow），比如设置 "dataType === 1"，则表示当数据域中 dataType 为 1 时显示当前配置项。'
-              }
-              placement="top"
-            >
-              <span className="title-text">显隐表达式</span>
+          <div
+            className="wide-screen-element-warp"
+            key={`${nodeKey}-minimum-child`}
+          >
+            <div className="element-title">
+              <Tooltip title={'Used to limit the minimum number of data items'} placement="top">
+                <span className="title-text">Minimum data item</span>
             </Tooltip>
           </div>
           <div className="content-item">
             <div className="form-item-box">
-              <Input
+              <InputNumber
                 style={{ display: 'inline-block' }}
-                placeholder={'请输入显隐表达式'}
-                defaultValue={targetJsonSchema.onShow}
-                onPressEnter={(
-                  event: React.KeyboardEvent<HTMLInputElement>,
-                ) => {
-                  const { value } = event.target as HTMLInputElement;
-                  this.handleValueChange('onShow', value);
-                }}
-                onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
-                  const { value } = event.target as HTMLInputElement;
-                  this.handleValueChange('onShow', value);
+                defaultValue={targetJsonSchema['minimum-child']}
+                onChange={(newVal) => {
+                  this.handleValueChange('minimum-child', newVal);
                 }}
               />
             </div>
           </div>
-        </div>
-
-        <div className="wide-screen-element-warp" key={`${nodeKey}-titleStyle`}>
-          <div className="element-title">
-            <Tooltip title={'可用于设置标题展示样式。'} placement="top">
-              <span className="title-text">标题样式</span>
-            </Tooltip>
           </div>
-          <div className="content-item">
-            <JsonView
-              jsonData={targetJsonSchema.titleStyle}
-              onChange={(newJsonData) => {
-                this.handleValueChange('titleStyle', newJsonData);
+          <div
+          className="wide-screen-element-warp"
+          key={`${nodeKey}-maximum-child`}
+      >
+        <div className="element-title">
+          <Tooltip title={'Used to limit the maximum number of data items'} placement="top">
+            Most data items
+          </Tooltip>
+        </div>
+        <div className="content-item">
+          <div className="form-item-box">
+            <InputNumber
+              style={{ display: 'inline-block' }}
+              defaultValue={targetJsonSchema['maximum-child']}
+              onChange={(newVal) => {
+                this.handleValueChange('maximum-child', newVal);
               }}
-              maxLines={10}
             />
           </div>
         </div>
       </div>
-    );
+  </>
+  )}
+    <div className="wide-screen-element-warp" key={`${nodeKey}-onShow`}>
+      <div className="element-title">
+        <Tooltip
+          title={
+            'Used to set the onShow expression, for example, setting "dataType === 1" means that the current configuration item will be displayed when dataType in the data field is 1.'
+          }
+          placement="top"
+        >
+          <span className="title-text">Explicit and Implicit Expressions</span>
+        </Tooltip>
+      </div>
+      <div className="content-item">
+        <div className="form-item-box">
+          <Input
+            style={{ display: 'inline-block' }}
+            placeholder={'Please enter the explicit/implicit expression'}
+            defaultValue={targetJsonSchema.onShow}
+            onPressEnter={(
+              event: React.KeyboardEvent<HTMLInputElement>,
+            ) => {
+              const { value } = event.target as HTMLInputElement;
+              this.handleValueChange('onShow', value);
+            }}
+            onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
+              const { value } = event.target as HTMLInputElement;
+              this.handleValueChange('onShow', value);
+            }}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div className="wide-screen-element-warp" key={`${nodeKey}-titleStyle`}>
+      <div className="element-title">
+        <Tooltip title={'Can be used to set the title display style.'} placement="top">
+          <span className="title-text">Title Style</span>
+        </Tooltip>
+      </div>
+      <div className="content-item">
+        <JsonView
+          jsonData={targetJsonSchema.titleStyle}
+          onChange={(newJsonData) => {
+            this.handleValueChange('titleStyle', newJsonData);
+          }}
+          maxLines={10}
+        />
+      </div>
+    </div>
+  </div>
+  );
   }
 }
 

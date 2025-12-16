@@ -19,17 +19,17 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
     const { initJSONSchemaData, initOnChange, initSchemaTypeList } =
-      this.props.schemaStore || {};
+    this.props.schemaStore || {};
 
-    // 根据props.data对jsonSchema进行初始化
+    // Initialize jsonSchema based on props.data
     if (props.data) {
       initJSONSchemaData(props.data);
     }
-    // 记录onChange事件
+    // Record the onChange event
     if (props.onChange) {
       initOnChange(props.onChange);
     }
-    // 重置TypeList
+    // Reset TypeList
     if (props.typeList) {
       initSchemaTypeList(props.typeList);
     }
@@ -37,22 +37,22 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     const { initJSONSchemaData, initOnChange, initSchemaTypeList } =
-      this.props.schemaStore || {};
+    this.props.schemaStore || {};
     if (!isEqual(nextProps.data, this.props.data)) {
       initJSONSchemaData(nextProps.data);
     }
-    // 记录onChange事件
+    // Record the onChange event
     if (!isEqual(nextProps.onChange, this.props.onChange)) {
       initOnChange(nextProps.onChange);
     }
-    // 重置TypeList
+    // Reset TypeList
     if (!isEqual(nextProps.typeList, this.props.typeList)) {
       initSchemaTypeList(nextProps.typeList);
     }
   }
 
   /**
-   * 拖拽相关方法：开始拖动时触发的事件
+   * Drag-and-drop related methods: Events triggered when dragging begins.
    */
   onDragStart = (eventData: any) => {
     const { getSchemaByIndexRoute } = this.props.schemaStore || {};
@@ -60,18 +60,18 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
     const curIndexRoute = node.indexRoute;
     const curJsonObj = getSchemaByIndexRoute(curIndexRoute);
     if (curJsonObj.isFixed) {
-      message.warning('当前元素不支持拖拽哦。');
+      message.warning('Drag and drop is not supported for this element.');
     }
   };
 
   /**
-   * 拖拽相关方法：拖动完成时触发的事件
+   * Drag-and-drop related methods: Events triggered when the drag is complete.
    */
   onDrop = (eventData: any) => {
     /**
-     * dragNode：拖动的元素
-     * node：拖拽的目标位置上的元素
-     * 根据eventData中的dropPosition值判断插入位置会不准确
+     * dragNode: The dragged element
+     * node: The element at the target location of the drag.
+     Determining the insertion position based on the dropPosition value in eventData can be inaccurate.
      * */
     const { dragNode, node } = eventData;
     const {
@@ -83,62 +83,62 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
       isSupportCurType,
     } = this.props.schemaStore || {};
 
-    // 拖动的元素key
+    // Drag element key
     const curIndexRoute = dragNode.indexRoute;
     const curJsonKey = dragNode.jsonKey;
-    // 获取当前拖动的元素
+    // Get the currently dragged element
     const curJsonObj = getSchemaByIndexRoute(curIndexRoute);
-    if (curJsonObj.isFixed) return; // 固定类型元素不允许拖拽
+    if (curJsonObj.isFixed) return; // Fixed-type elements cannot be dragged.
 
-    // 放置的目标元素key
+    // Place the target element key
     let targetIndexRoute = node.indexRoute;
 
-    // 判断是否是同一个父级容器
+    // Check if they are from the same parent container
     const isSameParentElem = isSameParent(curIndexRoute, targetIndexRoute);
-    // 判断先后位置
+    // Determine the order of appearance
     const curPosition = getCurPosition(curIndexRoute, targetIndexRoute);
 
     if (isSameParentElem) {
-      /** 同级元素的拖拽交互
-       * 备注：1、同级元素之间的拖拽不用考虑是否有重名key；
-       * 2、先删除再进行插入，避免插入时报同名错误；
-       * */
-      // 先删除当前拖动的元素
-      deleteJsonByIndex(curIndexRoute, true); // 设置为true表示跳过onChange
-      // 如果curPosition === 'before'，删除后需要进行移位操作
+      /** Drag and drop interaction of sibling elements */
+    /* Note: 1. Drag and drop between sibling elements does not need to consider whether there are duplicate key names;
+    * 2. Delete before inserting to avoid duplicate name errors during insertion;
+    * */
+      // First delete the currently dragged element
+      deleteJsonByIndex(curIndexRoute, true); // Setting it to true indicates skipping onChange
+      // If curPosition === 'before', a shift operation is required after deletion.
       if (curPosition === 'before') {
         /**
-         * 当拖动的元素在前面，目标元素在后面，
-         * 先删除拖动元素时会导致targetIndexRoute发生偏移，需要向前移动一位进行矫正（以便继续访问到此前的目标元素）
+         * When the dragged element is in front and the target element is behind,
+         Deleting a dragged element first will cause the targetIndexRoute to shift, which needs to be moved forward one position to correct it (so that the previous target element can still be accessed).
          */
         targetIndexRoute = moveForward(targetIndexRoute);
       }
       if (node.dragOverGapTop) {
-        /** 拖拽到目标元素前面 */
+        /** Drag and drop to the front of the target element */
         insertJsonData(targetIndexRoute, curJsonKey, curJsonObj, 'before');
       } else if (node.dragOver || node.dragOverGapBottom) {
-        /** 拖拽到目标元素当前位置，不进行位置置换，也认为是拖拽到目标元素后面 */
+        /** Drag to the current position of the target element; without swapping positions, it is considered as dragging to the back of the target element. */
         insertJsonData(targetIndexRoute, curJsonKey, curJsonObj);
       }
     } else {
-      /** 非同级元素的拖拽交互 */
-      // 判断是否有重名的jsonKey（非同级元素拖拽中可能出现重名）
+      /** Drag and drop interaction between non-sibling elements */
+        // Check if there is a duplicate jsonKey name (duplicate names may occur when dragging non-sibling elements).
       const isExitJsonKey_ = isExitJsonKey(targetIndexRoute, curJsonKey);
       if (isExitJsonKey_) {
-        message.warning('目标位置中有重名的元素');
+        message.warning('An element with the same name exists at the target location');
         return;
       }
       const curType = curJsonObj.type;
       const isSupportCurType_ = isSupportCurType(targetIndexRoute, curType);
       if (!isSupportCurType_) {
-        message.warning(`目标位置不支持${curType}类型元素`);
+        message.warning(`The target location does not support elements of type ${curType}`);
         return;
       }
 
-      // 跨级拖动时
+      // When dragging across levels
       const curKeyRoute = indexRoute2keyRoute(curIndexRoute);
       const targetParentIndexRoute = getParentIndexRoute(targetIndexRoute);
-      // 先获取拖拽元素的原始路径
+      // First get the original path of the dragged element
       const cacheKeyRoute = getWebCacheData(`${curKeyRoute}-${curType}`);
       saveWebCacheData(
         `${indexRoute2keyRoute(
@@ -147,11 +147,11 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
         cacheKeyRoute || curKeyRoute,
       );
 
-      // 非同级元素拖拽后删除
+      // Delete non-sibling elements after dragging
       if (node.dragOverGapTop) {
-        /** 拖拽到目标元素前面 */
+        /** Drag and drop to the front of the target element */
         if (curPosition === 'after') {
-          deleteJsonByIndex(curIndexRoute, true); // 设置为true表示跳过onChange
+          deleteJsonByIndex(curIndexRoute, true); // Setting it to true indicates skipping onChange
           insertJsonData(targetIndexRoute, curJsonKey, curJsonObj, 'before');
         } else {
           // curPosition === 'before'
@@ -161,17 +161,18 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
             curJsonObj,
             'before',
             true,
-          ); // 设置为true表示跳过onChange
-          deleteJsonByIndex(curIndexRoute);
+          )
+            // Setting it to true indicates skipping onChange
+            deleteJsonByIndex(curIndexRoute);
         }
       } else if (node.dragOver || node.dragOverGapBottom) {
-        /** 拖拽到目标元素当前位置，不进行位置置换，也认为是拖拽到目标元素后面 */
+        /** Drag to the current position of the target element; without swapping positions, it is considered as dragging to the back of the target element. */
         if (curPosition === 'after') {
-          deleteJsonByIndex(curIndexRoute, true); // 设置为true表示跳过onChange
+          deleteJsonByIndex(curIndexRoute, true); // Setting it to true indicates skipping onChange
           insertJsonData(targetIndexRoute, curJsonKey, curJsonObj);
         } else {
           // curPosition === 'before'
-          insertJsonData(targetIndexRoute, curJsonKey, curJsonObj, '', true); // 设置为true表示跳过onChange
+          insertJsonData(targetIndexRoute, curJsonKey, curJsonObj, '', true); // Setting it to true indicates skipping onChange
           deleteJsonByIndex(curIndexRoute);
         }
       }
@@ -179,20 +180,20 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
   };
 
   /**
-   * 默认展开二级schema面板
+   * The second-level schema panel expands by default.
    */
   catchExpandedKeys = (jsonSchema: any) => {
     const defaultExpandedKeys: string[] = [];
     if (jsonSchema && jsonSchema.propertyOrder && jsonSchema.properties) {
       jsonSchema.propertyOrder.map((key: string, index: number) => {
-        /** 1. 获取当前元素的key值 */
+        /** 1. Get the key value of the current element */
         const currentJsonKey = key;
-        /** 2. 获取当前元素的json数据对象 */
+        /** 2. Retrieve the JSON data object of the current element */
         const currentSchemaData = jsonSchema.properties[currentJsonKey];
-        /** 3. 判断是否是容器类型元素，如果是则禁止选中 */
+        /** 3. Determine if it is a container element; if so, disable selection. */
         const curType = currentSchemaData.type;
-        /** 4. 获取当前元素的id，用于做唯一标识 */
-        let nodeKey = `${curType}-${currentJsonKey}`; // 使用当前format+jsonKey作为nodeKey
+        /** 4. Get the ID of the current element, used as a unique identifier */
+        let nodeKey = `${curType}-${currentJsonKey}`; // Use the current format + jsonKey as nodeKey
         defaultExpandedKeys.push(nodeKey);
       });
     }
@@ -205,9 +206,9 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
     const isEmpty = isEmptySchema(jsonSchema);
     const curType = jsonSchema.type;
     /**
-     * 备注：此处单独将object进行渲染，主要是为了将Tree根组件抽离出来（以便在此处进行拖拽事件的处理），
-     * JSONSchema的一级字段必须为object类型（规避非法的jsonSchema数据，以及结构单一的jsonSchema数据，
-     * 后续再单独考虑如何兼容单一结构的jsonSchema数据）。
+     * Note: The object is rendered separately here mainly to extract the Tree root component (so that drag events can be handled here).
+     * First-level fields in a JSON Schema must be of type object (to avoid invalid JSON Schema data and JSON Schema data with a simple structure).
+     * We will consider how to make it compatible with single-structure JSONSchema data separately later.
      * */
     return (
       <div className="json-schema-container">
@@ -232,7 +233,7 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
                   indexRoute: '',
                   nodeKey: '',
                   targetJsonSchema: jsonSchema,
-                  isOnlyShowChild: true, // 一级object类型不显示，仅显示其子项
+                  isOnlyShowChild: true, // First-level object types are not displayed; only their child items are shown.
                 })}
               {curType !== 'object' &&
                 MappingRender({
@@ -257,7 +258,7 @@ class JSONSchema extends React.PureComponent<BaseRendererProps> {
           />
         )}
         {isEmpty && (
-          <p className="json-schema-empty">当前jsonSchema没有数据内容</p>
+          <p className="json-schema-empty">The current jsonSchema contains no data</p>
         )}
       </div>
     );

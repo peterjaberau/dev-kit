@@ -10,41 +10,41 @@ import {
 import { BaseRendererProps } from '$types/index';
 import './index.scss';
 
-/** 主要用于渲染typeSelect类型的元素
- * 备注：SelectFormSchema组件中只有default是可编辑的（提供选择列表） */
+/** Primarily used for rendering elements of typeSelect type */
+/* Note: Only the default option in the SelectFormSchema component is editable (providing a selection list). */
 class SelectFormSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
     this.typeChange = this.typeChange.bind(this);
   }
 
-  /** 数据源类型变动事件处理器 */
+  /** Data source type change event handler */
   typeChange = (newType: string) => {
     const { editSchemaData, updateSchemaData } = this.props.schemaStore || {};
     const { indexRoute, jsonKey, targetJsonSchema, typeSelectData } =
       this.props;
-    if (targetJsonSchema.default === newType) return; // default值未改变则直接跳出
+    if (targetJsonSchema.default === newType) return; // If the default value has not changed, exit directly.
     editSchemaData(indexRoute || '', jsonKey, {
       default: newType,
     });
 
-    // 判断是否在type改变时进行特殊处理（比如dataSource类型中需要调整data的数据内容）
+    // Determine whether special handling is needed when the type changes (e.g., the data content of data in the dataSource type needs to be adjusted).
     if (typeSelectData) {
       const newDataJSONObj = (typeSelectData as any)[newType];
-      if (newDataJSONObj && targetJsonSchema.title === '数据源类型') {
-        // 根据indexRoute获取下一个子元素的路径值
+      if (newDataJSONObj && targetJsonSchema.title === 'Data Source Type') {
+        // Get the path value of the next child element based on indexRoute
         const nextIndexRoute = getNextIndexRoute(indexRoute);
-        // 类型改变时更新targetJsonSchema.properties.data中的数据
+        // Update the data in targetJsonSchema.properties.data when the type changes.
         editSchemaData(nextIndexRoute, 'data', newDataJSONObj);
       }
     }
-    // event类型的特殊处理
+    // Special handling for event types
     if (EventTypeDataList) {
       const newEventJSONObj = (EventTypeDataList as any)[newType];
-      if (targetJsonSchema.title === '事件类型' && newEventJSONObj) {
-        // 根据indexRoute获取下一个子元素的路径值
+      if (targetJsonSchema.title === 'Event Type' && newEventJSONObj) {
+        // Get the path value of the next child element based on indexRoute
         const parentIndexRoute = getParentIndexRoute(indexRoute);
-        // 类型改变时更新父元素的json数据
+        // Update the parent element's JSON data when the type changes.
         updateSchemaData(parentIndexRoute, newEventJSONObj);
       }
     }

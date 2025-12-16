@@ -5,22 +5,22 @@ import BaseFormSchema from '$components/BaseFormSchema/index';
 import SelectFormSchema from '$components/SelectFormSchema/index';
 import { BaseRendererProps } from '$types/index';
 
-/** 渲染当前字段的表单项（Tree的单项内容） */
+/** Renders the form field for the current field (the content of a single item in the Tree) */
 const getTreeNodeTitleCont = (params: BaseRendererProps) => (
   <BaseFormSchema {...params} />
 );
 
-/** 渲染dataSelect在的内容 */
+/** Render the content of dataSelect */
 const getTypeSelectCont = (params: BaseRendererProps) => (
   <SelectFormSchema {...params} />
 );
 
-/** Quantity类型渲染组件 */
+/** Quantity type rendering component */
 const QuantitySchema = (props: BaseRendererProps) => {
   const { jsonKey, indexRoute, nodeKey, targetJsonSchema } = props;
   const curType = targetJsonSchema.type;
 
-  /** 获取quantity中的数值对象（默认第一个就是数值对象） */
+  /** Retrieves the numeric object from the quantity (the first one is the numeric object by default) */
   const unitJsonKey = targetJsonSchema.propertyOrder[0];
   const unitJsonData = targetJsonSchema.properties[unitJsonKey];
 

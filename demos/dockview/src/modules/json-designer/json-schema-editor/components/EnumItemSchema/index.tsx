@@ -9,7 +9,7 @@ import './index.scss';
 class EnumItemSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.onAddBtnEvent = this.onAddBtnEvent.bind(this);
     this.onCopyBtnEvent = this.onCopyBtnEvent.bind(this);
     this.onDeleteBtnEvent = this.onDeleteBtnEvent.bind(this);
@@ -17,54 +17,54 @@ class EnumItemSchema extends React.PureComponent<BaseRendererProps> {
     this.handleEnumTextChange = this.handleEnumTextChange.bind(this);
   }
 
-  /** jsonKey类型输入值变动事件处理器 */
+  /** jsonKey type input value change event handler */
   handleEnumKeyChange = (event: any) => {
     const { value } = event.target;
     const { indexRoute, enumIndex, enumKey } = this.props;
     const { isExitEnumKey, updateEnumKey } = this.props.schemaStore || {};
     if (value !== enumKey) {
       if (isExitEnumKey(indexRoute, enumIndex, value)) {
-        message.warning('对不起，存在相同的key值，请重新编辑。');
+        message.warning('Sorry, a duplicate key exists. Please edit it again.');
       } else {
-        updateEnumKey(indexRoute, enumIndex, value); // 更新枚举值
+        updateEnumKey(indexRoute, enumIndex, value); // Update enumeration value
       }
     }
   };
 
-  /** enumText类型输入值变动事件处理器 */
+  /** Handler for changes to the input value of enumText type */
   handleEnumTextChange = (event: any) => {
     const { value } = event.target;
     const { indexRoute, enumIndex, enumText } = this.props;
     const { updateEnumText } = this.props.schemaStore || {};
     if (value !== enumText) {
-      updateEnumText(indexRoute, enumIndex, value); // 更新枚举值
+      updateEnumText(indexRoute, enumIndex, value); // Update enumeration value
     }
   };
 
-  /** 新增选择项 */
+  /** Add new options */
   onAddBtnEvent = () => {
     const { indexRoute, enumIndex } = this.props;
     const { addEnumItem } = this.props.schemaStore || {};
-    addEnumItem(indexRoute, enumIndex); // 新增枚举值
+    addEnumItem(indexRoute, enumIndex); // Add an enumeration value
   };
 
-  /** 复制功能 */
+  /** Copy function */
   onCopyBtnEvent = () => {
     const { indexRoute, enumIndex } = this.props;
     const { copyEnumItem } = this.props.schemaStore || {};
     copyEnumItem(indexRoute, enumIndex); // copy枚举值
   };
 
-  /** 删除字段项 */
+  /** Delete field item */
   onDeleteBtnEvent = () => {
     const { getSchemaByIndexRoute, deleteEnumItem } =
-      this.props.schemaStore || {};
+    this.props.schemaStore || {};
     const { indexRoute, enumIndex } = this.props;
     const itemJSONObj = getSchemaByIndexRoute(indexRoute);
     if (itemJSONObj.enum && itemJSONObj.enum.length > 1) {
-      deleteEnumItem(indexRoute, enumIndex); // 删除指定位置的枚举值
+      deleteEnumItem(indexRoute, enumIndex); // Deletes the enum item at the specified position.
     } else {
-      message.warning('删除失败，请至少保留一个可选项。');
+      message.warning('Deletion failed. Please keep at least one option.');
     }
   };
 
@@ -95,19 +95,19 @@ class EnumItemSchema extends React.PureComponent<BaseRendererProps> {
           />
         </div>
         <div className="operate-item">
-          <Tooltip title="删除">
+          <Tooltip title="Delete">
             <CloseOutlined
               className="operate-btn delete-operate"
               onClick={this.onDeleteBtnEvent}
             />
           </Tooltip>
-          <Tooltip title="新增可选项">
+          <Tooltip title="Add optional">
             <PlusOutlined
               className="operate-btn"
               onClick={this.onAddBtnEvent}
             />
           </Tooltip>
-          <Tooltip title="复制">
+          <Tooltip title="Copy">
             <CopyOutlined
               className="operate-btn"
               onClick={this.onCopyBtnEvent}

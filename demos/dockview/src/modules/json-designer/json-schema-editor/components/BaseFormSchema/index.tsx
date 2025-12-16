@@ -1,354 +1,354 @@
 /**
- * 通用功能组件
- * 提供 key值编辑、类型选择列表、title编辑、新增、复制、删除、数据项排序、高级设置 相关操作
+ * General functional components
+ * Provides operations related to key value editing, type selection list, title editing, adding, copying, deleting, data item sorting, and advanced settings.
  */
-import * as React from 'react';
-import { inject, observer } from 'mobx-react';
-import { Input, message, Select, Modal, Button, Tooltip } from 'antd';
-const { Option } = Select;
-import {
-  PlusOutlined,
-  CloseOutlined,
-  CopyOutlined,
-  DragOutlined,
-  SettingOutlined,
-  SortAscendingOutlined,
-} from '@ant-design/icons';
-import AdvanceConfig from '$components/AdvanceConfig/index'; // 高级配置内容
-import {
-  isContainerSchema,
-  getParentIndexRoute,
-  TypeDataList,
-} from '@wibetter/json-utils';
-import { objClone, saveWebCacheData } from '$utils/index';
-import { TypeInfoList } from '$data/TypeList';
-import { BaseRendererProps } from '$types/index';
-import './index.scss';
+ import * as React from 'react';
+ import { inject, observer } from 'mobx-react';
+ import { Input, message, Select, Modal, Button, Tooltip } from 'antd';
+ const { Option } = Select;
+ import {
+ PlusOutlined,
+ CloseOutlined,
+ CopyOutlined,
+ DragOutlined,
+ SettingOutlined,
+ SortAscendingOutlined,
+ } from '@ant-design/icons';
+ import AdvanceConfig from '$components/AdvanceConfig/index'; // Advanced configuration content
+ import {
+ isContainerSchema,
+ getParentIndexRoute,
+ TypeDataList,
+ } from '@wibetter/json-utils';
+ import { objClone, saveWebCacheData } from '$utils/index';
+ import { TypeInfoList } from '$data/TypeList';
+ import { BaseRendererProps } from '$types/index';
+ import './index.scss';
 
-/**
- * 基本配置
- * 1、关于schema中的特殊属性：
- * 1）isFixed 表示当前元素是固定元素，不可 复制、拖拽和删除等；
- * 2）父元素 isContainer 为false 时，则当前元素不支持 新增、复制、删除和拖拽等操作，高级操作icon 显隐单独控制；
+ /**
+ * Basic Configuration
+ * 1. Regarding special attributes in the schema:
+ * 1) isFixed indicates that the current element is fixed and cannot be copied, dragged, or deleted;
+ * 2) When the parent element isContainer is false, the current element does not support operations such as adding, copying, deleting, and dragging. The visibility of advanced operation icons is controlled separately.
  */
 
-interface BaseFormSchemaState {
-  showAdvanceConfig: boolean;
-}
+ interface BaseFormSchemaState {
+ showAdvanceConfig: boolean;
+ }
 
-class BaseFormSchema extends React.PureComponent<
-  BaseRendererProps,
-  BaseFormSchemaState
-> {
-  constructor(props: BaseRendererProps) {
-    super(props);
-    this.state = {
-      showAdvanceConfig: false,
-    };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
-    this.onAddBtnEvent = this.onAddBtnEvent.bind(this);
-    this.onCopyBtnEvent = this.onCopyBtnEvent.bind(this);
-    this.onDeleteBtnEvent = this.onDeleteBtnEvent.bind(this);
-    this.handleJsonKeyChange = this.handleJsonKeyChange.bind(this);
-    this.handleTitleChange = this.handleTitleChange.bind(this);
-    this.handleTypeChange = this.handleTypeChange.bind(this);
-    this.childElemSort = this.childElemSort.bind(this);
+ class BaseFormSchema extends React.PureComponent<
+ BaseRendererProps,
+ BaseFormSchemaState
+ > {
+ constructor(props: BaseRendererProps) {
+ super(props);
+ this.state = {
+ showAdvanceConfig: false,
+ };
+ // Binding here is necessary so that `this` can be used in the callback function.
+ this.onAddBtnEvent = this.onAddBtnEvent.bind(this);
+ this.onCopyBtnEvent = this.onCopyBtnEvent.bind(this);
+ this.onDeleteBtnEvent = this.onDeleteBtnEvent.bind(this);
+ this.handleJsonKeyChange = this.handleJsonKeyChange.bind(this);
+ this.handleTitleChange = this.handleTitleChange.bind(this);
+ this.handleTypeChange = this.handleTypeChange.bind(this);
+ this.childElemSort = this.childElemSort.bind(this);
+ }
+
+ /** Select type change event handler */
+handleTypeChange = (newType: string) => {
+  const { changeType } = this.props.schemaStore || {};
+  const { indexRoute, jsonKey, targetJsonSchema } = this.props;
+  if (targetJsonSchema.type === newType) return; // If the format value has not changed, exit immediately.
+
+  // Retrieve initialized object data based on the current new type
+  const newTypeData = TypeDataList[newType];
+  changeType(indexRoute, jsonKey, newTypeData, targetJsonSchema);
+};
+
+/** jsonKey type input value change event handler */
+handleJsonKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const { editJsonKey, isExitJsonKey } = this.props.schemaStore || {};
+  const { value } = event.target;
+  const { indexRoute, jsonKey } = this.props;
+  if (jsonKey === value) return; // If the jsonKey value has not changed, exit immediately.
+  if (isExitJsonKey(indexRoute, value)) {
+    message.warning('The current key already exists, please choose another one.');
+    return;
   }
+  editJsonKey(indexRoute, value);
+};
 
-  /** select类型变动事件处理器 */
-  handleTypeChange = (newType: string) => {
-    const { changeType } = this.props.schemaStore || {};
-    const { indexRoute, jsonKey, targetJsonSchema } = this.props;
-    if (targetJsonSchema.type === newType) return; // format值未改变则直接跳出
+/** Event handler for changes in title type input value */
+handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const { editSchemaData } = this.props.schemaStore || {};
+  const { value } = event.target;
+  const { indexRoute, jsonKey, targetJsonSchema } = this.props;
+  if (targetJsonSchema.title === value) return; // If the title value hasn't changed, exit immediately.
+  editSchemaData(indexRoute, jsonKey, {
+    title: value,
+  });
+};
 
-    // 根据当前新的类型获取初始化的对象数据
-    const newTypeData = TypeDataList[newType];
-    changeType(indexRoute, jsonKey, newTypeData, targetJsonSchema);
-  };
+/** Get the list of types for the current field */
+/* The range of selectable types for the current field is determined by the type of the parent element. If the parent type is empty, a completely new selectable type will be used by default.*/
+getCurrentTypeList = (parentType: string) => {
+  const { SchemaTypeList } = this.props.schemaStore || {};
+  const myParentType = parentType || 'all';
+  let typeList = SchemaTypeList[myParentType];
+  if (!typeList || typeList.length === 0) {
+    typeList = SchemaTypeList.all; // If the current type list is empty, all field types will be displayed by default.
+  }
+  return typeList;
+};
 
-  /** jsonKey类型输入值变动事件处理器 */
-  handleJsonKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { editJsonKey, isExitJsonKey } = this.props.schemaStore || {};
-    const { value } = event.target;
-    const { indexRoute, jsonKey } = this.props;
-    if (jsonKey === value) return; // jsonKey值未改变则直接跳出
-    if (isExitJsonKey(indexRoute, value)) {
-      message.warning('当前key已存在，请换一个吧。');
-      return;
-    }
-    editJsonKey(indexRoute, value);
-  };
+/** Add a new field item
+ * Note: If the current field is a container type, add a child field item to it; if it is a primitive type, add a sibling node field item to it. */
+onAddBtnEvent = () => {
+  const { addChildJson, addNextJsonData } = this.props.schemaStore || {};
+  const { indexRoute, targetJsonSchema } = this.props;
 
-  /** title类型输入值变动事件处理器 */
-  handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { editSchemaData } = this.props.schemaStore || {};
-    const { value } = event.target;
-    const { indexRoute, jsonKey, targetJsonSchema } = this.props;
-    if (targetJsonSchema.title === value) return; // title值未改变则直接跳出
-    editSchemaData(indexRoute, jsonKey, {
-      title: value,
-    });
-  };
+  if (isContainerSchema(targetJsonSchema)) {
+    // Indicates that the current field is a container type.
+    addChildJson(indexRoute);
+  } else {
+    // Insert sibling node
+    addNextJsonData(indexRoute);
+  }
+};
 
-  /** 获取当前字段的类型清单
-   *  根据父元素的类型决定当前字段的类型可选择范围，如果父类型为空则默认使用全新的可选择类型 */
-  getCurrentTypeList = (parentType: string) => {
-    const { SchemaTypeList } = this.props.schemaStore || {};
-    const myParentType = parentType || 'all';
-    let typeList = SchemaTypeList[myParentType];
-    if (!typeList || typeList.length === 0) {
-      typeList = SchemaTypeList.all; // 如果当前类型清单为空，则默认展示所有的字段类型
-    }
-    return typeList;
-  };
+/** Copy function
+ *Note: A key value needs to be automatically generated.*/
+onCopyBtnEvent = () => {
+  const { indexRoute, targetJsonSchema, jsonKey } = this.props;
+  const {
+    getSchemaByIndexRoute,
+    indexRoute2keyRoute,
+    insertJsonData,
+    getNewJsonKeyIndex,
+  } = this.props.schemaStore || {};
+  const newJsonData = objClone(targetJsonSchema);
+  // 1. Get the parent element
+  const parentIndexRoute = getParentIndexRoute(indexRoute);
+  const parentJSONObj = getSchemaByIndexRoute(parentIndexRoute);
+  // 2. Generate a new key value
+  const newJsonKey = getNewJsonKeyIndex(parentJSONObj, jsonKey);
+  // 3. Record the path value of the data source when copying (Note: Only keep the most recent copy value source).
+  const curType = targetJsonSchema.type;
+  saveWebCacheData(
+    `${indexRoute2keyRoute(parentIndexRoute)}-${newJsonKey}-${curType}`,
+    indexRoute2keyRoute(indexRoute),
+  );
+  // 4. Insert copied JSON data
+  insertJsonData(indexRoute, newJsonKey, newJsonData);
+};
 
-  /** 新增字段项
-   *  备注：如果当前字段是容器类型，则为其添加子字段项，如果是基本类型则为其添加兄弟节点字段项 */
-  onAddBtnEvent = () => {
-    const { addChildJson, addNextJsonData } = this.props.schemaStore || {};
-    const { indexRoute, targetJsonSchema } = this.props;
+/** Delete field item */
+onDeleteBtnEvent = () => {
+  const { jsonKey, indexRoute } = this.props;
+  const { deleteJsonByIndex_CurKey } = this.props.schemaStore || {};
+  deleteJsonByIndex_CurKey(indexRoute, jsonKey); // Delete the corresponding JSON data object
+};
 
-    if (isContainerSchema(targetJsonSchema)) {
-      // 表示当前是容器类型字段
-      addChildJson(indexRoute);
-    } else {
-      // 插入兄弟节点
-      addNextJsonData(indexRoute);
-    }
-  };
+/** Intercept drag and drop events */
+ignoreDragEvent = (event: React.DragEvent<HTMLDivElement>) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
 
-  /** 复制功能
-   *  备注：需要自动生成一个key值 */
-  onCopyBtnEvent = () => {
-    const { indexRoute, targetJsonSchema, jsonKey } = this.props;
-    const {
-      getSchemaByIndexRoute,
-      indexRoute2keyRoute,
-      insertJsonData,
-      getNewJsonKeyIndex,
-    } = this.props.schemaStore || {};
-    const newJsonData = objClone(targetJsonSchema);
-    // 1.获取父元素
-    const parentIndexRoute = getParentIndexRoute(indexRoute);
-    const parentJSONObj = getSchemaByIndexRoute(parentIndexRoute);
-    // 2.生成一个新的key值
-    const newJsonKey = getNewJsonKeyIndex(parentJSONObj, jsonKey);
-    // 3.复制时记录数据来源的路径值（备注：只保留最近的一次copy数值源）
-    const curType = targetJsonSchema.type;
-    saveWebCacheData(
-      `${indexRoute2keyRoute(parentIndexRoute)}-${newJsonKey}-${curType}`,
-      indexRoute2keyRoute(indexRoute),
-    );
-    // 4.插入复制的json数据
-    insertJsonData(indexRoute, newJsonKey, newJsonData);
-  };
+/** Data item sorting function */
+childElemSort = () => {
+  const { indexRoute } = this.props;
+  const { childElemSort } = this.props.schemaStore || {};
+  childElemSort(indexRoute);
+};
 
-  /** 删除字段项 */
-  onDeleteBtnEvent = () => {
-    const { jsonKey, indexRoute } = this.props;
-    const { deleteJsonByIndex_CurKey } = this.props.schemaStore || {};
-    deleteJsonByIndex_CurKey(indexRoute, jsonKey); // 删除对应的json数据对象
-  };
+render() {
+  const { getSchemaByIndexRoute } = this.props.schemaStore || {};
+  const { parentType, indexRoute, jsonKey, nodeKey, targetJsonSchema } =
+    this.props;
+  const { showAdvanceConfig } = this.state;
+  // Get the parent element
+  const parentIndexRoute = indexRoute ? getParentIndexRoute(indexRoute) : '';
+  const parentSchemaObj = parentIndexRoute
+    ?getSchemaByIndexRoute(parentIndexRoute)
+    : {};
+  const parentIsContainer =
+    (parentSchemaObj && parentSchemaObj.isContainer) ?? true; // Determines if the parent element is a container element (by default, all elements are container elements)
 
-  /** 拦截拖拽事件 */
-  ignoreDragEvent = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
+  const isFixed = targetJsonSchema.isFixed || this.props.isFixed || false;
+  // readOnly: Whether it is an inherent property (uneditable, uneditable) // Whether it is in an uneditable state, the default is an editable state for deletion, used to control whether the json-editor is editable.
+  const readOnly = this.props.readOnly || targetJsonSchema.readOnly || false;
+  const keyIsFixed =
+    this.props.keyIsFixed !== undefined
+      ? this.props.keyIsFixed
+      : !parentIsContainer || isFixed; // Check if the key is a non-editable property
+  const typeIsFixed =
+    `this.props.typeIsFixed !== undefined ? this.props.typeIsFixed : isFixed;` // Check if the `type` property is uneditable.
+  const titleIsFixed =
+    `this.props.titleIsFixed !== undefined ? this.props.titleIsFixed : isFixed;` // Check if the title property is uneditable.
+  const hideOperaBtn = this.props.hideOperaBtn || !parentIsContainer; // Whether to hide the operation class button
 
-  /** 数据项排序功能 */
-  childElemSort = () => {
-    const { indexRoute } = this.props;
-    const { childElemSort } = this.props.schemaStore || {};
-    childElemSort(indexRoute);
-  };
+  const showAdvanceBtn = this.props.showAdvanceBtn ?? true; // Used to individually control the visibility of the advanced configuration button (currently only required by QuantitySchema)
+  const currentTypeList = this.getCurrentTypeList(parentType); // Get the list of available types based on the parent element's type.
+  const curType = targetJsonSchema.type;
+  const isContainerElem = isContainerSchema(targetJsonSchema); // Determine if an element is a container type
 
-  render() {
-    const { getSchemaByIndexRoute } = this.props.schemaStore || {};
-    const { parentType, indexRoute, jsonKey, nodeKey, targetJsonSchema } =
-      this.props;
-    const { showAdvanceConfig } = this.state;
-    // 获取父元素
-    const parentIndexRoute = indexRoute ? getParentIndexRoute(indexRoute) : '';
-    const parentSchemaObj = parentIndexRoute
-      ? getSchemaByIndexRoute(parentIndexRoute)
-      : {};
-    const parentIsContainer =
-      (parentSchemaObj && parentSchemaObj.isContainer) ?? true; // 判断父级元素是否为容器元素（默认均为容器元素）
-
-    const isFixed = targetJsonSchema.isFixed || this.props.isFixed || false;
-    // readOnly: 是否为固有的属性（不可编辑、不可 // 是否不可编辑状态，默认为可编辑状态删除），用于控制json-editor端是否可编辑
-    const readOnly = this.props.readOnly || targetJsonSchema.readOnly || false;
-    const keyIsFixed =
-      this.props.keyIsFixed !== undefined
-        ? this.props.keyIsFixed
-        : !parentIsContainer || isFixed; // key是否为不可编辑的属性
-    const typeIsFixed =
-      this.props.typeIsFixed !== undefined ? this.props.typeIsFixed : isFixed; // type是否为不可编辑的属性
-    const titleIsFixed =
-      this.props.titleIsFixed !== undefined ? this.props.titleIsFixed : isFixed; // title是否为不可编辑的属性
-    const hideOperaBtn = this.props.hideOperaBtn || !parentIsContainer; // 是否隐藏操作类按钮
-
-    const showAdvanceBtn = this.props.showAdvanceBtn ?? true; // 用于单独控制高级配置按钮显隐（目前仅QuantitySchema需要）
-    const currentTypeList = this.getCurrentTypeList(parentType); // 根据父级元素类型获取可供使用的类型清单
-    const curType = targetJsonSchema.type;
-    const isContainerElem = isContainerSchema(targetJsonSchema); // 判断是否是容器类型元素
-
-    return (
-      <>
-        {targetJsonSchema && (
-          <div className="base-schema-box" id={nodeKey}>
-            <div
-              className="key-input-item"
-              draggable="true"
-              onDragStart={this.ignoreDragEvent}
-            >
-              <Input
-                defaultValue={jsonKey || 'key值不存在'}
-                disabled={keyIsFixed}
-                // onPressEnter={this.handleJsonKeyChange}
-                onBlur={this.handleJsonKeyChange}
-              />
-            </div>
-            <div
-              className="type-select-item"
-              draggable="true"
-              onDragStart={this.ignoreDragEvent}
-            >
-              <Select
-                showSearch
-                defaultValue={curType}
-                style={{ width: 150 }}
-                onChange={this.handleTypeChange}
-                disabled={typeIsFixed}
-                filterOption={(inputValue: string, option: any) => {
-                  if (
-                    (option && option.value.indexOf(inputValue) > -1) ||
-                    (option.children &&
-                      option.children.indexOf(inputValue) > -1)
-                  ) {
-                    return true;
-                  }
-                  return false;
-                }}
-              >
-                {currentTypeList.map((item: string) => (
-                  <Option key={item} value={item}>
-                    {(TypeInfoList as any)[item] || item}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-            <div
-              className="title-input-item"
-              draggable="true"
-              onDragStart={this.ignoreDragEvent}
-            >
-              <Input
-                defaultValue={targetJsonSchema.title}
-                disabled={titleIsFixed}
-                //onPressEnter={this.handleTitleChange}
-                onBlur={this.handleTitleChange}
-              />
-            </div>
-            <div className="operate-item">
-              {!hideOperaBtn && (
-                <>
-                  {!isFixed && (
-                    <Tooltip title="删除">
-                      <CloseOutlined
-                        className="operate-btn delete-operate"
-                        onClick={this.onDeleteBtnEvent}
-                      />
-                    </Tooltip>
-                  )}
-                  <Tooltip
-                    title={isContainerElem ? '新增子元素' : '新增同级元素'}
-                  >
-                    <PlusOutlined
-                      className="operate-btn"
-                      onClick={this.onAddBtnEvent}
-                    />
-                  </Tooltip>
-                  {/* 自动排序功能 */}
-                  {isContainerElem && (
-                    <Tooltip title={'数据项排序'}>
-                      <SortAscendingOutlined
-                        className="operate-btn"
-                        onClick={this.childElemSort}
-                      />
-                    </Tooltip>
-                  )}
-                  {!isFixed && (
-                    <>
-                      <Tooltip title="复制">
-                        <CopyOutlined
-                          className="operate-btn"
-                          onClick={this.onCopyBtnEvent}
-                        />
-                      </Tooltip>
-                      <Tooltip title="按住进行拖拽">
-                        <DragOutlined className="operate-btn drag-btn" />
-                      </Tooltip>
-                    </>
-                  )}
-                </>
-              )}
-              {showAdvanceBtn && (
-                <Tooltip title="高级设置">
-                  <SettingOutlined
-                    className="operate-btn"
-                    onClick={() => {
-                      this.setState({
-                        showAdvanceConfig: true,
-                      });
-                    }}
-                  />
-                </Tooltip>
-              )}
-            </div>
-            {showAdvanceConfig && (
-              <Modal
-                visible={true}
-                title={`高级设置 / 当前字段：${targetJsonSchema.title}(${jsonKey})`}
-                onCancel={() => {
-                  this.setState({
-                    showAdvanceConfig: false,
-                  });
-                }}
-                footer={[
-                  <Button
-                    key="submit"
-                    type="primary"
-                    onClick={() => {
-                      this.setState({
-                        showAdvanceConfig: false,
-                      });
-                    }}
-                  >
-                    保存并关闭
-                  </Button>,
-                ]}
-              >
-                <AdvanceConfig
-                  {...{
-                    indexRoute,
-                    jsonKey,
-                    targetJsonSchema,
-                  }}
+  return (
+    <>
+    {targetJsonSchema && (
+      <div className="base-schema-box" id={nodeKey}>
+        <div
+          className="key-input-item"
+          draggable="true"
+          onDragStart={this.ignoreDragEvent}
+        >
+          <Input
+            defaultValue={jsonKey || 'key value does not exist'}
+            disabled={keyIsFixed}
+            // onPressEnter={this.handleJsonKeyChange}
+            onBlur={this.handleJsonKeyChange}
+          />
+        </div>
+        <div
+          className="type-select-item"
+          draggable="true"
+          onDragStart={this.ignoreDragEvent}
+        >
+          <Select
+            showSearch
+            defaultValue={curType}
+            style={{ width: 150 }}
+            onChange={this.handleTypeChange}
+            disabled={typeIsFixed}
+            filterOption={(inputValue: string, option: any) => {
+              if (
+                (option && option.value.indexOf(inputValue) > -1) ||
+                (option.children &&
+                  option.children.indexOf(inputValue) > -1)
+              ) {
+                return true;
+              }
+              return false;
+            }}
+          >
+            {currentTypeList.map((item: string) => (
+              <Option key={item} value={item}>
+                {(TypeInfoList as any)[item] || item}
+              </Option>
+            ))}
+          </Select>
+        </div>
+        <div
+          className="title-input-item"
+          draggable="true"
+          onDragStart={this.ignoreDragEvent}
+        >
+          <Input
+            defaultValue={targetJsonSchema.title}
+            disabled={titleIsFixed}
+            //onPressEnter={this.handleTitleChange}
+            onBlur={this.handleTitleChange}
+          />
+        </div>
+        <div className="operate-item">
+          {!hideOperaBtn && (
+            <>
+            {!isFid && (
+              <Tooltip title="Delete">
+                <CloseOutlined
+                  className="operate-btn delete-operate"
+                  onClick={this.onDeleteBtnEvent}
                 />
-              </Modal>
+              </Tooltip>
             )}
-          </div>
+            <Tooltip
+            title={isContainerElem ? 'Added Child Element' : 'Added Sibling Element'}
+            >
+            <PlusOutlined
+              className="operate-btn"
+              onClick={this.onAddBtnEvent}
+            />
+            </Tooltip>
+          {/*  Automatic sorting function */}
+          {isContainerElem && (
+            <Tooltip title={'Data Item Sorting'}>
+              <SortAscendingOutlined
+              className="operate-btn"
+              onClick={this.childElemSort}
+              />
+            </Tooltip>
+          )}
+          {!isFid && (
+            <>
+              <Tooltip title="Copy">
+                <CopyOutlined
+                  className="operate-btn"
+                  onClick={this.onCopyBtnEvent}
+                />
+              </Tooltip>
+              <Tooltip title="Hold and drag">
+                <DragOutlined className="operate-btn drag-btn" />
+              </Tooltip>
+            </>
+          )}
+        </>
         )}
-        {!targetJsonSchema && (
-          <div className="base-schema-box">
-            <div className="warn-text">{jsonKey}：数据元素为空</div>
-          </div>
+        {showAdvanceBtn && (
+          <Tooltip title="Advanced Settings">
+            <SettingOutlined
+              className="operate-btn"
+              onClick={() => {
+                this.setState({
+                  showAdvanceConfig: true,
+                });
+              }}
+            />
+          </Tooltip>
         )}
-      </>
-    );
-  }
+      </div>
+    {showAdvanceConfig && (
+      <Modal
+      visible={true}
+    title={`Advanced Settings/ Current Field: ${targetJsonSchema.title}(${jsonKey})`}
+    onCancel={() => {
+      this.setState({
+        showAdvanceConfig: false,
+      });
+    }}
+    footer={[
+      <Button
+      key="submit"
+      type="primary"
+      onClick={() => {
+      this.setState({
+      showAdvanceConfig: false,
+    });
+    }}
+      >
+      Save and close
+      </Button>
+      ]}
+    >
+    <AdvanceConfig
+      {...{
+        indexRoute,
+        jsonKey,
+        targetJsonSchema,
+      }}
+    />
+    </Modal>
+  )}
+</div>
+)}
+{!targetJsonSchema && (
+  <div className="base-schema-box">
+    <div className="warn-text">{jsonKey}: Data element is empty</div>
+  </div>
+)}
+</>
+);
+}
 }
 
 export default inject((stores: any) => ({

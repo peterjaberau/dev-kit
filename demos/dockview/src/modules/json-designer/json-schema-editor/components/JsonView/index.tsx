@@ -2,7 +2,7 @@ import * as React from 'react';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-solarized_light'; // ace-builds
-import { isObject, isArray, isFunction } from '@wibetter/json-utils';
+import { isObject , isArray , isFunction } from ' @wibetter / json - utils ' ;
 import './index.scss';
 
 interface JsonViewProps {
@@ -14,7 +14,7 @@ interface JsonViewProps {
 
 interface JsonViewState {
   isShowWarn: boolean;
-  warnText: string;
+  warningText: string;
   curJSONDataTemp?: any;
 }
 
@@ -23,9 +23,9 @@ class JsonView extends React.PureComponent<JsonViewProps, JsonViewState> {
     super(props);
 
     this.state = {
-      isShowWarn: false, // 用于判断是否显示错误信息
-      warnText: '', // 错误内容
-      curJSONDataTemp: undefined, // 用于记录当前不合规范的json数据
+      isShowWarn: false, // Used to determine whether to display error messages.
+      warnText: '', // Error content
+      curJSONDataTemp: undefined, // Used to record currently non-compliant JSON data
     };
 
     this.handleValueChange = this.handleValueChange.bind(this);
@@ -43,16 +43,16 @@ class JsonView extends React.PureComponent<JsonViewProps, JsonViewState> {
     const { isShowWarn, warnText, curJSONDataTemp } = this.state;
     const readOnly = _readOnly || false;
 
-    // 格式化JSON数据
+    // Format JSON data
     curJsonData = curJsonData !== undefined ? curJsonData : curJsonData || '{}';
-    // 判断当前jsonData是否是对象类型
-    if (isObject(curJsonData) || isArray(curJsonData)) {
+    // Check if the current jsonData is an object type
+    if ( isObject ( curJsonData ) || isArray ( curJsonData )) {
       curJsonData = JSON.stringify(curJsonData, null, 2);
     }
 
     return (
       <div className="json-view-box">
-        {readOnly && <div className="readOnly-btn">[只读]</div>}
+        {readOnly && <div className="readOnly-btn">[Read-only]</div>}
         {isShowWarn && (
           <div className="warning-box code-area-item">
             <div className="warning-img">X</div>
@@ -82,18 +82,18 @@ class JsonView extends React.PureComponent<JsonViewProps, JsonViewState> {
           }}
           onChange={(newJsonData) => {
             try {
-              const newJsonDataTemp = JSON.parse(newJsonData); // 进行格式化（主要用于检查是否是合格的json数据）
-              // 更新jsonData
+              const newJsonDataTemp = JSON.parse(newJsonData); // Perform formatting (mainly used to check if the data is valid JSON)
+              // Update jsonData
               this.handleValueChange(newJsonDataTemp);
               this.setState({
                 isShowWarn: false,
-                curJSONDataTemp: undefined, // 重置
+                curJSONDataTemp: undefined, // Reset
               });
             } catch (err) {
-              // 更新jsonData
+              // Update jsonData
               this.setState({
-                curJSONDataTemp: newJsonData, // 记录当前格式不正确的json数据
-                warnText: err.message,
+                curJSONDataTemp: newJsonData, // Records JSON data that is currently in an incorrect format.
+                warningText: err.message,
                 isShowWarn: true,
               });
             }

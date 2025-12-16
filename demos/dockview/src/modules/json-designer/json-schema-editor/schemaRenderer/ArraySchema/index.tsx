@@ -6,16 +6,16 @@ import BaseFormSchema from '$components/BaseFormSchema/index';
 import MappingRender from '$schemaRenderer/MappingRender';
 import { BaseRendererProps } from '$types/index';
 
-/** 渲染当前字段的表单项（Tree的单项内容） */
+/** Renders the form field for the current field (the content of a single item in the Tree) */
 const getTreeNodeTitleCont = (params: BaseRendererProps) => (
   <BaseFormSchema {...params} />
 );
 
-/** 渲染properties中的元素
- *  通过遍历propertyOrder有序的获取key值，
- *  再根据key值从properties中获取对应的json数据，
- *  parentIndexRoute用于拼接当前元素的完整索引路径。
- * */
+/** Render elements in properties. */
+/* Retrieve key values ​​in an ordered manner by iterating through the propertyOrder.
+  Then, retrieve the corresponding JSON data from the properties file based on the key value.
+* parentIndexRoute is used to concatenate the complete index path of the current element.
+* */
 const propertiesRender = (params: BaseRendererProps) => {
   const {
     propertyOrder,
@@ -26,17 +26,17 @@ const propertiesRender = (params: BaseRendererProps) => {
   } = params;
 
   return propertyOrder.map((key: string, index: number) => {
-    /** 1. 获取当前元素的路径值 */
+    /** 1. Get the path value of the current element */
     const currentIndexRoute = parentIndexRoute
       ? `${parentIndexRoute}-${index}`
       : `${index}`;
-    /** 2. 获取当前元素的key值 */
+    /** 2. Get the key value of the current element */
     const currentJsonKey = key;
-    /** 3. 获取当前元素的json数据对象 */
+    /** 3. Retrieve the JSON data object of the current element */
     const currentSchemaData = properties[currentJsonKey];
-    /** 4. 判断是否是容器类型元素，如果是则禁止选中 */
+    /** 4. Determine if it is a container element; if so, disable selection. */
     const curType = currentSchemaData.type;
-    /** 5. 获取当前元素的id，用于做唯一标识 */
+    /** 5. Get the ID of the current element, used as a unique identifier */
     const nodeKey = `${
       parentNodeKey ? `${parentNodeKey}-` : ''
     }${curType}-${currentJsonKey}`;
@@ -53,7 +53,7 @@ const propertiesRender = (params: BaseRendererProps) => {
   });
 };
 
-/** 渲染items中的元素 */
+/** Render the elements in items */
 const itemsRender = (props: BaseRendererProps) => {
   const { parentType, jsonKey, indexRoute, nodeKey, targetJsonSchema } = props;
 
@@ -89,16 +89,16 @@ const itemsRender = (props: BaseRendererProps) => {
   );
 };
 
-/** Array类型渲染组件 */
+/** Array type rendering component */
 const ArraySchema = (props: BaseRendererProps) => {
   const { jsonKey, indexRoute, nodeKey, targetJsonSchema } = props;
   const curType = targetJsonSchema.type;
 
-  // 获取items的index路径值
+  // Get the index path value of items
   const currentIndexRoute = indexRoute ? `${indexRoute}-0` : '0';
-  // 获取items的jsonKey
+  // Get the jsonKey of items
   const itemsJsonKey = 'items';
-  // 获取items的key路径
+  // Get the key path of items
   const curNodeKey = nodeKey ? `${nodeKey}-${itemsJsonKey}` : itemsJsonKey;
   const items = targetJsonSchema[itemsJsonKey] || {};
 

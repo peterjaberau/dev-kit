@@ -5,16 +5,16 @@ import MappingRender from '$schemaRenderer/MappingRender';
 import { BaseRendererProps } from '$types/index';
 const { TreeNode } = Tree;
 
-/** 渲染当前字段的表单项（Tree的表单项内容） */
+/** Renders the form field for the current field (the form field content of the Tree) */
 const getTreeNodeTitleCont = (params: BaseRendererProps) => {
   return <BaseFormSchema {...params} />;
 };
 
-/** 渲染properties中的元素
- *  通过遍历propertyOrder有序的获取key值，
- *  再根据key值从properties中获取对应的json数据，
- *  parentIndexRoute用于拼接当前元素的完整索引路径。
- * */
+/** Render elements in properties. */
+/* Retrieve key values ​​in an ordered manner by iterating through the propertyOrder.
+  Then, retrieve the corresponding JSON data from the properties file based on the key value.
+* parentIndexRoute is used to concatenate the complete index path of the current element.
+* */
 const propertiesRender = (params: BaseRendererProps) => {
   const {
     propertyOrder,
@@ -27,35 +27,35 @@ const propertiesRender = (params: BaseRendererProps) => {
   } = params;
 
   return propertyOrder.map((key: string, index: number) => {
-    /** 1. 获取当前元素的路径值 */
+    /** 1. Get the path value of the current element */
     const currentIndexRoute = parentIndexRoute
       ? `${parentIndexRoute}-${index}`
       : `${index}`;
-    /** 2. 获取当前元素的key值 */
+    /** 2. Get the key value of the current element */
     const currentJsonKey = key;
-    /** 3. 获取当前元素的json数据对象 */
+    /** 3. Retrieve the JSON data object of the current element */
     const currentSchemaData = properties[currentJsonKey];
-    /** 4. 判断是否是容器类型元素，如果是则禁止选中 */
+    /** 4. Determine if it is a container element; if so, disable selection. */
     const curType = currentSchemaData.type;
-    /** 5. 获取当前元素的id，用于做唯一标识 */
+    /** 5. Get the ID of the current element, used as a unique identifier */
     let nodeKey = `${
       parentNodeKey ? `${parentNodeKey}-` : ''
-    }${curType}-${currentJsonKey}`; // 默认只使用当前format+jsonKey作为nodeKey
+        }${curType}-${currentJsonKey}`; // By default, only the current format + jsonKey is used as the nodeKey.
 
     return MappingRender({
-      ...restProps,
-      parentType,
-      jsonKey: currentJsonKey,
-      indexRoute: currentIndexRoute,
-      key: nodeKey,
-      nodeKey,
-      targetJsonSchema: currentSchemaData,
+    ...restProps,
+    parentType,
+    jsonKey: currentJsonKey,
+    indexRoute: currentIndexRoute,
+    key: nodeKey,
+    nodeKey,
+    targetJsonSchema: currentSchemaData,
     });
-  });
+    });
 };
 
 /** ObjectSchema
- *  Object类型元素渲染组件
+ * Object type element rendering component
  * */
 const ObjectSchema = (props: BaseRendererProps) => {
   const { jsonKey, indexRoute, nodeKey, targetJsonSchema, isOnlyShowChild } =
@@ -63,7 +63,7 @@ const ObjectSchema = (props: BaseRendererProps) => {
   const curType = targetJsonSchema.type;
   const isFixed = targetJsonSchema.isFixed;
 
-  /** 先获取当前节点的properties内容 */
+  /** First, retrieve the properties content of the current node */
   const propertiesContElem = propertiesRender({
     ...props,
     propertyOrder: targetJsonSchema.propertyOrder,
@@ -74,7 +74,7 @@ const ObjectSchema = (props: BaseRendererProps) => {
     isOnlyShowChild,
   });
 
-  /** 节点内容 */
+  /** Node content */
   const TreeNodeElem = (
     <TreeNode
       className={`${curType}-schema schema-item-form`}
@@ -91,8 +91,8 @@ const ObjectSchema = (props: BaseRendererProps) => {
     </TreeNode>
   );
 
-  /** isOnlyShowChild为true时只渲染节点的properties内容
-   * 备注：JSONSchema渲染组件中，已经显示了节点内容（Tree根接口）
+  /** When isOnlyShowChild is true, only the properties content of the node is rendered. */
+   /* Note: The node content (Tree root interface) is already displayed in the JSONSchema rendering component.
    * */
   return isOnlyShowChild ? propertiesContElem : TreeNodeElem;
 };
