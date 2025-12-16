@@ -15,6 +15,7 @@ const registryMeta: any = {
   'canvas-illa': dynamic(() => import("#views/components/panels/custom/canvas-illa"), { ssr: false }),
   'recursive': dynamic(() => import("#views/components/panels/custom/recursive"), { ssr: false }),
   'oas': dynamic(() => import("#views/components/panels/custom/oas"), { ssr: false }),
+  'oas-doc': dynamic(() => import("#views/components/panels/custom/oas-doc"), { ssr: false }),
 
 }
 

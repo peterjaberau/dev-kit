@@ -1,8 +1,8 @@
-import OasApp from '#modules/oas/index'
+import OasDoc from '#modules/oas/doc'
 import { data } from '#modules/oas/data/petstore'
 
 const Index = (props: any) => {
 
-  return <OasApp apiSpec={data} />
+  return <OasDoc apiSpec={data} />
 }
 export default Index

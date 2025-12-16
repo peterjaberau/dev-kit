@@ -3,6 +3,7 @@ import React, { useEffect, useState, useMemo } from "react"
 import Oas from "oas"
 import { parseSchema } from "./utils/parse-schema"
 import { SchemaTreeNode } from "./components/schema-tree-node"
+import EditableSchemaTree from './components/editable-schema-tree'
 
 const Index = ({ apiSpec }: any) => {
   const [schemas, setSchemas]: any = useState(null)
@@ -19,23 +20,19 @@ const Index = ({ apiSpec }: any) => {
     load()
   }, [apiSpec])
 
-  // Build tree nodes once when schemas update
-  const roots = useMemo(() => {
-    if (!schemas) return []
-    return Object.entries(schemas).map(([name, schema]) => parseSchema(name, schema))
-  }, [schemas])
-
-  if (!schemas) {
-    return <div>Loading…</div>
-  }
+  // toggle edit mode in state if desired
+  const [editMode, setEditMode] = useState(false);
 
   return (
-    <ul style={{ listStyle: "none", padding: 0 }}>
-      {roots.map((root, index) => (
-        <SchemaTreeNode key={`${root.name}-${index}`} node={root} />
-      ))}
-    </ul>
-  )
+    <>
+      <button onClick={() => setEditMode(m => !m)}>
+        {editMode ? 'Switch to view' : 'Switch to edit'}
+      </button>
+      <EditableSchemaTree schemas={schemas} editMode={editMode} />
+    </>
+  );
+
+
 }
 
 export default Index

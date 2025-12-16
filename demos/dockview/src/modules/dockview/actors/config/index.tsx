@@ -57,6 +57,7 @@ export const dockViewDynamicPanelConfig = {
             { id: "canvas-illa", name: "Canvas Illa" },
             { id: "recursive", name: "Recursive" },
             { id: "oas", name: "OAS" },
+            { id: "oas-doc", name: "OAS Doc" },
             {
               id: "src",
               name: "src",
