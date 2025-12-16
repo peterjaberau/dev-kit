@@ -55,6 +55,8 @@ export const dockViewDynamicPanelConfig = {
             { id: "renderer", name: "Renderer" },
             { id: "json-viewer-custom", name: "Json Viewer Custom" },
             { id: "canvas-illa", name: "Canvas Illa" },
+            { id: "recursive", name: "Recursive" },
+            { id: "oas", name: "OAS" },
             {
               id: "src",
               name: "src",

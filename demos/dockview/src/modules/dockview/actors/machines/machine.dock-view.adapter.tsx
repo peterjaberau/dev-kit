@@ -56,50 +56,50 @@ export const dockViewAdapterMachine = setup({
         })
       })
 
-      // pick relevant panels from dockViewCanvasIllaConfig
-      const illaCanvasPanelKeys = keys(
-        pickBy(dockViewCanvasIllaConfig.currentApp.components, (c) => c.type === "DOCK_VIEW_PANEL_WIDGET"),
-      )
-      illaCanvasPanelKeys.forEach((item: any) => {
-        const panelConfig: any = dockViewCanvasIllaConfig.currentApp.components[item]
-
-        const panelChildrenConfig =
-          panelConfig?.childrenNode.length > 0 &&
-        dockViewCanvasIllaConfig.currentApp.components[panelConfig.childrenNode[0]]
-
-
-        enqueue.spawnChild("dockViewPanelMachine", {
-          id: item,
-          systemId: item,
-          input: {
-            refs: {
-              internal: {
-                parent: self,
-              },
-              external: {
-                api: context?.refs?.external?.api || null,
-              },
-            },
-            props: {},
-            view: {
-              id: item,
-              view: {
-                type: "DOCK_PANEL",
-                component: "default",
-                title: panelConfig?.props?.title || "Undefined",
-                renderer: panelConfig?.props?.renderer || "always",
-                position: panelConfig?.props?.position || null,
-                params: {
-                  childrenConfig: panelChildrenConfig
-                },
-              },
-            },
-            model: {
-              api: context?.model?.api || null,
-            },
-          },
-        })
-      })
+      // // pick relevant panels from dockViewCanvasIllaConfig
+      // const illaCanvasPanelKeys = keys(
+      //   pickBy(dockViewCanvasIllaConfig.currentApp.components, (c) => c.type === "DOCK_VIEW_PANEL_WIDGET"),
+      // )
+      // illaCanvasPanelKeys.forEach((item: any) => {
+      //   const panelConfig: any = dockViewCanvasIllaConfig.currentApp.components[item]
+      //
+      //   const panelChildrenConfig =
+      //     panelConfig?.childrenNode.length > 0 &&
+      //   dockViewCanvasIllaConfig.currentApp.components[panelConfig.childrenNode[0]]
+      //
+      //
+      //   enqueue.spawnChild("dockViewPanelMachine", {
+      //     id: item,
+      //     systemId: item,
+      //     input: {
+      //       refs: {
+      //         internal: {
+      //           parent: self,
+      //         },
+      //         external: {
+      //           api: context?.refs?.external?.api || null,
+      //         },
+      //       },
+      //       props: {},
+      //       view: {
+      //         id: item,
+      //         view: {
+      //           type: "DOCK_PANEL",
+      //           component: "default",
+      //           title: panelConfig?.props?.title || "Undefined",
+      //           renderer: panelConfig?.props?.renderer || "always",
+      //           position: panelConfig?.props?.position || null,
+      //           params: {
+      //             childrenConfig: panelChildrenConfig
+      //           },
+      //         },
+      //       },
+      //       model: {
+      //         api: context?.model?.api || null,
+      //       },
+      //     },
+      //   })
+      // })
     }),
     handleAddPanel: enqueueActions(({ context, enqueue, event, self }: any) => {
       const api = context?.model?.api

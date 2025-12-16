@@ -13,6 +13,9 @@ const registryMeta: any = {
   'renderer': dynamic(() => import("#views/components/panels/base/renderer"), { ssr: false }),
   'json-viewer-custom': dynamic(() => import("#views/components/panels/custom/json-viewer-custom"), { ssr: false }),
   'canvas-illa': dynamic(() => import("#views/components/panels/custom/canvas-illa"), { ssr: false }),
+  'recursive': dynamic(() => import("#views/components/panels/custom/recursive"), { ssr: false }),
+  'oas': dynamic(() => import("#views/components/panels/custom/oas"), { ssr: false }),
+
 }
 
 export const registryComponentsObj = (id: any) => {

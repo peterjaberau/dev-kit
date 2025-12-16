@@ -11,6 +11,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "oas": "^28.6.2",
     "@emotion/css": "^11.11.2",
     "axios": "^1.1.2",
     "events": "^3.3.0",
