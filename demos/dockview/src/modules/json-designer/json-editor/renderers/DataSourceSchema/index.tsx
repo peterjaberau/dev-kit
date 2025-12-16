@@ -33,27 +33,27 @@ class DataSourceSchema extends React.PureComponent<
     super(props);
 
     this.state = {
-      isShowFilter: false, // 是否显示数据过滤器
-      jsonView: false, // 是否显示code模式
-      isClosed: false, // 是否为关闭状态，默认是开启状态
+      isShowFilter: false, // Whether to display the data filter
+      jsonView: false, // Whether to display code mode
+      isClosed: false, // Whether it is closed; the default is open.
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.switchFilterBtn = this.switchFilterBtn.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  // 显示和隐藏数据过滤器
+  // Show and hide data filters
   switchFilterBtn = () => {
     const { isShowFilter } = this.state;
     this.setState({
@@ -68,15 +68,15 @@ class DataSourceSchema extends React.PureComponent<
       this.props;
     const { jsonView, isClosed, isShowFilter } = this.state;
     const curType = targetJsonSchema.type;
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
 
-    // 获取DataSource中各类数据对象
-    const typeDataObj = targetJsonSchema.properties.type || {}; // type中记录了数据源类型：local or remote
-    const dataObj = targetJsonSchema.properties.data || {}; // 用于录入数据（或者数据源地址）
-    const filterDataObj = targetJsonSchema.properties.filter || {}; // 数据过滤器
-    // 获取当前数据源类型
+    // Retrieve various data objects from the DataSource
+    const typeDataObj = targetJsonSchema.properties.type || {}; // The type field records the data source type: local or remote
+    const dataObj = targetJsonSchema.properties.data || {}; // Used for entering data (or data source address)
+    const filterDataObj = targetJsonSchema.properties.filter || {}; // Data filter
+    // Get the current data source type
     const dataType = typeDataObj.default; // local or remote
-    // 是否显示源码切换按钮
+    // Should the source code switching button be displayed?
     const showCodeViewBtn = targetJsonSchema.showCodeViewBtn ?? true;
 
     const style = targetJsonSchema.style
@@ -134,7 +134,7 @@ class DataSourceSchema extends React.PureComponent<
               event.stopPropagation();
             }}
           >
-            <span className="title-text">数据源配置</span>
+            <span className="title-text">Data Source Configuration</span>
             {isClosed ? (
               <RightOutlined className="close-operate-btn" />
             ) : (
@@ -152,7 +152,7 @@ class DataSourceSchema extends React.PureComponent<
                   event.stopPropagation();
                 }}
               >
-                <Tooltip title={jsonView ? '关闭源码模式' : '开启源码模式'}>
+                <Tooltip title={jsonView ? 'Disable Source Mode' : 'Enable Source Mode'}>
                   <CodeIcon
                     className={jsonView ? 'info-icon active' : 'info-icon'}
                   />
@@ -168,7 +168,7 @@ class DataSourceSchema extends React.PureComponent<
                 <div className="ace-editor-box code-area-item">
                   <Tooltip
                     title={
-                      isShowFilter ? '点击隐藏数据过滤器' : '点击显示数据过滤器'
+                      isShowFilter ? 'Click to hide data filter' : 'Click to show data filter'
                     }
                     placement="top"
                   >
@@ -212,7 +212,7 @@ class DataSourceSchema extends React.PureComponent<
                     nodeKey: `${nodeKey}-data`,
                     targetJsonSchema: dataObj,
                   })}
-                  <Tooltip title="点击设置数据过滤器" placement="top">
+                  <Tooltip title="Click to set data filter" placement="top">
                     <FilterOutlined
                       className="filter-url-btn"
                       onClick={this.switchFilterBtn}
@@ -239,7 +239,7 @@ class DataSourceSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'datasource',
   component: DataSourceSchema,

@@ -1,8 +1,8 @@
-// 全局类型声明
+// Global type declaration
 
 import * as React from 'react';
 
-// JSON Schema 相关类型
+// JSON Schema related types
 export interface JSONSchema {
   type: string;
   title?: string;
@@ -18,7 +18,7 @@ export interface JSONSchema {
   [key: string]: any;
 }
 
-// Store 类型
+// Store type
 export interface SchemaStore {
   pageScreen?: string;
   [key: string]: any;
@@ -45,7 +45,7 @@ export interface StoresInterface {
   JSONEditorStore: JSONStore;
 }
 
-// 组件通用 Props
+// Component General Props
 export interface BaseRendererProps {
   parentType?: string;
   jsonKey?: string;
@@ -59,16 +59,16 @@ export interface BaseRendererProps {
   [key: string]: any;
 }
 
-// MobX 类型声明已在 node_modules/mobx/lib/mobx.d.ts 中定义
+// MobX type declarations are defined in node_modules/mobx/lib/mobx.d.ts
 
 declare module 'mobx-react' {
   export class Provider extends React.Component<any> {}
 }
 
-// lodash 和 antd 的类型声明已在 node_modules 中提供
+//The type declarations for lodash and antd are provided in node_modules.
 
-// SVG 文件类型声明
-declare module '$assets/img/*.svg' {
+// SVG file type declaration
+  declare module '$assets/img/*.svg' {
   const content: React.ComponentType<any>;
   export default content;
 }
@@ -78,7 +78,7 @@ declare module '*.svg' {
   export default content;
 }
 
-// Window 接口扩展
+// Window Interface Extension
 declare global {
   interface Window {
     JSONEditorCustomRenderers?: Record<string, any>;

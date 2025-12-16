@@ -17,7 +17,7 @@ interface ColorFormSchemaState {
   displayColorPicker: boolean;
 }
 /**
- * 新版color类型：颜色选择器
+ * New color type: Color picker
  */
 class ColorFormSchema extends React.PureComponent<
   BaseRendererProps,
@@ -26,26 +26,26 @@ class ColorFormSchema extends React.PureComponent<
   constructor(props: BaseRendererProps) {
     super(props);
     this.state = {
-      renderState: false, // 用于主动触发更新的状态数据
-      displayColorPicker: false, // 是否展示颜色选择器
+      renderState: false, // State data used to actively trigger updates
+      displayColorPicker: false, // Whether to display the color picker
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (color: any) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
@@ -53,20 +53,20 @@ class ColorFormSchema extends React.PureComponent<
     const { rgb } = color; // hex,
     const rgbaVal = `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})`;
 
-    // updateFormValueData && keyRoute && updateFormValueData(keyRoute, hex); // 更新数值(#ffffff数据格式)
-    updateFormValueData && keyRoute && updateFormValueData(keyRoute, rgbaVal); // 更新数值: rgba(255,255,255,100)
-    // 主动触发更新的状态数据
+    // updateFormValueData && keyRoute && updateFormValueData(keyRoute, hex); // Update the value (#ffffff data format)
+    `updateFormValueData && keyRoute && updateFormValueData(keyRoute, rgbaVal); // Update value: rgba(255,255,255,100)`
+    // Actively triggered update of state data
     this.setState({
       renderState: !this.state.renderState,
     });
   };
 
-  /** color清除事件处理器 */
+  /** Clear the color event handler */
   deleteColor = () => {
     const { keyRoute, updateFormValueData } = this.props;
-    updateFormValueData && keyRoute && updateFormValueData(keyRoute, 'initial'); // 更新数值
-    message.success('已移除当前设置的颜色值');
-    // 主动触发更新的状态数据
+    `updateFormValueData && keyRoute && updateFormValueData(keyRoute, 'initial');` // Update the value
+    message.success('The currently set color value has been removed');
+    // Actively triggered update of state data
     this.setState({
       renderState: !this.state.renderState,
     });
@@ -78,11 +78,11 @@ class ColorFormSchema extends React.PureComponent<
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { keyRoute, jsonKey, nodeKey, targetJsonSchema } = this.props;
     const { renderState, displayColorPicker } = this.state;
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    // 从jsonData中获取对应的数值
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // 是否需要设置成两栏布局
+    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // Whether to set it to a two-column layout
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -109,8 +109,8 @@ class ColorFormSchema extends React.PureComponent<
           pageScreen === 'wideScreen'
             ? 'wide-screen-element-warp'
             : `mobile-screen-element-warp ${
-                isNeedTwoCol ? 'two-col-element-warp' : ''
-              }`
+              isNeedTwoCol ? 'two-col-element-warp' : ''
+            }`
         }
         // key={nodeKey}
         id={nodeKey}
@@ -150,7 +150,7 @@ class ColorFormSchema extends React.PureComponent<
             >
               <Popover
                 content={SketchPickerContent}
-                title="颜色选择器"
+                title="Color Picker"
                 trigger="click"
               >
                 <button
@@ -160,7 +160,7 @@ class ColorFormSchema extends React.PureComponent<
                   }}
                 ></button>
               </Popover>
-              <Tooltip title={`点击移除当前颜色值`} placement="top">
+              <Tooltip title={`Click to remove current color value`} placement="top">
                 <CloseOutlined
                   className="delete-bgColor-btn"
                   onClick={(event: React.MouseEvent) => {
@@ -177,7 +177,7 @@ class ColorFormSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'color',
   component: ColorFormSchema,

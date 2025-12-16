@@ -1,7 +1,7 @@
-// 通用mixin
+// General mixin
 $borderColor: #ddd;
 
-// type 为top 或者 bottom
+// type is top or bottom
 @mixin borderTopOrBtm($type) {
   &:after {
     content: '';
@@ -16,7 +16,7 @@ $borderColor: #ddd;
   }
 }
 
-// type为 right 或者 left
+// type is either right or left
 @mixin borderRtOrLt($type) {
   &:after {
     content: '';
@@ -31,14 +31,14 @@ $borderColor: #ddd;
   }
 }
 
-//超出1行显示...
+//More than 1 line to display...
 @mixin ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-// 超出多行显示...
+// Displaying more than one line...
 @mixin ellipsis($num) {
   overflow: hidden;
   display: -webkit-box;

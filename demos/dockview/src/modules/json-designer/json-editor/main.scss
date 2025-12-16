@@ -4,8 +4,8 @@
   position: relative;
   padding: 8px 10px;
 
-  /* 移动端的展示样式：块级展示
-     呈现：screen-element-warp以块级元素模式展示，element-title 和 content-item 分别以上下行块级元素模式展示
+  /* Mobile display style: block-level display
+     Rendering: screen-element-warp is displayed in block-level element mode, and element-title and content-item are displayed in block-level element mode up and down, respectively
    */
   .small-screen-element-warp,
   .mobile-screen-element-warp {

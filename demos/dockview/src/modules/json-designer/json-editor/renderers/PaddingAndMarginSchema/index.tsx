@@ -22,10 +22,10 @@ class PaddingAndMarginSchema extends React.PureComponent<
   constructor(props: BaseRendererProps) {
     super(props);
     this.state = {
-      type: 'all', // 设置类型，支持 自定义设值（custom）、统一设值（all）
-      renderAction: false, // 用于主动触发render的临时变量
+      type: 'all', // Sets the type, supporting custom values ​​(custom) or uniform values ​​(all).
+      renderAction: false, // Temporary variable used to actively trigger render
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.updateBoxStyleState = this.updateBoxStyleState.bind(this);
     this.initBoxStyle = this.initBoxStyle.bind(this);
     this.getStyleValText = this.getStyleValText.bind(this);
@@ -44,7 +44,7 @@ class PaddingAndMarginSchema extends React.PureComponent<
     this.initBoxStyle();
   }
 
-  // 记录box-style的数值（无需实时响应）
+  // Record the value of box-style (no real-time response required)
   boxStyle: any = {
     margin: {
       top: '',
@@ -61,18 +61,18 @@ class PaddingAndMarginSchema extends React.PureComponent<
     quantity: 'px',
   };
 
-  /** 初始化boxStyle的数值 */
+  /** Initialize the value of boxStyle */
   initBoxStyle = () => {
     const { jsonStore } = this.props;
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { keyRoute, targetJsonSchema } = this.props;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
     const marginSchema = targetJsonSchema.properties['margin'];
     const paddingSchema = targetJsonSchema.properties['padding'];
     const quantitySchema = targetJsonSchema.properties['quantity'];
-    const quantity = curJsonData.quantity || quantitySchema.default; // 获取数值单位
+    const quantity = curJsonData.quantity || quantitySchema.default; // Get the unit of the value
     let marginValue = curJsonData.margin || marginSchema.default;
     let paddingValue = curJsonData.padding || paddingSchema.default;
     marginValue = isNumber(marginValue)
@@ -80,9 +80,9 @@ class PaddingAndMarginSchema extends React.PureComponent<
       : marginValue || 'auto';
     paddingValue = isNumber(paddingValue)
       ? paddingValue.toString()
-      : paddingValue || 'auto';
+      : paddingValue || 'car';
 
-    // 重置数值
+    // Reset value
     this.boxStyle.quantity = quantity;
 
     const marginValueArr = marginValue.split(' ');
@@ -114,13 +114,13 @@ class PaddingAndMarginSchema extends React.PureComponent<
     );
   };
 
-  // 处理用户输入的数值（支持默认值设置）
+  // Process user-input values ​​(supports setting default values)
   getStyleValText = (valStr: any, defaultValue?: any) => {
     let curValue: any = 'auto';
     if (valStr === 'auto' || valStr === 0 || valStr === '' || valStr === '0') {
       curValue = valStr;
     } else if (/^\$/.test(valStr)) {
-      // 识别特殊字符串数值: 保留以 $ 开头的数值
+      // Identify special string numbers: Keep numbers that begin with $
       curValue = valStr;
     } else if (valStr) {
       curValue = parseInt(valStr);
@@ -131,13 +131,13 @@ class PaddingAndMarginSchema extends React.PureComponent<
     return curValue;
   };
 
-  // 获取单位设置（含单位）
+  // Get unit settings (including units)
   getStyleVal = (valStr: any) => {
     let curValue: any = '';
     if (valStr === 'auto' || valStr === 0) {
       curValue = valStr;
     } else if (/^\$/.test(valStr)) {
-      // 识别特殊字符串数值: 保留以 $ 开头的数值
+      // Identify special string numbers: Keep numbers that begin with $
       return valStr;
     } else if (valStr === '') {
       curValue = 'auto';
@@ -151,7 +151,7 @@ class PaddingAndMarginSchema extends React.PureComponent<
     return `${curValue}${this.boxStyle.quantity}`;
   };
 
-  /** 设置布局容器的盒子模型数值 */
+  /** Sets the box model values ​​for the layout container */
   setLayoutBoxStyle = (
     newVal: any,
     layoutStyleLock: boolean,
@@ -171,7 +171,7 @@ class PaddingAndMarginSchema extends React.PureComponent<
     }
   };
 
-  /** 布局容器的盒子模型数值联动设值 */
+  /** Sets the values ​​of the box model of the layout container in tandem */
   linkLayoutBoxStyle = (newVal: any, styleKey: string) => {
     const curValue = this.getStyleValText(newVal);
 
@@ -190,13 +190,13 @@ class PaddingAndMarginSchema extends React.PureComponent<
     this.updateBoxStyleState();
   };
 
-  /** 数值变动事件处理器: 更新到 jsonData 中 */
+  /** Value change event handler: Update jsonData */
   updateBoxStyleState = () => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
     const { renderAction } = this.state;
 
-    /** 获取布局容器的盒子模型数值 */
+    /** Get the box model values ​​of the layout container */
     const curBoxValue = {
       margin: this.getMarginValue(),
       padding: this.getPaddingValue(),
@@ -204,26 +204,26 @@ class PaddingAndMarginSchema extends React.PureComponent<
     };
 
     updateFormValueData &&
-      keyRoute &&
-      updateFormValueData(keyRoute, curBoxValue); // 更新单位数值
+    keyRoute &&
+    updateFormValueData(keyRoute, curBoxValue); // Update unit value
 
     this.setState({
       renderAction: !renderAction,
     });
   };
 
-  // 固定单位
+  // Fixed unit
   getQuantity = (curJsonData: any) => {
     const { targetJsonSchema } = this.props;
     const quantitySchema = targetJsonSchema.properties['quantity'];
     return curJsonData.quantity || quantitySchema.default;
   };
 
-  getSelectAfter = (curJsonData: any) => {
+  getSelectAfter = ( curJsonData : any ) => {
     return <span>{this.getQuantity(curJsonData)}</span>;
   };
 
-  // 暂未使用
+  // Not in use yet
   quantityChange = (newVal: any) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
@@ -233,8 +233,8 @@ class PaddingAndMarginSchema extends React.PureComponent<
       quantity: newVal,
     };
     updateFormValueData &&
-      keyRoute &&
-      updateFormValueData(keyRoute, curBoxValue);
+    keyRoute &&
+    updateFormValueData(keyRoute, curBoxValue);
   };
 
   setType = (newVal: string) => {
@@ -257,12 +257,12 @@ class PaddingAndMarginSchema extends React.PureComponent<
     const { pageScreen } = schemaStore || {};
     const { options: _editorOptions, getJSONDataByKeyRoute } = jsonStore || {};
     const { renderAction, type } = this.state;
-    // const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
+    // const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
 
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData = getJSONDataByKeyRoute(keyRoute) || {};
 
-    const autoComplete = targetJsonSchema.autoComplete || false; // 是否支持可选项
+    const autoComplete = targetJsonSchema.autoComplete || false; // Whether to support optional functions
     const curQuantity = this.getQuantity(curJsonData);
 
     const editorOptions = _editorOptions || {};
@@ -270,7 +270,7 @@ class PaddingAndMarginSchema extends React.PureComponent<
     if (editorOptions.GlobalOptions && isArray(editorOptions.GlobalOptions)) {
       defaultOptions = editorOptions.GlobalOptions;
     }
-    const options = targetJsonSchema.options || defaultOptions; // 是否支持可选项
+    const options = targetJsonSchema.options || defaultOptions; // Whether to support optional options
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -379,7 +379,7 @@ class PaddingAndMarginSchema extends React.PureComponent<
                     />
                   )}
                   <div className="Style-PaddingAndMargin-input-label">
-                    外边距
+                    outer margin
                   </div>
                 </div>
                 <div className="Style-PaddingAndMargin-input">
@@ -420,7 +420,7 @@ class PaddingAndMarginSchema extends React.PureComponent<
                     />
                   )}
                   <div className="Style-PaddingAndMargin-input-label">
-                    内边距
+                    Inner margin
                   </div>
                 </div>
               </div>
@@ -931,7 +931,7 @@ class PaddingAndMarginSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'padding-margin',
   component: PaddingAndMarginSchema,

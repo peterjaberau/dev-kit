@@ -3,8 +3,8 @@ import { inject, observer } from 'mobx-react';
 import { Collapse, Tabs } from 'antd';
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
-import MappingRender from '$core/MappingRender'; // 普通模式
-// import MappingRender from '$core/MappingRenderV2'; // 按需加载模式
+import MappingRender from '$core/MappingRender'; // Normal mode
+// import MappingRender from '$core/MappingRenderV2'; // On-demand loading mode
 import JsonView from '$components/JsonView/index';
 import {
   isEmptySchema,
@@ -49,46 +49,46 @@ class JSONDataEditor extends React.PureComponent<
     super(props);
 
     this.state = {
-      jsonView: props.jsonView || false, // 是否显示code模式，默认不显示code模式
-      viewStyle: this.catchViewStyle(props.viewStyle || 'fold'), // 默认为fold（可折叠面板），可选：tabs:（tabs切换面板）
+      jsonView: props.jsonView || false, // Whether to display code mode; code mode is not displayed by default.
+      viewStyle: this.catchViewStyle(props.viewStyle || 'fold'), // Defaults to 'fold' (collapseable panel), optional: tabs: (tabs switch panels)
     };
 
     const { initJSONSchemaData, setPageScreen } = this.props.schemaStore || {};
     const { initJSONData, initOnChange, setDynamicDataList, setOptions } =
-      this.props.jsonStore || {};
+    this.props.jsonStore || {};
 
-    // 根据props.schemaData对jsonSchema进行初始化
+    // Initialize the jsonSchema based on props.schemaData
     if (props.schemaData) {
       initJSONSchemaData(props.schemaData);
-      // 根据props.jsonData对jsonData进行初始化
+      // Initialize jsonData based on props.jsonData
       initJSONData(props.jsonData);
     } else if (props.jsonData) {
-      // schemaData为空，jsonData不为空时，尝试通过jsonData转jsonSchema
-      const jsonSchema = json2schema(props.jsonData); // 通过json转换schema
+      // When schemaData is empty but jsonData is not empty, try converting jsonData to jsonSchema.
+      const jsonSchema = json2schema(props.jsonData); // Convert schema from JSON
       initJSONSchemaData(jsonSchema);
-      // 根据props.jsonData对jsonData进行初始化
+      // Initialize jsonData based on props.jsonData
       initJSONData(props.jsonData);
     }
-    // 读取宽屏和小屏的配置
+    // Read the configuration for widescreen and small screen
     if (props.wideScreen) {
       setPageScreen(props.wideScreen);
     }
-    // 记录onChange事件
+    // Record the onChange event
     if (props.onChange) {
       initOnChange(props.onChange);
     }
 
-    // 获取dynamicDataList（动态数据源）
+    // Get dynamicDataList (dynamic data source)
     if (props.dynamicDataList) {
       setDynamicDataList(props.dynamicDataList);
     }
-    // 配置类数据
+    // Configuration data
     if (props.options) {
       setOptions(props.options);
     }
   }
 
-  /* 获取schema展示风格模式 */
+  /* Get schema display style mode */
   catchViewStyle = (viewStyle: string) => {
     switch (viewStyle) {
       case 'fold':
@@ -109,21 +109,21 @@ class JSONDataEditor extends React.PureComponent<
       setDynamicDataList,
       setOptions,
     } = this.props.jsonStore || {};
-    /** 1. 先初始化schemaData，如果jsonData和schemaData的格式不一致，则以schemaData为准 */
+    /** 1. First initialize schemaData. If the formats of jsonData and schemaData are inconsistent, schemaData shall prevail. */
     if (!isEqualByIdT(nextProps.schemaData, this.props.schemaData)) {
       JSONSchemaChange(nextProps.schemaData);
     }
-    /** 2. 初始化jsonData */
+    /** 2. Initialize jsonData */
     if (!isEqual(nextProps.jsonData, JSONEditorObj)) {
       initJSONData(nextProps.jsonData);
     }
-    // 读取code模式配置
+    // Read code mode configuration
     if (!isEqual(nextProps.jsonView, this.props.jsonView)) {
       this.setState({
         jsonView: nextProps.jsonView ?? false,
       });
     }
-    // 读取展示模式配置
+    // Read display mode configuration
     if (!isEqual(nextProps.viewStyle, this.props.viewStyle)) {
       this.setState({
         viewStyle: this.catchViewStyle(nextProps.viewStyle),
@@ -132,12 +132,12 @@ class JSONDataEditor extends React.PureComponent<
     if (!isEqual(nextProps.wideScreen, this.props.wideScreen)) {
       setPageScreen(nextProps.wideScreen);
     }
-    // 记录onChange事件
+    // Record the onChange event
     if (!isEqual(nextProps.onChange, this.props.onChange)) {
       initOnChange(nextProps.onChange);
     }
 
-    // 获取dynamicDataList（动态数据源）
+    // Get dynamicDataList (dynamic data source)
     if (!isEqual(nextProps.dynamicDataList, this.props.dynamicDataList)) {
       setDynamicDataList(nextProps.dynamicDataList);
     }
@@ -147,17 +147,17 @@ class JSONDataEditor extends React.PureComponent<
     }
   }
 
-  /* schema一级字段Title显示 */
+  /* Display the Title field, the first-level field in the schema */
   renderHeader = (format: string) => {
     switch (format) {
       case 'func':
-        return '功能设置';
+        return 'Function Settings';
       case 'style':
-        return '样式设置';
+        return 'Style Settings';
       case 'data':
-        return '数据设置';
+        return 'Data Settings';
       default:
-        return '属性设置';
+        return 'property settings';
     }
   };
 
@@ -170,19 +170,19 @@ class JSONDataEditor extends React.PureComponent<
       jsonChange,
     } = jsonStore || {};
     const { jsonView, viewStyle } = this.state;
-    const isEmpty = isEmptySchema(jsonSchema); // 判断是否是空的schema
-    const isStructured = isStructuredSchema(jsonSchema); // 判断是否是结构化的schema数据
+    const isEmpty = isEmptySchema(jsonSchema); // Check if the schema is empty
+    const isStructured = isStructuredSchema(jsonSchema); // Determine if the data is structured schema data
     /**
-     * 备注：此处单独将object进行渲染，主要是为了将Tree根组件抽离出来（以便在此将组件专用的配置数据分类展示），
+     * Note: The object is rendered separately here mainly to extract the Tree root component (so that the component-specific configuration data can be displayed here in categories).
      * */
     return (
       <div className="json-editor-container">
         {isEmpty && (
-          <p className="json-editor-empty">当前jsonSchema没有数据内容</p>
+          <p className="json-editor-empty">The current jsonSchema contains no data</p>
         )}
         {!isEmpty && !jsonView && (
           <>
-            {/* 作为结构性schema进行渲染 */}
+            {/* Rendered as a structural schema */}
             {isStructured && (
               <>
                 {viewStyle === 'fold' && (
@@ -193,17 +193,17 @@ class JSONDataEditor extends React.PureComponent<
                   >
                     {jsonSchema.propertyOrder.map(
                       (key: string, index: number) => {
-                        /** 1. 获取当前元素的路径值 */
+                        /** 1. Get the path value of the current element */
                         const currentIndexRoute = index;
-                        const currentKeyRoute = key; // key路径值，后续用于从jsonData中提取当前元素的数值
-                        /** 2. 获取当前元素的key值 */
+                        const currentKeyRoute = key; // key is the path value, which will be used later to extract the value of the current element from jsonData.
+                        /** 2. Get the key value of the current element */
                         const currentJsonKey = key;
-                        /** 3. 获取当前元素的json结构对象 */
+                        /** 3. Get the JSON structure object of the current element */
                         const currentSchemaData =
                           jsonSchema.properties[currentJsonKey];
                         const curType = currentSchemaData.type;
 
-                        /** 获取当前元素的id，用于做唯一标识 */
+                        /** Get the ID of the current element, used as a unique identifier */
                         const nodeKey = `${lastUpdateTime}-${jsonLastUpdateTime}-${curType}-${currentJsonKey}`;
 
                         if (
@@ -247,17 +247,17 @@ class JSONDataEditor extends React.PureComponent<
                   >
                     {jsonSchema.propertyOrder.map(
                       (key: string, index: number) => {
-                        /** 1. 获取当前元素的路径值 */
+                        /** 1. Get the path value of the current element */
                         const currentIndexRoute = index;
-                        const currentKeyRoute = key; // key路径值，后续用于从jsonData中提取当前元素的数值
-                        /** 2. 获取当前元素的key值 */
+                        const currentKeyRoute = key; // key is the path value, which will be used later to extract the value of the current element from jsonData.
+                        /** 2. Get the key value of the current element */
                         const currentJsonKey = key;
-                        /** 3. 获取当前元素的json结构对象 */
+                        /** 3. Get the JSON structure object of the current element */
                         const currentSchemaData =
                           jsonSchema.properties[currentJsonKey];
                         const curType = currentSchemaData.type;
 
-                        /** 5. 获取当前元素的id，用于做唯一标识 */
+                        /** 5. Get the ID of the current element, used as a unique identifier */
                         const nodeKey = `${lastUpdateTime}-${jsonLastUpdateTime}-${curType}-${currentJsonKey}`;
 
                         if (
@@ -296,7 +296,7 @@ class JSONDataEditor extends React.PureComponent<
                 )}
               </>
             )}
-            {/* 作为普通schema数据进行渲染 */}
+            {/* Render as regular schema data */}
             {!isStructured && (
               <>
                 {MappingRender({

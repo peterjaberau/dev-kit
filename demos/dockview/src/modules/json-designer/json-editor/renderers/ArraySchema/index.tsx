@@ -34,9 +34,9 @@ interface ArraySchemaState {
 }
 
 /**
- * 数组类型：用于展示数组类型的配置字段
- * 功能点：拖拽排序【新增】、上下移动子项、新增子项、复制子项、删除子项、折叠、源码模式切换
- * 展示：以折叠面板形式展示
+ * Array type: Configuration field used to display array type
+ * Features: Drag and drop sorting [Add], move sub-items up and down, add sub-items, copy sub-items, delete sub-items, collapse, source code mode switching
+ * Display: Presented in the form of a folding panel
  */
 class ArraySchema extends React.PureComponent<
   BaseRendererProps,
@@ -46,12 +46,12 @@ class ArraySchema extends React.PureComponent<
     super(props);
 
     this.state = {
-      currentActiveArrIndex: -1, // 记录当前展开的数组项，默认展开第一个数组项
-      jsonView: false, // 是否显示code模式
-      isClosed: false, // 是否为关闭状态，默认是开启状态
-      hoverIndex: -1, // 记录当前处于hover中的数据项
+      currentActiveArrIndex: -1, // Records the currently expanded array item; by default, the first array item is expanded.
+      jsonView: false, // Whether to display code mode
+      isClosed: false, // Whether it is closed; the default is open.
+      hoverIndex: -1, // Records the data item currently hovering over.
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.addArrayItem = this.addArrayItem.bind(this);
     this.deleteArrItem = this.deleteArrItem.bind(this);
     this.elemHoverEnterEvent = this.elemHoverEnterEvent.bind(this);
@@ -61,46 +61,46 @@ class ArraySchema extends React.PureComponent<
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 添加数组项 */
+  /** Add array item */
   addArrayItem = (keyRoute: string, curArr: any[], curArrIndex: number) => {
     const { addArrayItem } = this.props.jsonStore || {};
     const maximumChild = this.props.targetJsonSchema['maximum-child'];
     if (curArr && maximumChild && curArr.length >= maximumChild) {
-      message.warning(`添加失败，最多可添加${maximumChild}个子项`);
+      message.warning(`Add failed, a maximum of ${maximumChild} child items can be added`);
     } else {
       addArrayItem(keyRoute, curArrIndex);
     }
   };
 
-  /** 删除数组项 */
+  /** Delete array item */
   deleteArrItem = (keyRoute: string, arrIndex: number, curArr: any[]) => {
     const { deleteArrayIndex } = this.props.jsonStore || {};
     const minimumChild = this.props.targetJsonSchema['minimum-child'];
     if (curArr && minimumChild && curArr.length <= minimumChild) {
-      message.warning(`删除失败，至少需要保留${minimumChild}个子项`);
+      message.warning(`Deletion failed; at least ${minimumChild} child items must be retained`);
     } else {
       deleteArrayIndex(keyRoute, arrIndex);
     }
   };
 
   /**
-   * 各类元素的onMouseEnter事件
+   * The onMouseEnter event for various elements
    */
   elemHoverEnterEvent = (event: React.MouseEvent, currentIndex: number) => {
     event.stopPropagation();
 
-    // 当前元素没有在选中态，且不是上一次hover态的元素
+    // The current element is not selected and is not the element that was last hovered over.
     if (currentIndex !== this.state.hoverIndex) {
       this.setState({
         hoverIndex: currentIndex,
@@ -109,11 +109,11 @@ class ArraySchema extends React.PureComponent<
   };
 
   /**
-   * 各类元素的onMouseLeave事件
+   * The onMouseLeave event of various elements
    */
   elemHoverLeaveEvent = (event: React.MouseEvent, currentIndex: number) => {
     event.stopPropagation();
-    // 当前元素没有在选中态，且不是上一次hover态的元素
+    // The current element is not selected and is not the element that was last hovered over.
     if (currentIndex === this.state.hoverIndex) {
       this.setState({
         hoverIndex: -1,
@@ -122,14 +122,14 @@ class ArraySchema extends React.PureComponent<
   };
 
   /**
-   * 获取当前数组项的Title：数组项默认使用其第一个非空子项的数值作为title
+   * Get the title of the current array item: By default, the title of an array item is the value of its first non-empty child item.
    */
   getArrItemTitle = (arrItem: any) => {
     if (arrItem && isObject(arrItem)) {
       const arrItemKeys = Object.keys(arrItem);
       for (let index = 0, size = arrItemKeys.length; index < size; index++) {
         const itemVal = arrItem[arrItemKeys[index]];
-        // 只有不为空时才赋值（忽略URL类型数值）
+        // Only assign a value if it is not empty (ignore URL type numeric values)
         if (
           itemVal &&
           isString(itemVal) &&
@@ -155,7 +155,7 @@ class ArraySchema extends React.PureComponent<
     event.preventDefault();
     event.stopPropagation();
 
-    // 缓存当前折叠状态
+    // Cache the current collapsed state
     saveJSONEditorCache(keyRoute!, String(!isClosed));
   }
 
@@ -170,7 +170,7 @@ class ArraySchema extends React.PureComponent<
     event.preventDefault();
     event.stopPropagation();
 
-    // 缓存当前折叠状态
+    // Cache the current collapsed state
     saveJSONEditorCache(`${keyRoute}-activeArrIndex`, newArrIndex);
   }
 
@@ -193,17 +193,17 @@ class ArraySchema extends React.PureComponent<
       currentActiveArrIndex: _currentActiveArrIndex,
     } = this.state;
     const curType = targetJsonSchema.type;
-    // 是否显示源码切换按钮
+    // Should the source code switching button be displayed?
     const showCodeViewBtn = targetJsonSchema.showCodeViewBtn ?? true;
-    // 从jsonData中获取对应的数值
-    let curJsonData = getJSONDataByKeyRoute(keyRoute); // json内容数据
+    // Retrieve the corresponding value from jsonData
+    let curJsonData = getJSONDataByKeyRoute(keyRoute); // JSON content data
     if (!curJsonData || curJsonData.length === 0 || !isArray(curJsonData)) {
-      // 添加一个默认的数组数据
+      // Add a default array of data
       curJsonData = [{}];
     }
-    const arrayItemsDataObj = targetJsonSchema.items; // schema数据
+    const arrayItemsDataObj: any = targetJsonSchema.items; // schema数据
 
-    // 获取前端缓存中的折叠数据
+    // Retrieve folded data from the front-end cache
     let isClosed = _isClosed;
     const collapseCacheData = getJSONEditorCache(keyRoute!);
     if (collapseCacheData !== undefined) {
@@ -217,7 +217,7 @@ class ArraySchema extends React.PureComponent<
       currentActiveArrIndex = activeArrIndexCache;
     }
 
-    const boxTitle = targetJsonSchema.boxTitle ?? '数据配置';
+    const boxTitle = targetJsonSchema.boxTitle ?? 'Data Configuration';
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -280,7 +280,7 @@ class ArraySchema extends React.PureComponent<
                   event.stopPropagation();
                 }}
               >
-                <Tooltip title={jsonView ? '关闭源码模式' : '开启源码模式'}>
+                <Tooltip title={jsonView ? 'Disable Source Mode' : 'Enable Source Mode'}>
                   <CodeIcon
                     className={jsonView ? 'info-icon active' : 'info-icon'}
                   />
@@ -288,7 +288,7 @@ class ArraySchema extends React.PureComponent<
               </div>
             )}
 
-            <Tooltip title="添加数据项">
+            <Tooltip title="Add Data Item">
               <PlusOutlined
                 // src={addElemIcon}
                 className="array-add-child-btn"
@@ -313,7 +313,7 @@ class ArraySchema extends React.PureComponent<
                 const curKeyRoute = keyRoute
                   ? `${keyRoute}-${arrIndex}`
                   : `${arrIndex}`;
-                const arrTitle = this.getArrItemTitle(arrItem); // 获取数组项第一个非空元素的值
+                const arrTitle = this.getArrItemTitle(arrItem); // Get the value of the first non-empty element of the array item
                 return (
                   <div className="array-item" key={curKeyRoute}>
                     <div
@@ -344,13 +344,13 @@ class ArraySchema extends React.PureComponent<
                           <DownOutlined className="close-operate-btn array-operate-btn" />
                         )}
                         <Tooltip
-                          title={`删除${arrayItemsDataObj.title}/${arrIndex + 1}`}
+                          title={`Delete${arrayItemsDataObj.title}/${arrIndex + 1}`}
                         >
                           <Popconfirm
                             placement="top"
-                            title={`确定要删除${arrayItemsDataObj.title}/${
+                            title={`Confirm you want to delete ${arrayItemsDataObj.title}/${
                               arrIndex + 1
-                            }吗？`}
+                            }?`}
                             onCancel={(event?: React.MouseEvent) => {
                               event?.preventDefault();
                               event?.stopPropagation();
@@ -364,8 +364,8 @@ class ArraySchema extends React.PureComponent<
                               event?.preventDefault();
                               event?.stopPropagation();
                             }}
-                            okText="确定"
-                            cancelText="取消"
+                            okText="OK"
+                            cancelText="Cancel"
                           >
                             <DeleteIcon
                               // <img src={deleteIcon}
@@ -377,25 +377,25 @@ class ArraySchema extends React.PureComponent<
                             />
                           </Popconfirm>
                         </Tooltip>
-                        <Tooltip
-                          title={`复制${arrayItemsDataObj.title}/${arrIndex + 1}`}
-                        >
-                          <AddElemIcon
-                            // <img src={addElemIcon}
-                            className="array-operate-btn"
-                            onClick={(event: React.MouseEvent) => {
+                        <Tooltip title={'Copy'}>
+
+
+                            <AddElemIcon
+                              className="array-operate-btn"
+                              onClick={(event: React.MouseEvent) => {
                               this.addArrayItem(
                                 keyRoute!,
                                 curJsonData,
                                 arrIndex,
-                              ); // curArrIndex
+                                );
                               event.preventDefault();
                               event.stopPropagation();
                             }}
-                          />
-                        </Tooltip>
-                        {arrIndex !== 0 && (
-                          <Tooltip title={`向上移动`}>
+                              />
+                              </Tooltip>
+
+                            {arrIndex !== 0 && (
+                              <Tooltip title={'Move Up'}>
                             <ArrowUpOutlined
                               className="array-operate-btn"
                               onClick={(
@@ -406,10 +406,11 @@ class ArraySchema extends React.PureComponent<
                                 event?.stopPropagation();
                               }}
                             />
-                          </Tooltip>
-                        )}
-                        {arrIndex !== curJsonData.length - 1 && (
-                          <Tooltip title={`向下移动`}>
+                        </Tooltip>
+                            )}
+                        {
+                          arrIndex !== curJsonData.length - 1 && (
+                          <Tooltip title={'Move Down'}>
                             <ArrowDownOutlined
                               className="array-operate-btn"
                               onClick={(event: React.MouseEvent) => {
@@ -425,9 +426,7 @@ class ArraySchema extends React.PureComponent<
                       </div>
                     </div>
                     <div
-                      className={`array-item-content ${
-                        currentActiveArrIndex === arrIndex ? 'open' : 'closed'
-                      }`}
+                      className={`array-item-content ${currentActiveArrIndex === arrIndex ? 'open' : 'closed'}`}
                       // key={curNodeKey}
                       // id={curNodeKey}
                     >
@@ -453,7 +452,7 @@ class ArraySchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'array',
   component: ArraySchema,

@@ -1,31 +1,31 @@
 import { TypeDataList } from '@wibetter/json-utils';
 
-// 判断是否是URL地址类型
+// Check if it is a URL address type
 export function isURL(s: string): boolean {
   return /^http[s]?:\/\/.*/.test(s);
 }
-// 判断是否是字符串类型
+// Check if it is a string type
 export function isString(o: any): boolean {
   return Object.prototype.toString.call(o).slice(8, -1) === 'String';
 }
-// 判断是否是数字类型
+// Check if it is a number type
 export function isNumber(value: any): boolean {
   return (
     typeof value === 'number' ||
     Object.prototype.toString.call(value) === '[object Number]'
   );
 }
-// 判断是否是Boolean类型
+// Check if it is a Boolean type
 export function isBoolean(o: any): boolean {
   return Object.prototype.toString.call(o).slice(8, -1) === 'Boolean';
 }
 
-// 判断是否是年月日的时间类型
+// Determine if it is a year-month-day time type
 export function isDateStr(dateStr: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(dateStr);
 }
 
-// 判断是否是年月日时分的时间类型
+// Determine if it is a year, month, day, hour, or minute time type
 export function isDateTimeStr(dateStr: string): boolean {
   return (
     /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/.test(dateStr) ||
@@ -33,13 +33,13 @@ export function isDateTimeStr(dateStr: string): boolean {
   );
 }
 
-// 判断是否是时分的时间类型
+// Determine if it is a time-division time type
 export function isTimeStr(dateStr: string): boolean {
   return /^\d{2}:\d{2}:\d{2}$/.test(dateStr) || /^\d{2}:\d{2}$/.test(dateStr);
 }
 
 /**
- *  判断是否是数组类型
+ * Determine if it is an array type
  * */
 export function isArray(curObj: any): boolean {
   let isArray = false;
@@ -50,8 +50,8 @@ export function isArray(curObj: any): boolean {
 }
 
 /**
- *  判断是否是select多选类型(基础类型的array)
- *  select类型一定是一个array类型
+ * Determine if it is a select type (an array of basic types)
+ * The select type must be an array type.
  * */
 export function isSelect(curObj: any): boolean {
   if (!isArray(curObj)) {
@@ -60,7 +60,7 @@ export function isSelect(curObj: any): boolean {
   for (let ind = 0, size = curObj.length; ind < size; ind++) {
     const arrItem = curObj[ind];
     if (!isString(arrItem)) {
-      // 只要有一个不是string类型就认为不是select
+      // If any element is not a string, it is considered not a select.
       return false;
     }
   }
@@ -68,7 +68,7 @@ export function isSelect(curObj: any): boolean {
 }
 
 /**
- *  判断是否是对象类型
+ * Determine if it is an object type
  * */
 export function isObject(curObj: any): boolean {
   let isObject = false;
@@ -79,11 +79,11 @@ export function isObject(curObj: any): boolean {
 }
 
 /**
- *  判断是否是单位类型
+ * Determine if it is a unit type
  * */
 export function isQuantity(val: any): boolean {
   let isObject = false;
-  // 获取当前计量单位元素可选的单位类型
+  // Get the available unit types for the current unit of measurement element
   const quantityList = TypeDataList.quantity.properties.quantity.enum;
   if (quantityList.indexOf(val) >= 0) {
     isObject = true;
@@ -92,14 +92,14 @@ export function isQuantity(val: any): boolean {
 }
 
 /**
- *  判断是否是颜色值
+ * Determine if it is a color value
  * */
 export function isColor(colorVal: string): boolean {
   return /^#[0-9a-f]{3,6}$/.test(colorVal);
 }
 
 /**
- *  判断是否是函数类型
+ * Determine if it is a function type
  * */
 export function isFunction(curObj: any): boolean {
   let isFunction = false;

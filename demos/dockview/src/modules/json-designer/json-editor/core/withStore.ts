@@ -12,7 +12,7 @@ export default function withStore<P extends object = {}>(
 ): React.ComponentType<
   P & { schemaStore?: SchemaStore; jsonStore?: JSONStore }
 > {
-  // 注入 store
+  // Inject store
   const witchStoreRenderer = inject((stores: Stores) => ({
     schemaStore: stores.JSONSchemaStore,
     jsonStore: stores.JSONEditorStore,

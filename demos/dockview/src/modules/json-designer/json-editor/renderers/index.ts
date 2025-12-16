@@ -1,4 +1,4 @@
-// 内置的渲染器
+// Built-in renderer
 import '$renderers/ArraySchema/index';
 import '$renderers/ObjectSchema/index';
 import '$renderers/DataSourceSchema/index';

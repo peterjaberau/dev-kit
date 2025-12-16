@@ -12,24 +12,24 @@ import { isNeedTwoColWarpStyle, buildStyle } from '$utils/index';
 
 class QuantitySchema extends React.PureComponent<BaseRendererProps> {
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleInputChangeV1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
     const { value } = event.target;
     const curKeyRoute = keyRoute ? `${keyRoute}-unit` : 'unit';
-    updateFormValueData(curKeyRoute, Number(value)); // 更新单位数值
+    updateFormValueData(curKeyRoute, Number(value)); // Update unit value
   };
 
   handleInputChange = (event: any) => {
@@ -43,10 +43,10 @@ class QuantitySchema extends React.PureComponent<BaseRendererProps> {
     const curKeyRoute = keyRoute ? `${keyRoute}-unit` : 'unit';
 
     if (this.props.onChange) {
-      // 如果有监听数据变动函数则优先触发
+      // If there is a function to monitor data changes, it will be triggered first.
       this.props.onChange(value);
     } else {
-      updateFormValueData(curKeyRoute, value); // 更新数值
+      updateFormValueData(curKeyRoute, value); // Update the value
     }
   };
 
@@ -62,7 +62,7 @@ class QuantitySchema extends React.PureComponent<BaseRendererProps> {
     }
   };
 
-  // 单位切换
+  // Unit switching
   getUnitSelect = () => {
     const { targetJsonSchema } = this.props;
     const quantitySchema = targetJsonSchema.properties['quantity'];
@@ -99,24 +99,24 @@ class QuantitySchema extends React.PureComponent<BaseRendererProps> {
     const { pageScreen } = schemaStore || {};
     const { options: _editorOptions, getJSONDataByKeyRoute } = jsonStore || {};
     const { keyRoute, jsonKey, nodeKey, targetJsonSchema } = this.props;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    /** 获取quantity中的数值对象（默认第一个就是数值对象） */
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    /** Retrieves the numeric object from the quantity (the first one is the numeric object by default) */
     const unitJsonSchema = targetJsonSchema.properties['unit'];
     // const curQuantity = curJsonData.quantity;
     // const unit = curQuantity === 'percent' ? '%' : curQuantity;
     // const unitSuffix = <span>{unit}</span>;
-    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // 是否需要设置成两栏布局
-    const autoComplete = targetJsonSchema.autoComplete || false; // 是否支持可选项
+    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // Whether to set it to a two-column layout
+    const autoComplete = targetJsonSchema.autoComplete || false; // Whether to support optional functions
 
     const editorOptions = _editorOptions || {};
     let defaultOptions = [];
     if (editorOptions.GlobalOptions && isArray(editorOptions.GlobalOptions)) {
       defaultOptions = editorOptions.GlobalOptions;
     }
-    const options = targetJsonSchema.options || defaultOptions; // 是否支持可选项
+    const options = targetJsonSchema.options || defaultOptions; // Whether to support optional options
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -134,8 +134,8 @@ class QuantitySchema extends React.PureComponent<BaseRendererProps> {
           pageScreen === 'wideScreen'
             ? 'wide-screen-element-warp'
             : `mobile-screen-element-warp ${
-                isNeedTwoCol ? 'two-col-element-warp' : ''
-              }`
+              isNeedTwoCol ? 'two-col-element-warp' : ''
+            }`
         }
         // key={nodeKey}
         id={nodeKey}
@@ -174,8 +174,8 @@ class QuantitySchema extends React.PureComponent<BaseRendererProps> {
                   placeholder={
                     unitJsonSchema.placeholder ||
                     targetJsonSchema.placeholder ||
-                    `请输入${unitJsonSchema.title}` ||
-                    `请输入${targetJsonSchema.title}`
+                    `Please enter ${unitJsonSchema.title}` ||
+                    `Please enter ${targetJsonSchema.title}`
                   }
                   defaultValue={curJsonData.unit || unitJsonSchema.default}
                   onChange={this.handleValueChange}
@@ -191,8 +191,8 @@ class QuantitySchema extends React.PureComponent<BaseRendererProps> {
                 placeholder={
                   unitJsonSchema.placeholder ||
                   targetJsonSchema.placeholder ||
-                  `请输入${unitJsonSchema.title}` ||
-                  `请输入${targetJsonSchema.title}`
+                  `Please enter ${unitJsonSchema.title}` ||
+                  `Please enter ${targetJsonSchema.title}`
                 }
                 defaultValue={curJsonData.unit || unitJsonSchema.default}
                 onPressEnter={this.handleInputChange}
@@ -206,7 +206,7 @@ class QuantitySchema extends React.PureComponent<BaseRendererProps> {
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'quantity',
   component: QuantitySchema,

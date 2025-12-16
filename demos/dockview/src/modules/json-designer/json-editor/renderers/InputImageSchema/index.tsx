@@ -26,22 +26,22 @@ class InputImageSchema extends React.PureComponent<
     this.state = {
       loading: false,
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleImageChange = this.handleImageChange.bind(this);
     this.handleDeleteChange = this.handleDeleteChange.bind(this);
   }
 
-  // 方式1：在class组件中声明静态属性static，且必须是contextType，确保当前组件可以使用全局context中的数据（this.context不为空）
+  // Method 1: Declare a static property in the class component, and it must be contextType, to ensure that the current component can use data in the global context (this.context is not empty).
   // static contextType = ThemeContext;
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
@@ -60,11 +60,11 @@ class InputImageSchema extends React.PureComponent<
       const responseData = fileInfo.file.response || {};
       if (responseData.url) {
         updateFormValueData &&
-          keyRoute &&
-          updateFormValueData(keyRoute, responseData.url);
+        keyRoute &&
+        updateFormValueData(keyRoute, responseData.url);
       }
     } else if (fileInfo.file.status === 'error') {
-      message.error(`${fileInfo.file.name} 图片上传失败。`);
+      message.error(`${fileInfo.file.name} Image upload failed.`);
     }
     this.setState({
       loading: false,
@@ -84,12 +84,12 @@ class InputImageSchema extends React.PureComponent<
     const { nodeKey, jsonKey, keyRoute, targetJsonSchema } = this.props;
     const options = _options || {};
     const { loading } = this.state;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData = keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    // const isRequired = targetJsonSchema.isRequired || false; // 是否必填（默认非必填）
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    // const isRequired = targetJsonSchema.isRequired || false; // Whether it is required (default is not required)
     let defaultFileList = [];
-    if (curJsonData && isArray(curJsonData)) {
+    if ( curJsonData && isArray(curJsonData) ) {
       defaultFileList = curJsonData;
     } else if (curJsonData && isString(curJsonData)) {
       defaultFileList.push(curJsonData);
@@ -108,7 +108,7 @@ class InputImageSchema extends React.PureComponent<
       withCredentials: true,
       method: targetJsonSchema.uploadMethod || options.uploadMethod || 'POST',
       headers: {
-        // authorization: targetJsonSchema.authorization || 'authorization-content', // 会影响默认的图片上传
+        // authorization: targetJsonSchema.authorization || 'authorization-content', // This will affect the default image upload.
       },
       onChange: this.handleImageChange,
       onRemove: this.handleDeleteChange,
@@ -172,7 +172,7 @@ class InputImageSchema extends React.PureComponent<
                     marginTop: 8,
                   }}
                 >
-                  上传图片
+                  Upload Image
                 </div>
               </button>
             </Upload>
@@ -183,7 +183,7 @@ class InputImageSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'input-image',
   component: InputImageSchema,

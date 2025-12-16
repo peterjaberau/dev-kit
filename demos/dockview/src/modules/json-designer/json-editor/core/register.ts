@@ -7,19 +7,19 @@ declare global {
 }
 
 /**
- * 提供两种特殊的注册渲染器的方式
- * 1、自动加载预先注册的自定义渲染器：自动加载并注册 window.JSONEditorCustomRenderers 中的渲染器
- * 2、通过 postMessage 告知 json-editor 注册一个新的渲染器：间接注册渲染器，无需直接依赖 json-editor。
+ * Provides two special ways to register renderers
+ * 1. Automatically load pre-registered custom renderers: Automatically load and register renderers in window.JSONEditorCustomRenderers.
+ * 2. Inform json-editor to register a new renderer via postMessage: Indirectly register the renderer without directly depending on json-editor.
  */
 
-// 自动加载预先注册的自定义渲染器
+// Automatically load pre-registered custom renderers
 export function autoPreRegisterJSONEditorCustomRenderers() {
   if (window.JSONEditorCustomRenderers) {
     Object.keys(window.JSONEditorCustomRenderers).forEach(
       (rendererType: string) => {
         if (renderersMap[rendererType]) {
           console.warn(
-            `[json-editor]：预注册渲染器失败，当前存在重名渲染器（${rendererType}）。`,
+            `[json-editor]: Pre-registration of renderer failed because a renderer with the same name (${rendererType}) already exists.`,
           );
         } else {
           const curRenderer = window.JSONEditorCustomRenderers?.[rendererType];
@@ -35,32 +35,32 @@ export function autoPreRegisterJSONEditorCustomRenderers() {
   }
 }
 
-// 自动加载并注册 window.JSONEditorCustomRenderers 中的渲染器
+// Automatically load and register renderers in window.JSONEditorCustomRenderers
 autoPreRegisterJSONEditorCustomRenderers();
 
 /**
- * postMessage 渲染器动态注册机制
- 动态注册示例：
+ * PostMessage renderer dynamic registration mechanism
+ Example of dynamic registration:
  AddJSONCustomRenderer('new-type', {
-   type: 'new-type',
-   weight: 0,
-   framework: 'react',
-   component: newJsonRenderer,
-   config: {xx配置},
+ type: 'new-type',
+ weight: 0,
+ framework: 'react',
+ component: newJsonRenderer,
+ config: {xx configuration},
  });
 
  window.postMessage(
-   {
-    type: 'json-editor-renderer-register-event',
-    eventMsg: '[json-editor]: 注册一个自定义渲染器',
-    jsonRenderer: {
-      type: 'new-type',
-      // component: newJsonRenderer,
-    },
-   },
-  '*',
+ {
+ type: 'json-editor-renderer-register-event',
+ eventMsg: '[json-editor]: Register a custom renderer',
+ jsonRenderer: {
+ type: 'new-type',
+ // component: newJsonRenderer,
+ },
+ },
+ '*',
  );
-*/
+ */
 window.addEventListener(
   'message',
   (event: MessageEvent) => {
@@ -75,10 +75,10 @@ window.addEventListener(
       const curType = event.data.jsonRenderer.type;
       if (renderersMap[curType]) {
         console.warn(
-          `[json-editor]: 动态注册渲染器失败，当前存在重名渲染器（${curType}）。`,
+          `[json-editor]: Dynamic renderer registration failed because a renderer with the same name (${curType}) already exists.`,
         );
       } else {
-        console.info('[json-editor]: 响应动态注册渲染器事件：', curType);
+        console.info('[json-editor]: Responding to dynamically registered renderer events:', curType);
         const curRenderer = getJSONCustomRenderer(curType);
         if (curRenderer) {
           registerRenderer({
@@ -107,7 +107,7 @@ export function AddJSONCustomRenderer(
     return componentType;
   } else {
     console.error(
-      `[json-editor]：注册渲染器失败，存在重名渲染器(${componentType})。`,
+      `[json-editor]: Renderer registration failed due to a duplicate renderer (${componentType}).`
     );
   }
   return undefined;

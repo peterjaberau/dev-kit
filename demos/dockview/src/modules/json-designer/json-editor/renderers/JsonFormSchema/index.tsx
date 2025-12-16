@@ -15,7 +15,7 @@ import { catchJsonDataByWebCache } from '$mixins/index';
 
 interface JsonFormSchemaState {
   isShowWarn: boolean;
-  warnText: string;
+  warningText: string;
   curJSONDataTemp: any;
 }
 
@@ -25,35 +25,35 @@ class JsonFormSchema extends React.PureComponent<
 > {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 组件内部维护的数据
+    // Data maintained internally by the component
     this.state = {
-      isShowWarn: false, // 用于判断是否显示错误信息
-      warnText: '', // 错误内容
-      curJSONDataTemp: undefined, // 用于记录当前不合规范的json数据
+      isShowWarn: false, // Used to determine whether to display error messages.
+      warnText: '', // Error content
+      curJSONDataTemp: undefined, // Used to record currently non-compliant JSON data
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (newJsonData: any) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
     if (newJsonData) {
       updateFormValueData &&
-        keyRoute &&
-        updateFormValueData(keyRoute, newJsonData); // 更新数值
+      keyRoute &&
+      updateFormValueData(keyRoute, newJsonData); // Update the value
     }
   };
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
@@ -64,18 +64,18 @@ class JsonFormSchema extends React.PureComponent<
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { nodeKey, jsonKey, keyRoute, targetJsonSchema } = this.props;
     const { isShowWarn, warnText, curJSONDataTemp } = this.state;
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    // const isRequired = targetJsonSchema.isRequired || false; // 是否必填（默认非必填）
-    // 从jsonData中获取对应的数值
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    // const isRequired = targetJsonSchema.isRequired || false; // Whether it is required (default is not required)
+    // Retrieve the corresponding value from jsonData
     let curJsonData = getJSONDataByKeyRoute(keyRoute);
 
-    // 格式化JSON数据
+    // Format JSON data
     curJsonData =
       curJsonData !== undefined
         ? curJsonData
         : targetJsonSchema.default || '{}';
-    // 判断当前jsonData是否是对象类型
-    if (isObject(curJsonData) || isArray(curJsonData)) {
+    // Check if the current jsonData is an object type
+    if ( isObject ( curJsonData ) || isArray ( curJsonData )) {
       curJsonData = JSON.stringify(curJsonData, null, 2);
     }
 
@@ -146,18 +146,18 @@ class JsonFormSchema extends React.PureComponent<
             width={'100%'}
             onChange={(newJsonData: string) => {
               try {
-                const newJsonDataTemp = JSON.parse(newJsonData); // 进行格式化（主要用于检查是否是合格的json数据）
-                // 更新jsonData
+                const newJsonDataTemp = JSON.parse(newJsonData); // Perform formatting (mainly used to check if the data is valid JSON)
+                // Update jsonData
                 this.handleValueChange(newJsonDataTemp);
                 this.setState({
                   isShowWarn: false,
-                  curJSONDataTemp: undefined, // 重置
+                  curJSONDataTemp: undefined, // Reset
                 });
               } catch (err: any) {
-                // 更新jsonData
+                // Update jsonData
                 this.setState({
-                  curJSONDataTemp: newJsonData, // 记录当前格式不正确的json数据
-                  warnText: err.message,
+                  curJSONDataTemp: newJsonData, // Records JSON data that is currently in an incorrect format.
+                  warningText: err.message,
                   isShowWarn: true,
                 });
               }
@@ -174,7 +174,7 @@ class JsonFormSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'json',
   component: JsonFormSchema,

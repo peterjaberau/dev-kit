@@ -36,31 +36,31 @@ class DynamicDataSchema extends React.PureComponent<
     super(props);
 
     this.state = {
-      isShowFilter: false, // 是否显示数据过滤器
+      isShowFilter: false, // Whether to display the data filter
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.switchFilterBtn = this.switchFilterBtn.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: DynamicDataSchemaProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (curKeyRoute: string, value: any) => {
     const { updateFormValueData } = this.props.jsonStore || {};
-    updateFormValueData(curKeyRoute, value); // 更新数值
+    updateFormValueData(curKeyRoute, value); // Update the value
   };
 
-  // 显示和隐藏数据过滤器
+  // Show and hide data filters
   switchFilterBtn = () => {
     const { isShowFilter } = this.state;
     this.setState({
@@ -68,7 +68,7 @@ class DynamicDataSchema extends React.PureComponent<
     });
   };
 
-  // 面板展示内容切换（本地数据/接口数据）
+  // Switch between panel display content (local data/API data)
   tabChange = (value: string) => {
     const { keyRoute, jsonStore } = this.props;
     const { triggerChangeAction } = jsonStore || {};
@@ -78,7 +78,7 @@ class DynamicDataSchema extends React.PureComponent<
     }, 100);
   };
 
-  // API 配置变更处理
+  // API configuration change handling
   handleApiConfigChange = (apiConfig: any) => {
     const { keyRoute, jsonStore } = this.props;
     const { triggerChangeAction } = jsonStore || {};
@@ -102,16 +102,16 @@ class DynamicDataSchema extends React.PureComponent<
     } = this.props;
     const { isShowFilter } = this.state;
     const curType = targetJsonSchema.type;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData = getJSONDataByKeyRoute(keyRoute) || {};
 
-    // 获取DataSource中各类数据对象
-    const typeDataObj = targetJsonSchema.properties.type || {}; // type中记录了数据源类型：local or remote
+    // Retrieve various data objects from the DataSource
+    const typeDataObj = targetJsonSchema.properties.type || {}; // The type field records the data source type: local or remote
     const dataType = curJsonData.type || typeDataObj.default; // local or remote
 
-    const configDataObj = curJsonData.config || {}; // 接口数据请求配置对象
-    const dataObj = targetJsonSchema.properties.data || {}; // schema中的数据对象
-    const configSchema = targetJsonSchema.properties.config || {}; // config的schema配置
+    const configDataObj = curJsonData.config || {}; // Interface data request configuration object
+    const dataObj = targetJsonSchema.properties.data || {}; // Data object in the schema
+    const configSchema = targetJsonSchema.properties.config || {}; // config schema
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -162,7 +162,7 @@ class DynamicDataSchema extends React.PureComponent<
                   this.tabChange('local');
                 }}
               >
-                本地数据
+                Local data
               </div>
               <div
                 className={`tab-radio ${
@@ -172,7 +172,7 @@ class DynamicDataSchema extends React.PureComponent<
                   this.tabChange('remote');
                 }}
               >
-                接口数据
+                Interface data
               </div>
             </div>
           </div>
@@ -184,7 +184,7 @@ class DynamicDataSchema extends React.PureComponent<
             <div className="json-form-box">
               <Tooltip
                 title={
-                  isShowFilter ? '点击隐藏数据过滤器' : '点击显示数据过滤器'
+                  isShowFilter ? 'Click to hide data filter' : 'Click to show data filter'
                 }
                 placement="top"
               >
@@ -206,7 +206,7 @@ class DynamicDataSchema extends React.PureComponent<
                 {isShowFilter &&
                   renderChild({
                     rendererType: 'codearea',
-                    isIgnoreWarn: true, // 当前主要使用方法体(非直接执行函数)
+                    isIgnoreWarn: true, // Currently primarily using the method body (not directly executing functions).
                     parentType: curType,
                     jsonKey: 'localFilter',
                     indexRoute: indexRoute ? `${indexRoute}-3` : '3',
@@ -243,7 +243,7 @@ class DynamicDataSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'dynamic-data',
   component: DynamicDataSchema,

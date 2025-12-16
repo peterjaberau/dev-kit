@@ -1,10 +1,10 @@
 import { getWebCacheData } from '$utils/index';
 
-/** 从WebCache中获取jsonData数据
- * 备注：引用catchJsonDataByWebCache前，请确保当前组件的props中包含以下属性：
- * keyRoute、targetJsonSchema、updateFormValueData
- * getJSONDataByKeyRoute、getInitJsonDataByKeyRoute
- * */
+/** Retrieve jsonData from WebCache */
+/* Note: Before referencing catchJsonDataByWebCache, please ensure that the current component's props contain the following properties:
+* keyRoute、targetJsonSchema、updateFormValueData
+* getJSONDataByKeyRoute、getInitJsonDataByKeyRoute
+* */
 
 export function catchJsonDataByWebCache(this: any, curKeyRoute: string) {
   const { targetJsonSchema } = this.props;
@@ -15,16 +15,16 @@ export function catchJsonDataByWebCache(this: any, curKeyRoute: string) {
   } = this.props.jsonStore || {};
   const curType = targetJsonSchema.type;
   const keyRoute = curKeyRoute || this.props.keyRoute;
-  const cacheValue = getWebCacheData(`${keyRoute}-${curType}`); // 确保仅缓存同类型的数值
+  const cacheValue = getWebCacheData(`${keyRoute}-${curType}`); // Ensure that only values ​​of the same type are cached
   if (cacheValue) {
-    // 1. 先尝试从jsonData中获取数据
+    // 1. First try to retrieve data from jsonData
     let curValue = getJSONDataByKeyRoute(keyRoute);
     if (curValue === undefined || curValue === null) {
-      // 2. 再尝试从jsonDataTemp中获取数据
+      // 2. Try retrieving data from jsonDataTemp again.
       curValue = getInitJsonDataByKeyRoute(keyRoute);
     }
     if (curValue === undefined || curValue === null) {
-      // 3. 将缓存中的数值更新到jsonData中
+      // 3. Update the cached values ​​to jsonData
       updateFormValueData(keyRoute, cacheValue);
     }
   }

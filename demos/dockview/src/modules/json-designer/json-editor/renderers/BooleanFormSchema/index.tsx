@@ -15,23 +15,23 @@ import './index.scss';
 class BooleanFormSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (checked: boolean) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
@@ -44,10 +44,10 @@ class BooleanFormSchema extends React.PureComponent<BaseRendererProps> {
     const { getJSONDataByKeyRoute } = jsonStore || {};
 
     const { keyRoute, jsonKey, nodeKey, targetJsonSchema } = this.props;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // 是否需要设置成两栏布局
+    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // Whether to set it to a two-column layout
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -65,8 +65,8 @@ class BooleanFormSchema extends React.PureComponent<BaseRendererProps> {
           pageScreen === 'wideScreen'
             ? 'boolean-form-item wide-screen-element-warp'
             : `boolean-form-item mobile-screen-element-warp ${
-                isNeedTwoCol ? 'two-col-element-warp' : ''
-              }`
+              isNeedTwoCol ? 'two-col-element-warp' : ''
+            }`
         }
         // key={nodeKey}
         id={nodeKey}
@@ -113,7 +113,7 @@ class BooleanFormSchema extends React.PureComponent<BaseRendererProps> {
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'boolean',
   component: BooleanFormSchema,

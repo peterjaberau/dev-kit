@@ -40,19 +40,19 @@ class EventSchema extends React.PureComponent<
     super(props);
 
     this.state = {
-      jsonView: false, // 是否显示code模式
-      isClosed: false, // 是否为关闭状态，默认是开启状态
+      jsonView: false, // Whether to display code mode
+      isClosed: false, // Whether it is closed; the default is open.
     };
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: EventSchemaProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
@@ -72,15 +72,15 @@ class EventSchema extends React.PureComponent<
     const { jsonView, isClosed } = this.state;
 
     const typeDataObj = targetJsonSchema.properties.type || {};
-    // 注册类型事件的数据对象：on
+    // Data object for registering event types: on
     const registerJsonObj = targetJsonSchema.properties.register || {};
     const actionFuncJsonObj = targetJsonSchema.properties.actionFunc || {};
-    // 触发事件类型的数据对象：emit
+    // Data object that triggers an event: emit
     const triggerJsonObj = targetJsonSchema.properties.trigger || {};
     const eventDataJsonObj = targetJsonSchema.properties.eventData || {};
-    // 获取当前数据源类型
+    // Get the current data source type
     const dataType = typeDataObj.default; // local or remote
-    // 是否显示源码切换按钮
+    // Should the source code switching button be displayed?
     const showCodeViewBtn = targetJsonSchema.showCodeViewBtn ?? true;
 
     const style = targetJsonSchema.style
@@ -138,7 +138,7 @@ class EventSchema extends React.PureComponent<
               event.stopPropagation();
             }}
           >
-            <span className="title-text">事件配置</span>
+            <span className="title-text">Event Configuration</span>
             {isClosed ? (
               <RightOutlined className="close-operate-btn" />
             ) : (
@@ -156,7 +156,7 @@ class EventSchema extends React.PureComponent<
                   event.stopPropagation();
                 }}
               >
-                <Tooltip title={jsonView ? '关闭源码模式' : '开启源码模式'}>
+                <Tooltip title={jsonView ? 'Disable Source Mode' : 'Enable Source Mode'}>
                   <CodeIcon
                     className={jsonView ? 'info-icon active' : 'info-icon'}
                   />
@@ -225,7 +225,7 @@ class EventSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'event',
   component: EventSchema,

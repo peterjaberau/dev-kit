@@ -1,5 +1,5 @@
 /**
- *  将数据缓存到sessionStorage中
+ * Cache data in sessionStorage
  * */
 export function saveJSONEditorCache(
   key: string,
@@ -20,7 +20,7 @@ export function saveJSONEditorCache(
 }
 
 /**
- *  从sessionStorage中读取此前缓存的数据
+ * Read previously cached data from sessionStorage
  * */
 export function getJSONEditorCache(
   valueKey: string,
@@ -41,7 +41,7 @@ export function getJSONEditorCache(
 }
 
 /**
- *  从sessionStorage中删除此前缓存的数据
+ * Delete previously cached data from sessionStorage
  * */
 export function deleteJSONEditorCache(
   valueKey: string,

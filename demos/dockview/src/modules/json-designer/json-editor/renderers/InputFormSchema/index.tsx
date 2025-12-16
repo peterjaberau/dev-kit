@@ -12,15 +12,15 @@ import { BaseRendererProps } from '$types/index';
 class InputFormSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
-  // 方式1：在class组件中声明静态属性static，且必须是contextType，确保当前组件可以使用全局context中的数据（this.context不为空）
+  // Method 1: Declare a static property in the class component, and it must be contextType, to ensure that the current component can use data in the global context (this.context is not empty).
   // static contextType = ThemeContext;
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleInputChange = (event: any): void => {
     const { value } = event.target;
     this.handleValueChange(value);
@@ -30,21 +30,21 @@ class InputFormSchema extends React.PureComponent<BaseRendererProps> {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
     if (this.props.onChange) {
-      // 如果有监听数据变动函数则优先触发
+      // If there is a function to monitor data changes, it will be triggered first.
       this.props.onChange(value);
     } else {
-      updateFormValueData(keyRoute, value); // 更新数值
+      updateFormValueData(keyRoute, value); // Update the value
     }
   };
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps): void {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
@@ -54,18 +54,18 @@ class InputFormSchema extends React.PureComponent<BaseRendererProps> {
     const { pageScreen } = schemaStore || {};
     const { options: _editorOptions, getJSONDataByKeyRoute } = jsonStore || {};
     const { nodeKey, jsonKey, keyRoute, targetJsonSchema } = this.props;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData = keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    const isRequired: boolean = targetJsonSchema.isRequired || false; // 是否必填（默认非必填）
-    const autoComplete = targetJsonSchema.autoComplete || false; // 是否支持可选项
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    const isRequired: boolean = targetJsonSchema.isRequired || false; // Whether the field is required (default is not required)
+    const autoComplete = targetJsonSchema.autoComplete || false; // Whether to support optional functions
 
     const editorOptions = _editorOptions || {};
     let defaultOptions = [];
     if (editorOptions.GlobalOptions && isArray(editorOptions.GlobalOptions)) {
       defaultOptions = editorOptions.GlobalOptions;
     }
-    const options = targetJsonSchema.options || defaultOptions; // 是否支持可选项
+    const options = targetJsonSchema.options || defaultOptions; // Whether to support optional options
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -120,7 +120,7 @@ class InputFormSchema extends React.PureComponent<BaseRendererProps> {
                 allowClear={true}
                 placeholder={
                   targetJsonSchema.placeholder ||
-                  `请输入${targetJsonSchema.title}`
+                  `Please enter ${targetJsonSchema.title}`
                 }
                 defaultValue={curJsonData ?? targetJsonSchema.default}
                 onChange={this.handleValueChange}
@@ -134,7 +134,7 @@ class InputFormSchema extends React.PureComponent<BaseRendererProps> {
                 allowClear={true}
                 placeholder={
                   targetJsonSchema.placeholder ||
-                  `请输入${targetJsonSchema.title}`
+                  `Please enter ${targetJsonSchema.title}`
                 }
                 defaultValue={curJsonData ?? targetJsonSchema.default}
                 onPressEnter={this.handleInputChange}
@@ -148,7 +148,7 @@ class InputFormSchema extends React.PureComponent<BaseRendererProps> {
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'input',
   component: InputFormSchema,

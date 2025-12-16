@@ -42,7 +42,7 @@ interface JSONEditorState {
 }
 
 /**
- * JSONEditor功能组件
+ * JSONEditor functional component
  * @param props
  * @constructor
  */
@@ -53,7 +53,7 @@ export default class JSONEditor extends React.PureComponent<
   constructor(props: JSONEditorProps) {
     super(props);
     this.state = {
-      rootJSONStore: new RootJSONStore(), // 初始化一份rootJSONStore
+      rootJSONStore: new RootJSONStore(), // Initialize a rootJSONStore
     };
   }
 
@@ -72,9 +72,9 @@ export default class JSONEditor extends React.PureComponent<
     );
 
     if (element) {
-      ReactDOM.render(renderContent, element); // 挂载到指定位置
+      ReactDOM.render(renderContent, element); // Mount to the specified location
       return '';
     }
-    return renderContent; // 直接输出dom元素
+    return renderContent; // Directly output DOM element
   }
 }

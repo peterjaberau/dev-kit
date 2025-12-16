@@ -32,7 +32,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
 
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.showModal = this.showModal.bind(this);
     this.handleOk = this.handleOk.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -46,7 +46,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
     this.form.validateFields().then((values: any) => {
       const { keyRoute, jsonStore } = this.props;
 
-      // 处理 headers（如果存在）
+      // Process headers (if they exist)
       if (values.headers && Array.isArray(values.headers)) {
         const headersObj: Record<string, string> = {};
         values.headers.forEach((item: any) => {
@@ -63,7 +63,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
         }
       }
 
-      // 处理 data（如果存在）
+      // Process the data (if it exists)
       if (values.data && Array.isArray(values.data)) {
         const dataObj: Record<string, any> = {};
         values.data.forEach((item: any) => {
@@ -84,7 +84,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
         }
       }
 
-      // 处理 cache：如果开关关闭，删除 cache 字段；如果开启，使用 cacheTime 的值
+      // Handling cache: If the switch is off, delete the cache field; if on, use the cacheTime value.
       if (values.cache) {
         values.cache = values.cacheTime || 3000;
       } else {
@@ -92,7 +92,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
       }
       delete values.cacheTime;
 
-      // 删除空的数组对象
+      // Delete empty array objects
       if (values.headers && Object.keys(values.headers).length === 0) {
         delete values.headers;
       }
@@ -101,10 +101,10 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
       }
 
       if (this.props.onChange) {
-        // 如果有监听数据变动函数则优先触发
+        // If there is a function to monitor data changes, it will be triggered first.
         this.props.onChange(values);
       } else {
-        // 更新数值
+        // Update values
         jsonStore.updateFormValueData(keyRoute, values);
       }
 
@@ -126,12 +126,12 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
       return null;
     }
 
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       keyRoute && jsonStore ? jsonStore.getJSONDataByKeyRoute?.(keyRoute) : {};
     const currentValue = curJsonData || {};
 
-    // 从 schema 中获取各个字段的配置信息
+    // Retrieve configuration information for each field from the schema
     const properties = targetJsonSchema.properties || {};
     const urlSchema = properties.url || {};
     const methodSchema = properties.method || {};
@@ -154,7 +154,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
     const methodUpper = currentValue.method?.toUpperCase() || 'GET';
     const summary = `${methodUpper !== 'GET' ? methodUpper + ': ' : ''}${currentValue.url || ''}`;
 
-    // 将 headers 对象转换为数组格式用于表单编辑
+    // Convert the headers object to an array format for form editing
     const headersToArray = (headers: any) => {
       if (!headers || typeof headers !== 'object') return [];
       return Object.keys(headers).map((key: string) => ({
@@ -166,7 +166,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
       }));
     };
 
-    // 将 data 对象转换为数组格式用于表单编辑
+    // Convert the data object to array format for form editing
     const dataToArray = (data: any) => {
       if (!data || typeof data !== 'object') return [];
       return Object.keys(data).map((key: string) => ({
@@ -198,19 +198,19 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
           <Input
             className="api-schema-input"
             value={summary}
-            placeholder="点击右侧设置图标配置 API 接口"
+            placeholder="Click the settings icon on the right to configure the API interface"
             readOnly
             addonAfter={<SettingOutlined onClick={this.showModal} />}
           />
         </div>
         <Modal
-          title={targetJsonSchema.title || 'API 配置'}
+          title={targetJsonSchema.title || 'API Deployment'}
           visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           width={800}
-          okText="确定"
-          cancelText="取消"
+          okText="OK"
+          cancelText="Cancel"
         >
           <Form
             ref={(form) => (this.form = form)}
@@ -230,12 +230,12 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
           >
             <Tabs defaultActiveKey="1">
               <TabPane
-                tab={targetJsonSchema.tabTitles?.basic || '接口设置'}
+                tab={targetJsonSchema.tabTitles?.basic || 'Interface Settings'}
                 key="1"
               >
                 <Form.Item
                   name="method"
-                  label={methodSchema.title || '发送方式'}
+                  label={methodSchema.title || 'Sending Method'}
                   rules={[{ required: methodSchema.isRequired !== false }]}
                 >
                   <Select>
@@ -249,7 +249,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
 
                 <Form.Item
                   name="url"
-                  label={urlSchema.title || '接口地址'}
+                  label={urlSchema.title || 'API address'}
                   rules={[{ required: urlSchema.isRequired !== false }]}
                 >
                   <Input placeholder={urlSchema.placeholder || 'http://'} />
@@ -257,7 +257,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
 
                 <Form.Item
                   name="dataType"
-                  label={dataTypeSchema.title || '数据格式'}
+                  label={dataTypeSchema.title || 'Data Format'}
                 >
                   <Select>
                     <Select.Option value="json">JSON</Select.Option>
@@ -286,16 +286,17 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
                           }}
                         >
                           {dataTypeSchema.description ||
-                            `发送体格式为：${formatMap[dataType] || 'application/json'}，当发送内容中存在文件时会自动使用 form-data 格式。`}
-                        </div>
-                      );
-                    }}
+                            `The format of the data body is: ${formatMap[dataType] || 'application/json'}. When the data body contains a file, the form-data format will be used automatically.`
+                          }
+                            </div>
+                            );
+                          }}
                   </Form.Item>
                 </Form.Item>
 
                 <Form.Item
                   name="cache"
-                  label={cacheSchema.title || '是否设置缓存'}
+                  label={cacheSchema.title || 'Whether to set caching'}
                   valuePropName="checked"
                 >
                   <Switch />
@@ -311,7 +312,7 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
                     getFieldValue('cache') ? (
                       <Form.Item
                         name="cacheTime"
-                        label={cacheTimeSchema.title || '缓存时间（ms）'}
+                        label={cacheTimeSchema.title || 'Cache time (ms)'}
                       >
                         <InputNumber
                           min={0}
@@ -326,146 +327,147 @@ class ApiSchema extends React.PureComponent<BaseRendererProps, ApiSchemaState> {
                           }}
                         >
                           {cacheTimeSchema.description ||
-                            '设置该请求缓存有效时间，单位 ms'}
-                        </div>
+                            `Set the cache validity period for this request, in milliseconds.`
+                          }
+                            </div>
+                            </Form.Item>
+                            ) : null
+                          }
                       </Form.Item>
-                    ) : null
-                  }
-                </Form.Item>
-              </TabPane>
+                    </TabPane>
 
-              <TabPane
-                tab={targetJsonSchema.tabTitles?.http || 'HTTP配置'}
-                key="2"
-              >
-                <div style={{ marginBottom: '16px' }}>
-                  <h4 style={{ marginBottom: '12px' }}>
-                    {headersSchema.title || '请求头 (Headers)'}
-                  </h4>
-                  <Form.List name="headers">
-                    {(
-                      fields: any[],
-                      {
-                        add,
-                        remove,
-                      }: {
-                        add: (defaultValue?: any) => void;
-                        remove: (index: number) => void;
-                      },
-                    ) => (
-                      <>
-                        {fields.map(({ key, name, ...restField }: any) => (
-                          <Space
-                            key={key}
-                            style={{ display: 'flex', marginBottom: 8 }}
-                            align="baseline"
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, 'key']}
-                              rules={[{ required: true, message: '请输入Key' }]}
-                              style={{ flex: 1 }}
+                    <TabPane
+                    tab={targetJsonSchema.tabTitles?.http || 'HTTP配置'}
+                  key="2"
+                >
+                  <div style={{ marginBottom: '16px' }}>
+                    <h4 style={{ marginBottom: '12px' }}>
+                      {headersSchema.title || 'Request Headers'}
+                    </h4>
+                    <Form.List name="headers">
+                      {(
+                        fields: any[],
+                        {
+                          add,
+                          remove,
+                        }: {
+                          add: (defaultValue?: any) => void;
+                          remove: (index: number) => void;
+                        },
+                      ) => (
+                        <>
+                          {fields.map(({ key, name, ...restField }: any) => (
+                            <Space
+                              key={key}
+                              style={{ display: 'flex', marginBottom: 8 }}
+                              align="baseline"
                             >
-                              <Input placeholder="Key" />
-                            </Form.Item>
-                            <Form.Item
-                              {...restField}
-                              name={[name, 'value']}
-                              style={{ flex: 1 }}
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'key']}
+                                rules={[{ required: true, message: 'Please enter the Key' }]}
+                                style={{ flex: 1 }}
+                              >
+                                <Input placeholder="Key" />
+                              </Form.Item>
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'value']}
+                                style={{ flex: 1 }}
+                              >
+                                <Input placeholder="Value" />
+                              </Form.Item>
+                              <MinusCircleOutlined
+                                onClick={(event: React.MouseEvent) =>
+                                  remove(name)
+                                }
+                              />
+                            </Space>
+                          ))}
+                          <Form.Item>
+                            <Button
+                              type="dashed"
+                              onClick={(event: React.MouseEvent) => add()}
+                              block
+                              icon={<PlusOutlined />}
                             >
-                              <Input placeholder="Value" />
-                            </Form.Item>
-                            <MinusCircleOutlined
-                              onClick={(event: React.MouseEvent) =>
-                                remove(name)
-                              }
-                            />
-                          </Space>
-                        ))}
-                        <Form.Item>
-                          <Button
-                            type="dashed"
-                            onClick={(event: React.MouseEvent) => add()}
-                            block
-                            icon={<PlusOutlined />}
-                          >
-                            添加请求头
-                          </Button>
-                        </Form.Item>
-                      </>
-                    )}
-                  </Form.List>
-                </div>
+                              Add request headers
+                            </Button>
+                          </Form.Item>
+                        </>
+                      )}
+                    </Form.List>
+                  </div>
 
-                <div style={{ marginBottom: '16px' }}>
-                  <h4 style={{ marginBottom: '12px' }}>
-                    {dataSchema.title || '发送数据 (Data)'}
-                  </h4>
-                  <Form.List name="data">
-                    {(
-                      fields: any[],
-                      {
-                        add,
-                        remove,
-                      }: {
-                        add: (defaultValue?: any) => void;
-                        remove: (index: number) => void;
-                      },
-                    ) => (
-                      <>
-                        {fields.map(({ key, name, ...restField }: any) => (
-                          <Space
-                            key={key}
-                            style={{ display: 'flex', marginBottom: 8 }}
-                            align="baseline"
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, 'key']}
-                              rules={[{ required: true, message: '请输入Key' }]}
-                              style={{ flex: 1 }}
+                  <div style={{ marginBottom: '16px' }}>
+                    <h4 style={{ marginBottom: '12px' }}>
+                      {dataSchema.title || 'Send Data (Data)'}
+                    </h4>
+                    <Form.List name="data">
+                      {(
+                        fields: any[],
+                        {
+                          add,
+                          remove,
+                        }: {
+                          add: (defaultValue?: any) => void;
+                          remove: (index: number) => void;
+                        },
+                      ) => (
+                        <>
+                          {fields.map(({ key, name, ...restField }: any) => (
+                            <Space
+                              key={key}
+                              style={{ display: 'flex', marginBottom: 8 }}
+                              align="baseline"
                             >
-                              <Input placeholder="Key" />
-                            </Form.Item>
-                            <Form.Item
-                              {...restField}
-                              name={[name, 'value']}
-                              style={{ flex: 1 }}
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'key']}
+                                rules={[{ required: true, message: 'Please enter the Key' }]}
+                                style={{ flex: 1 }}
+                              >
+                                <Input placeholder="Key" />
+                              </Form.Item>
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'value']}
+                                style={{ flex: 1 }}
+                              >
+                                <Input placeholder="Value (Supports JSON)" />
+                              </Form.Item>
+                              <MinusCircleOutlined
+                                onClick={(event: React.MouseEvent) =>
+                                  remove(name)
+                                }
+                              />
+                            </Space>
+                          ))}
+                          <Form.Item>
+                            <Button
+                              type="dashed"
+                              onClick={(event: React.MouseEvent) => add()}
+                              block
+                              icon={<PlusOutlined />}
                             >
-                              <Input placeholder="Value (支持JSON)" />
-                            </Form.Item>
-                            <MinusCircleOutlined
-                              onClick={(event: React.MouseEvent) =>
-                                remove(name)
-                              }
-                            />
-                          </Space>
-                        ))}
-                        <Form.Item>
-                          <Button
-                            type="dashed"
-                            onClick={(event: React.MouseEvent) => add()}
-                            block
-                            icon={<PlusOutlined />}
-                          >
-                            添加发送数据
-                          </Button>
-                        </Form.Item>
-                        {dataSchema.description && (
-                          <div
-                            style={{
-                              fontSize: '12px',
-                              color: '#999',
-                              marginTop: '8px',
-                            }}
-                          >
-                            {dataSchema.description}
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </Form.List>
-                </div>
+                              Add Send Data
+                            </Button>
+                          </Form.Item>
+                          {dataSchema.description && (
+                            <div
+                              style={{
+                                fontSize: '12px',
+                                color: '#999',
+                                marginTop: '8px',
+                              }}
+                            >
+                              {dataSchema.description}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </Form.List>
+                  </div>
               </TabPane>
             </Tabs>
           </Form>

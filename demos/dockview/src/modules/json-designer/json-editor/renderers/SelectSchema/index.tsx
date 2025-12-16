@@ -3,7 +3,7 @@ import * as React from 'react';
 import { registerRenderer } from '$core/factory';
 import { BaseRendererProps } from '$types/index';
 import { toJS } from 'mobx';
-import { truncate, isArray, isObject } from '@wibetter/json-utils';
+import { truncate , isArray , isObject } from ' @wibetter / json - utils ' ;
 import { Select, Tooltip } from 'antd';
 const { Option } = Select;
 import { catchJsonDataByWebCache } from '$mixins/index';
@@ -12,30 +12,30 @@ import { isNeedTwoColWarpStyle, buildStyle, formatOptions } from '$utils/index';
 import './index.scss';
 
 /**
- * select下拉选择类型
+ * Select dropdown selection type
  */
 class SelectSchema extends React.PureComponent<BaseRendererProps> {
-  optionValue: Record<string, any> = {}; // 记录options中对象类型的value
+  optionValue: Record<string, any> = {}; // Records the value of the object type in options.
 
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (value: any, option?: any) => {
     const { keyRoute, jsonStore, targetJsonSchema } = this.props;
     const { updateFormValueData } = jsonStore || {};
@@ -54,7 +54,7 @@ class SelectSchema extends React.PureComponent<BaseRendererProps> {
 
         if (withLabel && option && isArray(option)) {
           curItem = {
-            value: curItem,
+            value : curItem ,
             label: option[index].children || option[index].label,
           };
         }
@@ -73,7 +73,7 @@ class SelectSchema extends React.PureComponent<BaseRendererProps> {
       }
     }
 
-    updateFormValueData && keyRoute && updateFormValueData(keyRoute, curValue); // 更新数值
+    `updateFormValueData && keyRoute && updateFormValueData(keyRoute, curValue);` // Update the value
   };
 
   render() {
@@ -81,11 +81,11 @@ class SelectSchema extends React.PureComponent<BaseRendererProps> {
     const { pageScreen } = schemaStore || {};
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { nodeKey, jsonKey, keyRoute, targetJsonSchema } = this.props;
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    // 从jsonData中获取对应的数值
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    // Retrieve the corresponding value from jsonData
     let curJsonData = getJSONDataByKeyRoute(keyRoute);
     let options = targetJsonSchema.options;
-    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // 是否需要设置成两栏布局
+    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // Whether to set it to a two-column layout
 
     const optionsFormat = formatOptions(toJS(options));
     options = optionsFormat.options;
@@ -124,8 +124,8 @@ class SelectSchema extends React.PureComponent<BaseRendererProps> {
           pageScreen === 'wideScreen'
             ? 'wide-screen-element-warp'
             : `mobile-screen-element-warp ${
-                isNeedTwoCol ? 'two-col-element-warp' : ''
-              }`
+              isNeedTwoCol ? 'two-col-element-warp' : ''
+            }`
         }
         // key={nodeKey}
         id={nodeKey}
@@ -157,8 +157,8 @@ class SelectSchema extends React.PureComponent<BaseRendererProps> {
               showSearch={targetJsonSchema.showSearch ?? true}
               mode={targetJsonSchema.multiple ? 'multiple' : undefined}
               defaultActiveFirstOption={
-                targetJsonSchema.defaultActiveFirstOption ?? false
-              } // 默认不选中第一条
+                targetJsonSchema.defaultActiveFirstOption ?? false}
+              // The first item is not selected by default.
               style={{ display: 'inline-block', minWidth: '120px' }}
               onChange={this.handleValueChange}
               defaultValue={curValue}
@@ -184,7 +184,7 @@ class SelectSchema extends React.PureComponent<BaseRendererProps> {
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'select',
   component: SelectSchema,

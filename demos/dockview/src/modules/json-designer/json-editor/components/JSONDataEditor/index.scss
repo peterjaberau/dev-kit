@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 .tabs-schema-box {
-  // 最后一个ant-tabs-tab去掉右外边距
+  // Remove the right margin from the last ant-tabs-tab
   .ant-tabs-tab:nth-last-child(2) {
     margin-right: 0 !important;
   }

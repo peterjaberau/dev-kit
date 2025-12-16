@@ -11,34 +11,34 @@ import { isNeedTwoColWarpStyle, buildStyle } from '$utils/index';
 import './index.scss';
 
 /**
- * Cascader 级联选择
- * 文档地址：https://ant-design.antgroup.com/components/cascader-cn
+ * Cascader cascading selection
+ * Documentation address: https://ant-design.antgroup.com/components/cascader-cn
  */
 
 class CascaderSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (value: any) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
-    updateFormValueData && keyRoute && updateFormValueData(keyRoute, value); // 更新数值
+    `updateFormValueData && keyRoute && updateFormValueData(keyRoute, value);` // Update the value
   };
 
   render() {
@@ -46,12 +46,12 @@ class CascaderSchema extends React.PureComponent<BaseRendererProps> {
     const { pageScreen } = schemaStore || {};
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { nodeKey, jsonKey, keyRoute, targetJsonSchema } = this.props;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
     const options = targetJsonSchema.options || [];
-    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // 是否需要设置成两栏布局
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
+    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // Whether to set it to a two-column layout
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -69,8 +69,8 @@ class CascaderSchema extends React.PureComponent<BaseRendererProps> {
           pageScreen === 'wideScreen'
             ? 'wide-screen-element-warp'
             : `mobile-screen-element-warp ${
-                isNeedTwoCol ? 'two-col-element-warp' : ''
-              }`
+              isNeedTwoCol ? 'two-col-element-warp' : ''
+            }`
         }
         // key={nodeKey}
         id={nodeKey}
@@ -115,7 +115,7 @@ class CascaderSchema extends React.PureComponent<BaseRendererProps> {
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'cascader',
   component: CascaderSchema,

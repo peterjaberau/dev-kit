@@ -24,40 +24,40 @@ class NumberFormSchema extends React.PureComponent<
     this.state = {
       renderTime: new Date().getTime(),
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (newVal: number | null) => {
     const { keyRoute, jsonStore, targetJsonSchema } = this.props;
     const { updateFormValueData } = jsonStore || {};
     if (newVal && newVal < targetJsonSchema.minimum) {
       message.warning(
-        `小于设定的最小数值${targetJsonSchema.minimum}，请重新输入。`,
+        `The value is less than the set minimum value ${targetJsonSchema.minimum}. Please re-enter it.`,
       );
     } else if (newVal && newVal > targetJsonSchema.maximum) {
       message.warning(
-        `超过设定的最大数值${targetJsonSchema.maximum}，请重新输入。`,
+        `The value exceeds the maximum value set ${targetJsonSchema.maximum}. Please re-enter.`,
       );
     } else {
-      updateFormValueData && keyRoute && updateFormValueData(keyRoute, newVal); // 更新数值
+      `updateFormValueData && keyRoute && updateFormValueData(keyRoute, newVal);` // Update the value
     }
   };
 
-  /** 数值加减按钮事件处理器 */
+  /** Event handlers for the plus and minus buttons */
   numberChange = (type: 'plus' | 'minus', curValue: number | undefined) => {
     const { keyRoute } = this.props;
     let curNum = 0;
@@ -70,7 +70,7 @@ class NumberFormSchema extends React.PureComponent<
       curNum -= 1;
     }
     this.handleValueChange(curNum);
-    // 更新渲染时间戳，以便number能重新渲染
+    // Update the rendering timestamp so that number can be re-rendered.
     this.setState({
       renderTime: new Date().getTime(),
     });
@@ -87,12 +87,12 @@ class NumberFormSchema extends React.PureComponent<
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { keyRoute, jsonKey, targetJsonSchema } = this.props;
     const { renderTime } = this.state;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    const isRequired = targetJsonSchema.isRequired || false; // 是否必填（默认非必填）
-    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // 是否需要设置成两栏布局
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    const isRequired = targetJsonSchema.isRequired || false; // Whether the field is required (default is not required)
+    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // Whether to set it to a two-column layout
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -110,8 +110,8 @@ class NumberFormSchema extends React.PureComponent<
           pageScreen === 'wideScreen'
             ? 'wide-screen-element-warp'
             : `mobile-screen-element-warp ${
-                isNeedTwoCol ? 'two-col-element-warp' : ''
-              }`
+              isNeedTwoCol ? 'two-col-element-warp' : ''
+            }`
         }
         // key={`${nodeKey}-${renderTime}`}
         // id={nodeKey}
@@ -142,7 +142,7 @@ class NumberFormSchema extends React.PureComponent<
             <div className="input-number-wrap">
               <div
                 className="number-btn minus"
-                title="点击减1"
+                title="Click to deduct 1"
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.numberChange(
                     'minus',
@@ -164,7 +164,7 @@ class NumberFormSchema extends React.PureComponent<
                 required={isRequired}
                 placeholder={
                   targetJsonSchema.placeholder ||
-                  `请输入${targetJsonSchema.title}`
+                  `Please enter ${targetJsonSchema.title}`
                 }
                 min={targetJsonSchema.minimum || 0}
                 max={targetJsonSchema.maximum || 1000000}
@@ -177,7 +177,7 @@ class NumberFormSchema extends React.PureComponent<
               />
               <div
                 className="number-btn plus"
-                title="点击加1"
+                title="Click to add 1"
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.numberChange(
                     'plus',
@@ -197,7 +197,7 @@ class NumberFormSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'number',
   component: NumberFormSchema,

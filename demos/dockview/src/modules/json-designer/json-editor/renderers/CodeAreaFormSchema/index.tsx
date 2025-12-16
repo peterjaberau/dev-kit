@@ -15,7 +15,7 @@ import { buildStyle } from '$utils/index';
 
 interface CodeAreaFormSchemaState {
   isShowWarn: boolean;
-  warnText: string;
+  warningText: string;
 }
 class CodeAreaFormSchema extends React.PureComponent<
   BaseRendererProps,
@@ -23,34 +23,34 @@ class CodeAreaFormSchema extends React.PureComponent<
 > {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 组件内部维护的数据
+    // Data maintained internally by the component
     this.state = {
-      isShowWarn: false, // 用于判断是否显示错误信息
-      warnText: '', // 错误内容
+      isShowWarn: false, // Used to determine whether to display error messages.
+      warnText: '', // Error content
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (newJsonData: string) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
     updateFormValueData &&
-      keyRoute &&
-      updateFormValueData(keyRoute, newJsonData); // 更新数值
+    keyRoute &&
+    updateFormValueData(keyRoute, newJsonData); // Update the value
   };
 
   render() {
@@ -66,16 +66,16 @@ class CodeAreaFormSchema extends React.PureComponent<
       targetJsonSchema,
     } = this.props;
     const { isShowWarn, warnText } = this.state;
-    const readOnly = isReadOnly || targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    const isRequired = targetJsonSchema.isRequired || false; // 是否必填（默认非必填）
-    // 从jsonData中获取对应的数值
+    const readOnly = isReadOnly || targetJsonSchema.readOnly || false; // Whether to make the text read-only (default is editable)
+    const isRequired = targetJsonSchema.isRequired || false; // Whether the field is required (default is not required)
+    // Retrieve the corresponding value from jsonData
     let curJsonData = getJSONDataByKeyRoute(keyRoute);
-    // 格式化JSON数据
+    // Format JSON data
     curJsonData =
       curJsonData !== undefined
         ? curJsonData
         : targetJsonSchema.default || '() => {}';
-    // 判断当前jsonData是否是对象类型
+    // Check if the current jsonData is an object type
     if (isObject(curJsonData)) {
       curJsonData = JSON.stringify(curJsonData, null, 2);
     }
@@ -146,17 +146,17 @@ class CodeAreaFormSchema extends React.PureComponent<
             width={'100%'}
             onChange={(newJsonData: string) => {
               try {
-                eval(newJsonData); // 进行格式化（主要用于检查是否是合格的json数据）
-                // 更新jsonData
+                eval(newJsonData); // Performs formatting (mainly used to check if the data is valid JSON).
+                // Update jsonData
                 this.handleValueChange(newJsonData);
                 this.setState({
                   isShowWarn: false,
                 });
               } catch (err: any) {
-                // 更新jsonData
+                // Update jsonData
                 this.handleValueChange(newJsonData);
                 this.setState({
-                  warnText: err.message,
+                  warningText: err.message,
                   isShowWarn: true,
                 });
               }
@@ -173,7 +173,7 @@ class CodeAreaFormSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'codearea',
   component: CodeAreaFormSchema,

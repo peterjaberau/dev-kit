@@ -21,7 +21,7 @@ export function buildStyle(
   const curStyle: Record<string, any> = {};
   if (style) {
     Object.keys(style).forEach((styleKey: string) => {
-      // 将属性短横线命名转换为驼峰命名，如 background-color => backgroundColor
+      // Convert the hyphen-based property names to camelCase, such as background-color => backgroundColor
       if (styleKey.indexOf('-') > 0) {
         curStyle[camelCase(styleKey)] = (style as any)[styleKey];
       } else {
@@ -32,37 +32,37 @@ export function buildStyle(
   return curStyle;
 }
 
-/** js对象数据深拷贝，避免数据联动 */
+/** Performs a deep copy of JavaScript object data to avoid data linkage */
 export function objClone(targetObj: any) {
   // const newObj = JSON.stringify(targetObj);
   // return JSON.parse(newObj);
   return _objClone(targetObj);
 }
 
-/** 对比两个json数据是否相等 */
+/** Compare two JSON data sets to see if they are equal */
 export function isEqual(targetObj: any, nextTargetObj: any) {
   // return JSON.stringify(targetObj) === JSON.stringify(nextTargetObj);
   return _isEqual(targetObj, nextTargetObj);
 }
 
 /*
- * 判断当前属性是否存在
- * 备注：要识别boolean类型的数值
+ * Check if the current property exists
+ * Note: To identify boolean values
  */
 export function hasProperties(targetPropertie: any): boolean {
   let hasProperties = false;
   if (targetPropertie !== undefined && targetPropertie !== null) {
-    // targetPropertie 等于""、0、false时均认为是存在的属性
+    // targetProperty is considered to exist when it equals "", 0, or false.
     hasProperties = true;
   }
   return hasProperties;
 }
 
-/** 是否需要设置成两栏布局
- * 比较适合固定宽度的元素，
- * 比如：boolean、date、date-time、time、number、color、quantity
- * 呈现：element-title 和 content-item 在同一行展示
- * */
+/** Should it be set to a two-column layout? */
+/* More suitable for elements with a fixed width.
+* ：boolean、date、date-time、time、number、color、quantity
+* Display: element-title and content-item are displayed on the same line.
+* */
 export function isNeedTwoColWarpStyle(format: string): boolean {
   let isNeedTwoColWarp = false;
   if (
@@ -80,10 +80,10 @@ export function isNeedTwoColWarpStyle(format: string): boolean {
   return isNeedTwoColWarp;
 }
 
-/** 根据className判断是否是基本类型元素
- *  基本类型元素：input、boolean、 date、date-time、 time、 url、
- *  textarea、number、 radio、 select、color、quantity
- * */
+/** Determine if an element is a primitive type based on its className. */
+/* Basic element types: input, boolean, date, date-time, time, url,
+*  textarea、number、 radio、 select、color、quantity
+* */
 export function isBaseSchemaElem(elemClassName: string): boolean {
   let isBaseSchema = false;
   if (
@@ -105,11 +105,11 @@ export function isBaseSchemaElem(elemClassName: string): boolean {
   return isBaseSchema;
 }
 
-/** 根据className判断是否是容器类型元素
- *  容器类型元素：func、style、data、object
- *  主要用于判断当前元素点击新增时是添加子元素还是添加兄弟节点，容器类型点击新增时则添加子节点。
- *  备注：array类型字段只有固定的一个items属性，不能新增其他子元素。
- * */
+/** Determine if an element is a container type based on its className. */
+/* Container type elements: func, style, data, object
+* Primarily used to determine whether clicking "Add" on the current element adds a child element or a sibling node. For container types, clicking "Add" adds a child node.
+* Note: Array type fields have only one fixed item attribute and cannot have additional child elements added.
+* */
 export function isBoxSchemaElem(elemClassName: string): boolean {
   let isBoxSchema = false;
   if (
@@ -123,9 +123,9 @@ export function isBoxSchemaElem(elemClassName: string): boolean {
   return isBoxSchema;
 }
 
-/** 根据className判断是否是一级固定类型元素
- *  容器类型元素：func、style、data
- * */
+/** Determine if an element is a first-level fixed type based on its className. */
+/* Container type elements: func, style, data
+* */
 export function isFirstSchemaElem(elemClassName: string): boolean {
   let isFirstSchema = false;
   if (
@@ -138,7 +138,7 @@ export function isFirstSchemaElem(elemClassName: string): boolean {
   return isFirstSchema;
 }
 /**
- * 获取当前url中的所有参数
+ * Retrieves all parameters in the current URL
  */
 export function getParams(): Record<string, string> {
   let params = window.location.search;
@@ -160,7 +160,7 @@ export function getParams(): Record<string, string> {
   return paramsObj;
 }
 /**
- * 获取当前url中的指定参数
+ * Retrieve specified parameters from the current URL
  */
 export function getURLParam(key: string): string {
   const params = window.location.search;
@@ -177,28 +177,28 @@ export function getURLParam(key: string): string {
 }
 
 /**
- *  将数据缓存到sessionStorage中
+ * Cache data in sessionStorage
  */
 export function saveWebCacheData(valueKey: string, value: any): void {
   saveJSONEditorCache(valueKey, value, 'json-editor-formData');
 }
 
 /**
- *  从sessionStorage中读取此前缓存的数据
+ * Read previously cached data from sessionStorage
  */
 export function getWebCacheData(valueKey: string): any {
   return getJSONEditorCache(valueKey, 'json-editor-formData');
 }
 
 /**
- *  从sessionStorage中删除此前缓存的数据
+ * Delete previously cached data from sessionStorage
  */
 export function deleteWebCacheData(valueKey: string): void {
   deleteJSONEditorCache(valueKey, 'json-editor-formData');
 }
 
 /**
- * 处理 Props 数据，所有以 On 或者 Expr 结尾的 prop 都进行一次计算
+ * Process Props data; perform a calculation on all props ending with On or Expr.
  *
  * xxxOn
  * xxxExpr
@@ -231,13 +231,13 @@ export function getExprProperties(
   return schema;
 }
 
-// options 异常格式 处理，自动转成可用列表格式
+// Handling of abnormal options formats, automatically converting them to an available list format.
 export function formatOptions(options: any): {
   options: any[];
   optionValue: Record<string, any>;
 } {
   let curOptions: any[] = [];
-  let optionValue: Record<string, any> = {}; // 记录对象类型的value
+  let optionValue: Record<string, any> = {}; // Record the value of the object type
   if (isArray(options)) {
     // curOptions = options;
     options.forEach((option: any) => {
@@ -259,7 +259,7 @@ export function formatOptions(options: any): {
       curOptions = formatResult.options;
       optionValue = formatResult.optionValue;
     } catch (error) {
-      console.warn('options 异常数据格式转换失败：', options);
+      console.warn('Options data format conversion failed:', options);
     }
   }
   return {
@@ -273,7 +273,7 @@ export function formatOptions1(options: any): {
   optionValue: Record<string, any>;
 } {
   let curOptions: any[] = [];
-  let optionValue: Record<string, any> = {}; // 记录对象类型的value
+  let optionValue: Record<string, any> = {}; // Record the value of the object type
   if (isArray(options)) {
     // curOptions = options;
     options.forEach((option: any, index: number) => {
@@ -290,7 +290,7 @@ export function formatOptions1(options: any): {
           curOptions.push(option);
         }
       } else if (isString(option)) {
-        // 兼容异常 option 数据
+        // Compatibility with abnormal option data
         try {
           const curOption = JSON.parse(option);
           if (isObject(curOption.value)) {
@@ -305,7 +305,7 @@ export function formatOptions1(options: any): {
             curOptions.push(curOption);
           }
         } catch (error) {
-          console.warn('option 异常数据格式转换失败：', option);
+          console.warn('Option error: failed to convert data format:', option);
         }
       }
     });
@@ -316,7 +316,7 @@ export function formatOptions1(options: any): {
       curOptions = formatResult.options;
       optionValue = formatResult.optionValue;
     } catch (error) {
-      console.warn('options 异常数据格式转换失败：', options);
+      console.warn('Options data format conversion failed:', options);
     }
   }
   return {
@@ -350,8 +350,8 @@ export function getObjectTitle(objItem: any): string | any {
 }
 
 /**
- * options 数据处理
- * 将 options 列表中的普通 option 自动包裹一层：
+ * options Data processing
+ * Automatically wrap regular options in the options list with a layer:
  * 比如：[{label: 'xxLabel', value: 123}] => [{label: 'xxLabel', value: {label: 'xxLabel', value: 123}}]
  */
 export function getWrapOptions(options: any[]): any[] {

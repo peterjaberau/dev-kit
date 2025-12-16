@@ -21,10 +21,10 @@ class BoxStyleSchema extends React.PureComponent<
   constructor(props: BaseRendererProps) {
     super(props);
     this.state = {
-      layoutStyleLock: false, // 是否锁住容器数值值的设置，默认为false，设置为true后4个数值同时联动
-      renderAction: false, // 用于主动触发render的临时变量
+      layoutStyleLock: false, // Whether to lock the container's value; the default is false, setting it to true will cause all four values ​​to move simultaneously.
+      renderAction: false, // Temporary variable used to actively trigger render
     };
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.updateBoxStyleState = this.updateBoxStyleState.bind(this);
     this.initBoxStyle = this.initBoxStyle.bind(this);
   }
@@ -37,7 +37,7 @@ class BoxStyleSchema extends React.PureComponent<
     this.initBoxStyle();
   }
 
-  // 记录box-style的数值（无需实时响应）
+  // Record the value of box-style (no real-time response required)
   layoutStyleObj: any = {
     top: '',
     right: '',
@@ -46,18 +46,18 @@ class BoxStyleSchema extends React.PureComponent<
     quantity: 'px',
   };
 
-  /** 初始化boxStyle的数值 */
+  /** Initialize the value of boxStyle */
   initBoxStyle = () => {
     const { jsonStore } = this.props;
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { keyRoute, targetJsonSchema } = this.props;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
     const unitJsonSchema = targetJsonSchema.properties['unit'];
-    const quantity = curJsonData.quantity; // 获取数值单位
-    const unitStr = curJsonData.unit || unitJsonSchema.default; // 获取数值
-    // 重置数值
+    const quantity = curJsonData.quantity; // Get the unit of the value
+    const unitStr = curJsonData.unit || unitJsonSchema.default; // Get the value
+    // Reset value
     this.layoutStyleObj = {
       top: '',
       right: '',
@@ -65,12 +65,12 @@ class BoxStyleSchema extends React.PureComponent<
       left: '',
       quantity: quantity,
     };
-    // 设置盒子模型数值
+    // Set box model values
     if (unitStr) {
       const unitArr = unitStr.split(' ');
       if (unitArr.length === 1) {
         if (unitArr[0] && unitArr[0].indexOf(quantity) >= 0) {
-          // 表示当前值有单位
+          // Indicates that the current value has a unit
           this.layoutStyleObj.top = unitArr[0];
           this.layoutStyleObj.right = unitArr[0];
           this.layoutStyleObj.bottom = unitArr[0];
@@ -105,7 +105,7 @@ class BoxStyleSchema extends React.PureComponent<
     }
   };
 
-  /** 设置布局容器的盒子模型数值 */
+  /** Sets the box model values ​​for the layout container */
   setLayoutBoxStyle = (
     newVal: any,
     layoutStyleLock: boolean,
@@ -128,7 +128,7 @@ class BoxStyleSchema extends React.PureComponent<
     }
   };
 
-  /** 布局容器的盒子模型数值联动设值 */
+  /** Sets the values ​​of the box model of the layout container in tandem */
   linkLayoutBoxStyle = (newVal: any) => {
     let curValue = newVal;
     if (newVal === 'auto') {
@@ -168,15 +168,15 @@ class BoxStyleSchema extends React.PureComponent<
     return 0;
   };
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   updateBoxStyleState = () => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
     const { renderAction } = this.state;
-    /** 获取布局容器的盒子模型数值 */
+    /** Get the box model values ​​of the layout container */
     const boxStyleUnit = `${this.layoutStyleObj.top} ${this.layoutStyleObj.right} ${this.layoutStyleObj.bottom} ${this.layoutStyleObj.left}`;
     const curKeyRoute = keyRoute ? `${keyRoute}-unit` : 'unit';
-    updateFormValueData(curKeyRoute, boxStyleUnit); // 更新单位数值
+    updateFormValueData(curKeyRoute, boxStyleUnit); // Update unit value
     this.setState({
       renderAction: !renderAction,
     });
@@ -187,7 +187,7 @@ class BoxStyleSchema extends React.PureComponent<
     const { schemaStore, jsonStore } = this.props;
     const { pageScreen } = schemaStore || {};
     const { renderAction, layoutStyleLock } = this.state;
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -237,7 +237,7 @@ class BoxStyleSchema extends React.PureComponent<
           <div className="center-box">
             <Tooltip
               placement="top"
-              title={layoutStyleLock ? '点击解锁联动' : '点击联动'}
+              title={layoutStyleLock ? 'Click to unlock collaboration' : 'Click to collaborate'}
             >
               <div
                 className={layoutStyleLock ? 'lock-icon' : 'lock-icon unlock'}
@@ -331,7 +331,7 @@ class BoxStyleSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'box-style',
   component: BoxStyleSchema,

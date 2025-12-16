@@ -1,3 +1,3 @@
-// 自定义渲染器
+//Custom renderer
 import '$customRenderers/DynamicDataSchema/index';
 import '$customRenderers/EventSchema/index';

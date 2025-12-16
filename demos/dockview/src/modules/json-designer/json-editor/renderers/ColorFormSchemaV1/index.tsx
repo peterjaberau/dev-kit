@@ -11,42 +11,42 @@ import { isNeedTwoColWarpStyle, buildStyle } from '$utils/index';
 import './index.scss';
 
 /**
- * 旧版color类型：使用原生input(type=color)实现颜色选择器
+ * Legacy color type: Implement a color picker using the native input(type=color) method.
  */
 class ColorFormSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
 
     const { value } = event.target;
-    updateFormValueData && keyRoute && updateFormValueData(keyRoute, value); // 更新数值
+    `updateFormValueData && keyRoute && updateFormValueData(keyRoute, value);` // Update the value
   };
 
-  /** color清除事件处理器 */
+  /** Clear the color event handler */
   deleteColor = () => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
-    updateFormValueData && keyRoute && updateFormValueData(keyRoute, 'initial'); // 更新数值
-    message.success('已移除当前设置的颜色值');
+    `updateFormValueData && keyRoute && updateFormValueData(keyRoute, 'initial');` // Update the value
+    message.success('The currently set color value has been removed');
   };
 
   render() {
@@ -54,11 +54,11 @@ class ColorFormSchema extends React.PureComponent<BaseRendererProps> {
     const { pageScreen } = schemaStore || {};
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { keyRoute, jsonKey, nodeKey, targetJsonSchema } = this.props;
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    // 从jsonData中获取对应的数值
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // 是否需要设置成两栏布局
+    const isNeedTwoCol = isNeedTwoColWarpStyle(targetJsonSchema.type); // Whether to set it to a two-column layout
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -76,8 +76,8 @@ class ColorFormSchema extends React.PureComponent<BaseRendererProps> {
           pageScreen === 'wideScreen'
             ? 'wide-screen-element-warp'
             : `mobile-screen-element-warp ${
-                isNeedTwoCol ? 'two-col-element-warp' : ''
-              }`
+              isNeedTwoCol ? 'two-col-element-warp' : ''
+            }`
         }
         // key={nodeKey}
         id={nodeKey}
@@ -112,7 +112,7 @@ class ColorFormSchema extends React.PureComponent<BaseRendererProps> {
               defaultValue={curJsonData ?? targetJsonSchema.default}
               onChange={this.handleValueChange}
             />
-            <Tooltip title={`点击移除当前颜色值`} placement="top">
+            <Tooltip title={`Click to remove current color value`} placement="top">
               <CloseOutlined
                 className="delete-bgColor-btn"
                 onClick={(event: React.MouseEvent) => {
@@ -127,7 +127,7 @@ class ColorFormSchema extends React.PureComponent<BaseRendererProps> {
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'color',
   component: ColorFormSchema,

@@ -13,28 +13,28 @@ import { buildStyle } from '$utils/index';
 class TextAreaFormSchema extends React.PureComponent<BaseRendererProps> {
   constructor(props: BaseRendererProps) {
     super(props);
-    // 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+    // Binding here is necessary so that `this` can be used in the callback function.
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
 
-  /** 数值变动事件处理器 */
+  /** Numerical change event handler */
   handleValueChange = (event: any) => {
     const { keyRoute, jsonStore } = this.props;
     const { updateFormValueData } = jsonStore || {};
     const { value } = event.target;
-    updateFormValueData && keyRoute && updateFormValueData(keyRoute, value); // 更新数值
+    `updateFormValueData && keyRoute && updateFormValueData(keyRoute, value);` // Update the value
   };
 
   render() {
@@ -42,11 +42,11 @@ class TextAreaFormSchema extends React.PureComponent<BaseRendererProps> {
     const { pageScreen } = schemaStore || {};
     const { getJSONDataByKeyRoute } = jsonStore || {};
     const { keyRoute, jsonKey, nodeKey, targetJsonSchema } = this.props;
-    // 从jsonData中获取对应的数值
+    // Retrieve the corresponding value from jsonData
     const curJsonData =
       getJSONDataByKeyRoute && keyRoute && getJSONDataByKeyRoute(keyRoute);
-    const readOnly = targetJsonSchema.readOnly || false; // 是否只读（默认可编辑）
-    const isRequired = targetJsonSchema.isRequired || false; // 是否必填（默认非必填）
+    const readOnly = targetJsonSchema.readOnly || false; // Whether to make it read-only (default is editable)
+    const isRequired = targetJsonSchema.isRequired || false; // Whether the field is required (default is not required)
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -98,7 +98,7 @@ class TextAreaFormSchema extends React.PureComponent<BaseRendererProps> {
               required={isRequired}
               placeholder={
                 targetJsonSchema.placeholder ||
-                `请输入${targetJsonSchema.title}`
+                `Please enter ${targetJsonSchema.title}`
               }
               defaultValue={curJsonData ?? targetJsonSchema.default}
               onPressEnter={this.handleValueChange}
@@ -111,7 +111,7 @@ class TextAreaFormSchema extends React.PureComponent<BaseRendererProps> {
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'textarea',
   component: TextAreaFormSchema,

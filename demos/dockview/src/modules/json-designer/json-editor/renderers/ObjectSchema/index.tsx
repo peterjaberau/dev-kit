@@ -31,21 +31,21 @@ class ObjectSchema extends React.PureComponent<
     super(props);
 
     this.state = {
-      jsonView: false, // 是否显示code模式
-      isClosed: false, // 是否为关闭状态，默认是开启状态
+      jsonView: false, // Whether to display code mode
+      isClosed: false, // Whether it is closed; the default is open.
     };
 
     this.collapseChange = this.collapseChange.bind(this);
   }
 
   componentWillMount() {
-    // 从web缓存中获取数值
+    // Retrieve values ​​from web cache
     catchJsonDataByWebCache.call(this);
   }
 
   componentWillReceiveProps(nextProps: BaseRendererProps) {
     if (nextProps.keyRoute !== this.props.keyRoute) {
-      /** 当key值路径发生变化时重新从web缓存中获取数值 */
+      /** Retrieve the value from the web cache when the key path changes. */
       catchJsonDataByWebCache.call(this, nextProps.keyRoute);
     }
   }
@@ -60,7 +60,7 @@ class ObjectSchema extends React.PureComponent<
     event.preventDefault();
     event.stopPropagation();
 
-    // 缓存当前折叠状态
+    // Cache the current collapsed state
     saveJSONEditorCache(keyRoute, !isClosed);
   }
 
@@ -79,19 +79,19 @@ class ObjectSchema extends React.PureComponent<
       renderChild,
     } = this.props;
     const { jsonView, isClosed: _isClosed } = this.state;
-    // 判断是否结构化Schema，如果是则不显示Title，避免重复的title
+    // Check if it's a structured schema; if so, don't display the title to avoid duplicate titles.
     const isStructured = isStructuredSchema;
-    // 是否显示源码切换按钮
+    // Should the source code switching button be displayed?
     const showCodeViewBtn = targetJsonSchema.showCodeViewBtn ?? true;
 
-    // 获取前端缓存中的折叠数据
+    // Retrieve folded data from the front-end cache
     let isClosed = _isClosed;
     const collapseCacheData = getJSONEditorCache(keyRoute);
     if (collapseCacheData !== undefined) {
       isClosed = collapseCacheData;
     }
 
-    const boxTitle = targetJsonSchema.boxTitle ?? '对象配置';
+    const boxTitle = targetJsonSchema.boxTitle ?? 'Object Configuration';
 
     const style = targetJsonSchema.style
       ? buildStyle(toJS(targetJsonSchema.style))
@@ -160,7 +160,7 @@ class ObjectSchema extends React.PureComponent<
                     event.stopPropagation();
                   }}
                 >
-                  <Tooltip title={jsonView ? '关闭源码模式' : '开启源码模式'}>
+                  <Tooltip title={jsonView ? 'Disable Source Mode' : 'Enable Source Mode'}>
                     <CodeIcon
                       className={jsonView ? 'info-icon active' : 'info-icon'}
                     />
@@ -178,21 +178,21 @@ class ObjectSchema extends React.PureComponent<
               targetJsonSchema.propertyOrder &&
               targetJsonSchema.propertyOrder.map(
                 (key: string, index: number) => {
-                  /** 1. 获取当前元素的路径值 */
+                  /** 1. Get the path value of the current element */
                   const currentIndexRoute = indexRoute
                     ? `${indexRoute}-${index}`
                     : `${index}`;
                   const currentKeyRoute = keyRoute
-                    ? `${keyRoute}-${key}`
-                    : `${key}`; // key路径值，后续用于从jsonData中提取当前元素的数值
-                  /** 2. 获取当前元素的key值 */
+                    ? `${keyRoute}-${key}` :
+                      `${key}`; // The key path value, which will be used later to extract the value of the current element from the jsonData.
+                  /** 2. Get the key value of the current element */
                   const currentJsonKey = key;
-                  /** 3. 获取当前元素的json结构对象 */
+                  /** 3. Get the JSON structure object of the current element */
                   const currentSchemaData =
                     targetJsonSchema.properties[currentJsonKey];
-                  /** 4. 判断是否是容器类型元素，如果是则禁止选中 */
+                  /** 4. Determine if it is a container element; if so, disable selection. */
                   const curType = currentSchemaData.type;
-                  /** 5. 获取当前元素的id，用于做唯一标识 */
+                  /** 5. Get the ID of the current element, used as a unique identifier */
                   const childNodeKey = `${nodeKey}-${curType}-${currentJsonKey}`;
 
                   return renderChild({
@@ -214,7 +214,7 @@ class ObjectSchema extends React.PureComponent<
   }
 }
 
-// 注册成一个json-editor渲染器
+// Register as a json-editor renderer
 registerRenderer({
   type: 'object',
   component: ObjectSchema,
