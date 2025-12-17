@@ -6,9 +6,6 @@ export const oasMachine = setup({
   actions: {
     setOasInstance: assign(({ context, event }: any, params: any) => {
       const { oas } = params
-      console.log('-----setOasInstance----', {
-        event, params
-      })
 
       context.instance.oas = oas
     }),
@@ -146,6 +143,7 @@ export const oasMachine = setup({
 }).createMachine({
   initial: "loading",
   context: ({ input, self }: any) => {
+    console.log(input?.apiSpec)
     return {
       props: {
         apiSpec: input?.apiSpec || null,
@@ -246,7 +244,7 @@ export const oasMachine = setup({
 
       },
 
-      ...input,
+      // ...input,
     }
   },
   entry: enqueueActions(({ enqueue, context, event }) => {

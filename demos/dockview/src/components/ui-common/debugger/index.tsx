@@ -3,14 +3,15 @@ import { useState } from 'react'
 import { MovableModal } from "#components/ui-common/panel/movableModal"
 import JsonView from "react18-json-view"
 import { useDockViewDebugger } from "#modules/dockview/actors/selectors"
-
-
+import { useOas } from "#modules/dockview/actors/selectors/okas.selector"
+import { Stack } from '@chakra-ui/react'
 
 
 
 
 export default function Debugger(props: any) {
   const { dockViewDebugger } = useDockViewDebugger()
+  const { oasContext } = useOas()
   const [position, setPosition] = useState(() => {
     const width = 500;
     const height = 600;
@@ -29,16 +30,32 @@ export default function Debugger(props: any) {
       defaultPosition={position}
       title={"Debugger"}
       bodyContent={
-        <JsonView
-          src={{
-            ...dockViewDebugger
-          }}
-          collapsed={1}
-          theme="github"
-          displaySize
-          displayArrayIndex
-          style={{ fontSize: 13, fontWeight: "bold" }}
-        />
+        <Stack>
+          <JsonView
+            src={{
+              ...dockViewDebugger,
+            }}
+            collapsed={1}
+            theme="github"
+            displaySize
+            displayArrayIndex
+            style={{ fontSize: 13, fontWeight: "bold" }}
+          />
+          <JsonView
+            src={{
+              oas: {
+                apiSpec: oasContext.props.apiSpec,
+                oasInstance: oasContext.instance.oas,
+                executionCache: oasContext.executionCache
+              }
+            }}
+            collapsed={2}
+            theme="github"
+            displaySize
+            displayArrayIndex
+            style={{ fontSize: 13, fontWeight: "bold" }}
+          />
+        </Stack>
       }
       onClose={onClose}
     />

@@ -3,7 +3,8 @@ import { dockViewAdapterMachine } from "./machine.dock-view.adapter"
 import { dynamicPanelLabMachine } from "./machine.dynamic-panel.lab"
 import { oasMachine } from './oas/machine.oas'
 import { DOCK_VIEW_ENUM } from "../lib"
-import { data as oasApiSpecs } from "#modules/oas/data/petstore"
+import { data as apiSpec } from "#modules/oas/data/petstore"
+import { data as oasSampleSpecs } from "#modules/oas/data/sample-api-specs"
 
 export const appMachine = setup({
   types: {
@@ -25,7 +26,7 @@ export const appMachine = setup({
       context.oasRef = spawn("oasMachine", {
         systemId: DOCK_VIEW_ENUM.OAS_INSTANCE_ID,
         input: {
-          apiSpec: oasApiSpecs
+          apiSpec: oasSampleSpecs
         }
       })
     }),

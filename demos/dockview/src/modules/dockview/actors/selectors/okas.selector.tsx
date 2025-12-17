@@ -10,7 +10,7 @@ export const useOas = () => {
 
   const oasInstance = oasContext?.instance?.oas
   const oasExecutionCache = oasContext?.executionCache
-  const oasApiSpecs = oasContext?.props?.apiSpec
+  const oasApiSpec = oasContext?.props?.apiSpec
 
   return {
     oasRef,
@@ -20,7 +20,7 @@ export const useOas = () => {
 
     oasInstance,
     oasExecutionCache,
-    oasApiSpecs
+    oasApiSpec
   }
 
 }

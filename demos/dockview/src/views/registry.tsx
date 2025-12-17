@@ -16,7 +16,7 @@ const registryMeta: any = {
   'recursive': dynamic(() => import("#views/components/panels/custom/recursive"), { ssr: false }),
   'oas': dynamic(() => import("#views/components/panels/custom/oas"), { ssr: false }),
   'oas-doc': dynamic(() => import("#views/components/panels/custom/oas-doc"), { ssr: false }),
-
+  'oas-json-viewer': dynamic(() => import("#views/components/panels/custom/oas-json-viewer"), { ssr: false }),
 }
 
 export const registryComponentsObj = (id: any) => {

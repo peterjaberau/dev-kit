@@ -58,6 +58,7 @@ export const dockViewDynamicPanelConfig = {
             { id: "recursive", name: "Recursive" },
             { id: "oas", name: "OAS" },
             { id: "oas-doc", name: "OAS Doc" },
+            { id: "oas-json-viewer", name: "OAS Json Viewer" },
             {
               id: "src",
               name: "src",
