@@ -1,7 +1,9 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { dockViewAdapterMachine } from "./machine.dock-view.adapter"
 import { dynamicPanelLabMachine } from "./machine.dynamic-panel.lab"
+import { oasMachine } from './oas/machine.oas'
 import { DOCK_VIEW_ENUM } from "../lib"
+import { data as oasApiSpecs } from "#modules/oas/data/petstore"
 
 export const appMachine = setup({
   types: {
@@ -19,10 +21,20 @@ export const appMachine = setup({
         systemId: DOCK_VIEW_ENUM.DYNAMIC_PANEL_LAB_ACTOR_ID,
       })
     }),
+    spawnOasRef: assign(({ context, spawn }) => {
+      context.oasRef = spawn("oasMachine", {
+        systemId: DOCK_VIEW_ENUM.OAS_INSTANCE_ID,
+        input: {
+          apiSpec: oasApiSpecs
+        }
+      })
+    }),
+
   },
   actors: {
     dockViewAdapterMachine,
-    dynamicPanelLabMachine
+    dynamicPanelLabMachine,
+    oasMachine
   },
   guards: {},
 }).createMachine({
@@ -30,11 +42,13 @@ export const appMachine = setup({
     return {
       dockViewAdapterRef: null,
       dynamicPanelLabRef: null,
+      oasRef: null,
       ...input,
     }
   },
   entry: enqueueActions(({ enqueue }) => {
     enqueue("spawnDockViewAdapter")
     enqueue("spawnDynamicPanelLab")
+    enqueue("spawnOasRef")
   }),
 })

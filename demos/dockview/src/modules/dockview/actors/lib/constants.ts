@@ -5,6 +5,8 @@ export enum DOCK_VIEW_ENUM {
   ADAPTER_ID = 'dock-view-adapter',
   API_ID = 'dock-view-api',
 
+  OAS_INSTANCE_ID = 'oas-instance',
+
 
 
   DYNAMIC_PANEL_LAB_ACTOR_ID = "dynamic-panel-lab-actor",
