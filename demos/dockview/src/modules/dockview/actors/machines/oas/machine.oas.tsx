@@ -1,5 +1,5 @@
 import { assign, enqueueActions, setup } from "xstate"
-import { createOasInstance } from "#modules/dockview/actors/lib/handlers/oas/create-oas-instance"
+import { createInstanceOAS } from "#modules/dockview/actors/lib/handlers/oas/create-instance-oas"
 import { dereferenceOas } from "#modules/dockview/actors/lib/handlers/oas/dereference-oas"
 
 export const oasMachine = setup({
@@ -137,7 +137,7 @@ export const oasMachine = setup({
 
   },
   actors: {
-    createOasInstance,
+    createInstanceOAS,
     dereferenceOas,
   },
 }).createMachine({
@@ -253,7 +253,7 @@ export const oasMachine = setup({
   states: {
     loading: {
       invoke: {
-        src: "createOasInstance",
+        src: "createInstanceOAS",
         input: ({ context }: any) => ({ apiSpec: context?.props?.apiSpec }),
         onDone: {
           target: "ready",

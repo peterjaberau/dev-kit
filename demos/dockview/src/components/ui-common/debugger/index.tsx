@@ -4,6 +4,7 @@ import { MovableModal } from "#components/ui-common/panel/movableModal"
 import JsonView from "react18-json-view"
 import { useDockViewDebugger } from "#modules/dockview/actors/selectors"
 import { useOas } from "#modules/dockview/actors/selectors/okas.selector"
+import { useOasManager } from "#modules/dockview/actors/selectors/oas-manager.selector"
 import { Stack } from '@chakra-ui/react'
 
 
@@ -12,6 +13,8 @@ import { Stack } from '@chakra-ui/react'
 export default function Debugger(props: any) {
   const { dockViewDebugger } = useDockViewDebugger()
   const { oasContext } = useOas()
+  const { oasManagerContext } = useOasManager()
+
   const [position, setPosition] = useState(() => {
     const width = 500;
     const height = 600;
@@ -34,6 +37,11 @@ export default function Debugger(props: any) {
           <JsonView
             src={{
               ...dockViewDebugger,
+              oas: {
+                apiSpec: oasContext.props.apiSpec,
+                oasInstance: oasContext.instance.oas,
+                executionCache: oasContext.executionCache
+              }
             }}
             collapsed={1}
             theme="github"
@@ -43,11 +51,7 @@ export default function Debugger(props: any) {
           />
           <JsonView
             src={{
-              oas: {
-                apiSpec: oasContext.props.apiSpec,
-                oasInstance: oasContext.instance.oas,
-                executionCache: oasContext.executionCache
-              }
+              oasManager: oasManagerContext
             }}
             collapsed={2}
             theme="github"

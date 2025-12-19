@@ -6,6 +6,8 @@ export enum DOCK_VIEW_ENUM {
   API_ID = 'dock-view-api',
 
   OAS_INSTANCE_ID = 'oas-instance',
+  OAS_MANAGER_INSTANCE_ID = 'oas-manager-instance',
+
 
 
 

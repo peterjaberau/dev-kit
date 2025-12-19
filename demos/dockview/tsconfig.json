@@ -33,6 +33,9 @@
       "#actor-kit/*": ["./src/actor-kit/*"],
       "#actor-kit": ["./src/actor-kit/"],
 
+      "#datasets/*": ["./src/datasets/*"],
+      "#datasets": ["./src/datasets/"],
+
       "#actors/*": ["./src/actors/*"],
       "#actors": ["./src/actors/"],
 

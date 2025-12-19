@@ -8,11 +8,19 @@ export const useApp = () => {
   const appState: any = useSelector(appRef, (state) => state)
   const appContext = appState.context
 
+  const dockViewAdapterRef = appContext.dockViewAdapterRef
+  const oasRef = appContext.oasRef
+  const oasManagerRef = appContext.oasManagerRef
+
   return {
     appRef,
     sendToApp,
 
     appState,
     appContext,
+
+    dockViewAdapterRef,
+    oasRef,
+    oasManagerRef
   }
 }
