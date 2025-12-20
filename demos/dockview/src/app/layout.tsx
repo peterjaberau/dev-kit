@@ -11,14 +11,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning style={{ overflow: 'hidden'}}>
+    <html lang="en" suppressHydrationWarning style={{ overflow: "hidden" }}>
       <body suppressHydrationWarning>
         <Suspense>
-            <ChakraProvider>
-              {children}
-              <DebuggerTrigger />
-              <PlaygroundTrigger />
-            </ChakraProvider>
+          <ChakraProvider>
+            {children}
+            <DebuggerTrigger />
+            <PlaygroundTrigger />
+          </ChakraProvider>
         </Suspense>
       </body>
     </html>

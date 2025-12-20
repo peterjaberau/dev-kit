@@ -4,6 +4,7 @@ import { Center } from "@chakra-ui/react"
 import { cache, useEffect, useState } from "react"
 
 const registryMeta: any = {
+  'json-view-tree': dynamic(() => import("#views/components/panels/base/json-view-tree"), { ssr: false }),
   'ai-chat': dynamic(() => import("#views/components/panels/base/ai-chat"), { ssr: false }),
   'code': dynamic(() => import("#views/components/panels/base/code"), { ssr: false }),
   'default': dynamic(() => import("#views/components/panels/base/default"), { ssr: false }),
@@ -18,6 +19,7 @@ const registryMeta: any = {
   'oas-doc': dynamic(() => import("#views/components/panels/custom/oas-doc"), { ssr: false }),
   'oas-json-viewer': dynamic(() => import("#views/components/panels/custom/oas-json-viewer"), { ssr: false }),
   'oas-manager': dynamic(() => import("#views/components/panels/oas-panels/manager"), { ssr: false }),
+
 
 }
 

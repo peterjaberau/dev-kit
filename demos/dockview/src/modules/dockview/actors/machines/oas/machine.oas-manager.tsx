@@ -56,8 +56,8 @@ export const oasManagerMachine = setup({
         datasetName: "petstore-ref-quirks",
       },
       metadata: {
-        OAS_OPEN_API_SPECS: METADATA.data.OAS_OPEN_API_SPECS,
-        OAS_METHODS: METADATA.data.OAS_METHODS,
+        OAS_OPEN_API_SPECS: METADATA.OAS_OPEN_API_SPECS,
+        OAS_METHODS: METADATA.OAS_METHODS,
 
         oas: {
           methods: {
