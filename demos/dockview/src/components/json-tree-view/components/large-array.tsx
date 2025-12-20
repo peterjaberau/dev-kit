@@ -77,19 +77,19 @@ export default function LargeArray({ node, depth, deleteHandle: _deleteSelf, ind
 	const Icons = (
 		<>
 			{!fold && !isEditing && (
-				<span onClick={() => setFold(true)} className='jv-size-chevron'>
-					{ifDisplay(displaySize, depth, fold) && <span className='jv-size'>{node.length} Items</span>}
-          <AngleDownIcon className='jv-chevron' />
+				<span onClick={() => setFold(true)} >
+					{ifDisplay(displaySize, depth, fold) && <span >{node.length} Items</span>}
+          <AngleDownIcon  />
 				</span>
 			)}
 
       {isEditing && (
-        <IconButton className='json-view--edit' css={{ display: 'inline-block' }} onClick={adding ? add : deleteSelf}>
+        <IconButton size='2xs' variant='ghost' onClick={adding ? add : deleteSelf}>
           <DoneIcon />
         </IconButton>
       )}
       {isEditing && (
-        <IconButton className='json-view--edit' css={{ display: 'inline-block' }} onClick={cancel}>
+        <IconButton size='2xs' variant='ghost' onClick={cancel}>
           <CancelIcon />
         </IconButton>
       )}
@@ -99,17 +99,16 @@ export default function LargeArray({ node, depth, deleteHandle: _deleteSelf, ind
 			)}
 			{!fold && !isEditing && editableAdd(editable) && customAdd(customOptions) && (
 
-        <IconButton className='json-view--edit' onClick={() => add()}>
+        <IconButton size='2xs' variant='ghost' onClick={() => add()}>
           <AddIcon />
         </IconButton>
 
 			)}
 			{!fold && !isEditing && editableDelete(editable) && customDelete(customOptions) && _deleteSelf && (
-        <IconButton className='json-view--edit' onClick={() => setDeleting(true)}>
+        <IconButton size='2xs' variant='ghost' onClick={() => setDeleting(true)}>
           <DeleteIcon />
         </IconButton>
 
-				// <DeleteSVG className='json-view--edit' onClick={() => setDeleting(true)} />
 			)}
 			{typeof CustomOperation === 'function' ? <CustomOperation node={node} /> : null}
 		</>
@@ -117,12 +116,11 @@ export default function LargeArray({ node, depth, deleteHandle: _deleteSelf, ind
 
 	return (
 		<>
-			<span>{'['}</span>
 
 			{Icons}
 
 			{!fold ? (
-				<div className='jv-indent'>
+				<div >
 					{nestCollapsedArray.map((item, index) => (
 						<LargeArrayNode
 							key={String(indexOrName) + String(index)}
@@ -138,15 +136,14 @@ export default function LargeArray({ node, depth, deleteHandle: _deleteSelf, ind
 					))}
 				</div>
 			) : (
-				<button onClick={() => setFold(false)} className='jv-button'>
-					...
-				</button>
+				<IconButton size='2xs' variant='ghost' onClick={() => setFold(false)} >
+					Expand
+				</IconButton>
 			)}
 
-			<span>{']'}</span>
 
 			{fold && ifDisplay(displaySize, depth, fold) && (
-				<span onClick={() => setFold(false)} className='jv-size'>
+				<span onClick={() => setFold(false)} >
 					{node.length} Items
 				</span>
 			)}

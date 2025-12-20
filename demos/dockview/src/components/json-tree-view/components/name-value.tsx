@@ -11,10 +11,11 @@ interface Props {
   parent?: Record<string, any> | Array<any>
   parentPath: string[]
   deleteHandle: (indexOrName: string | number, parentPath: string[]) => void
-  editHandle: (indexOrName: string | number, newValue: any, oldValue: any, parentPath: string[]) => void
+  editHandle: (indexOrName: string | number, newValue: any, oldValue: any, parentPath: string[]) => void,
+  isParentExpanded?: boolean | any
 }
 
-export default function NameValue({ indexOrName, value, depth, deleteHandle, editHandle, parent, parentPath }: Props) {
+export default function NameValue({ indexOrName, value, depth, deleteHandle, editHandle, parent, parentPath, isParentExpanded=false }: Props) {
   const { displayArrayIndex } = useContext(JsonViewContext)
   const isArray = Array.isArray(parent)
   const isCurrentValueArray = Array.isArray(value)
@@ -22,36 +23,27 @@ export default function NameValue({ indexOrName, value, depth, deleteHandle, edi
 
   return (
     <Box
+      data-id='data-name-value'
       // flexDirection={isCurrentValueArray || isCurrentValuePlainObject ? 'column': 'row'}
       css={{
         ...(isCurrentValueArray || isCurrentValuePlainObject ? {
+          ...(
+            isParentExpanded ? undefined : {
+              display: 'flex',
+              flexDirection: 'row',
+            }
+          )
         }: {
           display: 'flex',
           flexDirection: 'row',
-
-
         }),
         border: "1px solid",
         borderColor: "border",
+        borderRadius: 'sm',
+        boxShadow: 'xs',
         p: 2,
       }}
     >
-      {!isArray || (isArray && displayArrayIndex) ? (
-        <>
-          <Badge
-            data-id="name-value--array-index--or--object-name"
-            variant={typeof indexOrName === "number" ? "outline" : "surface"}
-            css={{
-              mr: 2
-            }}
-          >
-            {indexOrName}
-          </Badge>
-        </>
-      ) : (
-        <></>
-      )}
-
 
       <JsonNode
         node={value}

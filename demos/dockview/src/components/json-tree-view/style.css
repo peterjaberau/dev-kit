@@ -33,11 +33,11 @@
 }
 .json-view .jv-chevron {
 	display: inline-block;
-	vertical-align: -20%;
+	/*vertical-align: -20%;*/
 	cursor: pointer;
 	opacity: 0.4;
-	width: 1em;
-	height: 1em;
+	/*width: 1em;*/
+	/*height: 1em;*/
 }
 :is(.json-view .jv-chevron:hover, .json-view .jv-size:hover + .jv-chevron) {
 	opacity: 0.8;
@@ -45,30 +45,30 @@
 .json-view .jv-size {
 	cursor: pointer;
 	opacity: 0.4;
-	font-size: 0.875em;
-	font-style: italic;
-	margin-left: 0.5em;
-	vertical-align: -5%;
-	line-height: 1;
+	/*font-size: 0.875em;*/
+	/*font-style: italic;*/
+	/*margin-left: 0.5em;*/
+	/*vertical-align: -5%;*/
+	/*line-height: 1;*/
 }
 
 .json-view :is(.json-view--copy, .json-view--edit),
 .json-view .json-view--link svg {
 	display: none;
-	width: 1em;
-	height: 1em;
-	margin-left: 0.25em;
+	/*width: 1em;*/
+	/*height: 1em;*/
+	/*margin-left: 0.25em;*/
 	cursor: pointer;
 }
 
 .json-view .json-view--input {
 	width: 120px;
-	margin-left: 0.25em;
-	border-radius: 4px;
-	border: 1px solid currentColor;
-	padding: 0px 4px;
-	font-size: 87.5%;
-	line-height: 1.25;
+	/*margin-left: 0.25em;*/
+	/*border-radius: 4px;*/
+	/*border: 1px solid currentColor;*/
+	/*padding: 0px 4px;*/
+	/*font-size: 87.5%;*/
+	/*line-height: 1.25;*/
 	background: transparent;
 }
 .json-view .json-view--deleting {
@@ -79,7 +79,7 @@
 
 :is(.json-view:hover, .json-view--pair:hover) > :is(.json-view--copy, .json-view--edit),
 :is(.json-view:hover, .json-view--pair:hover) > .json-view--link svg {
-	display: inline-block;
+	/*display: inline-block;*/
 }
 
 .json-view .jv-button {
@@ -94,10 +94,10 @@
 }
 
 .json-view svg {
-	vertical-align: -10%;
+	/*vertical-align: -10%;*/
 }
 .jv-size-chevron ~ svg {
-	vertical-align: -16%;
+	/*vertical-align: -16%;*/
 }
 
 /* Themes */

@@ -5,6 +5,7 @@ import CopyButton from "./copy-button"
 import NameValue from "./name-value"
 import type { CustomizeOptions } from "../types"
 import { BiChevronDown as AngleDownIcon } from "react-icons/bi"
+import { IconButton } from "@chakra-ui/react"
 
 interface Props {
   originNode: Array<any>
@@ -66,10 +67,9 @@ export default function LargeArrayNode({
   const Icons = (
     <>
       {!fold && (
-        <span onClick={() => setFold(true)} className="jv-size-chevron">
-          {ifDisplay(displaySize, depth, fold) && <span className="jv-size">{objectSize(node)} Items</span>}
-          <AngleDownIcon className="jv-chevron" />
-          {/*<AngleDownSVG className='jv-chevron' />*/}
+        <span onClick={() => setFold(true)} >
+          {ifDisplay(displaySize, depth, fold) && <span >{objectSize(node)} Items</span>}
+          <AngleDownIcon  />
         </span>
       )}
 
@@ -82,7 +82,6 @@ export default function LargeArrayNode({
 
   return (
     <div>
-      <span>{"["}</span>
 
       {Icons}
 
@@ -98,16 +97,16 @@ export default function LargeArrayNode({
               deleteHandle={deleteHandle}
               editHandle={editHandle}
               parentPath={parentPath}
+              isParentExpanded={true}
             />
           ))}
         </div>
       ) : (
-        <button onClick={() => setFold(false)} className="jv-button">
+        <IconButton size='2xs' variant='ghost' onClick={() => setFold(false)} >
           {startIndex} ... {startIndex + node.length - 1}
-        </button>
+        </IconButton>
       )}
 
-      <span>{"]"}</span>
     </div>
   )
 }

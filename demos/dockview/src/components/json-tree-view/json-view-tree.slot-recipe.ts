@@ -28,9 +28,9 @@ export const jsonViewTreeSlotRecipe = defineSlotRecipe({
     /* ================= ROOT ================= */
 
     root: {
-      display: "block",
-      color: "#4d4d4d",
-      textAlign: "left",
+      // display: "block",
+      // color: "#4d4d4d",
+      // textAlign: "left",
 
       "--json-property": "#009033",
       "--json-index": "#676dff",
@@ -38,6 +38,7 @@ export const jsonViewTreeSlotRecipe = defineSlotRecipe({
       "--json-string": "#b2762e",
       "--json-boolean": "#dc155e",
       "--json-null": "#dc155e",
+      fontSize: 'sm',
 
       "& svg": {
         verticalAlign: "-10%",

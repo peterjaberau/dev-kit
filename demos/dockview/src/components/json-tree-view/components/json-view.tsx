@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useCallback, useEffect, useState } from 'react'
-import { ChakraProvider, defineConfig, defaultConfig, createSystem, useSlotRecipe, chakra } from "@chakra-ui/react"
+import { ChakraProvider, defineConfig, defaultConfig, createSystem, useSlotRecipe, chakra, Container } from "@chakra-ui/react"
 import JsonNode from './json-node'
 import type { Collapsed, CustomizeCollapseStringUI, CustomizeNode, DisplaySize, Editable, NodeMeta } from '../types'
 import { stringifyForCopying } from '../utils'
@@ -265,15 +265,13 @@ export default function JsonView({
           CustomOperation,
         }}
       >
-        <chakra.code
-          css={cssRoot}
-          className={
-            "json-view" +
-            (dark ? " dark" : "") +
-            (theme && theme !== "default" ? "json-view_" + theme : "") +
-            (className ? " " + className : "")
-          }
-          style={style}
+        <Container
+          css={{
+            ...cssRoot,
+            width: 'full',
+            padding: 0,
+            margin: 0
+          }}
         >
           <JsonNode
             node={src}
@@ -323,7 +321,7 @@ export default function JsonView({
             }}
             parentPath={[]}
           />
-        </chakra.code>
+        </Container>
       </JsonViewContext.Provider>
     </JsonViewThemeProvider>
   )

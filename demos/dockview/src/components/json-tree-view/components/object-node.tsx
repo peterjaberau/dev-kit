@@ -13,7 +13,7 @@ import {
 } from "../utils"
 import CopyButton from "./copy-button"
 import NameValue from "./name-value"
-import { chakra, IconButton, HStack, Stack, Icon, Button, Box } from "@chakra-ui/react"
+import { chakra, IconButton, HStack, Stack, Icon, Button, Box, Flex, Badge } from "@chakra-ui/react"
 import {
   BiTrash as DeleteIcon,
   BiPlus as AddIcon,
@@ -201,6 +201,13 @@ export default function ObjectNode({
 
   const Icons = (
     <>
+    {!fold && !isEditing && (
+      <Button variant="outline" size="2xs" onClick={() => setFold(true)}>
+        Collapse
+      </Button>
+    )}
+
+
       {!fold && !isEditing && (
         <chakra.span data-id="object-node-action-icons" onClick={() => setFold(true)}>
           {ifDisplay(displaySize, depth, fold) && (
@@ -217,18 +224,12 @@ export default function ObjectNode({
       )}
 
       {isEditing && (
-        <IconButton size="2xs" variant="ghost" css={{ display: "inline-block" }} onClick={adding ? add : deleteSelf}>
+        <IconButton size="2xs" variant="ghost" onClick={adding ? add : deleteSelf}>
           <DoneIcon />
         </IconButton>
       )}
       {isEditing && (
-        <IconButton
-          size="2xs"
-          variant="ghost"
-          className="json-view--edit"
-          css={{ display: "inline-block" }}
-          onClick={cancel}
-        >
+        <IconButton size="2xs" variant="ghost" onClick={cancel}>
           <CancelIcon />
         </IconButton>
       )}
@@ -237,21 +238,9 @@ export default function ObjectNode({
         <CopyButton node={node} nodeMeta={{ depth, indexOrName, parent, parentPath, currentPath }} />
       )}
       {!fold && !isEditing && editableAdd(editable) && customAdd(customOptions) && (
-        // <AddSVG
-        // 	className='json-view--edit'
-        // 	onClick={() => {
-        // 		if (isPlainObject) {
-        // 			setAdding(true)
-        // 			setTimeout(() => inputRef.current?.focus())
-        // 		} else {
-        // 			add()
-        // 		}
-        // 	}}
-        // />
         <IconButton
           size="2xs"
           variant="ghost"
-          className="json-view--edit"
           onClick={() => {
             if (isPlainObject) {
               setAdding(true)
@@ -265,10 +254,9 @@ export default function ObjectNode({
         </IconButton>
       )}
       {!fold && !isEditing && editableDelete(editable) && customDelete(customOptions) && _deleteSelf && (
-        <IconButton size="2xs" variant="ghost" className="json-view--edit" onClick={() => setDeleting(true)}>
+        <IconButton size="2xs" variant="ghost" onClick={() => setDeleting(true)}>
           <DeleteIcon />
         </IconButton>
-        // <DeleteSVG className='json-view--edit' onClick={() => setDeleting(true)} />
       )}
       {typeof CustomOperation === "function" ? <CustomOperation node={node} /> : null}
     </>
@@ -276,13 +264,40 @@ export default function ObjectNode({
 
   if (Array.isArray(node)) {
     return (
-      <>
-        {/*<span>{'['}</span>*/}
+      <chakra.div
+        data-id="object-node--array"
+        css={{
+          ...(fold
+            ? {
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }
+            : {
+                // display: 'block'
+              }),
+          cursor: 'pointer',
+          _hover: {
+            backgroundColor: 'bg.subtle'
+          }
+        }}
+      >
+        <HStack justifyContent={"space-between"} alignItems={"center"}>
+          <Badge
+            variant="surface"
+            css={{
+              mr: 2,
+            }}
+          >
+            {indexOrName}
+          </Badge>
 
-        {Icons}
+          <HStack>{Icons}</HStack>
+        </HStack>
 
         {!fold && (
-          <Stack data-id="object-node--array">
+          <Stack data-id="object-node--array-items" pt={2}>
             {node.map((n, i) => (
               <NameValue
                 key={String(indexOrName) + String(i)}
@@ -293,31 +308,57 @@ export default function ObjectNode({
                 deleteHandle={deleteHandle}
                 editHandle={editHandle}
                 parentPath={currentPath}
+                isParentExpanded={true}
               />
             ))}
           </Stack>
         )}
 
-        {fold && (
-          <Button variant="outline" size="2xs" onClick={() => setFold(false)}>
-            Expand
-          </Button>
-        )}
+        <HStack>
+          {fold && (
+            <Button variant="outline" size="2xs" onClick={() => setFold(false)}>
+              Expand
+            </Button>
+          )}
 
-        {fold && ifDisplay(displaySize, depth, fold) && (
-          <span style={{ marginLeft: "8px", backgroundColor: "red" }} onClick={() => setFold(false)}>
-            {objectSize(node)} Items
-          </span>
-        )}
-      </>
+          {fold && ifDisplay(displaySize, depth, fold) && (
+            <span style={{ marginLeft: "8px", backgroundColor: "red" }} onClick={() => setFold(false)}>
+              {objectSize(node)} Items - array
+            </span>
+          )}
+        </HStack>
+      </chakra.div>
     )
   } else if (isPlainObject) {
     return (
-      <>
-        {Icons}
+      <chakra.div
+        data-id="object-node--object"
+        css={{
+          ...(fold
+            ? {
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }
+            : {
+                display: "block",
+              }),
+        }}
+      >
+        <HStack justifyContent={"space-between"} alignItems={"center"}>
+          <Badge
+            variant="surface"
+            css={{
+              mr: 2,
+            }}
+          >
+            {indexOrName}
+          </Badge>
+          <HStack>{Icons}</HStack>
+        </HStack>
 
-        {!fold ? (
-          <Stack data-id="object-node--objects">
+        {!fold && (
+          <Stack data-id="object-node--object-items" pt={2}>
             {Object.entries(node).map(([name, value]) => (
               <NameValue
                 key={String(indexOrName) + String(name)}
@@ -328,23 +369,26 @@ export default function ObjectNode({
                 deleteHandle={deleteHandle}
                 editHandle={editHandle}
                 parentPath={currentPath}
+                isParentExpanded={true}
               />
             ))}
           </Stack>
-        ) : (
-          <Button onClick={() => setFold(false)} size="2xs" variant="outline">
-            Expand
-          </Button>
         )}
 
-        {/*<span>{'}'}</span>*/}
+        <HStack>
+          {fold && (
+            <Button variant="outline" size="2xs" onClick={() => setFold(false)}>
+              Expand
+            </Button>
+          )}
 
-        {fold && ifDisplay(displaySize, depth, fold) && (
-          <span style={{ marginLeft: "8px" }} onClick={() => setFold(false)}>
-            {objectSize(node)} Items
-          </span>
-        )}
-      </>
+          {fold && ifDisplay(displaySize, depth, fold) && (
+            <span style={{ marginLeft: "8px" }} onClick={() => setFold(false)}>
+              {objectSize(node)} Items - object
+            </span>
+          )}
+        </HStack>
+      </chakra.div>
     )
   } else {
     return <span>{String(node)}</span>

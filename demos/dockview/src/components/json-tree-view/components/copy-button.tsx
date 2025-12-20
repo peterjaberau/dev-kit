@@ -1,8 +1,7 @@
 import { useContext, useState } from "react"
-import { IconButton, useSlotRecipe } from "@chakra-ui/react"
+import { IconButton } from "@chakra-ui/react"
 
 import { BiCopy as CopyIcon, BiCheckCircle as CopiedIcon } from "react-icons/bi"
-import { jsonViewTreeSlotRecipe } from "../json-view-tree.slot-recipe"
 
 import { JsonViewContext } from "./json-view"
 import { writeClipboard } from "../utils"
@@ -16,8 +15,6 @@ interface Props {
 export default function CopyButton({ node, nodeMeta }: Props) {
   const { customizeCopy, CopyComponent, CopiedComponent } = useContext(JsonViewContext)
 
-  const recipe = useSlotRecipe({ recipe: jsonViewTreeSlotRecipe })
-  const { copy: cssCopy } = recipe()
 
   const [copied, setCopied] = useState(false)
 
@@ -37,19 +34,13 @@ export default function CopyButton({ node, nodeMeta }: Props) {
   return copied ? (
     typeof CopiedComponent === "function" ? (
       <CopiedComponent
-        css={{
-          ...cssCopy,
-          // display: "inline-block",
-        }}
+
       />
     ) : (
       <IconButton
         variant="ghost"
         size="2xs"
-        css={{
-          ...cssCopy,
-          // display: "inline-block",
-        }}
+
       >
         <CopiedIcon />
       </IconButton>
@@ -57,22 +48,17 @@ export default function CopyButton({ node, nodeMeta }: Props) {
   ) : typeof CopyComponent === "function" ? (
     <CopyComponent
       onClick={copyHandler}
-      css={{
-        ...cssCopy,
-      }}
+
     />
   ) : (
     <IconButton
       onClick={copyHandler}
       variant="ghost"
       size="2xs"
-      css={{
-        ...cssCopy,
-      }}
+
     >
       <CopyIcon />
     </IconButton>
 
-    // <CopySVG onClick={copyHandler} className='json-view--copy' />
   )
 }
