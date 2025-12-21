@@ -9,10 +9,22 @@ export const rootMachine = setup({
   actors: {},
   guards: {},
 }).createMachine({
+  initial: 'idle',
   context: ({ input }: any) => {
     return {
-      ...input,
+      data: input?.data,
+      collapsed: true,
+      enableClipboard: true,
+      editable: false,
+      displayArrayIndex: true,
+      displaySize: true,
     }
   },
-  entry: enqueueActions(({ enqueue }) => {}),
+  // entry: enqueueActions(({ enqueue }) => {}),
+  states: {
+    idle: {
+
+    }
+  }
+
 })

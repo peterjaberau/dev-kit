@@ -1,10 +1,17 @@
 "use client"
-import { JsonTreeProvider } from "./providers"
+import { AppProvider, UIProvider } from "./providers"
+import { Root } from "./components/root"
 
-export const App = ({ children }: any) => {
+const App = ({ data }: any) => {
   return (
     <>
-      <JsonTreeProvider>{children}</JsonTreeProvider>
+      <AppProvider data={data}>
+        <UIProvider>
+          <Root />
+        </UIProvider>
+      </AppProvider>
     </>
   )
 }
+
+export default App
