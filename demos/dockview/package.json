@@ -11,6 +11,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@zag-js/async-list": "^1.31.1",
+    "@zag-js/core": "^1.31.1  ",
+    "@zag-js/tree-view": "^1.31.1",
+    "@zag-js/utils": "^1.31.1",
+    "@zag-js/collection": "^1.31.1",
+    "@zag-js/json-tree-utils": "^1.31.1",
+    "@zag-js/react": "^1.31.1",
+    "lucide-react": "^0.562.0",
     "@ant-design/icons": "^5.4.0",
     "ace-builds": "^1.35.4",
     "@wibetter/json-utils": "^6.0.1",

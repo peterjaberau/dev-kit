@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "shiki": "^3.9.1",
-    "@chakra-ui/react": "^3.24.0",
-    "@ark-ui/react": "^5.18.3",
-    "@chakra-ui/charts": "3.24.0",
+    "@chakra-ui/react": "^3.30.0",
+    "@ark-ui/react": "^5.30.0",
+    "@chakra-ui/charts": "^3.30.0",
     "@hookform/resolvers": "5.0.1",
     "@tanstack/react-table": "8.21.3",
     "@tanstack/react-virtual": "3.13.6",

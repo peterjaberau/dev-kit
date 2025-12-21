@@ -33,8 +33,12 @@
       "#actor-kit/*": ["./src/actor-kit/*"],
       "#actor-kit": ["./src/actor-kit/"],
 
+      "#json-tree-view-react/*": ["./src/components/json-tree-view-react/*"],
+      "#json-tree-view-react": ["./src/components/json-tree-view-react/"],
+
       "#json-tree-view/*": ["./src/components/json-tree-view/*"],
       "#json-tree-view": ["./src/components/json-tree-view/"],
+
 
       "#datasets/*": ["./src/datasets/*"],
       "#datasets": ["./src/datasets/"],

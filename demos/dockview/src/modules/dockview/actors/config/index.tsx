@@ -46,7 +46,9 @@ export const dockViewDynamicPanelConfig = {
           id: "panels",
           name: "Panels",
           children: [
-            { id: "json-view-tree", name: "Json View Tree" },
+            { id: "json-tree-renderer", name: "Json Tree Renderer" },
+            { id: "tree-view-pro", name: "Tree View Pro" },
+            { id: "json-tree-view-react", name: "Json Tree View React" },
             { id: "ai-chat", name: "AI Chat" },
             { id: "code", name: "Code" },
             { id: "default", name: "Default", disabled: true },

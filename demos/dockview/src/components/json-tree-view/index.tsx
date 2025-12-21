@@ -1,25 +1,38 @@
-import JsonView, { defaultURLRegExp, JsonViewProps } from './components/json-view'
-import { stringifyForCopying as stringify } from './utils'
-import {
-  BiSolidEdit as EditIcon,
-  BiTrash as DeleteIcon,
-  BiCheck as DoneIcon,
-  BiXCircle as CancelIcon,
-  BiCopy as CopyIcon,
-  BiCheckCircle as CopiedIcon,
-  BiLinkExternal as LinkIcon
-} from "react-icons/bi";
+import { chakra, useSlotRecipe } from "@chakra-ui/react"
+import { JsonTreeView } from '@ark-ui/react'
+import { ChevronRightIcon } from 'lucide-react'
+import { jsonTreeViewSlotRecipe } from './recipe'
 
-// import { ReactComponent as EditSVG } from './svgs/edit.svg'
-// import { ReactComponent as DeleteSVG } from './svgs/trash.svg'
-// import { ReactComponent as DoneSVG } from './svgs/done.svg'
-// import { ReactComponent as CancelSVG } from './svgs/cancel.svg'
-// import { ReactComponent as CopySVG } from './svgs/copy.svg'
-// import { ReactComponent as CopiedSVG } from './svgs/copied.svg'
-// import { ReactComponent as LinkSVG } from './svgs/link.svg'
+const testArray = [1, 2, 3, 4, 5]
+Object.defineProperties(testArray, {
+  customProperty: { value: 'custom value', enumerable: false, writable: false },
+  anotherProperty: { value: 42, enumerable: false, writable: false },
+})
 
-export { JsonView as default, stringify, defaultURLRegExp,
-  // EditSVG, DeleteSVG, DoneSVG, CancelSVG, CopySVG, CopiedSVG, LinkSVG,
-  EditIcon, DeleteIcon, DoneIcon, CancelIcon, CopyIcon, CopiedIcon, LinkIcon
+const Index = () => {
+  const recipe = useSlotRecipe({ recipe: jsonTreeViewSlotRecipe })
+  const styles: any = recipe()
+
+
+  return (
+    <JsonTreeView.Root
+      style={styles.root}
+      data={{
+        normalArray: [1, 2, 3],
+        arrayWithNonEnumerableProperties: testArray,
+        sparseArray: (() => {
+          const sparse = []
+          sparse[0] = 'first'
+          sparse[5] = 'sixth'
+          return sparse
+        })(),
+      }}
+    >
+      <JsonTreeView.Tree
+        style={styles.tree}
+        arrow={<ChevronRightIcon />}
+      />
+    </JsonTreeView.Root>
+  )
 }
-export type { JsonViewProps }
+export default Index
