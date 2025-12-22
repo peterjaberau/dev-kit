@@ -1,11 +1,13 @@
 "use client"
+
+import { forwardRef } from "react"
 import { AppProvider, UIProvider } from "./providers"
 import { Root } from "./components/root"
 
-const App = ({ data }: any) => {
+const App = (props: any) => {
   return (
     <>
-      <AppProvider data={data}>
+      <AppProvider {...props}>
         <UIProvider>
           <Root />
         </UIProvider>

@@ -3,16 +3,16 @@ import React from "react"
 import { createActorContext } from "@xstate/react"
 import { appMachine } from "../machines"
 
-export const AppContext = createActorContext<any>()
+export const AppContext = createActorContext(appMachine)
 
-export const AppProvider = ({ children, data }: any) => {
-
-  console.log('---data----', {
-    data
-  })
-
+export const AppProvider = (props: any) => {
+  const { children, ...rest } = props
   return (
-    <AppContext.Provider logic={appMachine(data)} >
+    <AppContext.Provider
+      options={{
+        input: { ...rest },
+      }}
+    >
       {children}
     </AppContext.Provider>
   )

@@ -9,7 +9,7 @@ export const rootMachine = setup({
   actors: {},
   guards: {},
 }).createMachine({
-  initial: 'idle',
+  initial: "idle",
   context: ({ input }: any) => {
     return {
       data: input?.data,
@@ -20,11 +20,7 @@ export const rootMachine = setup({
       displaySize: true,
     }
   },
-  // entry: enqueueActions(({ enqueue }) => {}),
   states: {
-    idle: {
-
-    }
-  }
-
+    idle: {},
+  },
 })

@@ -9,10 +9,6 @@ export function useApp() {
   const appState: any = useSelector(appRef, (state) => state)
   const appContext = appState.context
 
-  console.log('---appRef----', {
-    appRef
-  })
-
   return {
     appRef,
     sendToApp,

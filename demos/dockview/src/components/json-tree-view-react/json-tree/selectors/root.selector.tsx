@@ -13,13 +13,11 @@ export function useRoot() {
 
   const data = rootContext?.data
 
-
-
   return {
     rootRef,
     sendToRoot,
     rootState,
     rootContext,
-    data
+    data,
   }
 }
