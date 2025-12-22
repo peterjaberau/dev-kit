@@ -1,3 +1,10 @@
 export * from './recipe'
 export * from './constants'
 export * from './actors'
+
+export * from './is-array'
+export * from './is-object'
+export * from './is-number'
+export * from './is-bigint'
+export * from './is-boolean'
+export * from './is-string'

@@ -1,17 +1,30 @@
 import { assign, enqueueActions, setup } from "xstate"
+import { nodeMachine } from './node.machine'
+import { machineConstants} from '../utils/constants'
 
 export const rootMachine = setup({
   types: {
     context: {} as any,
     events: {} as any,
   } as any,
-  actions: {},
-  actors: {},
+  actions: {
+    spawnRootNode: assign(({ context, spawn }) => {
+      context.rootNodeRef = spawn("nodeMachine", {
+        systemId: machineConstants.NODE_PREFIX + "root",
+        input: {
+          data: context?.data
+        }
+      })
+    }),
+  },
+  actors: {
+    nodeMachine
+  },
   guards: {},
 }).createMachine({
-  initial: "idle",
   context: ({ input }: any) => {
     return {
+      rootNodeRef: null,
       data: input?.data,
       collapsed: true,
       enableClipboard: true,
@@ -20,7 +33,7 @@ export const rootMachine = setup({
       displaySize: true,
     }
   },
-  states: {
-    idle: {},
-  },
+  entry: enqueueActions(({ enqueue, context, event }) => {
+    enqueue("spawnRootNode")
+  }),
 })
