@@ -1,36 +1,57 @@
-import { assign, createMachine, setup } from "xstate"
+import { assign, createMachine, enqueueActions, setup } from "xstate"
+import { nodeMachine } from './node.machine'
 
 
-export const nodeObjectMachine = setup({
+export const nodeObjectMachine: any = setup({
   types: {} as any,
-  actions: {
-    // spawnNodeArray: assign(({ context, spawn }) => {
-    //   context.refs.relations.branch = spawn("nodeTypeofArrayMachine", {
-    //     input: {
-    //       refs: {
-    //         internal: {
-    //           parent: self,
-    //         },
-    //       },
-    //     },
-    //   })
-    // }),
-  },
   actors: {
-    // nodeTypeofArrayMachine,
-    // nodeTypeofObjectMachine
+    nodeMachine
   },
-  guards: {
+  actions: {
+    spawnNodes: assign(({ context, spawn, self }) => {
+      const data = context?.config?.data
+      Object.keys(data).forEach((key) => {
 
+
+
+        // const node =  spawn(nodeMachine, {
+        //   input: {
+        //     refs: {
+        //       internal: {
+        //         // parentNode: context?.refs?.internal?.parent,
+        //         parent: self
+        //       },
+        //     },
+        //     config: {
+        //       data: context?.data[key]
+        //     },
+        //     info: {
+        //       parentPath: [
+        //         ...context?.info?.parentPath, key
+        //       ]
+        //     }
+        //   }
+        // })
+
+        // context.refs.internal.nodes = {
+        //   ...context?.refs?.internal?.nodes,
+        //   [key]: node
+        // }
+      })
+
+    }),
   },
+
+
 }).createMachine({
+  // initial: "initiating",
   context: ({ input, self }: any) => {
-
     return {
       refs: {
         internal: {
           self: self,
-          parent: input?.refs?.internal?.parent
+          parent: input?.refs?.internal?.parent,
+          nodes: {}
         },
         external: {
           ...input?.refs?.external,
@@ -43,8 +64,12 @@ export const nodeObjectMachine = setup({
       runtime: {},
     }
   },
-  // entry: enqueueActions(({ enqueue, context, event }) => {
-  //   enqueue("spawnNodeArray")
-  //   enqueue("spawnNodeObject")
-  // }),
+  // states: {
+  //   initiating: {
+  //     entry: enqueueActions(({ enqueue, context, event }) => {
+  //       enqueue("spawnNodes")
+  //     })
+  //   }
+  // }
+
 })

@@ -1,6 +1,7 @@
+'use client'
 import { chakra, Container, Stack } from "@chakra-ui/react"
 import React, { Ref } from "react"
-import { useApp, useAppRoot, useNode, useNodeRoot } from "../selectors"
+import { useApp, useAppRoot, useNodeRootInstance, useNodeRoot } from "../selectors"
 import { CollapseWrapper } from "#views/components/common"
 import JsonView from "react18-json-view"
 
@@ -9,7 +10,9 @@ const Impl = (props: any, ref: Ref<HTMLDivElement>) => {}
 export const Root = (props: any) => {
   const { appId, appContext  } = useApp()
   const { appRootId, appRootContext } = useAppRoot()
-  const { nodeRootId, nodeRootContext  } = useNodeRoot()
+  const { nodeRootId, nodeRootContext, nodeInfo: nodeRootInfo  } = useNodeRoot()
+  const { nodeRootInstanceId, nodeRootInstanceContext, nodeInstance: nodeRootInstanceInfo  } = useNodeRootInstance()
+
 
   return (
     <Stack
@@ -31,10 +34,16 @@ export const Root = (props: any) => {
             },
             nodeRoot: {
               id: nodeRootId,
-              context: nodeRootContext
+              context: nodeRootContext,
+              instance: nodeRootInfo
             },
+            nodeRootInstance: {
+              id: nodeRootInstanceId,
+              context: nodeRootInstanceContext,
+              instance: nodeRootInstanceInfo
+            }
           }}
-          collapsed={1}
+          collapsed={2}
           theme="github"
           displaySize
           displayArrayIndex

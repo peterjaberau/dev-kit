@@ -61,6 +61,16 @@ export default function JsonNode({
   }
 
   if (Array.isArray(node) || isObject(node)) {
+
+    console.log('node isArray or isObject ', {
+      parentPath,
+      parent,
+      node,
+      indexOrName,
+      depth
+    })
+
+
     return (
       <ObjectNode
         parent={parent}
@@ -128,6 +138,14 @@ export default function JsonNode({
           parentPath,
         })
     }
+
+    console.log('node isScalar ', {
+      parentPath,
+      parent,
+      indexOrName,
+      node,
+      depth
+    })
 
     const handleKeyDown = useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {

@@ -1,3 +1,4 @@
+'use client'
 import { useSelector } from "@xstate/react"
 import { useApp } from "./app.selector"
 import { getSpawnedActor } from "../utils"

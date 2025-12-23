@@ -1,9 +1,5 @@
-import { assign, enqueueActions, setup, raise } from "xstate"
+import { assign, enqueueActions, setup, raise, createMachine } from "xstate"
 import { isBranch, isLeaf, isFalsy, typeOf, isArray, isObject, machineConstants } from "../utils"
-
-import { nodeObjectMachine } from './node.typeof-object.machine'
-import { nodeArrayMachine } from './node.typeof-array.machine'
-import { nodeScalarMachine } from './node.typeof-scalar.machine'
 
 export const nodeMachine = setup({
   types: {
@@ -29,78 +25,69 @@ export const nodeMachine = setup({
       }
     }),
 
-    spawnNodeScalar: assign(({ context, spawn, self }) => {
-      context.refs.relations.tree.root = spawn("nodeScalarMachine", {
+    spawnNodeScalar: enqueueActions(({ context, enqueue, self }) => {
+      if (context.runtime.spawned) return
+      context.runtime.spawned = true
+
+      enqueue.spawnChild(nodeMachine, {
         input: {
           refs: {
-            internal: {
-              parent: self,
-            },
+            internal: { parent: self },
             relations: {
-              nodes: {
-                current: self,
-                parent: null,
-              },
+              nodes: { current: self, parent: null },
             },
           },
-          info: context?.info,
           config: {
-            data: context?.config?.data
-          }
-        },
-      })
-    }),
-    spawnNodeObject: assign(({ context, spawn, self }) => {
-      context.refs.relations.tree.root = spawn("nodeObjectMachine", {
-        input: {
-          refs: {
-            internal: {
-              parent: self,
-            },
-            relations: {
-              nodes: {
-                current: self,
-                parent: null,
-              },
-            },
+            data: context.config.data,
           },
-          info: context?.info,
-          config: {
-            data: context?.config?.data
-          }
-        },
-      })
-    }),
-    spawnNodeArray: assign(({ context, spawn, self }) => {
-      context.refs.relations.tree.root = spawn("nodeArrayMachine", {
-        input: {
-          refs: {
-            internal: {
-              parent: self,
-            },
-            relations: {
-              nodes: {
-                current: self,
-                parent: null,
-              },
-            },
-          },
-          info: context?.info,
-          config: {
-            data: context?.config?.data
-          }
         },
       })
     }),
 
+    spawnNodeObject: enqueueActions(({ context, enqueue, self }) => {
+      if (context.runtime.spawned) return
+      context.runtime.spawned = true
 
+      const data = context.config.data
+
+      Object.keys(data).forEach((key) => {
+        enqueue.spawnChild(nodeMachine, {
+          input: {
+            refs: {
+              internal: { parent: self },
+              relations: {
+                nodes: { current: self, parent: null },
+              },
+            },
+            config: {
+              data: data[key],
+            },
+          },
+        })
+      })
+    }),
+
+    spawnNodeArray: enqueueActions(({ context, enqueue, self }) => {
+      if (context.runtime.spawned) return
+      context.runtime.spawned = true
+
+      const data = context.config.data
+
+      data.forEach((item: any) => {
+        enqueue.spawnChild(nodeMachine, {
+          input: {
+            refs: {
+              internal: { parent: self },
+            },
+            config: {
+              data: item,
+            },
+          },
+        })
+      })
+    }),
   },
-  actors: {
-    nodeObjectMachine,
-    nodeArrayMachine,
-    nodeScalarMachine,
-
-  },
+  actors: {},
   guards: {
     isRootNode: ({ context }: any) => {
       return context?.info?.is?.isRoot
@@ -121,22 +108,11 @@ export const nodeMachine = setup({
     return {
       refs: {
         internal: {
-          self: self,
+          self,
           parent: input?.refs?.internal?.parent || null,
+          instance: null,
         },
         external: {},
-        relations: {
-          nodes: {
-            // data source actors, at node level
-            current: self,
-            parent: input?.refs?.relations?.nodes?.parent,
-          },
-          tree: {
-            root: null,
-            branch: null,
-            leaf: null,
-          },
-        },
       },
       config: {
         data: input?.config?.data,
@@ -148,18 +124,10 @@ export const nodeMachine = setup({
           isScalar: null,
           isArray: null,
           isObject: null,
-
-          isRootBranch: null, // root node is object or array
-          isRootLeaf: null, // root node is scalar
-          isBranch: null, // node is object or array
-          isChildBranch: null,
-          isChildLeaf: null,
-          isLeaf: null, // node is scalar
-
         },
       },
       runtime: {
-        /* config state in runtime */
+        spawned: false,
       },
     }
   },
@@ -168,11 +136,79 @@ export const nodeMachine = setup({
     initiating: {
       entry: ["evalNodeType"],
       always: [
-        { guard: "isScalarNode", actions: ["spawnNodeScalar"], target: "ready", },
-        { guard: "isObjectNode", actions: ["spawnNodeObject"], target: "ready", },
-        { guard: "isArrayNode", actions: ["spawnNodeArray"], target: "ready", },
+        { guard: "isScalarNode", actions: ["spawnNodeScalar"], target: "ready" },
+        { guard: "isObjectNode", actions: ["spawnNodeObject"], target: "ready" },
+        { guard: "isArrayNode", actions: ["spawnNodeArray"], target: "ready" },
       ],
     },
     ready: {},
   },
 })
+
+export const createNode = (input: any) => {
+  return setup({
+    actions: {
+      spawnChildNodes: assign(({ context, event, spawn }: any) => {
+        context.config.data = event.data
+        // context.refs.internal.nodes =
+      }),
+    },
+    actors: {},
+  }).createMachine({
+    id: "node",
+    initial: "idle",
+    context: ({ spawn, self }) => {
+      return {
+        refs: {
+          internal: {
+            self,
+            parent: input?.refs?.internal?.parent || null,
+            nodes: [],
+          },
+          external: {},
+        },
+        config: {
+          data: input?.config?.data,
+        },
+        runtime: {},
+      }
+    },
+    on: {
+      UPDATE: {
+        actions: ["spawnChildNodes"],
+      },
+    },
+
+    states: {
+      idle: {},
+    },
+  })
+}
+
+export const createChildNodes = ({ data, spawn }: any) => {
+  if (Array.isArray(data)) {
+    return data.map((item, index) => {
+      return spawn(
+        createNode({
+          config: {
+            data: item,
+          },
+        }),
+        { id: String(index) },
+      )
+    })
+  }
+
+  if (typeof data === 'object' && data !== null) {
+    const children: any = {};
+    for (const [key, val] of Object.entries(data)) {
+      children[key] = spawn(createNode({
+        config: {
+          data: val
+        }
+      }), { id: key})
+    }
+    return children
+  }
+  return undefined
+}

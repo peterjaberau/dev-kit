@@ -57,6 +57,9 @@ export function JsonTreeViewNode(props: JsonTreeViewNodeProps) {
     }
   }, [indexPath, node])
 
+
+
+
   return (
     <TreeView.NodeProvider node={node} indexPath={indexPath}>
       {nodeState.isBranch ? (

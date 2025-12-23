@@ -1,3 +1,4 @@
+'use client'
 import { useSelector } from "@xstate/react"
 import { AppContext } from '../providers'
 

@@ -21,6 +21,9 @@ export const appRootMachine = setup({
           config: {
             data: context?.data
           },
+          info: {
+            parentPath: []
+          }
         }
       })
     }),

@@ -11,6 +11,9 @@ export const JsonTreeViewTree = forwardRef<HTMLDivElement, JsonTreeViewTreeProps
   const [nodeProps, treeProps] = splitTreeNodeProps(props, ['arrow', 'indentGuide', 'renderValue'])
   const tree = useTreeViewContext()
   const children = tree.collection.getNodeChildren(tree.collection.rootNode)
+
+
+
   return (
     <TreeView.Tree data-scope="json-tree-view" {...treeProps} ref={ref}>
       {children.map((child, index) => (

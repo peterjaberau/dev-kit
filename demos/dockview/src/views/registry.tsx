@@ -4,7 +4,7 @@ import { Center } from "@chakra-ui/react"
 import { cache, useEffect, useState } from "react"
 
 const registryMeta: any = {
-
+  'json-view-tree': dynamic(() => import("#views/components/panels/base/json-view-tree"), { ssr: false }),
   'tree-view-pro': dynamic(() => import("#views/components/panels/base/tree-view-pro"), { ssr: false }),
   'json-tree-renderer': dynamic(() => import("#views/components/panels/base/json-tree-renderer"), { ssr: false }),
   'json-tree-view-react': dynamic(() => import("#views/components/panels/base/json-tree-view-react"), { ssr: false }),

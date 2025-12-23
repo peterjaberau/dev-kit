@@ -12,6 +12,11 @@ export const JsonTreeViewValueNode = (props: JsonTreeViewValueNodeProps): React.
     return <>{renderValue?.(node) ?? node.value}</>
   }
 
+
+  console.log('----nodeValue-------', {
+    node,
+  })
+
   const Element = node.tagName
   return (
     <Element
