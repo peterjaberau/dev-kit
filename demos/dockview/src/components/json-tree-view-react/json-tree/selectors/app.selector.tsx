@@ -9,7 +9,10 @@ export function useApp() {
   const appState: any = useSelector(appRef, (state) => state)
   const appContext = appState.context
 
+  const appId = appRef?.id
+
   return {
+    appId,
     appRef,
     sendToApp,
 

@@ -1,7 +1,6 @@
 import { assign, enqueueActions, raise, setup, createMachine, sendTo, stopChild, spawnChild } from "xstate"
 import { currentAppExampleConfig, nodeManagerConfig } from "#actors/model/shared/config"
 import { applyDefaultLayout, dockviewApiEvents } from "#actors/model/actions"
-// import { currentAppExampleMachine } from "./current-app.machine"
 
 const defaultConfig = {
   demo: currentAppExampleConfig.configDemo,

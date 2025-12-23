@@ -11,7 +11,6 @@ export const appMachine = createMachine({
   },
   entry: assign({
     root: ({ spawn, context }: any) => {
-      console.log("--create app machine---", context)
       return spawn(rootMachine, { systemId: machineConstants.ROOT, input: context })
     },
   }),

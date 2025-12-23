@@ -8,11 +8,19 @@ export const rootMachine = setup({
     events: {} as any,
   } as any,
   actions: {
-    spawnRootNode: assign(({ context, spawn }) => {
-      context.rootNodeRef = spawn("nodeMachine", {
-        systemId: machineConstants.NODE_PREFIX + "root",
+    handleInitiate: assign(({ context }) => {}),
+    spawnNode: assign(({ context, spawn, self }) => {
+      context.nodeRef = spawn("nodeMachine", {
+        systemId: machineConstants.NODE,
         input: {
-          data: context?.data
+          refs: {
+            internal: {
+              parent: self
+            },
+          },
+          config: {
+            data: context?.data
+          },
         }
       })
     }),
@@ -24,7 +32,7 @@ export const rootMachine = setup({
 }).createMachine({
   context: ({ input }: any) => {
     return {
-      rootNodeRef: null,
+      nodeRef: null,
       data: input?.data,
       collapsed: true,
       enableClipboard: true,
@@ -33,7 +41,7 @@ export const rootMachine = setup({
       displaySize: true,
     }
   },
-  entry: enqueueActions(({ enqueue, context, event }) => {
-    enqueue("spawnRootNode")
+  entry: enqueueActions(({ context, enqueue, check, event}) => {
+    enqueue('spawnNode')
   }),
 })

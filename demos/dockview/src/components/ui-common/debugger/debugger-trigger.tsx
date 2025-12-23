@@ -4,6 +4,7 @@ import { LuBug } from "react-icons/lu"
 import { useState } from "react"
 import { IconButton } from "@chakra-ui/react"
 
+
 export const DebuggerTrigger = () => {
   const [isOpenDebuggerPanel, setIsOpenDebuggerPanel] = useState(false)
 

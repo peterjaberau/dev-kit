@@ -7,17 +7,23 @@ export function useRoot() {
   const { appRef } = useApp()
 
   const rootRef = getSpawnedActor(machineConstants.ROOT, appRef)
-  const sendToRoot = rootRef.send
+  const sendToRoot = rootRef?.send
   const rootState: any = useSelector(rootRef, (state) => state)
-  const rootContext = rootState.context
+  const rootContext = rootState?.context
+
+  const nodeRef = rootContext?.nodeRef
+
+  const rootId = rootRef?.id
 
   const data = rootContext?.data
 
   return {
+    rootId,
     rootRef,
     sendToRoot,
     rootState,
     rootContext,
+    nodeRef,
     data,
   }
 }

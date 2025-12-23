@@ -143,7 +143,6 @@ export const oasMachine = setup({
 }).createMachine({
   initial: "loading",
   context: ({ input, self }: any) => {
-    console.log(input?.apiSpec)
     return {
       props: {
         apiSpec: input?.apiSpec || null,
