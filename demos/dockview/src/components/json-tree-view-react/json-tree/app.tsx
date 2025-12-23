@@ -1,16 +1,15 @@
 "use client"
 
-import { forwardRef } from "react"
-import { AppProvider, UIProvider } from "./providers"
+import { AppProvider, AppUIProvider } from "./providers"
 import { Root } from "./components/root"
 
 const App = (props: any) => {
   return (
     <>
       <AppProvider {...props}>
-        <UIProvider>
+        <AppUIProvider>
           <Root />
-        </UIProvider>
+        </AppUIProvider>
       </AppProvider>
     </>
   )

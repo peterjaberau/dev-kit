@@ -1,8 +1,5 @@
-// machine provider
 export * from './app.provider'
-export * from './node.provider'
-export * from './root.provider'
+export * from './app.root.provider'
+export * from './app.ui.provider'
 
 
-// ui & theme providers
-export * from './ui.provider'

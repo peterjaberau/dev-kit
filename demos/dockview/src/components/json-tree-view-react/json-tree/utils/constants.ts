@@ -7,9 +7,11 @@ export enum JSON_TREE_CONSTANTS {
 
 export const machineConstants = {
   APP: "jt",
-  ROOT: "jt-root",
+  APP_ROOT: "jt-root",
   NODE: "jt-node-manager",
+
   NODE_ROOT: "jt-node-root",
+
   NODE_PREFIX: 'jt-node-',
 } as const
 

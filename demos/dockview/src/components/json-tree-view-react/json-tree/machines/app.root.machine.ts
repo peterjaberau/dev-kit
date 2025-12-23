@@ -2,16 +2,16 @@ import { assign, enqueueActions, setup } from "xstate"
 import { nodeMachine } from './node.machine'
 import { machineConstants} from '../utils/constants'
 
-export const rootMachine = setup({
+export const appRootMachine = setup({
   types: {
     context: {} as any,
     events: {} as any,
   } as any,
   actions: {
     handleInitiate: assign(({ context }) => {}),
-    spawnNode: assign(({ context, spawn, self }) => {
-      context.nodeRef = spawn("nodeMachine", {
-        systemId: machineConstants.NODE,
+    spawnRootNode: assign(({ context, spawn, self }) => {
+      context.nodeRootRef = spawn("nodeMachine", {
+        systemId: machineConstants.NODE_ROOT,
         input: {
           refs: {
             internal: {
@@ -32,7 +32,7 @@ export const rootMachine = setup({
 }).createMachine({
   context: ({ input }: any) => {
     return {
-      nodeRef: null,
+      nodeRootRef: null,
       data: input?.data,
       collapsed: true,
       enableClipboard: true,
@@ -42,6 +42,6 @@ export const rootMachine = setup({
     }
   },
   entry: enqueueActions(({ context, enqueue, check, event}) => {
-    enqueue('spawnNode')
+    enqueue('spawnRootNode')
   }),
 })

@@ -6,7 +6,7 @@ const themeConfig: any = defineConfig({
 const theme = createSystem(themeConfig);
 
 
-export const UIProvider = (props: { children: ReactNode }) => {
+export const AppUIProvider = (props: { children: ReactNode }) => {
   return (
     <ChakraProvider value={theme}>
       {props.children}

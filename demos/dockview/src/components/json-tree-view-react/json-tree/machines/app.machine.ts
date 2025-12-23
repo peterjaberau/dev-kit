@@ -1,5 +1,5 @@
 import { assign, createMachine } from "xstate"
-import { rootMachine } from "./root.machine"
+import { appRootMachine } from "./app.root.machine"
 import { machineConstants } from "../utils"
 
 
@@ -11,7 +11,7 @@ export const appMachine = createMachine({
   },
   entry: assign({
     root: ({ spawn, context }: any) => {
-      return spawn(rootMachine, { systemId: machineConstants.ROOT, input: context })
+      return spawn(appRootMachine, { systemId: machineConstants.APP_ROOT, input: context })
     },
   }),
 })

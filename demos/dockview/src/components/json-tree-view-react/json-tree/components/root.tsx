@@ -1,7 +1,6 @@
 import { chakra, Container, Stack } from "@chakra-ui/react"
 import React, { Ref } from "react"
-import { useApp, useRoot, useNodeRoot, useNodeTreeRoot } from "../selectors"
-import { data } from "#datasets/metadata"
+import { useApp, useAppRoot, useNode, useNodeRoot } from "../selectors"
 import { CollapseWrapper } from "#views/components/common"
 import JsonView from "react18-json-view"
 
@@ -9,9 +8,8 @@ const Impl = (props: any, ref: Ref<HTMLDivElement>) => {}
 
 export const Root = (props: any) => {
   const { appId, appContext  } = useApp()
-  const { rootId, rootContext } = useRoot()
+  const { appRootId, appRootContext } = useAppRoot()
   const { nodeRootId, nodeRootContext  } = useNodeRoot()
-  const { nodeTreeRootId, nodeTreeRootContext } = useNodeTreeRoot()
 
   return (
     <Stack
@@ -27,21 +25,14 @@ export const Root = (props: any) => {
               id: appId,
               context: appContext
             },
-            root: {
-              id: rootId,
-              context: rootContext
+            appRoot: {
+              id: appRootId,
+              context: appRootContext
             },
             nodeRoot: {
               id: nodeRootId,
-              context: nodeRootContext,
-              config: nodeRootContext?.config,
-              relations: nodeRootContext?.refs?.relations,
-              info: nodeRootContext?.info
+              context: nodeRootContext
             },
-            nodeTreeRoot: {
-              id: nodeTreeRootId,
-              context: nodeTreeRootContext
-            }
           }}
           collapsed={1}
           theme="github"

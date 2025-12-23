@@ -1,8 +1,9 @@
 import { assign, enqueueActions, setup, raise } from "xstate"
 import { isBranch, isLeaf, isFalsy, typeOf, isArray, isObject, machineConstants } from "../utils"
-import { nodeTreeRootMachine } from "./node.tree.root.machine"
-import { nodeTreeBranchMachine } from "./node.tree.branch.machine"
-import { nodeTreeLeafMachine } from "./node.tree.leaf.machine"
+
+import { nodeObjectMachine } from './node.typeof-object.machine'
+import { nodeArrayMachine } from './node.typeof-array.machine'
+import { nodeScalarMachine } from './node.typeof-scalar.machine'
 
 export const nodeMachine = setup({
   types: {
@@ -15,32 +16,21 @@ export const nodeMachine = setup({
       const data = context?.config?.data
 
       const isRootNode = isFalsy(context?.refs?.relations?.nodes?.parent)
-      const isBranchNode = isBranch(data)
-      const isLeafNode = isLeaf(data)
-      const isRootBranch = isRootNode && isBranchNode
-      const isRootLeaf = isRootNode && isLeafNode
-      const isChildBranch = isBranchNode && !isRootNode
-      const isChildLeaf = isLeafNode && !isRootNode
-
-      const isArrayNode = isArray(context?.config?.data)
+      const isScalarNode = isLeaf(data)
       const isObjectNode = isObject(context?.config?.data)
+      const isArrayNode = isArray(context?.config?.data)
 
       context.info.typeof = typeOf(data)
       context.info.is = {
         isRoot: isRootNode,
-        isRootBranch: isRootBranch,
-        isRootLeaf: isRootLeaf,
-        isBranch: isBranchNode,
-        isLeaf: isLeafNode,
-        isChildBranch: isChildBranch,
-        isChildLeaf: isChildLeaf,
-        isArray: isArrayNode,
+        isScalar: isScalarNode,
         isObject: isObjectNode,
+        isArray: isArrayNode,
       }
     }),
 
-    spawnNodeTreeRoot: assign(({ context, spawn, self }) => {
-      context.refs.relations.tree.root = spawn("nodeTreeRootMachine", {
+    spawnNodeScalar: assign(({ context, spawn, self }) => {
+      context.refs.relations.tree.root = spawn("nodeScalarMachine", {
         input: {
           refs: {
             internal: {
@@ -60,8 +50,8 @@ export const nodeMachine = setup({
         },
       })
     }),
-    spawnNodeTreeBranch: assign(({ context, spawn, self }) => {
-      context.refs.relations.tree.branch = spawn("nodeTreeBranchMachine", {
+    spawnNodeObject: assign(({ context, spawn, self }) => {
+      context.refs.relations.tree.root = spawn("nodeObjectMachine", {
         input: {
           refs: {
             internal: {
@@ -74,11 +64,15 @@ export const nodeMachine = setup({
               },
             },
           },
+          info: context?.info,
+          config: {
+            data: context?.config?.data
+          }
         },
       })
     }),
-    spawnNodeTreeLeaf: assign(({ context, spawn, self }) => {
-      context.refs.relations.tree.leaf = spawn("nodeTreeLeafMachine", {
+    spawnNodeArray: assign(({ context, spawn, self }) => {
+      context.refs.relations.tree.root = spawn("nodeArrayMachine", {
         input: {
           refs: {
             internal: {
@@ -91,45 +85,34 @@ export const nodeMachine = setup({
               },
             },
           },
+          info: context?.info,
+          config: {
+            data: context?.config?.data
+          }
         },
       })
     }),
+
+
   },
   actors: {
-    nodeTreeRootMachine,
-    nodeTreeBranchMachine,
-    nodeTreeLeafMachine,
+    nodeObjectMachine,
+    nodeArrayMachine,
+    nodeScalarMachine,
+
   },
   guards: {
     isRootNode: ({ context }: any) => {
       return context?.info?.is?.isRoot
     },
-    isRootBranchNode: ({ context }: any) => {
-      return context?.info?.is?.isRootBranch
+    isScalarNode: ({ context }: any) => {
+      return context?.info?.is?.isScalar
     },
-    isRootLeafNode: ({ context }: any) => {
-      return context?.info?.is?.isRootLeaf
+    isObjectNode: ({ context }: any) => {
+      return context?.info?.is?.isObject
     },
-    isBranchNode: ({ context }: any) => {
-      return context?.info?.is?.isBranch
-    },
-    isLeafNode: ({ context }: any) => {
-      return context?.info?.is?.isLeaf
-    },
-    isChildBranchNode: ({ context }: any) => {
-      return context?.info?.is?.isChildBranch
-    },
-    isChildLeafNode: ({ context }: any) => {
-      return context?.info?.is?.isChildLeaf
-    },
-    isBranchArray: ({ context }: any) => {
-      return context?.info?.is?.isBranch
-    },
-    isBranchObject: ({ context }: any) => {
-      return context?.info?.is?.isBranch
-    },
-    isBranchScalar: ({ context }: any) => {
-      return context?.info?.is?.isBranch
+    isArrayNode: ({ context }: any) => {
+      return context?.info?.is?.isArray
     },
   },
 }).createMachine({
@@ -162,14 +145,17 @@ export const nodeMachine = setup({
         typeof: null,
         is: {
           isRoot: null,
+          isScalar: null,
+          isArray: null,
+          isObject: null,
+
           isRootBranch: null, // root node is object or array
           isRootLeaf: null, // root node is scalar
           isBranch: null, // node is object or array
           isChildBranch: null,
           isChildLeaf: null,
           isLeaf: null, // node is scalar
-          isArray: null,
-          isObject: null,
+
         },
       },
       runtime: {
@@ -182,10 +168,9 @@ export const nodeMachine = setup({
     initiating: {
       entry: ["evalNodeType"],
       always: [
-        { guard: "isRootBranchNode", actions: ["spawnNodeTreeRoot"], target: "ready", },
-        { guard: "isRootLeafNode", actions: ["spawnNodeTreeRoot"], target: "ready", },
-        { guard: "isChildBranchNode", actions: ["spawnNodeTreeBranch"], target: "ready", },
-        { guard: "isChildLeafNode", actions: ["spawnNodeTreeLeaf"], target: "ready", },
+        { guard: "isScalarNode", actions: ["spawnNodeScalar"], target: "ready", },
+        { guard: "isObjectNode", actions: ["spawnNodeObject"], target: "ready", },
+        { guard: "isArrayNode", actions: ["spawnNodeArray"], target: "ready", },
       ],
     },
     ready: {},
