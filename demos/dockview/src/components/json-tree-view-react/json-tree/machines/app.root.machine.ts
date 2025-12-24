@@ -1,6 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { nodeMachine } from './node.machine'
 import { machineConstants} from '../utils/constants'
+import { createNode, createChildNodes } from './node.recursive'
 
 export const appRootMachine = setup({
   types: {
@@ -27,6 +28,22 @@ export const appRootMachine = setup({
         }
       })
     }),
+    spawnRecursive: assign(({ context, spawn, self }) => {
+      context.nodeRecursiveRef = spawn(createNode({
+        refs: {
+          internal: {
+            parent: self
+          },
+        },
+        config: {
+          data: context?.data
+        },
+        info: {
+          parentPath: []
+        }
+      }))
+    }),
+
   },
   actors: {
     nodeMachine
@@ -36,6 +53,7 @@ export const appRootMachine = setup({
   context: ({ input }: any) => {
     return {
       nodeRootRef: null,
+      nodeRecursiveRef: null,
       data: input?.data,
       collapsed: true,
       enableClipboard: true,
@@ -45,6 +63,7 @@ export const appRootMachine = setup({
     }
   },
   entry: enqueueActions(({ context, enqueue, check, event}) => {
-    enqueue('spawnRootNode')
+    // enqueue('spawnRootNode')
+    enqueue('spawnRecursive')
   }),
 })
