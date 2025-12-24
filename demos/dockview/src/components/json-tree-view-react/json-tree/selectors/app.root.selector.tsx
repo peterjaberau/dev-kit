@@ -12,7 +12,7 @@ export function useAppRoot() {
   const appRootState: any = useSelector(appRootRef, (state) => state)
   const appRootContext = appRootState?.context
 
-  const nodeRootRef = appRootContext?.nodeRootRef
+  const nodeRef = appRootContext?.nodeRef
 
   const appRootId = appRootRef?.id
 
@@ -24,7 +24,7 @@ export function useAppRoot() {
     sendToAppRoot,
     appRootState,
     appRootContext,
-    nodeRootRef,
+    nodeRef,
     data,
   }
 }
