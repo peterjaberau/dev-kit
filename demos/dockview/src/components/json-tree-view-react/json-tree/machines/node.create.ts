@@ -1,5 +1,6 @@
 import { assign, setup } from "xstate"
 import { createChildNodes } from './node.create-child'
+import { typeOf, isNumber, isBranch, isBoolean, isFunction, isString, isNull,  isLeaf, isArray, isObject, isObjectLeaf } from "../utils"
 
 export const createNode = (input: any) => {
   return setup({
@@ -8,8 +9,7 @@ export const createNode = (input: any) => {
       spawnChildNodes: assign(({ context, event, spawn, self }: any) => {
         context.dataConfig.value = event.data
         context.refs.childNodes = createChildNodes({
-          refs: { parent: self },
-          dataConfig: { value: event.data },
+          context,
           spawn,
         })
       }),
@@ -19,13 +19,40 @@ export const createNode = (input: any) => {
     id: "node",
     initial: "idle",
     context: ({ spawn, self }: any) => {
+
+      const parentRef = input?.refs?.parent || null
+      const dataConfig = {
+        value: input?.dataConfig?.value,
+      }
+      const dataRuntime = {
+        info: {
+          dataType: typeOf(input?.dataConfig?.value),
+          isScalar: isLeaf(input?.dataConfig?.value),
+          isObject: isObject(input?.dataConfig?.value),
+          isBranch: isBranch(input?.dataConfig?.value),
+          isArray: isArray(input?.dataConfig?.value),
+          isNumber: isNumber(input?.dataConfig?.value),
+          isString: isString(input?.dataConfig?.value),
+          isBoolean: isBoolean(input?.dataConfig?.value),
+          isFunction: isFunction(input?.dataConfig?.value),
+          isNull: isNull(input?.dataConfig?.value),
+        }
+      }
+      const refs = {
+        self,
+        parent: parentRef,
+      }
+
+
       return {
         refs: {
-          self,
-          parent: input?.refs?.parent || null,
+          ...refs,
           childNodes: createChildNodes({
-            dataConfig: { value: input?.dataConfig?.value },
-            refs: { parent: self },
+            context: {
+              refs,
+              dataConfig,
+              dataRuntime
+            },
             spawn,
           }),
         },
@@ -33,13 +60,8 @@ export const createNode = (input: any) => {
         dataSchema: {
           /* schema of the mapped data - potentially it could be referenced */
         },
-        dataConfig: {
-          /* binding config of the data based on dataSchema */
-          value: input?.dataConfig?.value,
-        },
-        dataRuntime: {
-          /* manage the evaluated state of the data  */
-        },
+        dataConfig,
+        dataRuntime,
 
         viewSchema: {
           /* schema of the view including mapping with components */

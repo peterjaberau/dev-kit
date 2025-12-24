@@ -22,7 +22,8 @@ const testData = {
 const Index = (props: any) => {
   return (
     <JsonTree
-      data={testData}
+      // data={testData}
+      data={data}
       // collapsed={2}
       // theme="github"
       // editable={true}

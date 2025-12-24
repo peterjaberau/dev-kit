@@ -1,10 +1,11 @@
 "use client"
-import { chakra, Container, Stack, HStack, For, Text } from "@chakra-ui/react"
+import JsonView from "react18-json-view"
+import { chakra, Container, Stack, HStack, For, Text, Code, Box } from "@chakra-ui/react"
 import React, { Ref } from "react"
 import { useApp, useAppRoot, useNode } from "../selectors"
 import { CollapseWrapper } from "#views/components/common"
-
-import JsonView from "react18-json-view"
+import { Collapsible } from "@chakra-ui/react"
+import { LuChevronRight } from "react-icons/lu"
 
 const Impl = (props: any, ref: Ref<HTMLDivElement>) => {}
 
@@ -23,7 +24,10 @@ export const Root = (props: any) => {
     dataValue,
     internal,
     childNames,
-  } = useNode()
+    dataRuntimeInfo,
+    dataRuntime,
+    dataTypeLabel,
+  }: any = useNode()
 
   return (
     <Stack
@@ -46,6 +50,8 @@ export const Root = (props: any) => {
               parentNode,
               childNodes,
               childNames,
+              dataRuntime,
+              dataTypeLabel,
             },
             app: {
               id: appId,
@@ -64,7 +70,7 @@ export const Root = (props: any) => {
         />
       </CollapseWrapper>
 
-      <Container mt={4} css={{ bg: "bg.panel", borderRadius: "md", boxShadow: "sm", p: 4 }}>
+      <Container mt={4}  css={{ bg: "bg.panel", borderRadius: "md", boxShadow: "sm", p: 4 }}>
         <JsonViewNode nodeRef={nodeRef} />
       </Container>
     </Stack>
@@ -73,18 +79,19 @@ export const Root = (props: any) => {
 
 // all nodes. it's the one which decide between branch or leaf
 export const JsonViewNode = ({ nodeRef }: any) => {
-  const { childNames } = useNode({ actorRef: nodeRef })
+  const { childNames, dataRuntimeInfo: dataInfo, getChildNode } = useNode({ actorRef: nodeRef })
 
   return (
-    <Stack css={{ bg: "bg.muted", borderRadius: "md", p: 4 }} gap={3}>
+    <Stack css={{ bg: "bg.muted", borderRadius: "md", p: 2 }} gap={2} >
       <For each={childNames}>
         {(item: any, index: any) => {
+          const { dataRuntimeInfo: dataChildInfo, nodeRef: nodeChildRef } = useNode({ actorRef: getChildNode(item) })
+
           return (
-            <HStack key={index} css={{ bg: "bg.panel", px: 3, py: 2, borderRadius: "md", boxShadow: "xs" }}>
-              <Text fontWeight={"semibold"} textStyle={"sm"}>
-                {item}
-              </Text>
-            </HStack>
+            <Box key={index}  asChild>
+              {dataChildInfo?.isBranch && <JsonViewBranch nodeRef={nodeChildRef} />}
+              {dataChildInfo?.isScalar && <JsonViewItem nodeRef={nodeChildRef} />}
+            </Box>
           )
         }}
       </For>
@@ -93,20 +100,71 @@ export const JsonViewNode = ({ nodeRef }: any) => {
 }
 
 // branch actually is collapisble component
-export const JsonViewBranch = ({ nodeRef }) => {}
+export const JsonViewBranch = ({ nodeRef }: any) => {
+  const { dataRuntimeInfo: dataInfo, dataValue, nodeId, displayLabels } = useNode({ actorRef: nodeRef })
+  return (
+      <Collapsible.Root defaultOpen={false} unstyled css={{ bg: "bg.panel", px: 3, py: 2, borderRadius: "md", boxShadow: "xs",   }}>
+        <Collapsible.Trigger width={'full'} _open={{ pb: 2}} css={{ cursor: 'pointer' }} asChild>
+          <HStack justifyContent={"space-between"} alignItems={"center"} flex={1}>
+            <HStack alignItems={"center"} flex={1}>
+              <Collapsible.Indicator transition="transform 0.2s" _open={{ transform: "rotate(90deg)" }}>
+                <LuChevronRight />
+              </Collapsible.Indicator>
+              <Text fontWeight={"semibold"} textStyle={"sm"}>
+                {nodeId}
+              </Text>
+            </HStack>
+            <HStack>
+              <Text
+                css={{
+                  fontWeight: "light",
+                  fontStyle: "italic",
+                }}
+                textStyle={"xs"}
+              >
+                {displayLabels.childrenCountLabel}
+              </Text>
+              <Code>{displayLabels.dataTypeLabel}</Code>
+            </HStack>
+          </HStack>
+        </Collapsible.Trigger>
+        <Collapsible.Content>
+          <JsonViewNode nodeRef={nodeRef} />
+        </Collapsible.Content>
+      </Collapsible.Root>
+  )
+}
 // the header of the branch that include the indicator + info + trigger
-export const JsonViewBranchControl = ({ nodeRef }) => {}
+export const JsonViewBranchControl = ({ nodeRef }: any) => {}
 // the arrow at the right of the branch control
-export const JsonViewBranchIndicator = ({ nodeRef }) => {}
+export const JsonViewBranchIndicator = ({ nodeRef }: any) => {}
 // the + or - icon to the left
-export const JsonViewBranchTrigger = ({ nodeRef }) => {}
+export const JsonViewBranchTrigger = ({ nodeRef }: any) => {}
 // the collapsible content of the branch. actually it will render the JsonViewNode inside.
-export const JsonViewBranchContent = ({ nodeRef }) => {}
+export const JsonViewBranchContent = ({ nodeRef }: any) => {}
 // the text of the branch control
-export const JsonViewBranchText = ({ nodeRef }) => {}
+export const JsonViewBranchText = ({ nodeRef }: any) => {}
 
 // leaf node
-export const JsonViewItem = ({ nodeRef }) => {}
+export const JsonViewItem = ({ nodeRef }: any) => {
+  const { dataRuntimeInfo: dataInfo, dataValue, nodeId, displayLabels } = useNode({ actorRef: nodeRef })
+  return (
+    <HStack justifyContent={"space-between"} flex={1} css={{ bg: "bg.panel", px: 3, py: 2, borderRadius: "md", boxShadow: "xs",   }}>
+      <HStack flex={1}>
+        <Text fontWeight={"semibold"} textStyle={"sm"}>
+          {nodeId}:
+        </Text>
+        <Text fontWeight={"normal"} color={"fg.info"} textStyle={"sm"}>
+          {dataValue}
+        </Text>
+      </HStack>
+      <HStack>
+        <Code>{displayLabels.dataTypeLabel}</Code>
+      </HStack>
+    </HStack>
+  )
+}
+
 // indicator can be placed at the side of the item
-export const JsonViewItemIndicator = ({ nodeRef }) => {}
-export const JsonViewItemText = ({ nodeRef }) => {}
+export const JsonViewItemIndicator = ({ nodeRef }: any) => {}
+export const JsonViewItemText = ({ nodeRef }: any) => {}

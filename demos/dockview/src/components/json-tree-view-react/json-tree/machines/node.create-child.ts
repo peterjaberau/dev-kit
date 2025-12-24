@@ -1,19 +1,20 @@
-import { assign, setup } from "xstate"
-import { isLeaf, isArray, isObject } from "../utils"
 import { createNode } from './node.create'
 
-export const createChildNodes = ({ dataConfig, refs, spawn }: any) => {
-  const isScalarNode = isLeaf(dataConfig.value)
-  const isObjectNode = isObject(dataConfig.value)
-  const isArrayNode = isArray(dataConfig.value)
+export const createChildNodes = ({ context, spawn }: any) => {
 
-  if (isArrayNode) {
-    return dataConfig.value.map((item: any, index: any) => {
+  const parentRef = context?.refs?.parent
+  const dataInfo = context?.dataRuntime?.info
+
+  const dataValue = context?.dataConfig?.value
+
+
+  if (dataInfo?.isArray) {
+    return dataValue.map((item: any, index: any) => {
       return spawn(
         createNode({
           refs: {
             self,
-            parent: refs?.parent
+            parent: parentRef
           },
           dataConfig: {
             value: item,
@@ -24,14 +25,14 @@ export const createChildNodes = ({ dataConfig, refs, spawn }: any) => {
     })
   }
 
-  if (isObjectNode) {
+  if (dataInfo?.isObject) {
     const nodes: any = {}
-    for (const [key, val] of Object.entries(dataConfig?.value)) {
+    for (const [key, val] of Object.entries(dataValue)) {
       nodes[key] = spawn(
         createNode({
           refs: {
             self,
-            parent: refs?.parent
+            parent: parentRef
           },
           dataConfig: {
             value: val,
@@ -43,14 +44,6 @@ export const createChildNodes = ({ dataConfig, refs, spawn }: any) => {
     return nodes
   }
 
-  // if (isScalarNode) {
-  //   return spawn(
-  //     createNode({
-  //       config: {
-  //         data,
-  //       },
-  //     }),
-  //   )
-  // }
+
   return undefined
 }
