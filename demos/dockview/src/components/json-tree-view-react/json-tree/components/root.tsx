@@ -1,10 +1,10 @@
 "use client"
 import JsonView from "react18-json-view"
 import { chakra, Container, Stack, HStack, For, Text, Code, Box } from "@chakra-ui/react"
-import React, { Ref } from "react"
+import React, { forwardRef, memo, Ref, useState } from "react"
 import { useApp, useAppRoot, useNode } from "../selectors"
 import { CollapseWrapper } from "#views/components/common"
-import { Collapsible } from "@chakra-ui/react"
+import { Collapsible, useCollapsible } from "@chakra-ui/react"
 import { LuChevronRight } from "react-icons/lu"
 
 const Impl = (props: any, ref: Ref<HTMLDivElement>) => {}
@@ -70,7 +70,7 @@ export const Root = (props: any) => {
         />
       </CollapseWrapper>
 
-      <Container mt={4}  css={{ bg: "bg.panel", borderRadius: "md", boxShadow: "sm", p: 4 }}>
+      <Container mt={4} css={{ bg: "bg.panel", borderRadius: "md", boxShadow: "sm", p: 4 }}>
         <JsonViewNode nodeRef={nodeRef} />
       </Container>
     </Stack>
@@ -78,17 +78,17 @@ export const Root = (props: any) => {
 }
 
 // all nodes. it's the one which decide between branch or leaf
-export const JsonViewNode = ({ nodeRef }: any) => {
+export const JsonViewNode = memo(({ nodeRef }: any) => {
   const { childNames, dataRuntimeInfo: dataInfo, getChildNode } = useNode({ actorRef: nodeRef })
 
   return (
-    <Stack css={{ bg: "bg.muted", borderRadius: "md", p: 2 }} gap={2} >
+    <Stack css={{ bg: "bg.muted", borderRadius: "md", p: 2 }} gap={2}>
       <For each={childNames}>
         {(item: any, index: any) => {
           const { dataRuntimeInfo: dataChildInfo, nodeRef: nodeChildRef } = useNode({ actorRef: getChildNode(item) })
 
           return (
-            <Box key={index}  asChild>
+            <Box key={index} css={{ bg: "bg.panel", px: 3, py: 2, borderRadius: "md", boxShadow: "xs" }}>
               {dataChildInfo?.isBranch && <JsonViewBranch nodeRef={nodeChildRef} />}
               {dataChildInfo?.isScalar && <JsonViewItem nodeRef={nodeChildRef} />}
             </Box>
@@ -97,59 +97,104 @@ export const JsonViewNode = ({ nodeRef }: any) => {
       </For>
     </Stack>
   )
-}
+})
 
-// branch actually is collapisble component
+/**
+ * JsonViewBranch: actually is collapisble component
+ * JsonViewBranchControl: the header of the branch that include the indicator + info + trigger
+ * JsonViewBranchIndicator: the arrow icon that indicate open/close state
+ */
+
 export const JsonViewBranch = ({ nodeRef }: any) => {
   const { dataRuntimeInfo: dataInfo, dataValue, nodeId, displayLabels } = useNode({ actorRef: nodeRef })
   return (
-      <Collapsible.Root defaultOpen={false} unstyled css={{ bg: "bg.panel", px: 3, py: 2, borderRadius: "md", boxShadow: "xs",   }}>
-        <Collapsible.Trigger width={'full'} _open={{ pb: 2}} css={{ cursor: 'pointer' }} asChild>
-          <HStack justifyContent={"space-between"} alignItems={"center"} flex={1}>
-            <HStack alignItems={"center"} flex={1}>
-              <Collapsible.Indicator transition="transform 0.2s" _open={{ transform: "rotate(90deg)" }}>
-                <LuChevronRight />
-              </Collapsible.Indicator>
-              <Text fontWeight={"semibold"} textStyle={"sm"}>
-                {nodeId}
-              </Text>
-            </HStack>
-            <HStack>
-              <Text
-                css={{
-                  fontWeight: "light",
-                  fontStyle: "italic",
-                }}
-                textStyle={"xs"}
-              >
-                {displayLabels.childrenCountLabel}
-              </Text>
-              <Code>{displayLabels.dataTypeLabel}</Code>
-            </HStack>
-          </HStack>
-        </Collapsible.Trigger>
-        <Collapsible.Content>
-          <JsonViewNode nodeRef={nodeRef} />
-        </Collapsible.Content>
-      </Collapsible.Root>
+    <Collapsible.Root defaultOpen={false} unstyled>
+      <JsonViewBranchTrigger>
+        <JsonViewBranchControl nodeRef={nodeRef} />
+      </JsonViewBranchTrigger>
+      <JsonViewBranchContent nodeRef={nodeRef} />
+    </Collapsible.Root>
   )
 }
-// the header of the branch that include the indicator + info + trigger
-export const JsonViewBranchControl = ({ nodeRef }: any) => {}
-// the arrow at the right of the branch control
-export const JsonViewBranchIndicator = ({ nodeRef }: any) => {}
-// the + or - icon to the left
-export const JsonViewBranchTrigger = ({ nodeRef }: any) => {}
+
+export const JsonViewBranchControl = forwardRef(({ children, nodeRef, ...props }: any, ref: any) => {
+  const { dataRuntimeInfo: dataInfo, dataValue, nodeId, displayLabels } = useNode({ actorRef: nodeRef })
+  return (
+    <HStack justifyContent={"space-between"} alignItems={"center"} flex={1} {...props} ref={ref}>
+      <HStack alignItems={"center"} flex={1}>
+        <JsonViewBranchIndicator />
+        <JsonViewNodeText>{nodeId}</JsonViewNodeText>
+      </HStack>
+      <HStack>
+        <JsonViewNodeLabelText>{displayLabels.childrenCountLabel}</JsonViewNodeLabelText>
+        <JsonViewNodeLabelCode>{displayLabels.dataTypeLabel}</JsonViewNodeLabelCode>
+      </HStack>
+    </HStack>
+  )
+})
+
+export const JsonViewBranchTrigger = ({ children }: any) => {
+  return (
+    <Collapsible.Trigger width={"full"} _open={{ pb: 2 }} css={{ cursor: "pointer" }} asChild>
+      {children}
+    </Collapsible.Trigger>
+  )
+}
+
+export const JsonViewBranchIndicator = () => {
+  return (
+    <Collapsible.Indicator transition="transform 0.2s" _open={{ transform: "rotate(90deg)" }}>
+      <LuChevronRight />
+    </Collapsible.Indicator>
+  )
+}
+
+export const JsonViewBranchContent = ({ nodeRef }: any) => {
+  return (
+    <Collapsible.Content>
+      <JsonViewNode nodeRef={nodeRef} />
+    </Collapsible.Content>
+  )
+}
+
+export const JsonViewNodeText = ({ children }: any) => {
+  return (
+    <Text fontWeight={"semibold"} textStyle={"sm"}>
+      {children}
+    </Text>
+  )
+}
+
+export const JsonViewNodeLabelText = ({ children }: any) => {
+  return (
+    <Text
+      css={{
+        fontWeight: "light",
+        fontStyle: "italic",
+      }}
+      textStyle={"xs"}
+    >
+      {children}
+    </Text>
+  )
+}
+
+export const JsonViewNodeLabelCode = ({ children }: any) => {
+  return (
+    <Code>{children}</Code>
+  )
+}
+
+
+
 // the collapsible content of the branch. actually it will render the JsonViewNode inside.
-export const JsonViewBranchContent = ({ nodeRef }: any) => {}
 // the text of the branch control
-export const JsonViewBranchText = ({ nodeRef }: any) => {}
 
 // leaf node
 export const JsonViewItem = ({ nodeRef }: any) => {
   const { dataRuntimeInfo: dataInfo, dataValue, nodeId, displayLabels } = useNode({ actorRef: nodeRef })
   return (
-    <HStack justifyContent={"space-between"} flex={1} css={{ bg: "bg.panel", px: 3, py: 2, borderRadius: "md", boxShadow: "xs",   }}>
+    <HStack justifyContent={"space-between"} flex={1}>
       <HStack flex={1}>
         <Text fontWeight={"semibold"} textStyle={"sm"}>
           {nodeId}:
