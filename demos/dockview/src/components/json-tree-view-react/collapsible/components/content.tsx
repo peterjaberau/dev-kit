@@ -1,10 +1,10 @@
 import { mergeProps } from '@zag-js/react'
 import { forwardRef } from 'react'
 import { chakra } from '@chakra-ui/react'
-import { useAppContext } from '../providers'
+import { useContext } from '../providers'
 
 export const Content = forwardRef<HTMLDivElement, any>((props, ref) => {
-  const app = useAppContext()
+  const app = useContext()
 
   if (app.isUnmounted) {
     return null

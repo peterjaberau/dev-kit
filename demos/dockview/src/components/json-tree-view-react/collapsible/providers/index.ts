@@ -1,2 +1,2 @@
-export * from "./app.provider"
+export * from "./provider"
 export * from "./root.provider"

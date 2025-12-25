@@ -1,1 +1,7 @@
-export * as Collapsible from './main'
+export {
+  useComponent,
+  useContext,
+} from './base'
+
+
+export * as Collapsible from './namespace'

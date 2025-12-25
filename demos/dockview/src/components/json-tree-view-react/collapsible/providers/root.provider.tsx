@@ -1,7 +1,7 @@
 import { mergeProps } from '@zag-js/react'
 import { forwardRef } from 'react'
 import { chakra } from '@chakra-ui/react'
-import { AppProvider } from './app.provider'
+import { Provider } from './provider'
 import { createSplitProps } from '../helpers/utils/create-split-props'
 
 const splitRootProviderProps = createSplitProps()
@@ -11,9 +11,9 @@ export const RootProvider = forwardRef<HTMLDivElement, any>((props, ref) => {
   const mergedProps = mergeProps(component.getRootProps(), localProps)
 
   return (
-    <AppProvider value={component}>
+    <Provider value={component}>
       <chakra.div {...mergedProps} ref={ref} />
-    </AppProvider>
+    </Provider>
   )
 })
 

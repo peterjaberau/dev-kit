@@ -4,7 +4,7 @@ import { createSplitProps } from '../helpers/utils/create-split-props'
 import { chakra } from '@chakra-ui/react'
 // import { ark } from '../helpers/factory'
 import { useComponent } from '../selectors'
-import { AppProvider } from '../providers'
+import { Provider } from '../providers'
 
 
 export const splitCollapsibleProps = (props: any) =>
@@ -24,25 +24,15 @@ export const splitCollapsibleProps = (props: any) =>
 
 
 export const Root = forwardRef<HTMLDivElement, any>((props, ref) => {
-  const [useAppProps, localProps] = splitCollapsibleProps(props)
+  const [useProps, localProps] = splitCollapsibleProps(props)
 
-  const app = useComponent(useAppProps)
+  const app = useComponent(useProps)
   const mergedProps = mergeProps(app.getRootProps(), localProps)
 
-  console.log(
-    '---Root---',
-    {
-      useAppProps,
-      localProps,
-      app,
-      mergedProps,
-    }
-  )
-
   return (
-    <AppProvider value={app}>
+    <Provider value={app}>
       <chakra.div {...mergedProps} ref={ref} />
-    </AppProvider>
+    </Provider>
   )
 })
 
