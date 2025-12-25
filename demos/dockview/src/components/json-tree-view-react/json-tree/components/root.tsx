@@ -6,6 +6,7 @@ import { useApp, useAppRoot, useNode } from "../selectors"
 import { CollapseWrapper } from "#views/components/common"
 import { Collapsible, useCollapsible } from "@chakra-ui/react"
 import { LuChevronRight } from "react-icons/lu"
+import { createSplitProps } from "#json-tree-view-react/collapsible/helpers/utils"
 
 const Impl = (props: any, ref: Ref<HTMLDivElement>) => {}
 
@@ -205,6 +206,15 @@ export const JsonViewItem = ({ nodeRef }: any) => {
   )
 }
 
-// indicator can be placed at the side of the item
-export const JsonViewItemIndicator = ({ nodeRef }: any) => {}
-export const JsonViewItemText = ({ nodeRef }: any) => {}
+
+
+
+
+
+export const JsonTreeRoot = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
+  // return <chakra.div {...props} ref={ref} />
+
+  return (
+    <Container mt={4} css={{ bg: "bg.panel", borderRadius: "md", boxShadow: "sm", p: 4 }} {...props} ref={ref} />
+  )
+})

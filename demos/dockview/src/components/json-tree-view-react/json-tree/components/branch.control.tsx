@@ -1,4 +1,9 @@
+import React, { forwardRef } from "react"
+import { HStack } from "@chakra-ui/react"
 
-export const BranchControl = (props: any) => {
+export const JsonTreeBranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
 
-}
+  return (
+    <HStack alignItems={"center"} flex={1} {...props} ref={ref} />
+  )
+})

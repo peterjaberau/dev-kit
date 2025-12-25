@@ -27,11 +27,14 @@
 
 
 * **tree-view-tree.tsx** --> `????` 
-  * TreeViewTree --> `????` (displayName)
-    * _useTreeViewContext()_
+* TreeViewTree --> `????` (displayName)
+  * _useTreeViewContext()_
 
 
 
-* **tree-view-root.tsx** --> `????`
-    * TreeViewTree --> `????` (displayName)
-        * _useTreeViewContext()_
+* **render-strategy.ts** --> `render.provider.tsx` (lazy load, mounting strategy)
+* RenderStrategyPropsProvider --> `RenderProvider` (exposed providerName)
+* useRenderStrategyContext --> `useRenderContext` (hookName)
+* RenderStrategyContext --> `RenderContext` (name)
+* RenderStrategyPropsProvider --> `RenderProvider` (providerName)
+
