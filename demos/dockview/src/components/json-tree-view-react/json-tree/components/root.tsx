@@ -99,16 +99,11 @@ export const JsonViewNode = memo(({ nodeRef }: any) => {
   )
 })
 
-/**
- * JsonViewBranch: actually is collapisble component
- * JsonViewBranchControl: the header of the branch that include the indicator + info + trigger
- * JsonViewBranchIndicator: the arrow icon that indicate open/close state
- */
 
 export const JsonViewBranch = ({ nodeRef }: any) => {
   const { dataRuntimeInfo: dataInfo, dataValue, nodeId, displayLabels } = useNode({ actorRef: nodeRef })
   return (
-    <Collapsible.Root defaultOpen={false} unstyled>
+    <Collapsible.Root defaultOpen={false} unstyled >
       <JsonViewBranchTrigger>
         <JsonViewBranchControl nodeRef={nodeRef} />
       </JsonViewBranchTrigger>

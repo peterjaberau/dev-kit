@@ -61,6 +61,7 @@ export const dockViewDynamicPanelConfig = {
             { id: "canvas-illa", name: "Canvas Illa" },
             { id: "recursive", name: "Recursive" },
             { id: "oas-manager", name: "OAS Manager" },
+            { id: "custom-collapsible", name: "Custom Collapsible" },
             { id: "oas", name: "OAS" },
             { id: "oas-doc", name: "OAS Doc" },
             { id: "oas-json-viewer", name: "OAS Json Viewer" },

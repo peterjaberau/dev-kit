@@ -20,6 +20,7 @@ const registryMeta: any = {
   'recursive': dynamic(() => import("#views/components/panels/custom/recursive"), { ssr: false }),
   'oas': dynamic(() => import("#views/components/panels/custom/oas"), { ssr: false }),
   'oas-doc': dynamic(() => import("#views/components/panels/custom/oas-doc"), { ssr: false }),
+  'custom-collapsible': dynamic(() => import("#views/components/panels/custom/custom-collapsible"), { ssr: false }),
   'oas-json-viewer': dynamic(() => import("#views/components/panels/custom/oas-json-viewer"), { ssr: false }),
   'oas-manager': dynamic(() => import("#views/components/panels/oas-panels/manager"), { ssr: false }),
 
