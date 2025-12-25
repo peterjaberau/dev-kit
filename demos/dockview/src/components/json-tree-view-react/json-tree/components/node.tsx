@@ -21,17 +21,18 @@ export const JsonTreeNode = forwardRef<HTMLDivElement, any>((props: any, ref: an
   const { childNames, dataRuntimeInfo: dataInfo, getChildNode, nodeId, dataValue, displayLabels } = useNode({ actorRef: nodeRef })
 
   return (
-    <Stack css={{ bg: "bg.muted", borderRadius: "md", p: 2 }} gap={2} ref={ref} {...rest}>
-      <Box css={{ bg: "bg.panel", px: 3, py: 2, borderRadius: "md", boxShadow: "xs" }}>
+    <Stack css={{ bg: "transparent",  }} gap={2} ref={ref} {...rest}>
+      <Box >
         {dataInfo?.isBranch && (
           <JsonTreeBranch>
-            <JsonTreeBranchTrigger>
+            <JsonTreeBranchTrigger >
               <JsonTreeBranchControl>
                 <JsonTreeBranchIndicator />
                 <JsonTreeNodeKey flex={1}>{nodeId}</JsonTreeNodeKey>
                 <JsonTreeNodeLabel>{displayLabels.childrenCountLabel}</JsonTreeNodeLabel>
                 <JsonTreeNodeCode>{displayLabels.dataTypeLabel}</JsonTreeNodeCode>
               </JsonTreeBranchControl>
+            </JsonTreeBranchTrigger>
               <JsonTreeBranchContent>
                 <For each={childNames}>
                   {(child: any, index: any) => {
@@ -39,7 +40,6 @@ export const JsonTreeNode = forwardRef<HTMLDivElement, any>((props: any, ref: an
                   }}
                 </For>
               </JsonTreeBranchContent>
-            </JsonTreeBranchTrigger>
           </JsonTreeBranch>
         )}
         {dataInfo?.isScalar && (

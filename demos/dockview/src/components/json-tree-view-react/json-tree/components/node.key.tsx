@@ -3,6 +3,6 @@ import { Text } from "@chakra-ui/react"
 
 export const JsonTreeNodeKey = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   return (
-    <Text fontWeight={"semibold"} textStyle={"sm"} {...props} ref={ref} />
+    <Text fontWeight={"semibold"} textAlign={'start'} textStyle={"sm"} {...props} ref={ref} />
   )
 })
