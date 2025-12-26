@@ -6,6 +6,7 @@ import { machineConstants } from "../utils"
 
 export function useAppRoot() {
   const { appRef } = useApp()
+  console.log("Legacy useApp started:", appRef)
 
   const appRootRef = getSpawnedActor(machineConstants.APP_ROOT, appRef)
   const sendToAppRoot = appRootRef?.send

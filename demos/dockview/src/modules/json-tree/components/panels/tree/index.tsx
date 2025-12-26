@@ -1,6 +1,6 @@
 'use client'
 import { Base } from '#json-tree/components'
-import { useNode } from "#json-tree-view-react/json-tree/selectors"
+import { useNode } from "../../../selectors"
 import { Container } from "@chakra-ui/react"
 import React from "react"
 

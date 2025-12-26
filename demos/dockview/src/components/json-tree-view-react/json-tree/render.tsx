@@ -3,7 +3,7 @@ import {
   JsonTreeRoot,
   JsonTreeNode,
 } from './components'
-import { useAppRoot, useNode } from "#json-tree-view-react/json-tree/selectors"
+import { useNode } from "#json-tree-view-react/json-tree/selectors"
 import { Container } from "@chakra-ui/react"
 import React from "react"
 

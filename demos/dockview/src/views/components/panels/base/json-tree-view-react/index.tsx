@@ -1,4 +1,4 @@
-import JsonTree from "#json-tree-view-react/json-tree/app"
+import JsonTree from "#json-tree-view-react/json-tree"
 import React from "react"
 import { data } from "#datasets/metadata"
 
