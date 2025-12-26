@@ -9,19 +9,17 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
       data-scope="json-tree"
       data-part="branch"
       css={{
-
         borderRadius: "md",
         '&:has([data-part="branch-trigger"]:hover)': {
-          boxShadow: 'sm',
+          boxShadow: "sm",
         },
 
         '& [data-part="branch-trigger"]:is(:hover, :focus-visible)': {
-          bg: 'bg.subtle',
+          bg: "bg.subtle",
         },
         '& [data-part="branch-trigger"]:is(:hover, :focus-visible) + [data-part="branch-content"]': {
-          bg: 'bg.subtle',
+          bg: "bg.subtle",
         },
-
       }}
       defaultOpen={false}
       unstyled

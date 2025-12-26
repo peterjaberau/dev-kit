@@ -10,11 +10,12 @@ export const BranchContent = forwardRef<HTMLDivElement, any>((props: any, ref: a
       css={{
         bg: "bg.panel",
         borderRadius: "md",
-
         pb: 2,
         px: 2,
       }}
-      // _open={{ borderTopRadius: 0 }}
+      _open={{
+        borderTopRadius: "none",
+      }}
       ref={ref}
       {...props}
     >

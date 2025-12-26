@@ -13,13 +13,13 @@ export const BranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: a
         userSelect: "none",
         cursor: "pointer",
         px: 3,
-      }}
-      _open={{
-        // borderTopRadius: "md",
-        // borderBottomRadius: "none",
+        _open: {
+        borderBottomRadius: "none",
         pt: 2,
         pb: 0,
+      }
       }}
+
       _closed={{ borderRadius: "md", py: 2 }}
       justifyContent="flex-start"
       alignItems={"center"}
