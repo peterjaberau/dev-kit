@@ -4,16 +4,19 @@ import { HStack } from "@chakra-ui/react"
 export const BranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   return (
     <HStack
+
+      data-scope="json-tree"
+      data-part="branch-control"
       css={{
+        borderRadius: "md",
+        bg: "bg.panel",
         userSelect: "none",
         cursor: "pointer",
-        bg: "bg.panel",
-
         px: 3,
       }}
       _open={{
-        borderTopRadius: "md",
-        borderBottomRadius: "none",
+        // borderTopRadius: "md",
+        // borderBottomRadius: "none",
         pt: 2,
         pb: 0,
       }}

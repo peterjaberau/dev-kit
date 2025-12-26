@@ -21,10 +21,12 @@ export const Node = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { childNames, dataRuntimeInfo: dataInfo, getChildNode, nodeId, dataValue, displayLabels } = useNode({ actorRef: nodeRef })
 
   return (
-    <Stack css={{ bg: "transparent",  }} gap={2} ref={ref} {...rest}>
-      <Box >
+    <Stack  gap={2} ref={ref} {...rest}>
+      <Box asChild>
         {dataInfo?.isBranch && (
-          <Branch>
+          <Branch
+            data-id={nodeId}
+          >
             <BranchTrigger >
               <BranchControl>
                 <BranchIndicator />

@@ -8,7 +8,6 @@ export const ItemControl = forwardRef<HTMLDivElement, any>((props: any, ref: any
         borderRadius: "md",
         userSelect: "none",
         cursor: "pointer",
-        bg: "bg.panel",
         py: 2,
         px: 3,
       }}
