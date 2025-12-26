@@ -13,7 +13,6 @@ export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: a
       css={{ cursor: "pointer" }}
       {...props}
       ref={ref}
-      asChild
     />
   )
 })

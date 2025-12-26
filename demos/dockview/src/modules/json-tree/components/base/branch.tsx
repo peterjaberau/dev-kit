@@ -10,10 +10,24 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
       data-part="branch"
       css={{
         borderRadius: "md",
+        '&:has([data-part="branch-control"]:hover)': {
+          boxShadow: "sm",
+        },
+        '& [data-part="branch-control"]:is(:hover, :focus-visible)': {
+          bg: "bg.subtle",
+        },
+        '& [data-part="branch-control"]:is(:hover, :focus-visible) + [data-part="branch-content"]': {
+          bg: "bg.subtle",
+        },
+
+        '& [data-part="branch-control"]:is(:hover, :focus-visible) [data-part="toolbar"]': {
+          opacity: 1,
+          pointerEvents: 'auto',
+        },
+
         '&:has([data-part="branch-trigger"]:hover)': {
           boxShadow: "sm",
         },
-
         '& [data-part="branch-trigger"]:is(:hover, :focus-visible)': {
           bg: "bg.subtle",
         },

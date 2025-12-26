@@ -1,6 +1,5 @@
 
 
-
 // Composable JsonTree. See Render as an example />
 export { Root } from "./root"
 export { Node } from "./node"
@@ -18,3 +17,5 @@ export { BranchTrigger } from "./branch.trigger"
 export { BranchIndicator } from "./branch.indicator"
 export { BranchControl } from "./branch.control"
 export { BranchContent } from "./branch.content"
+
+export * from "./toolbar"

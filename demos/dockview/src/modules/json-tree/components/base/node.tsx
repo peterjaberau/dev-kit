@@ -14,34 +14,59 @@ import {
   NodeIndicator,
   Item,
   ItemControl,
+  Toolbar,
+  ToolbarIndicator,
+  ToolbarItem,
+  ToolbarItemDivider,
+  ToolbarItemText,
+  ToolbarItemMenu,
+  ToolbarItemOptions,
+  ToolbarItemButton,
+  ToolbarCommandCopy,
+  ToolbarCommandBookmark,
 } from "."
 
 export const Node = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { nodeRef, ...rest } = props
-  const { childNames, dataRuntimeInfo: dataInfo, getChildNode, nodeId, dataValue, displayLabels } = useNode({ actorRef: nodeRef })
+  const {
+    childNames,
+    dataRuntimeInfo: dataInfo,
+    getChildNode,
+    nodeId,
+    dataValue,
+    displayLabels,
+  } = useNode({ actorRef: nodeRef })
 
   return (
-    <Stack  gap={2} ref={ref} {...rest}>
+    <Stack gap={2} ref={ref} {...rest}>
       <Box asChild>
         {dataInfo?.isBranch && (
-          <Branch
-            data-id={nodeId}
-          >
-            <BranchTrigger >
-              <BranchControl>
+          <Branch data-id={nodeId}>
+            {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
+            <BranchControl asChild>
+              <BranchTrigger>
                 <BranchIndicator />
                 <NodeKey flex={1}>{nodeId}</NodeKey>
+                <Toolbar>
+                  <ToolbarItemButton asChild>
+                    <ToolbarCommandCopy />
+                  </ToolbarItemButton>
+
+                  <ToolbarItemButton asChild>
+                    <ToolbarCommandBookmark />
+                  </ToolbarItemButton>
+                </Toolbar>
                 <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
-              </BranchControl>
-            </BranchTrigger>
-              <BranchContent>
-                <For each={childNames}>
-                  {(child: any, index: any) => {
-                    return <Node key={index} nodeRef={getChildNode(child)} />
-                  }}
-                </For>
-              </BranchContent>
+              </BranchTrigger>
+            </BranchControl>
+            <BranchContent>
+              <For each={childNames}>
+                {(child: any, index: any) => {
+                  return <Node key={index} nodeRef={getChildNode(child)} />
+                }}
+              </For>
+            </BranchContent>
           </Branch>
         )}
         {dataInfo?.isScalar && (

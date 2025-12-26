@@ -16,7 +16,7 @@ export const BranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: a
         _open: {
         borderBottomRadius: "none",
         pt: 2,
-        pb: 0,
+        // pb: 0,
       }
       }}
 
