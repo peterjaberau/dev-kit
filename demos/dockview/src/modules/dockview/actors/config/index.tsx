@@ -1,40 +1,3 @@
-export const dockViewAdapterConfig = {
-  nodes: [
-    {
-      id: "panel__1",
-      view: {
-        type: 'DOCK_PANEL',
-        component: "dynamic",
-        title: "Panel - 1",
-        renderer: "always",
-      },
-      model: {}
-    },
-    {
-      id: "panel__2",
-      view: {
-        type: 'DOCK_PANEL',
-        component: "default",
-        title: "Panel - 2",
-        renderer: "always",
-        position: { referencePanel: "panel__1", direction: "right" },
-      },
-      model: {}
-    },
-    {
-      id: "panel__3",
-      view: {
-        type: 'DOCK_PANEL',
-        component: "default",
-        title: "Panel - 3",
-        renderer: "always",
-        position: { referencePanel: "panel__2", direction: "right" },
-      },
-      model: {}
-    }
-  ]
-}
-
 // used in dynamicPanelViewMachine. potientially the panels map can be move to higher actor
 export const dockViewDynamicPanelConfig = {
   scope: {
@@ -46,31 +9,48 @@ export const dockViewDynamicPanelConfig = {
           id: "panels",
           name: "Panels",
           children: [
-            { id: "json-view-tree", name: "Json View Tree (React 18 custom)" },
-            { id: "json-tree-renderer", name: "Json Tree Renderer (ark json)" },
-            { id: "tree-view-pro", name: "Tree View Pro" },
-            { id: "json-tree-view-react", name: "Json Tree View React" },
-            { id: "ai-chat", name: "AI Chat" },
-            { id: "code", name: "Code" },
             { id: "default", name: "Default", disabled: true },
-            { id: "empty", name: "empty" },
-            { id: "json-viewer", name: "Json Viewer" },
-            { id: "placeholder", name: "Placeholder" },
-            { id: "renderer", name: "Renderer" },
-            { id: "json-viewer-custom", name: "Json Viewer Custom" },
-            { id: "canvas-illa", name: "Canvas Illa" },
-            { id: "recursive", name: "Recursive" },
-            { id: "oas-manager", name: "OAS Manager" },
-            { id: "custom-collapsible", name: "Custom Collapsible" },
-            { id: "oas", name: "OAS" },
-            { id: "oas-doc", name: "OAS Doc" },
-            { id: "oas-json-viewer", name: "OAS Json Viewer" },
             {
-              id: "src",
-              name: "src",
+              id: "json-tree-folder",
+              name: "Json Tree",
               children: [
-                { id: "src/app.tsx", name: "app.tsx" },
-                { id: "src/index.ts", name: "index.ts" },
+                { id: "json-tree-tree", name: "Tree" },
+              ],
+            },
+            {
+              id: "json-drafts-folder",
+              name: "Json & Recursive Drafts",
+              children: [
+                { id: "json-view-tree", name: "Json View Tree (React 18 custom)" },
+                { id: "json-tree-renderer", name: "Json Tree Renderer (ark json)" },
+                { id: "tree-view-pro", name: "Tree View Pro" },
+                { id: "json-tree-view-react", name: "Json Tree View React" },
+                { id: "json-viewer-custom", name: "Json Viewer Custom" },
+                { id: "json-viewer", name: "Json Viewer" },
+                { id: "recursive", name: "Recursive" },
+              ],
+            },
+            {
+              id: "oas-folder",
+              name: "OAS",
+              children: [
+                { id: "oas", name: "OAS" },
+                { id: "oas-manager", name: "OAS Manager" },
+                { id: "oas-doc", name: "OAS Doc" },
+                { id: "oas-json-viewer", name: "OAS Json Viewer" },
+              ],
+            },
+            {
+              id: "misc-dockables-folder",
+              name: "Misc Dockables",
+              children: [
+                { id: "ai-chat", name: "AI Chat" },
+                { id: "code", name: "Code" },
+                { id: "empty", name: "empty" },
+                { id: "placeholder", name: "Placeholder" },
+                { id: "canvas-illa", name: "Canvas Illa" },
+                { id: "renderer", name: "Renderer" },
+                { id: "custom-collapsible", name: "Custom Collapsible" },
               ],
             },
           ],
@@ -84,8 +64,42 @@ export const dockViewDynamicPanelConfig = {
   },
 }
 
-
-
+export const dockViewAdapterConfig = {
+  nodes: [
+    {
+      id: "panel__1",
+      view: {
+        type: "DOCK_PANEL",
+        component: "dynamic",
+        title: "Panel - 1",
+        renderer: "always",
+      },
+      model: {},
+    },
+    {
+      id: "panel__2",
+      view: {
+        type: "DOCK_PANEL",
+        component: "default",
+        title: "Panel - 2",
+        renderer: "always",
+        position: { referencePanel: "panel__1", direction: "right" },
+      },
+      model: {},
+    },
+    {
+      id: "panel__3",
+      view: {
+        type: "DOCK_PANEL",
+        component: "default",
+        title: "Panel - 3",
+        renderer: "always",
+        position: { referencePanel: "panel__2", direction: "right" },
+      },
+      model: {},
+    },
+  ],
+}
 
 export const dockViewCanvasIllaConfig: any = {
   config: {
@@ -144,7 +158,7 @@ export const dockViewCanvasIllaConfig: any = {
         childrenNode: ["button_2"],
         type: "DOCK_VIEW_PANEL_WIDGET",
         props: {
-          title: 'Panel 2',
+          title: "Panel 2",
           renderer: "always",
           position: { referencePanel: "panel_1", direction: "right" },
         },
@@ -155,7 +169,7 @@ export const dockViewCanvasIllaConfig: any = {
         childrenNode: ["button_3"],
         type: "DOCK_VIEW_PANEL_WIDGET",
         props: {
-          title: 'Panel 3',
+          title: "Panel 3",
           renderer: "always",
           position: { referencePanel: "panel_2", direction: "right" },
         },

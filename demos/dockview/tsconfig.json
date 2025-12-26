@@ -27,6 +27,13 @@
       "@/*": ["./*"],
       "~/*": ["./public/*"],
 
+      "#shared/*": ["./src/modules/json-tree/*"],
+      "#shared": ["./src/modules/json-tree/"],
+
+      "#json-tree/*": ["./src/modules/json-tree/*"],
+      "#json-tree": ["./src/modules/json-tree/"],
+
+
       "#rui/*": ["./src/rui/*"],
       "#rui": ["./src/rui/"],
 
