@@ -1,4 +1,9 @@
-import React, { forwardRef } from "react"
+"use client"
+import { DropIndicator } from "#drag-drop/components/dnd-drop-indicator"
+import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
+import { useDraggableTreeItem } from "#drag-drop/hooks/use-draggable-tree-item"
+
+import React, { forwardRef, useContext, useRef } from "react"
 import { Stack, For, Box } from "@chakra-ui/react"
 import { useNode } from "../../selectors"
 import {
@@ -16,6 +21,8 @@ import {
   ItemControl,
 } from "."
 
+const indentPerLevel = 5
+
 export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { nodeRef, ...rest } = props
   const {
@@ -27,9 +34,41 @@ export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: a
     displayLabels,
   } = useNode({ actorRef: nodeRef })
 
+  /** START drag-drop logic */
+  const itemRef: any = useRef<HTMLDivElement | null>(null)
+  const childrenGroupRef = useRef<HTMLDivElement | null>(null)
+
+  const { dispatch, uniqueContextId } = useContext(TreeContext)
+  const { attachInstruction, extractInstruction, DropIndicator: ItemIndicator } = useContext(DependencyContext)
+
+  const { dragState, groupState, instruction } = useDraggableTreeItem({
+    item: {
+      id: nodeId,
+      children: childNames,
+      isOpen: dataInfo?.isBranch,
+      isDraft: false,
+    },
+    buttonRef: itemRef,
+    groupRef: childrenGroupRef,
+    dispatch,
+    uniqueContextId,
+    attachInstruction,
+    extractInstruction,
+  })
+  /** END drag-drop logic */
+
   return (
-    <Stack gap={2} ref={ref} {...rest}>
-      <Box asChild>
+    <Stack
+      css={{
+        // support dnd
+        position: "relative",
+        opacity: dragState === "dragging" ? 0.4 : 1,
+      }}
+      gap={2}
+      ref={ref}
+      {...rest}
+    >
+      <Box ref={itemRef}>
         {dataInfo?.isBranch && (
           <Branch data-id={nodeId}>
             {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
@@ -41,12 +80,18 @@ export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: a
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
               </BranchTrigger>
             </BranchControl>
-            <BranchContent>
-              <For each={childNames}>
-                {(child: any, index: any) => {
-                  return <NodeDraggable key={index} nodeRef={getChildNode(child)} />
-                }}
-              </For>
+            {instruction && <ItemIndicator instruction={instruction} />}
+
+            <BranchContent ref={childrenGroupRef}>
+              <DropIndicator.Group isActive={groupState === "is-innermost-over"}>
+                <Stack gap={2}>
+                <For each={childNames}>
+                  {(child: any, index: any) => {
+                    return <NodeDraggable key={index} nodeRef={getChildNode(child)} />
+                  }}
+                </For>
+                </Stack>
+              </DropIndicator.Group>
             </BranchContent>
           </Branch>
         )}
@@ -57,6 +102,7 @@ export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: a
               <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>
               <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
             </ItemControl>
+            {instruction && <ItemIndicator instruction={instruction} />}
           </ItemDraggable>
         )}
       </Box>
