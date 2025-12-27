@@ -9,6 +9,9 @@ const registryMeta: any = {
   // Json Tree
   'json-tree-tree': dynamic(() => import("#views/components/panels/json-tree/tree"), { ssr: false }),
 
+  // Drag & Drop
+  'pdnd-tree': dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
+
   // Json Drafts
   'json-view-tree': dynamic(() => import("#views/components/panels/base/json-view-tree"), { ssr: false }),
   'json-tree-renderer': dynamic(() => import("#views/components/panels/base/json-tree-renderer"), { ssr: false }),

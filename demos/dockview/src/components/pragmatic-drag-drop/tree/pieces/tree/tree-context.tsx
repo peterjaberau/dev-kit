@@ -1,0 +1,44 @@
+import { createContext } from 'react';
+
+import {
+  attachInstruction,
+  extractInstruction,
+} from '@atlaskit/pragmatic-drag-and-drop-hitbox/list-item';
+// import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/list-item';
+import { DropIndicator } from '../../components/dnd-drop-indicator';
+
+import type { TreeAction, TreeItem } from '../../data/tree';
+
+export type TreeContextValue = {
+  dispatch: (action: TreeAction) => void;
+  uniqueContextId: Symbol;
+  getPathToItem: (itemId: string) => string[];
+  getMoveTargets: ({ itemId }: { itemId: string }) => TreeItem[];
+  getChildrenOfItem: (itemId: string) => TreeItem[];
+  registerTreeItem: (args: {
+    itemId: string;
+    element: HTMLElement;
+    actionMenuTrigger: HTMLElement;
+  }) => void;
+};
+
+export const TreeContext = createContext<TreeContextValue>({
+  dispatch: () => {},
+  uniqueContextId: Symbol('uniqueId'),
+  getPathToItem: () => [],
+  getMoveTargets: () => [],
+  getChildrenOfItem: () => [],
+  registerTreeItem: () => {},
+});
+
+export type DependencyContext = {
+  DropIndicator: typeof DropIndicator.ListItem;
+  attachInstruction: typeof attachInstruction;
+  extractInstruction: typeof extractInstruction;
+};
+
+export const DependencyContext = createContext<DependencyContext>({
+  DropIndicator: DropIndicator.ListItem,
+  attachInstruction: attachInstruction,
+  extractInstruction: extractInstruction,
+});
