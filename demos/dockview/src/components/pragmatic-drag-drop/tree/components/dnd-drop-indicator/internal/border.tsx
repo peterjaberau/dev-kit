@@ -19,26 +19,29 @@ const borderRecipe = defineRecipe({
   variants: {
     status: {
       default: {
-        "--stroke-color": "border",
-        borderColor: "border",
+        "--stroke-color": "#1868DB",
+        borderColor: "#1868DB",
       },
       warning: {
-        "--stroke-color": "border.warning",
-        borderColor: "border.warning",
+        "--stroke-color": "#E06C00",
+        borderColor: "#E06C00",
       },
     },
     size: {
       sm: {
         "--stroke-width": "1px",
-        border: "1px solid",
+        borderWidth: "1px",
+        borderStyle: "solid",
       },
       md: {
         "--stroke-width": "2px",
-        border: "2px solid",
+        borderWidth: "2px",
+        borderStyle: "solid",
       },
       lg: {
         "--stroke-width": "3px",
-        border: "3px solid",
+        borderWidth: "3px",
+        borderStyle: "solid",
       },
     },
   },

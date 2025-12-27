@@ -82,10 +82,10 @@ const lineRecipe = defineRecipe({
     },
     status: {
       default: {
-        "--stroke-color": "colors.gray.900",
+        "--stroke-color": "#1868DB",
       },
       warning: {
-        "--stroke-color": "colors.orange.500",
+        "--stroke-color": "#E06C00",
       },
     },
     size: {

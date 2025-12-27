@@ -13,12 +13,12 @@ export const Group = forwardRef<
       ref={forwardedRef}
       css={
         isActive && {
-          backgroundColor: "bg.info",
-          borderRadius: "xs",
-          outlineOffset: "2px",
+          backgroundColor: "#E9F2FE",
+          borderRadius: "2px",
+          outlineOffset: "6px",
           outlineWidth: "2px",
           outlineStyle: "solid",
-          outlineColor: "border",
+          outlineColor: "#1868DB",
         }
       }
     >
