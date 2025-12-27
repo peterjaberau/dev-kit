@@ -4,11 +4,9 @@ import { chakra, Container, Center } from "@chakra-ui/react"
 import memoizeOne from "memoize-one"
 import invariant from "tiny-invariant"
 
-// import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash"
 import { triggerPostMoveFlash } from "./utils/dnd-flourish"
 import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
-// import { GroupDropIndicator } from "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group"
 import { DropIndicator } from "./components/dnd-drop-indicator"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
 import {
@@ -18,17 +16,8 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 
 import { getInitialTreeState, tree, type TreeItem as TreeItemType, treeStateReducer } from "./data/tree"
-import { DependencyContext, TreeContext, type TreeContextValue } from "./pieces/tree/tree-context"
-import TreeItem from "./pieces/tree/tree-item"
-
-const treeStyles = {
-  display: "flex",
-  boxSizing: "border-box",
-  flexDirection: "column",
-  background: "bg.subtle",
-}
-
-type CleanupFn = () => void
+import { DependencyContext, TreeContext, type TreeContextValue } from "./providers/tree-context"
+import TreeItem from "./components/tree-item"
 
 function createTreeItemRegistry() {
   const registry = new Map<string, { element: HTMLElement; actionMenuTrigger: HTMLElement }>()
@@ -41,7 +30,7 @@ function createTreeItemRegistry() {
     itemId: string
     element: HTMLElement
     actionMenuTrigger: HTMLElement
-  }): CleanupFn => {
+  }) => {
     registry.set(itemId, { element, actionMenuTrigger })
     return () => {
       registry.delete(itemId)
@@ -238,13 +227,13 @@ function Index() {
 
   return (
     <TreeContext.Provider value={context}>
-      <Container css={{ px: 24,  }}>
-        <Center id="tree" ref={ref} css={{ boxShadow: "sm", py: 10}}>
-            <DropIndicator.Group isActive={dropTargetState === "is-innermost-over"} ref={groupRef}>
-              {data.map((item, index) => {
-                return <TreeItem item={item} key={item.id} level={0} index={index} />
-              })}
-            </DropIndicator.Group>
+      <Container css={{ px: 24 }}>
+        <Center id="tree" ref={ref} css={{ boxShadow: "sm", py: 10 }}>
+          <DropIndicator.Group isActive={dropTargetState === "is-innermost-over"} ref={groupRef}>
+            {data.map((item, index) => {
+              return <TreeItem item={item} key={item.id} level={0} index={index} />
+            })}
+          </DropIndicator.Group>
         </Center>
       </Container>
     </TreeContext.Provider>

@@ -18,4 +18,8 @@ export { BranchIndicator } from "./branch.indicator"
 export { BranchControl } from "./branch.control"
 export { BranchContent } from "./branch.content"
 
+export { NodeDraggable } from "./node-draggable"
+export { ItemDraggable } from "./item-draggable"
+
+
 export * from "./toolbar"

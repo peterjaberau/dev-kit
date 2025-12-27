@@ -30,8 +30,13 @@
       "#shared/*": ["./src/modules/json-tree/*"],
       "#shared": ["./src/modules/json-tree/"],
 
+//      pragmatic-drag-drop
+
       "#json-tree/*": ["./src/modules/json-tree/*"],
       "#json-tree": ["./src/modules/json-tree/"],
+
+      "#drag-drop/*": ["./src/components/pragmatic-drag-drop/tree/*"],
+      "#drag-drop": ["./src/components/pragmatic-drag-drop/tree/"],
 
 
       "#rui/*": ["./src/rui/*"],

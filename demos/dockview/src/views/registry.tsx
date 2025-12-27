@@ -8,6 +8,8 @@ const registryMeta: any = {
 
   // Json Tree
   'json-tree-tree': dynamic(() => import("#views/components/panels/json-tree/tree"), { ssr: false }),
+  'json-tree-tree-draggable': dynamic(() => import("#views/components/panels/json-tree/tree-draggable"), { ssr: false }),
+
 
   // Drag & Drop
   'pdnd-tree': dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
