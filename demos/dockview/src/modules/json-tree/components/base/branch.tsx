@@ -1,11 +1,16 @@
 import React, { forwardRef, useState } from "react"
 import { Collapsible } from "@chakra-ui/react"
+import { useNode } from "../../selectors"
 
 export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { children, ...rest } = props
+  const { nodeRef, children, ...rest } = props
+  const { sendToNode, isOpen } = useNode({ actorRef: nodeRef })
+
 
   return (
     <Collapsible.Root
+      open={isOpen}
+      onOpenChange={(e: any) => sendToNode({ type: 'BRANCH_OPEN_CHANGED', isOpen: e.open })}
       data-scope="json-tree"
       data-part="branch"
       css={{

@@ -13,6 +13,11 @@ export const createNode = (input: any) => {
           spawn,
         })
       }),
+
+
+      setBranchOpen: assign(({ context, event }: any) => {
+        context.viewConfig.isOpen = event.isOpen
+      }),
     },
     actors: {},
   }).createMachine({
@@ -67,6 +72,7 @@ export const createNode = (input: any) => {
           /* schema of the view including mapping with components */
         },
         viewConfig: {
+          isOpen: input?.viewConfig?.value
           /* props of the view */
         },
         viewRuntime: {
@@ -78,6 +84,10 @@ export const createNode = (input: any) => {
       UPDATE: {
         actions: ["spawnChildNodes"],
       },
+
+      BRANCH_OPEN_CHANGED: {
+        actions: ['setBranchOpen']
+      }
     },
 
     states: {

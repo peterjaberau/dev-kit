@@ -19,6 +19,9 @@ export const createChildNodes = ({ context, spawn }: any) => {
           dataConfig: {
             value: item,
           },
+          viewConfig: {
+            isOpen: false,
+          }
         }),
         { id: String(index) },
       )
@@ -37,6 +40,9 @@ export const createChildNodes = ({ context, spawn }: any) => {
           dataConfig: {
             value: val,
           },
+          viewConfig: {
+            isOpen: false,
+          }
         }),
         { id: key },
       )

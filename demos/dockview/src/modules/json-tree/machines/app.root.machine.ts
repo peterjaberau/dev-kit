@@ -16,6 +16,9 @@ export const appRootMachine = setup({
         dataConfig: {
           value: context?.data
         },
+        viewConfig: {
+          isOpen: true,
+        }
       }))
     }),
 

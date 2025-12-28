@@ -1,4 +1,5 @@
 "use client"
+
 // import { DropIndicator } from "#drag-drop/components/dnd-drop-indicator"
 // import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
 import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
@@ -34,7 +35,9 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
     nodeId,
     dataValue,
     displayLabels,
+    isOpen,
   } = useNode({ actorRef: nodeRef })
+
 
   /** START drag-drop logic */
   const itemRef: any = useRef<HTMLDivElement | null>(null)
@@ -47,7 +50,7 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
     item: {
       id: nodeId,
       children: childNames,
-      isOpen: dataInfo?.isBranch,
+      isOpen: dataInfo?.isBranch && isOpen,
       isDraft: false,
     },
     buttonRef: itemRef,
@@ -83,7 +86,8 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
            }}
       >
         {dataInfo?.isBranch && (
-          <Branch data-id={nodeId}>
+          <Branch data-id={nodeId} nodeRef={nodeRef} >
+            {instruction && <DropIndicator instruction={instruction} />}
             {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
             <BranchControl asChild>
               <BranchTrigger>
@@ -109,7 +113,7 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
         )}
         {dataInfo?.isScalar && (
           <ItemDraggable>
-            {instruction && <DropIndicator instruction={instruction} />}
+            {/*{instruction && <DropIndicator instruction={instruction} />}*/}
             <ItemControl>
               <NodeKey>{nodeId}</NodeKey>
               <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>

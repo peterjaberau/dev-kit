@@ -16,6 +16,8 @@ export const useNode = ({ actorRef = null } = {}) => {
   const dataConfig = nodeContext?.dataConfig
   const dataValue = dataConfig.value
 
+
+
   const internal = {
     nodeLogic: nodeRef?.src,
   }
@@ -61,6 +63,10 @@ export const useNode = ({ actorRef = null } = {}) => {
           dataTypeLabel: dataRuntimeInfo?.dataType,
         }
 
+  const viewConfig = nodeContext?.viewConfig
+  const isOpen = viewConfig?.isOpen
+
+
   return {
     nodeRef,
     nodeId,
@@ -73,6 +79,10 @@ export const useNode = ({ actorRef = null } = {}) => {
 
     dataConfig,
     dataValue,
+
+
+    viewConfig,
+    isOpen,
 
     internal,
 
