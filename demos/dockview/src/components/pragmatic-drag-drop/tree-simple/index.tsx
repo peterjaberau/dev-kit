@@ -5,7 +5,7 @@ import { chakra } from '@chakra-ui/react';
 import type { Instruction } from '@atlaskit/pragmatic-drag-and-drop-hitbox/tree-item';
 
 // import { DropIndicator } from '../tree/components/dnd-drop-indicator';
-import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/tree-item';
+import { DropIndicator } from '../drop-indicator/tree-item';
 
 import Layout from './layout';
 
