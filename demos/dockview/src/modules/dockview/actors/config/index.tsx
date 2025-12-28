@@ -25,6 +25,7 @@ export const dockViewDynamicPanelConfig = {
               name: "Drag & Drop",
               children: [
                 { id: "pdnd-tree", name: "Pdnd Tree" },
+                { id: "pdnd-tree-simple", name: "Pdnd Tree Simple" },
                 { id: "pdnd-tree-sortable", name: "Pdnd Tree Sortable" },
 
               //   pdnd-tree-sortable

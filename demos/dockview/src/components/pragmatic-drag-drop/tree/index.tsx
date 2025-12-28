@@ -7,8 +7,10 @@ import invariant from "tiny-invariant"
 import { triggerPostMoveFlash } from "./utils/dnd-flourish"
 import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
-import { DropIndicator } from "./components/dnd-drop-indicator"
+// import { DropIndicator } from "./components/dnd-drop-indicator"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
+import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
+
 import {
   dropTargetForElements,
   type ElementDropTargetEventBasePayload,
@@ -229,11 +231,11 @@ function Index() {
     <TreeContext.Provider value={context}>
       <Container css={{ px: 24 }}>
         <Center id="tree" ref={ref} css={{ boxShadow: "sm", py: 10 }}>
-          <DropIndicator.Group isActive={dropTargetState === "is-innermost-over"} ref={groupRef}>
+          <GroupDropIndicator isActive={dropTargetState === "is-innermost-over"} ref={groupRef}>
             {data.map((item, index) => {
               return <TreeItem item={item} key={item.id} level={0} index={index} />
             })}
-          </DropIndicator.Group>
+          </GroupDropIndicator>
         </Center>
       </Container>
     </TreeContext.Provider>

@@ -1,5 +1,6 @@
 "use client"
-import { DropIndicator } from "#drag-drop/components/dnd-drop-indicator"
+// import { DropIndicator } from "#drag-drop/components/dnd-drop-indicator"
+import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
 import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
 import { useDraggableTreeItem } from "#drag-drop/hooks/use-draggable-tree-item"
 
@@ -39,7 +40,7 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
   const childrenGroupRef = useRef<HTMLDivElement | null>(null)
 
   const { dispatch, uniqueContextId } = useContext(TreeContext)
-  const { attachInstruction, extractInstruction, DropIndicator: ItemIndicator } = useContext(DependencyContext)
+  const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
 
   const { dragState, groupState, instruction } = useDraggableTreeItem({
     item: {
@@ -57,6 +58,16 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
   })
   /** END drag-drop logic */
 
+  const aria = (() => {
+    if (!childNames.length) {
+      return undefined;
+    }
+    return {
+      'aria-expanded': dataInfo?.isBranch,
+      'aria-controls': `tree-item-${nodeId}--subtree`,
+    };
+  })();
+
   return (
     <Stack
       css={{
@@ -68,7 +79,6 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
       {...rest}
     >
       <Box ref={itemRef}>
-        {instruction && <ItemIndicator instruction={instruction} />}
         {dataInfo?.isBranch && (
           <Branch data-id={nodeId}>
             {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
@@ -82,7 +92,7 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
             </BranchControl>
 
             <BranchContent ref={childrenGroupRef}>
-              <DropIndicator.Group isActive={groupState === "is-innermost-over"}>
+              <GroupDropIndicator ref={childrenGroupRef} isActive={groupState === "is-innermost-over"}>
                 <Stack gap={2}>
                 <For each={childNames}>
                   {(child: any, index: any) => {
@@ -90,13 +100,13 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
                   }}
                 </For>
                 </Stack>
-              </DropIndicator.Group>
+              </GroupDropIndicator>
             </BranchContent>
           </Branch>
         )}
         {dataInfo?.isScalar && (
           <ItemDraggable>
-            {/*{instruction && <ItemIndicator instruction={instruction} />}*/}
+            {instruction && <DropIndicator instruction={instruction} />}
             <ItemControl>
               <NodeKey>{nodeId}</NodeKey>
               <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>

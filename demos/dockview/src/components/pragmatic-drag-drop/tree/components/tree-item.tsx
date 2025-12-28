@@ -3,7 +3,8 @@
 import { Fragment, memo, useCallback, useContext, useRef } from "react"
 import { chakra, HStack, Icon, Text } from "@chakra-ui/react"
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
-import { DropIndicator } from "./dnd-drop-indicator"
+// import { DropIndicator } from "./dnd-drop-indicator"
+import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
 import { DependencyContext, TreeContext } from "../providers/tree-context"
 import { useDraggableTreeItem } from "../hooks/use-draggable-tree-item"
 import { Stack, Badge } from "@chakra-ui/react"
@@ -14,7 +15,7 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
   const groupRef = useRef<HTMLDivElement>(null)
 
   const { dispatch, uniqueContextId } = useContext(TreeContext)
-  const { attachInstruction, extractInstruction, DropIndicator: ListIndicator } = useContext(DependencyContext)
+  const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
 
   const { dragState, groupState, instruction } = useDraggableTreeItem({
     item,
@@ -27,6 +28,16 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
   })
 
   const toggleOpen = useCallback(() => dispatch({ type: "toggle", itemId: item.id }), [dispatch, item.id])
+
+  const aria = (() => {
+    if (!item.children.length) {
+      return undefined;
+    }
+    return {
+      'aria-expanded': item.isOpen,
+      'aria-controls': `tree-item-${item.id}--subtree`,
+    };
+  })();
 
   return (
     <Fragment>
@@ -47,15 +58,14 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
           onClick={toggleOpen}
           w="100%"
           bg="transparent"
-          border="1px solid"
           marginBottom={1}
           p={0}
           data-index={index}
           data-level={level}
           opacity={dragState === "dragging" ? 0.4 : 1}
         >
-          {instruction && <ListIndicator instruction={instruction} />}
-            <HStack p={2} pl={level * indentPerLevel + 2} boxShadow={"sm"}>
+          {instruction && <DropIndicator instruction={instruction} />}
+            <HStack p={2} pl={level * indentPerLevel + 2} >
               {item.children.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
               <Text>Item {item.id}</Text>
             </HStack>
@@ -70,13 +80,13 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
       </chakra.div>
 
       {item.children.length > 0 && item.isOpen && (
-        <chakra.div pl={indentPerLevel}>
-          <DropIndicator.Group ref={groupRef} isActive={groupState === "is-innermost-over"}>
+        // <chakra.div id={aria?.['aria-controls']} pl={indentPerLevel}>
+          <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
             {item.children.map((child: any, i: number) => (
               <TreeItem key={child.id} item={child} level={level + 1} index={i} />
             ))}
-          </DropIndicator.Group>
-        </chakra.div>
+          </GroupDropIndicator>
+        // </chakra.div>
       )}
     </Fragment>
   )

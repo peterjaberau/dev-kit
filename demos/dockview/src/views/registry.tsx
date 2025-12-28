@@ -13,6 +13,8 @@ const registryMeta: any = {
 
   // Drag & Drop
   'pdnd-tree': dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
+  'pdnd-tree-simple': dynamic(() => import("#views/components/panels/pdnd/tree-simple"), { ssr: false }),
+
   'pdnd-tree-sortable': dynamic(() => import("#views/components/panels/pdnd/tree-sortable"), { ssr: false }),
 
   // Json Drafts
