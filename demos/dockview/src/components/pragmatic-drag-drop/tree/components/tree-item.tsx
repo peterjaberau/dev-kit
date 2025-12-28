@@ -3,8 +3,8 @@
 import { Fragment, memo, useCallback, useContext, useRef } from "react"
 import { chakra, HStack, Icon, Text } from "@chakra-ui/react"
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
-// import { DropIndicator } from "./dnd-drop-indicator"
-import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
+// import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
+import { GroupDropIndicator } from "../../../pragmatic-drag-drop/drop-indicator/group"
 import { DependencyContext, TreeContext } from "../providers/tree-context"
 import { useDraggableTreeItem } from "../hooks/use-draggable-tree-item"
 import { Stack, Badge } from "@chakra-ui/react"

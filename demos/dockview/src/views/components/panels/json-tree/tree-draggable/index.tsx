@@ -113,9 +113,9 @@ const Index = (props: any) => {
   return (
     <JsonTreeDraggable
       data={{
-        testData: testData,
-        // openapi: openapiData["non-standard-components"],
-        // meta: data,
+        // testData: testData,
+        openapi: openapiData["non-standard-components"],
+        meta: data,
       }}
     />
   )

@@ -9,7 +9,8 @@ import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-
 import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
 // import { DropIndicator } from "./components/dnd-drop-indicator"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
-import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
+// import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
+import { GroupDropIndicator } from "../../pragmatic-drag-drop/drop-indicator/group"
 
 import {
   dropTargetForElements,

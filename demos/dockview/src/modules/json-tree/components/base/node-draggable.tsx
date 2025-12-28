@@ -1,6 +1,7 @@
 "use client"
 // import { DropIndicator } from "#drag-drop/components/dnd-drop-indicator"
-import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
+// import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
+import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
 import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
 import { useDraggableTreeItem } from "#drag-drop/hooks/use-draggable-tree-item"
 
@@ -58,15 +59,6 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
   })
   /** END drag-drop logic */
 
-  const aria = (() => {
-    if (!childNames.length) {
-      return undefined;
-    }
-    return {
-      'aria-expanded': dataInfo?.isBranch,
-      'aria-controls': `tree-item-${nodeId}--subtree`,
-    };
-  })();
 
   return (
     <Stack
