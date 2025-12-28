@@ -3,7 +3,7 @@ import { DropIndicator } from "#drag-drop/components/dnd-drop-indicator"
 import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
 import { useDraggableTreeItem } from "#drag-drop/hooks/use-draggable-tree-item"
 
-import React, { forwardRef, useContext, useRef } from "react"
+import React, { forwardRef, useContext, useRef, memo } from "react"
 import { Stack, For, Box } from "@chakra-ui/react"
 import { useNode } from "../../selectors"
 import {
@@ -23,7 +23,7 @@ import {
 
 const indentPerLevel = 5
 
-export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
+export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { nodeRef, ...rest } = props
   const {
     childNames,
@@ -64,11 +64,11 @@ export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: a
         position: "relative",
         opacity: dragState === "dragging" ? 0.4 : 1,
       }}
-      gap={2}
       ref={ref}
       {...rest}
     >
       <Box ref={itemRef}>
+        {instruction && <ItemIndicator instruction={instruction} />}
         {dataInfo?.isBranch && (
           <Branch data-id={nodeId}>
             {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
@@ -80,14 +80,13 @@ export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: a
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
               </BranchTrigger>
             </BranchControl>
-            {instruction && <ItemIndicator instruction={instruction} />}
 
             <BranchContent ref={childrenGroupRef}>
               <DropIndicator.Group isActive={groupState === "is-innermost-over"}>
                 <Stack gap={2}>
                 <For each={childNames}>
                   {(child: any, index: any) => {
-                    return <NodeDraggable key={index} nodeRef={getChildNode(child)} />
+                    return <NodeDraggable key={child} nodeRef={getChildNode(child)} />
                   }}
                 </For>
                 </Stack>
@@ -97,15 +96,15 @@ export const NodeDraggable = forwardRef<HTMLDivElement, any>((props: any, ref: a
         )}
         {dataInfo?.isScalar && (
           <ItemDraggable>
+            {/*{instruction && <ItemIndicator instruction={instruction} />}*/}
             <ItemControl>
               <NodeKey>{nodeId}</NodeKey>
               <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>
               <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
             </ItemControl>
-            {instruction && <ItemIndicator instruction={instruction} />}
           </ItemDraggable>
         )}
       </Box>
     </Stack>
   )
-})
+}))

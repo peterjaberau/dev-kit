@@ -7,6 +7,7 @@ export type TreeItem = {
   isDraft?: boolean;
   children: TreeItem[];
   isOpen?: boolean;
+  [key: string]: any;
 };
 
 export type TreeState = {
@@ -23,6 +24,15 @@ export function getInitialData(): TreeItem[] {
     {
       id: '1',
       isOpen: true,
+      profile: {
+        firstName: 'John',
+        lastName: 'Doe',
+        dob: '1990-01-01',
+        summary: 'A sample user profile',
+        weight: 70,
+        height: 175,
+
+      },
 
       children: [
         {
@@ -32,6 +42,7 @@ export function getInitialData(): TreeItem[] {
           children: [
             {
               id: '1.1.1',
+              isOpen: true,
               children: [],
             },
             {
@@ -59,6 +70,56 @@ export function getInitialData(): TreeItem[] {
             },
             {
               id: '2.1.2',
+              children: [],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: '3',
+      isOpen: true,
+      children: [
+        {
+          id: '3.1',
+          isOpen: true,
+
+          children: [
+            {
+              id: '3.1',
+              children: [],
+            },
+            {
+              id: '3.1.2',
+              children: [],
+            },
+            {
+              id: '3.1.3',
+              children: [],
+            },
+            {
+              id: '3.1.4',
+              children: [],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: '4',
+      isOpen: true,
+      children: [
+        {
+          id: '4.1',
+          isOpen: true,
+
+          children: [
+            {
+              id: '4.1.1',
+              children: [],
+            },
+            {
+              id: '4.1.2',
               children: [],
             },
           ],

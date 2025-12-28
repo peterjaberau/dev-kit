@@ -6,9 +6,8 @@ import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { DropIndicator } from "./dnd-drop-indicator"
 import { DependencyContext, TreeContext } from "../providers/tree-context"
 import { useDraggableTreeItem } from "../hooks/use-draggable-tree-item"
-
+import { Stack, Badge } from "@chakra-ui/react"
 const indentPerLevel = 5
-
 
 const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; level: number; index: number }) {
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -31,22 +30,42 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
 
   return (
     <Fragment>
-      <chakra.div position="relative">
+      <chakra.div
+        position="relative"
+        css={{
+          ...(dragState === "idle" && {
+            borderRadius: 3,
+            cursor: "pointer",
+            _hover: {
+              backgroundColor: "rgba(9, 30, 66, 0.06)",
+            },
+          }),
+        }}
+      >
         <chakra.button
           ref={buttonRef}
           onClick={toggleOpen}
           w="100%"
           bg="transparent"
-          border={0}
+          border="1px solid"
+          marginBottom={1}
           p={0}
+          data-index={index}
+          data-level={level}
           opacity={dragState === "dragging" ? 0.4 : 1}
         >
-          <HStack p={2} pl={level * indentPerLevel + 2}>
-            {item.children.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
-            <Text>Item {item.id}</Text>
-          </HStack>
-
           {instruction && <ListIndicator instruction={instruction} />}
+            <HStack p={2} pl={level * indentPerLevel + 2} boxShadow={"sm"}>
+              {item.children.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
+              <Text>Item {item.id}</Text>
+            </HStack>
+            {/*<HStack>*/}
+            {/*  <Badge>id: {item.id}</Badge>*/}
+            {/*  <Badge>level: {level}</Badge>*/}
+            {/*  <Badge>children#: {item.children.length}</Badge>*/}
+            {/*  <Badge>isOpen: {item.isOpen}</Badge>*/}
+            {/*  <Badge>index: {index}</Badge>*/}
+            {/*</HStack>*/}
         </chakra.button>
       </chakra.div>
 

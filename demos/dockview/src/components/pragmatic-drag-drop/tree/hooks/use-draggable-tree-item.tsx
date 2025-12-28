@@ -25,6 +25,12 @@ function delay({ waitMs, fn }: { waitMs: number; fn: () => void }) {
   }
 }
 
+function sameInstruction(a: any, b: any) {
+  if (a === b) return true
+  if (!a || !b) return false
+  return a.operation === b.operation && a.position === b.position
+}
+
 type Params = {
   item: any
   buttonRef: React.RefObject<HTMLButtonElement | null>
@@ -59,6 +65,15 @@ export function useDraggableTreeItem({
     invariant(buttonRef.current)
 
     function onChange({ self }: ElementDropTargetEventBasePayload) {
+
+      // const [innermost] = location.current.dropTargets
+      // if (innermost?.element !== self.element) {
+      //   setInstruction(null)
+      //   cancelExpand()
+      //   return
+      // }
+
+
       const instr = extractInstruction(self.data)
 
       if (instr?.operation === "combine" && item.children.length && !item.isOpen && !cancelExpandRef.current) {
@@ -70,7 +85,8 @@ export function useDraggableTreeItem({
 
       if (instr?.operation !== "combine") cancelExpand()
 
-      setInstruction(instr)
+      // setInstruction(instr)
+      setInstruction((prev) => (sameInstruction(prev, instr) ? prev : instr))
     }
 
     return combine(
@@ -97,12 +113,23 @@ export function useDraggableTreeItem({
         },
         onDragStart: ({ source }) => {
           setDragState("dragging")
+
+          console.log('onDragStart ------', {
+            source,
+            isOpenOnDragStart: source.data.isOpenOnDragStart
+          });
           if (source.data.isOpenOnDragStart) {
             dispatch({ type: "collapse", itemId: item.id })
           }
         },
         onDrop: ({ source }) => {
           setDragState("idle")
+
+          console.log('onDrop ------', {
+            source,
+            isOpenOnDragStart: source.data.isOpenOnDragStart
+          });
+
           if (source.data.isOpenOnDragStart) {
             dispatch({ type: "expand", itemId: item.id })
           }
@@ -110,8 +137,8 @@ export function useDraggableTreeItem({
       }),
       dropTargetForElements({
         element: buttonRef.current,
-        getData: ({ input, element }) =>
-          attachInstruction(
+        getData: ({ input, element }) => {
+          return attachInstruction(
             { id: item.id },
             {
               input,
@@ -119,16 +146,29 @@ export function useDraggableTreeItem({
               operations: item.isDraft
                 ? { combine: "blocked" }
                 : {
-                    combine: "available",
-                    "reorder-before": "available",
-                    "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
-                  },
+                  combine: "available",
+                  "reorder-before": "available",
+                  "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
+                },
             },
-          ),
-        canDrop: ({ source }) =>
-          source.data.type === "tree-item" &&
+          )
+        },
+        canDrop: ({ source }) => {
+          console.log('canDrop check', {
+            uniqueContextId,
+            source,
+            canDrop: source.data.type === "tree-item" &&
+              source.data.id !== item.id &&
+              source.data.uniqueContextId === uniqueContextId
+          });
+
+          return source.data.type === "tree-item" &&
           source.data.id !== item.id &&
-          source.data.uniqueContextId === uniqueContextId,
+          source.data.uniqueContextId === uniqueContextId
+        },
+
+
+
         onDragEnter: onChange,
         onDrag: onChange,
         onDragLeave: () => {
