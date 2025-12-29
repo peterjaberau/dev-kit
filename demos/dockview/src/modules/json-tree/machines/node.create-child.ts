@@ -17,13 +17,14 @@ export const createChildNodes = ({ context, spawn }: any) => {
             parent: parentRef
           },
           dataConfig: {
+            name: String(index),
             value: item,
           },
           viewConfig: {
             isOpen: false,
-          }
+          },
         }),
-        { id: String(index) },
+        // { id: String(index) },
       )
     })
   }
@@ -38,13 +39,14 @@ export const createChildNodes = ({ context, spawn }: any) => {
             parent: parentRef
           },
           dataConfig: {
+            name: key,
             value: val,
           },
           viewConfig: {
             isOpen: false,
           }
         }),
-        { id: key },
+        // { id: key },
       )
     }
     return nodes
@@ -53,3 +55,6 @@ export const createChildNodes = ({ context, spawn }: any) => {
 
   return undefined
 }
+
+
+

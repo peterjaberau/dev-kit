@@ -33,9 +33,11 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
     dataRuntimeInfo: dataInfo,
     getChildNode,
     nodeId,
+    dataName,
     dataValue,
     displayLabels,
     isOpen,
+    metadata,
   } = useNode({ actorRef: nodeRef })
 
 
@@ -48,10 +50,18 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
 
   const { dragState, groupState, instruction } = useDraggableTreeItem({
     item: {
-      id: nodeId,
-      children: childNames,
-      isOpen: dataInfo?.isBranch && isOpen,
+      id: metadata?.id,
+      children: metadata?.children,
+      isOpen: metadata?.data?.isBranch && metadata?.data?.isOpen,
       isDraft: false,
+
+
+
+
+      // id: nodeId,
+      // children: childNames,
+      // isOpen: dataInfo?.isBranch && isOpen,
+      // isDraft: false,
     },
     buttonRef: itemRef,
     groupRef: childrenGroupRef,
@@ -92,7 +102,7 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
             <BranchControl asChild>
               <BranchTrigger>
                 <BranchIndicator />
-                <NodeKey flex={1}>{nodeId}</NodeKey>
+                <NodeKey flex={1}>{dataName}</NodeKey>
                 <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
               </BranchTrigger>
@@ -101,7 +111,7 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
             <BranchContent ref={childrenGroupRef}>
               <GroupDropIndicator ref={childrenGroupRef} isActive={groupState === "is-innermost-over"}>
                 <Stack gap={2}>
-                <For each={childNames}>
+                <For each={metadata?.children}>
                   {(child: any, index: any) => {
                     return <NodeDraggable key={child} nodeRef={getChildNode(child)} />
                   }}
@@ -115,7 +125,7 @@ export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, r
           <ItemDraggable>
             {/*{instruction && <DropIndicator instruction={instruction} />}*/}
             <ItemControl>
-              <NodeKey>{nodeId}</NodeKey>
+              <NodeKey>{metadata?.name}</NodeKey>
               <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>
               <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
             </ItemControl>

@@ -27,6 +27,13 @@
       "@/*": ["./*"],
       "~/*": ["./public/*"],
 
+      "#atlas-ui/*": ["./src/components/atlas/ui/*"],
+      "#atlas-ui": ["./src/components/atlas/ui/"],
+      "#atlas-packages/*": ["./src/components/atlas/packages/*"],
+      "#atlas-packages": ["./src/components/atlas/packages/"],
+
+
+
       "#shared/*": ["./src/modules/json-tree/*"],
       "#shared": ["./src/modules/json-tree/"],
 

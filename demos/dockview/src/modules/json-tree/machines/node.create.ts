@@ -27,6 +27,7 @@ export const createNode = (input: any) => {
 
       const parentRef = input?.refs?.parent || null
       const dataConfig = {
+        name: input?.dataConfig?.name,
         value: input?.dataConfig?.value,
       }
       const dataRuntime = {
@@ -95,3 +96,7 @@ export const createNode = (input: any) => {
     },
   })
 }
+
+
+
+

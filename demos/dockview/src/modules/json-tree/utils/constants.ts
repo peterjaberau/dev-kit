@@ -13,6 +13,8 @@ export const machineConstants = {
   NODE_ROOT: "jt-node-root",
 
   NODE_PREFIX: 'jt-node-',
+  NODE_ROOT_NAME: '__NODE_ROOT__',
+
 } as const
 
 export const regexConstants = {

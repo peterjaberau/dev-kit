@@ -2,7 +2,7 @@
 import { useAppRoot } from "./app.root.selector"
 import { useSelector } from "@xstate/react"
 import { keys } from "lodash"
-
+import { machineConstants } from "../utils/constants"
 export const useNode = ({ actorRef = null } = {}) => {
   const appRoot = useAppRoot()
 
@@ -14,6 +14,7 @@ export const useNode = ({ actorRef = null } = {}) => {
   const nodeContext = nodeState?.context
 
   const dataConfig = nodeContext?.dataConfig
+  const dataName = dataConfig?.name || machineConstants.NODE_ROOT_NAME
   const dataValue = dataConfig.value
 
 
@@ -63,8 +64,23 @@ export const useNode = ({ actorRef = null } = {}) => {
           dataTypeLabel: dataRuntimeInfo?.dataType,
         }
 
+
+
+
   const viewConfig = nodeContext?.viewConfig
   const isOpen = viewConfig?.isOpen
+
+  const metadata = {
+    id: nodeId,
+    name: dataName,
+    data: {
+      type: dataRuntimeInfo?.dataType,
+      isBranch: dataRuntimeInfo?.isBranch,
+      isScalar: dataRuntimeInfo?.isScalar,
+      isOpen: isOpen,
+    },
+    children: childNames
+  }
 
 
   return {
@@ -79,6 +95,7 @@ export const useNode = ({ actorRef = null } = {}) => {
 
     dataConfig,
     dataValue,
+    dataName,
 
 
     viewConfig,
@@ -92,5 +109,7 @@ export const useNode = ({ actorRef = null } = {}) => {
     getChildNode,
 
     displayLabels,
+
+    metadata
   }
 }

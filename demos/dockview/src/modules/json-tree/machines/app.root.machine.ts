@@ -1,5 +1,6 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { createNode } from './node.create'
+import { machineConstants } from "../utils/constants"
 
 export const appRootMachine = setup({
   types: {
@@ -14,6 +15,7 @@ export const appRootMachine = setup({
           parent: self,
         },
         dataConfig: {
+          name: machineConstants.NODE_ROOT_NAME,
           value: context?.data
         },
         viewConfig: {
@@ -31,6 +33,7 @@ export const appRootMachine = setup({
   context: ({ input }: any) => {
     return {
       nodeRef: null,
+      nodeMetaRef: null,
       nodeRecursiveRef: null,
       data: input?.data,
       collapsed: true,
