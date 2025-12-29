@@ -1,20 +1,15 @@
-/**
- * @jsxRuntime classic
- * @jsx jsx
- */
-import { jsx } from '@compiled/react';
+import { token } from '#atlas-ui/primitives/css';
+import { chakra } from '@chakra-ui/react';
 
-import { cssMap } from '@atlaskit/css';
-import { token } from '@atlaskit/tokens';
 
-const styles = cssMap({
-	root: {
-		boxSizing: 'border-box',
-		height: '20px',
-		width: '20px',
-		borderRadius: token('radius.small'),
-	},
-});
+const styles = {
+  root: {
+    boxSizing: 'border-box',
+    height: '20px',
+    width: '20px',
+    borderRadius: token('radius.small'),
+  },
+};
 
 export type ContainerAvatarProps = {
 	/**
@@ -35,5 +30,5 @@ export type ContainerAvatarProps = {
  * A container avatar to be used in sidebar navigation items.
  */
 export const ContainerAvatar = ({ src }: ContainerAvatarProps) => (
-	<img src={src} css={styles.root} alt="" />
+	<chakra.img src={src} css={styles.root} alt="" />
 );

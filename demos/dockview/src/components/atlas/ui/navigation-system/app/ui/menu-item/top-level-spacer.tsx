@@ -1,21 +1,15 @@
-/**
- * @jsxRuntime classic
- * @jsx jsx
- */
-
+import { token } from '#atlas-ui/primitives/css';
+import { chakra } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
-import { cssMap, jsx } from '@compiled/react';
-
-import { token } from '@atlaskit/tokens';
 
 import { useLevel } from './expandable-menu-item/expandable-menu-item-context';
 
-const styles = cssMap({
-	root: {
-		height: token('space.150'),
-	},
-});
+const styles = {
+  root: {
+    height: token('space.150'),
+  },
+};
 
 /**
  * Use this component to create visual separation between the:
@@ -45,5 +39,5 @@ export function TopLevelSpacer() {
 		}
 	}, [level]);
 
-	return <div css={styles.root} />;
+	return <chakra.div css={styles.root} />;
 }

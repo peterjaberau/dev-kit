@@ -1,6 +1,5 @@
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode, useId } from 'react';
 
-import { useId } from '@atlaskit/ds-lib/use-id';
 
 import { MenuListItem } from '../menu-item/menu-list-item';
 
@@ -50,7 +49,7 @@ export const MenuSection = ({
 	children,
 	testId,
 	isMenuListItem = false,
-}: MenuSectionProps): JSX.Element => {
+}: MenuSectionProps | any) => {
 	const id = useId();
 
 	const content = (
@@ -62,7 +61,7 @@ export const MenuSection = ({
 	);
 
 	if (isMenuListItem) {
-		return <MenuListItem testId={testId}>{content}</MenuListItem>;
+		return <MenuListItem>{content}</MenuListItem>;
 	}
 
 	// Legacy. isMenuListItem should become default.

@@ -1,13 +1,8 @@
-/**
- * @jsxRuntime classic
- * @jsx jsx
- */
-import { type Ref, useMemo, useRef } from 'react';
+import { token } from '#atlas-ui/primitives/css';
+import { chakra } from '@chakra-ui/react';
+import { type Ref, useMemo, useRef, forwardRef } from 'react';
 
-import type { RouterLinkComponentProps } from '@atlaskit/app-provider';
-import { cssMap, jsx } from '@atlaskit/css';
-import forwardRefWithGeneric from '@atlaskit/ds-lib/forward-ref-with-generic';
-import mergeRefs from '@atlaskit/ds-lib/merge-refs';
+import { mergeRefs } from "#atlas-packages/ds-lib"
 
 import { ListItem } from '../../components/list-item';
 
@@ -15,41 +10,24 @@ import { MenuItemBase } from './menu-item';
 import type { MenuItemLinkOrButtonCommonProps, MenuItemOnClick } from './types';
 import { useScrollMenuItemIntoView } from './use-scroll-menu-item-into-view';
 
-const listItemStyles = cssMap({
-	root: {
-		/**
-		 * Setting a large scroll margin to prevent _horizontally_ scrolling the selected menu item into view.
-		 * `scrollIntoView` will scroll on both axes and does not allow completely opting out of scrolling for a particular axis.
-		 *
-		 * We have specifically chosen to prevent horizontal scrolling as deeply nested menu items are not a common use case, and
-		 * horizontal scrolling can cause the the sidebar to look inconsistent on load.
-		 *
-		 * We are using a large static value to here to handle all realistic nesting levels. As an alternative we could dynamically
-		 * calculate this based on the current nesting level, but it isn't necessary and would be a performance hit.
-		 */
-		scrollMarginInline: '1000px',
-	},
-});
+const listItemStyles = {
+  root: {
+    /**
+     * Setting a large scroll margin to prevent _horizontally_ scrolling the selected menu item into view.
+     * `scrollIntoView` will scroll on both axes and does not allow completely opting out of scrolling for a particular axis.
+     *
+     * We have specifically chosen to prevent horizontal scrolling as deeply nested menu items are not a common use case, and
+     * horizontal scrolling can cause the the sidebar to look inconsistent on load.
+     *
+     * We are using a large static value to here to handle all realistic nesting levels. As an alternative we could dynamically
+     * calculate this based on the current nesting level, but it isn't necessary and would be a performance hit.
+     */
+    scrollMarginInline: '1000px',
+  },
+};
 
-export type LinkMenuItemProps<RouterLinkConfig extends Record<string, any> = never> =
-	MenuItemLinkOrButtonCommonProps &
-		RouterLinkComponentProps<RouterLinkConfig> & {
-			/**
-			 * The native `target` attribute for the anchor element.
-			 */
-			target?: HTMLAnchorElement['target'];
-			/**
-			 * Whether the menu item is selected.
-			 */
-			isSelected?: boolean;
 
-			/**
-			 * Called when the user has clicked on the trigger content.
-			 */
-			onClick?: MenuItemOnClick<HTMLAnchorElement>;
-		};
-
-const LinkMenuItemNoRef = <RouterLinkConfig extends Record<string, any> = never>(
+const LinkMenuItemNoRef = (
 	{
 		testId,
 		actions,
@@ -69,10 +47,10 @@ const LinkMenuItemNoRef = <RouterLinkConfig extends Record<string, any> = never>
 		isDragging,
 		hasDragIndicator,
 		dropIndicator,
-	}: LinkMenuItemProps<RouterLinkConfig>,
-	forwardedRef?: Ref<HTMLAnchorElement>,
+	}: any,
+  forwardedRef?: Ref<HTMLAnchorElement>
 ) => {
-	const itemRef = useRef<HTMLDivElement>(null);
+	const itemRef: any = useRef<HTMLDivElement>(null);
 
 	useScrollMenuItemIntoView({
 		elementRef: itemRef,
@@ -84,7 +62,7 @@ const LinkMenuItemNoRef = <RouterLinkConfig extends Record<string, any> = never>
 	}, [itemRef, listItemRef]);
 
 	return (
-		<ListItem ref={ref} xcss={listItemStyles.root}>
+		<ListItem ref={ref} css={listItemStyles.root}>
 			<MenuItemBase
 				testId={testId}
 				description={description}
@@ -116,6 +94,4 @@ const LinkMenuItemNoRef = <RouterLinkConfig extends Record<string, any> = never>
  *
  * A menu item link. It should be used within a `ul`.
  */
-export const LinkMenuItem: <RouterLinkConfig extends Record<string, any> = never>(
-	props: LinkMenuItemProps<RouterLinkConfig> & React.RefAttributes<HTMLAnchorElement>,
-) => React.ReactElement | null = forwardRefWithGeneric(LinkMenuItemNoRef);
+export const LinkMenuItem = forwardRef(LinkMenuItemNoRef);

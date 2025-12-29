@@ -38,7 +38,7 @@ export const negativeSpaceMap = {
   "space.negative.400": "-32px",
 }
 
-export const allSpaceMap = { ...positiveSpaceMap, ...negativeSpaceMap }
+export const allSpaceMap: any = { ...positiveSpaceMap, ...negativeSpaceMap }
 
 export const inverseColorMap = {
   "color.background.neutral.bold": "color.text.inverse",
@@ -123,7 +123,7 @@ export const borderColorMap = {
   "color.border.bold": "#344563",
 } as const
 
-export const backgroundColorMap = {
+export const backgroundColorMap: any = {
   "color.background.accent.lime.subtlest": "#EEFBDA",
   "color.background.accent.lime.subtlest.hovered": "#D3F1A7",
   "color.background.accent.lime.subtlest.pressed": "#B3DF72",
@@ -558,3 +558,7 @@ export const allTokens = {
 export const token = (key: keyof typeof allTokens) => {
   return allTokens[key]
 }
+
+
+
+

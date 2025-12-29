@@ -1,29 +1,28 @@
-import { token } from '#atlas-ui/primitives/css';
-import { chakra } from '@chakra-ui/react';
+import { token } from "#atlas-ui/primitives/css"
+import { Card, chakra } from "@chakra-ui/react"
 
-
-import React from 'react';
+import React from "react"
 
 const footerStyles = {
   root: {
-    borderBlockStartWidth: token('border.width'),
-    borderBlockStartStyle: 'solid',
-    borderBlockStartColor: token('color.border'),
-    paddingBlockStart: token('space.100')
-  }
-};
+    borderBlockStartWidth: token("border.width"),
+    borderBlockStartStyle: "solid",
+    borderBlockStartColor: token("color.border"),
+    paddingBlockStart: token("space.100"),
+  },
+}
 
 export interface FlyoutFooterProps {
-    /**
-     * The content to display within the flyout footer. Typically used for
-     * supplementary actions or information.
-     */
-    children?: React.ReactNode;
+  /**
+   * The content to display within the flyout footer. Typically used for
+   * supplementary actions or information.
+   */
+  children?: React.ReactNode
 
-    /**
-     * A unique string that appears as data attribute data-testid in the
-     * rendered code, serving as a hook for automated tests.
-     */
+  /**
+   * A unique string that appears as data attribute data-testid in the
+   * rendered code, serving as a hook for automated tests.
+   */
 }
 
 /**
@@ -34,11 +33,7 @@ export interface FlyoutFooterProps {
  * component should be placed after FlyoutBody within the FlyoutMenuItemContent.
  */
 export const FlyoutFooter = (props: FlyoutFooterProps) => {
-    const { children } = props;
+  const { children } = props
 
-    return (
-        <chakra.div  css={footerStyles.root}>
-            {children}
-        </chakra.div>
-    )
-};
+  return <Card.Footer>{children}</Card.Footer>
+}

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import noop from '@atlaskit/ds-lib/noop';
+import { noop } from "#atlas-packages/ds-lib"
 
 /**
  * __Is open context__
@@ -20,14 +20,14 @@ export const useSetFlyoutMenuOpen = () => useContext(SetIsOpenContext);
 
 /**
  * __On close context__
- * 
+ *
  * A context for storing the onClose value of the FlyoutMenuItem.
  */
 export const OnCloseContext = createContext<(() => void) | null | undefined>(null);
 
 /**
  * __On close provider__
- * 
+ *
  * A context provider for supplying the onClose function to the FlyoutHeader.
  */
 export const OnCloseProvider = OnCloseContext.Provider;
