@@ -43,7 +43,7 @@ export const Anchor = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
       }}
     >
       isRouter ? (
-      <ChakraLink href={href} {...rest} ref={ref}>
+      <ChakraLink href={href} {...rest} ref={ref} asChild>
         <NextLink href={href || "/"}>{children}</NextLink>
       </ChakraLink>
       ) : (

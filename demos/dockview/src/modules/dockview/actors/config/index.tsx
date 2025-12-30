@@ -28,7 +28,8 @@ export const dockViewDynamicPanelConfig = {
                 { id: "pdnd-tree-simple", name: "Pdnd Tree Simple" },
                 { id: "pdnd-tree-sortable", name: "Pdnd Tree Sortable" },
                 { id: "pdnd-tree-dxos", name: "Pdnd Tree DXOS" },
-
+                { id: "pdnd-tree-atlas", name: "Pdnd Tree Atlas" },
+              // pdnd-tree-atlas
               ],
             },
 

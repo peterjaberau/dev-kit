@@ -114,21 +114,13 @@ export function useDraggableTreeItem({
         onDragStart: ({ source }) => {
           setDragState("dragging")
 
-          console.log('onDragStart ------', {
-            source,
-            isOpenOnDragStart: source.data.isOpenOnDragStart
-          });
+
           if (source.data.isOpenOnDragStart) {
             dispatch({ type: "collapse", itemId: item.id })
           }
         },
         onDrop: ({ source }) => {
           setDragState("idle")
-
-          console.log('onDrop ------', {
-            source,
-            isOpenOnDragStart: source.data.isOpenOnDragStart
-          });
 
           if (source.data.isOpenOnDragStart) {
             dispatch({ type: "expand", itemId: item.id })

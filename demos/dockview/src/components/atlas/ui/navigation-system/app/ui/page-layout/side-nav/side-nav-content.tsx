@@ -1,49 +1,31 @@
-/**
- * @jsxRuntime classic
- * @jsx jsx
- */
+import { token } from '#atlas-ui/primitives/css';
+import { chakra } from '@chakra-ui/react';
 import React, { forwardRef, type ReactNode, type Ref, useMemo, useRef } from 'react';
 
-import { cssMap, jsx, keyframes } from '@compiled/react';
-
-import mergeRefs from '@atlaskit/ds-lib/merge-refs';
-import { token } from '@atlaskit/tokens';
+import { mergeRefs } from "#atlas-packages/ds-lib"
 
 import { useIsFhsEnabled } from '../../fhs-rollout/use-is-fhs-enabled';
+import { keyframes } from "@emotion/css"
 
-/**
- * The main content of the side nav, filling up the middle section. It acts as a scroll container.
- *
- * It will grow to take up the available space in the side nav — this is used to push the footer to the
- * bottom of the side nav.
- */
 export const SideNavContent: React.ForwardRefExoticComponent<
 	React.PropsWithoutRef<SideNavContentProps> & React.RefAttributes<HTMLDivElement>
 > = forwardRef<HTMLDivElement, SideNavContentProps>(_SideNavContent);
 
 // Placing this const below the function breaks Compiled!
-const styles = cssMap({
-	scrollContainer: {
-		flex: 1,
-		overflow: 'auto',
-	},
-	paddingContainer: {
-		paddingBlockStart: token('space.150'),
-		paddingInlineEnd: token('space.150'),
-		paddingBlockEnd: token('space.150'),
-		paddingInlineStart: token('space.150'),
-	},
-});
+const styles = {
+  scrollContainer: {
+    flex: 1,
+    overflow: 'auto',
+  },
+  paddingContainer: {
+    paddingBlockStart: token('space.150'),
+    paddingInlineEnd: token('space.150'),
+    paddingBlockEnd: token('space.150'),
+    paddingInlineStart: token('space.150'),
+  },
+};
 
-/**
- * Using CSS scroll-driven animations to apply a scrolled indicator border.
- *
- * This approach is better for SSR, as some apps like Confluence will apply the
- * initial scroll position of the side nav content using JS before hydration.
- *
- * If we applied the border through React state it would only appear after hydration,
- * whereas this CSS approach should show even before hydration.
- */
+
 const scrolledBorder = keyframes({
 	from: {
 		boxShadow: 'none',
@@ -57,15 +39,15 @@ const scrolledBorder = keyframes({
 });
 
 const scrollTimelineVar = '--sNcst';
-const fullHeightSidebarStyles = cssMap({
-	scrollContainer: {
-		// Creates the scroll timeline bound to the var
-		scrollTimeline: `${scrollTimelineVar} block`,
-		// Consumes the scroll timeline for the animation
-		animationTimeline: scrollTimelineVar,
-		animationName: scrolledBorder,
-	},
-});
+const fullHeightSidebarStyles = {
+  scrollContainer: {
+    // Creates the scroll timeline bound to the var
+    scrollTimeline: `${scrollTimelineVar} block`,
+    // Consumes the scroll timeline for the animation
+    animationTimeline: scrollTimelineVar,
+    animationName: scrolledBorder,
+  },
+};
 
 function _SideNavContent(
 	{ children, testId }: SideNavContentProps,
@@ -81,13 +63,13 @@ function _SideNavContent(
 		 * Otherwise we can run into issues with sticky child elements if the padding is added to the scrollable element - as the stick point would include the padding, but
 		 * the scrollable area doesn't, so other non-sticky children can be seen above/below the sticky element's stick point.
 		 */
-		<div
+		<chakra.div
 			css={[styles.scrollContainer, isFhsEnabled && fullHeightSidebarStyles.scrollContainer]}
 			ref={isFhsEnabled ? mergedRef : forwardedRef}
 			data-testid={testId}
 		>
-			<div css={styles.paddingContainer}>{children}</div>
-		</div>
+			<chakra.div css={styles.paddingContainer}>{children}</chakra.div>
+		</chakra.div>
 	);
 }
 

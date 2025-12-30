@@ -266,7 +266,6 @@ export function treeStateReducer(state: TreeState, action: TreeAction): TreeStat
 }
 
 const dataReducer = (data: TreeItem[], action: TreeAction) => {
-  console.log('action', action);
 
   const item = tree.find(data, action.itemId);
   if (!item) {

@@ -26,112 +26,110 @@ import {
 
 const indentPerLevel = 5
 
-export const NodeDraggable = memo(forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { nodeRef, ...rest } = props
-  const {
-    childNames,
-    dataRuntimeInfo: dataInfo,
-    getChildNode,
-    nodeId,
-    dataName,
-    dataValue,
-    displayLabels,
-    isOpen,
-    metadata,
-  } = useNode({ actorRef: nodeRef })
+export const NodeDraggable = memo(
+  forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
+    const { nodeRef, ...rest } = props
+    const {
+      childNames,
+      dataRuntimeInfo: dataInfo,
+      getChildNode,
+      nodeId,
+      dataName,
+      dataValue,
+      displayLabels,
+      isOpen,
+      metadata,
+    } = useNode({ actorRef: nodeRef })
 
+    /** START drag-drop logic */
+    const itemRef: any = useRef<HTMLDivElement | null>(null)
+    const childrenGroupRef = useRef<HTMLDivElement | null>(null)
 
-  /** START drag-drop logic */
-  const itemRef: any = useRef<HTMLDivElement | null>(null)
-  const childrenGroupRef = useRef<HTMLDivElement | null>(null)
+    const { dispatch, uniqueContextId } = useContext(TreeContext)
+    const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
 
-  const { dispatch, uniqueContextId } = useContext(TreeContext)
-  const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
+    const { dragState, groupState, instruction } = useDraggableTreeItem({
+      item: {
+        id: metadata?.id,
+        children: metadata?.children,
+        isOpen: metadata?.data?.isBranch && metadata?.data?.isOpen,
+        isDraft: false,
 
-  const { dragState, groupState, instruction } = useDraggableTreeItem({
-    item: {
-      id: metadata?.id,
-      children: metadata?.children,
-      isOpen: metadata?.data?.isBranch && metadata?.data?.isOpen,
-      isDraft: false,
+        // id: nodeId,
+        // children: childNames,
+        // isOpen: dataInfo?.isBranch && isOpen,
+        // isDraft: false,
+      },
+      buttonRef: itemRef,
+      groupRef: childrenGroupRef,
+      dispatch,
+      uniqueContextId,
+      attachInstruction,
+      extractInstruction,
+    })
+    /** END drag-drop logic */
 
-
-
-
-      // id: nodeId,
-      // children: childNames,
-      // isOpen: dataInfo?.isBranch && isOpen,
-      // isDraft: false,
-    },
-    buttonRef: itemRef,
-    groupRef: childrenGroupRef,
-    dispatch,
-    uniqueContextId,
-    attachInstruction,
-    extractInstruction,
-  })
-  /** END drag-drop logic */
-
-
-  return (
-    <Stack
-      css={{
-        // support dnd
-        position: "relative",
-        // opacity: dragState === "dragging" ? 0.4 : 1,
-        ...(dragState === "idle" && {
-          borderRadius: 3,
-          cursor: "pointer",
-          _hover: {
-            backgroundColor: "rgba(9, 30, 66, 0.06)",
-          },
-        }),
-      }}
-      ref={ref}
-      {...rest}
-    >
-      <Box ref={itemRef}
-           css={{
-             opacity: dragState === "dragging" ? 0.4 : 1
-           }}
-      >
-        {dataInfo?.isBranch && (
-          <Branch data-id={nodeId} nodeRef={nodeRef} >
-            {instruction && <DropIndicator instruction={instruction} />}
-            {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
-            <BranchControl asChild>
-              <BranchTrigger>
-                <BranchIndicator />
-                <NodeKey flex={1}>{dataName}</NodeKey>
-                <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
-                <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
-              </BranchTrigger>
-            </BranchControl>
-            {/*{instruction && <DropIndicator instruction={instruction} />}*/}
-            <BranchContent ref={childrenGroupRef}>
-              <GroupDropIndicator ref={childrenGroupRef} isActive={groupState === "is-innermost-over"}>
-                <Stack gap={2}>
-                <For each={metadata?.children}>
-                  {(child: any, index: any) => {
-                    return <NodeDraggable key={child} nodeRef={getChildNode(child)} />
-                  }}
-                </For>
-                </Stack>
-              </GroupDropIndicator>
-            </BranchContent>
-          </Branch>
-        )}
-        {dataInfo?.isScalar && (
-          <ItemDraggable>
-            {/*{instruction && <DropIndicator instruction={instruction} />}*/}
-            <ItemControl>
-              <NodeKey>{metadata?.name}</NodeKey>
-              <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>
-              <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
-            </ItemControl>
-          </ItemDraggable>
-        )}
-      </Box>
-    </Stack>
-  )
-}))
+    return (
+      <GroupDropIndicator ref={childrenGroupRef} isActive={groupState === "is-innermost-over"}>
+        <Stack
+          css={{
+            // support dnd
+            position: "relative",
+            // opacity: dragState === "dragging" ? 0.4 : 1,
+            ...(dragState === "idle" && {
+              borderRadius: 3,
+              cursor: "pointer",
+              _hover: {
+                backgroundColor: "rgba(9, 30, 66, 0.06)",
+              },
+            }),
+          }}
+          ref={ref}
+          {...rest}
+        >
+          <Box
+            ref={itemRef}
+            css={{
+              opacity: dragState === "dragging" ? 0.4 : 1,
+            }}
+          >
+            {dataInfo?.isBranch && (
+              <Branch data-id={nodeId} nodeRef={nodeRef}>
+                {/*{instruction && <DropIndicator instruction={instruction} />}*/}
+                {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
+                <BranchControl asChild>
+                  <BranchTrigger>
+                    <BranchIndicator />
+                    <NodeKey flex={1}>{dataName}</NodeKey>
+                    <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
+                    <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
+                  </BranchTrigger>
+                </BranchControl>
+                {/*{instruction && <DropIndicator instruction={instruction} />}*/}
+                <BranchContent ref={childrenGroupRef}>
+                  <Stack gap={2}>
+                    <For each={metadata?.children}>
+                      {(child: any, index: any) => {
+                        return <NodeDraggable key={child} nodeRef={getChildNode(child)} />
+                      }}
+                    </For>
+                  </Stack>
+                </BranchContent>
+              </Branch>
+            )}
+            {dataInfo?.isScalar && (
+              <ItemDraggable>
+                {instruction && <DropIndicator instruction={instruction} />}
+                <ItemControl>
+                  <NodeKey>{metadata?.name}</NodeKey>
+                  <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>
+                  <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
+                </ItemControl>
+              </ItemDraggable>
+            )}
+          </Box>
+        </Stack>
+      </GroupDropIndicator>
+    )
+  }),
+)

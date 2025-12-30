@@ -31,13 +31,13 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
 
   const aria = (() => {
     if (!item.children.length) {
-      return undefined;
+      return undefined
     }
     return {
-      'aria-expanded': item.isOpen,
-      'aria-controls': `tree-item-${item.id}--subtree`,
-    };
-  })();
+      "aria-expanded": item.isOpen,
+      "aria-controls": `tree-item-${item.id}--subtree`,
+    }
+  })()
 
   return (
     <Fragment>
@@ -54,39 +54,79 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
         }}
       >
         <chakra.button
-          ref={buttonRef}
+          {...aria}
+          css={{
+            color: "currentColor",
+            border: 0,
+            width: "100%",
+            position: "relative",
+            background: "transparent",
+            margin: 0,
+            padding: 0,
+            borderRadius: 3,
+            cursor: "pointer",
+          }}
+          id={`tree-item-${item.id}`}
           onClick={toggleOpen}
-          w="100%"
-          bg="transparent"
-          marginBottom={1}
-          p={0}
+          ref={buttonRef}
           data-index={index}
           data-level={level}
-          opacity={dragState === "dragging" ? 0.4 : 1}
         >
-          {instruction && <DropIndicator instruction={instruction} />}
-            <HStack p={2} pl={level * indentPerLevel + 2} >
-              {item.children.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
-              <Text>Item {item.id}</Text>
-            </HStack>
-            {/*<HStack>*/}
-            {/*  <Badge>id: {item.id}</Badge>*/}
-            {/*  <Badge>level: {level}</Badge>*/}
-            {/*  <Badge>children#: {item.children.length}</Badge>*/}
-            {/*  <Badge>isOpen: {item.isOpen}</Badge>*/}
-            {/*  <Badge>index: {index}</Badge>*/}
-            {/*</HStack>*/}
+          <chakra.span
+            css={{
+              padding: 1,
+              paddingRight: "40px",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "row",
+              backgroundColor: "transparent",
+              borderRadius: 3,
+              ...(dragState === "dragging" && {
+                opacity: 0.4,
+              }),
+            }}
+          >
+            {item.children.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
+
+            <chakra.span
+              css={{
+                flexGrow: 1,
+                overflow: "hidden",
+                textAlign: "left",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Item {item.id}
+            </chakra.span>
+            <chakra.small
+              css={{
+                margin: 0,
+                color: "fg.muted",
+              }}
+            >
+              {item.isDraft ? <code>Draft</code> : null}
+            </chakra.small>
+          </chakra.span>
+          {instruction ? <DropIndicator instruction={instruction} /> : null}
+          <chakra.span
+            css={{
+              position: "absolute",
+              inset: 0,
+              left: `calc(-1 * ${level} * ${indentPerLevel}`,
+            }}
+          />
         </chakra.button>
       </chakra.div>
 
       {item.children.length > 0 && item.isOpen && (
-        // <chakra.div id={aria?.['aria-controls']} pl={indentPerLevel}>
+        <chakra.div id={aria?.["aria-controls"]} pl={indentPerLevel}>
           <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
             {item.children.map((child: any, i: number) => (
               <TreeItem key={child.id} item={child} level={level + 1} index={i} />
             ))}
           </GroupDropIndicator>
-        // </chakra.div>
+        </chakra.div>
       )}
     </Fragment>
   )

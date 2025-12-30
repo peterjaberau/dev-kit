@@ -1,6 +1,6 @@
 "use client"
 import { useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react"
-import { chakra, Container, Center, Box } from "@chakra-ui/react"
+import { chakra, Container, Center } from "@chakra-ui/react"
 import memoizeOne from "memoize-one"
 import invariant from "tiny-invariant"
 
@@ -45,6 +45,7 @@ function createTreeItemRegistry() {
 
 function Index() {
   const [state, updateState] = useReducer(treeStateReducer, null, getInitialTreeState)
+
   const ref = useRef<HTMLDivElement>(null)
   const { extractInstruction } = useContext(DependencyContext)
   const [dropTargetState, setDropTargetState] = useState<"is-innermost-over" | "idle">("idle")
@@ -231,20 +232,13 @@ function Index() {
   return (
     <TreeContext.Provider value={context}>
       <Container css={{ px: 24 }}>
-        <Box id="tree" ref={ref} css={{
-          display: 'flex',
-          boxSizing: 'border-box',
-          width: 280,
-          padding: 8,
-          flexDirection: 'column',
-          backgroundColor: 'bg.subtle',
-        }}>
+        <Center id="tree" ref={ref} css={{ boxShadow: "sm", py: 10 }}>
           <GroupDropIndicator isActive={dropTargetState === "is-innermost-over"} ref={groupRef}>
             {data.map((item, index) => {
               return <TreeItem item={item} key={item.id} level={0} index={index} />
             })}
           </GroupDropIndicator>
-        </Box>
+        </Center>
       </Container>
     </TreeContext.Provider>
   )

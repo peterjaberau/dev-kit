@@ -105,16 +105,16 @@ const ExpandableMenuItemIcon: any = ({
       >
         {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
       </Icon>
-      {providedElemBefore && (
-        <chakra.div
-          css={{
-            ...iconStyles.providedElemBefore,
-            ...(isSelected && iconStyles.providedElemBeforeSelected),
-          }}
-        >
-          {providedElemBefore}
-        </chakra.div>
-      )}
+      {/*{providedElemBefore && (*/}
+      {/*  <chakra.div*/}
+      {/*    css={{*/}
+      {/*      ...iconStyles.providedElemBefore,*/}
+      {/*      ...(isSelected && iconStyles.providedElemBeforeSelected),*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    {providedElemBefore}*/}
+      {/*  </chakra.div>*/}
+      {/*)}*/}
     </>
   )
 }
@@ -126,13 +126,18 @@ const ExpandableMenuItemIcon: any = ({
  * The trigger component for an `ExpandableMenuItem`. Interacting with it will expand or collapse the expandable.
  */
 
-export const ExpandableMenuItemTrigger = React.forwardRef<
+export const ExpandableMenuItemTrigger: any = React.forwardRef<
   HTMLButtonElement | HTMLAnchorElement | any>(function ExpandableMenuItemTrigger(
   {
+    href,
+    isDragging,
+    hasDragIndicator,
+    visualContentRef,
+    dropIndicator,
+    elemBefore: providedElemBefore,
+
     actions,
     isSelected,
-    href,
-    elemBefore: providedElemBefore,
     elemAfter,
     actionsOnHover,
     onClick,
@@ -140,13 +145,9 @@ export const ExpandableMenuItemTrigger = React.forwardRef<
     testId,
     interactionName,
     isContentTooltipDisabled,
-    visualContentRef,
-    isDragging,
-    hasDragIndicator,
-    dropIndicator,
     iconProps,
   }: any,
-  forwardedRef,
+  forwardedRef: any,
 ) {
   const id = useId()
   const onExpansionToggle = useOnExpansionToggle()
@@ -175,28 +176,32 @@ export const ExpandableMenuItemTrigger = React.forwardRef<
     isSelected: Boolean(isSelectable && isSelected),
   })
 
-  const elemBefore = isSelectable ? (
-    <IconButton
-      aria-expanded={isExpanded}
-      aria-labelledby={id}
-      variant={'ghost'}
-      size={'xs'}
-      onClick={handleIconClick}
-    >
-      <ExpandableMenuItemIcon
-        iconProps={iconProps}
-        isExpanded={isExpanded}
-        isSelected={isSelected}
-        providedElemBefore={providedElemBefore}
-      />
-    </IconButton>
-  ) : (
-    <ExpandableMenuItemIcon
-      isExpanded={isExpanded}
-      isSelected={isSelected}
-      providedElemBefore={providedElemBefore}
-    />
-  )
+  const ElementBefore = () => {
+    return (
+      isSelectable ? (
+        <IconButton
+          aria-expanded={isExpanded}
+          aria-labelledby={id}
+          variant={'ghost'}
+          size={'xs'}
+          onClick={handleIconClick}
+        >
+          <ExpandableMenuItemIcon
+            iconProps={iconProps}
+            isExpanded={isExpanded}
+            isSelected={isSelected}
+            providedElemBefore={providedElemBefore}
+          />
+        </IconButton>
+      ) : (
+        <ExpandableMenuItemIcon
+          isExpanded={isExpanded}
+          isSelected={isSelected}
+          providedElemBefore={providedElemBefore}
+        />
+      )
+    )
+  }
 
   return (
     <chakra.div
@@ -209,8 +214,8 @@ export const ExpandableMenuItemTrigger = React.forwardRef<
       <MenuItemBase
         id={id}
         actions={actions}
-        actionsOnHover={actionsOnHover}
-        elemBefore={elemBefore}
+        actionsOnHover={actionsOnHover as any}
+        // elemBefore={<ElementBefore />}
         ariaExpanded={isExpanded}
         elemAfter={elemAfter}
         href={href}

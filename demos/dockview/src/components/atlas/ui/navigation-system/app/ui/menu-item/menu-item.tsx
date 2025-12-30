@@ -1,5 +1,6 @@
+'use client'
 import { token } from "#atlas-ui/primitives/css"
-import { chakra } from "@chakra-ui/react"
+import { chakra, Button } from "@chakra-ui/react"
 import React, { forwardRef, Suspense, useCallback, useRef } from "react"
 import { Avatar, Text } from "@chakra-ui/react"
 import { Anchor, Pressable } from "#atlas-ui/primitives/components"
@@ -502,7 +503,7 @@ type MenuItemBaseProps<T extends HTMLAnchorElement | HTMLButtonElement> = MenuIt
  * It contains a type argument `<T>`, to specify the type of the interactive element (`button` or `a`).
  * This can be inferred from the type of the `onClick` prop.
  */
-const MenuItemBaseNoRef = <T extends HTMLAnchorElement | HTMLButtonElement>(
+const MenuItemBaseNoRef =(
   {
     id,
     testId,
@@ -526,19 +527,19 @@ const MenuItemBaseNoRef = <T extends HTMLAnchorElement | HTMLButtonElement>(
     isDragging,
     hasDragIndicator,
     dropIndicator,
-  }: MenuItemBaseProps<T>,
-  forwardedRef: React.ForwardedRef<T>,
+  }: any,
+  forwardedRef: any,
 ) => {
   const level = useLevel()
   const setFlyoutMenuOpen = useSetFlyoutMenuOpen()
   const isFlyoutMenuOpen = useFlyoutMenuOpen()
   const isLink = typeof href !== "undefined"
-  const labelRef: any = useRef<T | null>(null)
-  const descriptionRef = useRef<T | null>(null)
+  const labelRef: any = useRef<any>(null)
+  const descriptionRef = useRef<any>(null)
   const tooltipOnClick = useRef<React.MouseEventHandler<HTMLElement> | null>(null)
 
   const handleClick = useCallback(
-    (event: React.MouseEvent<T>) => {
+    (event: React.MouseEvent<any>) => {
       // Toggle flyout menu open state when inside a flyout context provider
       setFlyoutMenuOpen(!isFlyoutMenuOpen)
 
@@ -574,26 +575,8 @@ const MenuItemBaseNoRef = <T extends HTMLAnchorElement | HTMLButtonElement>(
 
   const interactiveElemContent = (
     <chakra.div css={interactiveContentStyles.root}>
-      {/**
-       * We are creating a hidden element to increase the interactive area of our menu items.
-       * This enables users to only need to move their pointers vertically to be able to access
-       * nested menu items.
-       *
-       * 📺 More context: https://www.youtube.com/watch?v=zVFJAwrCQCM
-       *
-       * Notes:
-       *
-       * - We cannot use `::before` on the interactive element itself as you
-       *   cannot drag a `button` element from `::before` in Firefox
-       *   https://bugzilla.mozilla.org/show_bug.cgi?id=1967645
-       * - The hidden element uses `position:absolute` so it won't impact layout
-       *
-       */}
       <chakra.div
         css={extendButtonOrAnchorStyles.root}
-        // This extends the clickable area of nested menu items to the width
-        // of the root level menu items, while being visually indented.
-        // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values
         style={{ insetInlineStart: `calc(-1 * ${level} * ${expandableMenuItemIndentation})` }}
         aria-hidden="true"
       />
@@ -612,17 +595,6 @@ const MenuItemBaseNoRef = <T extends HTMLAnchorElement | HTMLButtonElement>(
           </Text>
         )}
       </chakra.div>
-      {/**
-       * Both the drop indicator and drag handle use `position:absolute`
-       * Both rely on `position:relative` on a parent for positioning.
-       */}
-
-      {/**
-       * Wrapping `LazyDragHandle` in it's own `Suspense` boundary, so that it's loading won't block
-       * the rendering of the rest of the menu item.
-       * We put the `Suspense` in the conditional branch to avoid putting a `Suspense` in the react
-       * tree for consumers who don't need it
-       */}
       {hasDragIndicator ? (
         <Suspense fallback={null}>
           <LazyDragHandle />
@@ -673,20 +645,24 @@ const MenuItemBaseNoRef = <T extends HTMLAnchorElement | HTMLButtonElement>(
             {interactiveElemContent}
           </Anchor>
         ) : (
-          <Pressable
-            onClick={handleClick as any}
+          <Button
+            variant={'plain'}
+            size={'sm'}
+            p={0}
+            asChild
+            onClick={handleClick }
             css={{
-              ...buttonOrAnchorStyles.root,
-              ...buttonOrAnchorStyles.rootT26Shape,
-              ...topLevelSiblingStyles.root,
-              ...(isSelected && buttonOrAnchorStyles.selected),
-              ...(hasDragIndicator && buttonOrAnchorStyles.hasDragIndicator),
+              // ...buttonOrAnchorStyles.root,
+              // ...buttonOrAnchorStyles.rootT26Shape,
+              // ...topLevelSiblingStyles.root,
+              // ...(isSelected && buttonOrAnchorStyles.selected),
+              // ...(hasDragIndicator && buttonOrAnchorStyles.hasDragIndicator),
             }}
             aria-expanded={ariaExpanded}
-            isDisabled={isDisabled}
+            disabled={isDisabled}
           >
             {interactiveElemContent}
-          </Pressable>
+          </Button>
         )}
 
         {showElemBefore && (
