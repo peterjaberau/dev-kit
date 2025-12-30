@@ -27,6 +27,9 @@
       "@/*": ["./*"],
       "~/*": ["./public/*"],
 
+      "#dxos/*": ["./src/components/dxos/*"],
+      "#dxos": ["./src/components/dxos/"],
+
       "#atlas-ui/*": ["./src/components/atlas/ui/*"],
       "#atlas-ui": ["./src/components/atlas/ui/"],
       "#atlas-packages/*": ["./src/components/atlas/packages/*"],
