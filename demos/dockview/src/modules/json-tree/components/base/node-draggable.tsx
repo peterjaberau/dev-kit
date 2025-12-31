@@ -41,6 +41,7 @@ export const NodeDraggable = memo(
       metadata,
     } = useNode({ actorRef: nodeRef })
 
+
     /** START drag-drop logic */
     const itemRef: any = useRef<HTMLDivElement | null>(null)
     const childrenGroupRef = useRef<HTMLDivElement | null>(null)
@@ -95,7 +96,7 @@ export const NodeDraggable = memo(
             }}
           >
             {dataInfo?.isBranch && (
-              <Branch data-id={nodeId} nodeRef={nodeRef} dragState={dragState}>
+              <Branch  data-drag-state={dragState} data-id={nodeId} nodeRef={nodeRef} dragState={dragState}>
                 {/*{instruction && <DropIndicator instruction={instruction} />}*/}
                 {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
                 <BranchControl asChild>

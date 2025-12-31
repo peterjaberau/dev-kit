@@ -7,16 +7,16 @@ export const ItemControl = forwardRef<HTMLDivElement, any>((props: any, ref: any
       data-scope="json-tree"
       data-part="item-control"
       css={{
-        borderRadius: "md",
+        // borderRadius: "md",
         userSelect: "none",
         cursor: "pointer",
         py: 2,
         px: 3,
         // bg: "bg.panel",
-        _hover: {
-          boxShadow: "sm",
-          // bg: "bg.subtle",
-        }
+        // _hover: {
+        //   boxShadow: "sm",
+        //   // bg: "bg.subtle",
+        // }
       }}
       justifyContent="flex-start"
       alignItems={"center"}
