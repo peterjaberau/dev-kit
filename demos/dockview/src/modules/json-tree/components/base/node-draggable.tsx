@@ -80,7 +80,8 @@ export const NodeDraggable = memo(
               borderRadius: 3,
               cursor: "pointer",
               _hover: {
-                backgroundColor: "rgba(9, 30, 66, 0.06)",
+                // backgroundColor: "bg.panel",
+                // backgroundColor: "rgba(9, 30, 66, 0.06)",
               },
             }),
           }}
@@ -94,7 +95,7 @@ export const NodeDraggable = memo(
             }}
           >
             {dataInfo?.isBranch && (
-              <Branch data-id={nodeId} nodeRef={nodeRef}>
+              <Branch data-id={nodeId} nodeRef={nodeRef} dragState={dragState}>
                 {/*{instruction && <DropIndicator instruction={instruction} />}*/}
                 {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
                 <BranchControl asChild>

@@ -12,10 +12,10 @@ export const ItemControl = forwardRef<HTMLDivElement, any>((props: any, ref: any
         cursor: "pointer",
         py: 2,
         px: 3,
-        bg: "bg.panel",
+        // bg: "bg.panel",
         _hover: {
           boxShadow: "sm",
-          bg: "bg.subtle",
+          // bg: "bg.subtle",
         }
       }}
       justifyContent="flex-start"

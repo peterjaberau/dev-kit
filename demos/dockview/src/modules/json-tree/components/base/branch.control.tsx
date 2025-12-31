@@ -9,7 +9,7 @@ export const BranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: a
       data-part="branch-control"
       css={{
         borderRadius: "md",
-        bg: "bg.panel",
+        // bg: "bg.panel",
         userSelect: "none",
         cursor: "pointer",
         px: 3,

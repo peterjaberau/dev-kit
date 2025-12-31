@@ -65,14 +65,12 @@ export function useDraggableTreeItem({
     invariant(buttonRef.current)
 
     function onChange({ self }: ElementDropTargetEventBasePayload) {
-
       // const [innermost] = location.current.dropTargets
       // if (innermost?.element !== self.element) {
       //   setInstruction(null)
       //   cancelExpand()
       //   return
       // }
-
 
       const instr = extractInstruction(self.data)
 
@@ -114,13 +112,21 @@ export function useDraggableTreeItem({
         onDragStart: ({ source }) => {
           setDragState("dragging")
 
-
+          console.log("onDragStart ------", {
+            source,
+            isOpenOnDragStart: source.data.isOpenOnDragStart,
+          })
           if (source.data.isOpenOnDragStart) {
             dispatch({ type: "collapse", itemId: item.id })
           }
         },
         onDrop: ({ source }) => {
           setDragState("idle")
+
+          console.log("onDrop ------", {
+            source,
+            isOpenOnDragStart: source.data.isOpenOnDragStart,
+          })
 
           if (source.data.isOpenOnDragStart) {
             dispatch({ type: "expand", itemId: item.id })
@@ -138,28 +144,25 @@ export function useDraggableTreeItem({
               operations: item.isDraft
                 ? { combine: "blocked" }
                 : {
-                  combine: "available",
-                  "reorder-before": "available",
-                  "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
-                },
+                    combine: "available",
+                    "reorder-before": "available",
+                  "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
+
+                  // "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
+                                    // "reorder-after": (item?.isOpen && item?.children?.length && item?.children?.length > 0 ) ? "not-available" : "available",
+                  },
             },
           )
         },
         canDrop: ({ source }) => {
-          console.log('canDrop check', {
-            uniqueContextId,
-            source,
-            canDrop: source.data.type === "tree-item" &&
-              source.data.id !== item.id &&
-              source.data.uniqueContextId === uniqueContextId
-          });
 
-          return source.data.type === "tree-item" &&
-          source.data.id !== item.id &&
-          source.data.uniqueContextId === uniqueContextId
+
+          return (
+            source.data.type === "tree-item" &&
+            source.data.id !== item.id &&
+            source.data.uniqueContextId === uniqueContextId
+          )
         },
-
-
 
         onDragEnter: onChange,
         onDrag: onChange,

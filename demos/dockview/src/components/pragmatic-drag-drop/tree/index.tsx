@@ -1,250 +1,241 @@
 "use client"
-import { useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react"
-import { chakra, Container, Center, Box } from "@chakra-ui/react"
+
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react"
+import { Container, Center } from "@chakra-ui/react"
 import memoizeOne from "memoize-one"
 import invariant from "tiny-invariant"
 
-import { triggerPostMoveFlash } from "./utils/dnd-flourish"
-import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
-// import { DropIndicator } from "./components/dnd-drop-indicator"
-import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
-// import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
-import { GroupDropIndicator } from "../../pragmatic-drag-drop/drop-indicator/group"
+
+import { triggerPostMoveFlash } from "./utils/dnd-flourish"
+import {
+  getInitialTreeState,
+  tree,
+  type TreeItem as TreeItemType,
+  treeStateReducer,
+} from "./data/tree"
 
 import {
-  dropTargetForElements,
-  type ElementDropTargetEventBasePayload,
-  monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
+  DependencyContext,
+  TreeContext,
+  type TreeContextValue,
+} from "./providers/tree-context"
 
-import { getInitialTreeState, tree, type TreeItem as TreeItemType, treeStateReducer } from "./data/tree"
-import { DependencyContext, TreeContext, type TreeContextValue } from "./providers/tree-context"
 import TreeItem from "./components/tree-item"
+import { GroupDropIndicator } from "../../pragmatic-drag-drop/drop-indicator/group"
+import { useDraggableTree } from "./hooks/use-draggable-tree"
+
+/* ------------------------------------------------------------------ */
+/* Tree item registry (unchanged)                                      */
+/* ------------------------------------------------------------------ */
 
 function createTreeItemRegistry() {
-  const registry = new Map<string, { element: HTMLElement; actionMenuTrigger: HTMLElement }>()
+  const registry = new Map<
+    string,
+    { element: HTMLElement; actionMenuTrigger: HTMLElement }
+  >()
 
   const registerTreeItem = ({
-    itemId,
-    element,
-    actionMenuTrigger,
-  }: {
+                              itemId,
+                              element,
+                              actionMenuTrigger,
+                            }: {
     itemId: string
     element: HTMLElement
     actionMenuTrigger: HTMLElement
   }) => {
     registry.set(itemId, { element, actionMenuTrigger })
-    return () => {
-      registry.delete(itemId)
-    }
+    return () => registry.delete(itemId)
   }
 
   return { registry, registerTreeItem }
 }
 
-function Index() {
-  const [state, updateState] = useReducer(treeStateReducer, null, getInitialTreeState)
-  const ref = useRef<HTMLDivElement>(null)
-  const { extractInstruction } = useContext(DependencyContext)
-  const [dropTargetState, setDropTargetState] = useState<"is-innermost-over" | "idle">("idle")
+/* ------------------------------------------------------------------ */
+/* Index                                                               */
+/* ------------------------------------------------------------------ */
 
-  const [{ registry, registerTreeItem }] = useState(createTreeItemRegistry)
+function Index() {
+  const [state, dispatch] = useReducer(
+    treeStateReducer,
+    null,
+    getInitialTreeState,
+  )
 
   const { data, lastAction } = state
-  let lastStateRef = useRef<TreeItemType[]>(data)
+
+  const rootRef = useRef<HTMLDivElement>(null)
+  const groupRef = useRef<HTMLDivElement>(null)
+
+  const { extractInstruction } = useContext(DependencyContext)
+
+  const [{ registry, registerTreeItem }] = useState(
+    createTreeItemRegistry,
+  )
+
+  /* ------------------------------------------------------------------ */
+  /* Keep latest tree state for callbacks                                */
+  /* ------------------------------------------------------------------ */
+
+  const lastStateRef = useRef<TreeItemType[]>(data)
+
   useEffect(() => {
     lastStateRef.current = data
   }, [data])
 
-  useEffect(() => {
-    if (lastAction === null) {
-      return
-    }
+  /* ------------------------------------------------------------------ */
+  /* Live region announcements + post-move flash                         */
+  /* ------------------------------------------------------------------ */
 
-    // focus seems to be more reliable after a timeout.
+  useEffect(() => {
+    if (!lastAction) return
+
     setTimeout(() => {
       if (lastAction.type === "modal-move") {
-        const parentName = lastAction.targetId === "" ? "the root" : `Item ${lastAction.targetId}`
+        const parentName =
+          lastAction.targetId === ""
+            ? "the root"
+            : `Item ${lastAction.targetId}`
 
         liveRegion.announce(
-          `You've moved Item ${lastAction.itemId} to position ${lastAction.index + 1} in ${parentName}.`,
+          `You've moved Item ${lastAction.itemId} to position ${
+            lastAction.index + 1
+          } in ${parentName}.`,
         )
 
-        const { element, actionMenuTrigger } = registry.get(lastAction.itemId) ?? {}
-        if (element) {
-          triggerPostMoveFlash(element)
+        const entry = registry.get(lastAction.itemId)
+        if (entry?.element) {
+          triggerPostMoveFlash(entry.element)
         }
 
-        /**
-         * Only moves triggered by the modal will result in focus being
-         * returned to the trigger.
-         */
-        actionMenuTrigger?.focus()
-
+        entry?.actionMenuTrigger?.focus()
         return
       }
 
       if (lastAction.type === "instruction") {
-        const { element } = registry.get(lastAction.itemId) ?? {}
-        if (element) {
-          triggerPostMoveFlash(element)
+        const entry = registry.get(lastAction.itemId)
+        if (entry?.element) {
+          triggerPostMoveFlash(entry.element)
         }
-
-        return
       }
     })
   }, [lastAction, registry])
 
   useEffect(() => {
-    return () => {
-      liveRegion.cleanup()
-    }
+    return () => liveRegion.cleanup()
   }, [])
 
-  /**
-   * Returns the items that the item with `itemId` can be moved to.
-   *
-   * Uses a depth-first search (DFS) to compile a list of possible targets.
-   */
-  const getMoveTargets = useCallback(({ itemId }: { itemId: string }) => {
-    const data = lastStateRef.current
+  /* ------------------------------------------------------------------ */
+  /* Tree helpers                                                        */
+  /* ------------------------------------------------------------------ */
 
-    const targets = []
+  const getMoveTargets = useCallback(
+    ({ itemId }: { itemId: string }) => {
+      const targets: TreeItemType[] = []
+      const stack = [...lastStateRef.current]
 
-    const searchStack = Array.from(data)
-    while (searchStack.length > 0) {
-      const node = searchStack.pop()
+      while (stack.length) {
+        const node: any = stack.pop()
+        if (!node) continue
+        if (node.id === itemId) continue
+        if (node.isDraft) continue
 
-      if (!node) {
-        continue
+        targets.push(node)
+        node.children.forEach((c: any) => stack.push(c))
       }
 
-      /**
-       * If the current node is the item we want to move, then it is not a valid
-       * move target and neither are its children.
-       */
-      if (node.id === itemId) {
-        continue
-      }
+      return targets
+    },
+    [],
+  )
 
-      /**
-       * Draft items cannot have children.
-       */
-      if (node.isDraft) {
-        continue
-      }
-
-      targets.push(node)
-
-      node.children.forEach((childNode) => searchStack.push(childNode))
-    }
-
-    return targets
-  }, [])
-
-  const getChildrenOfItem = useCallback((itemId: string) => {
-    const data = lastStateRef.current
-
-    /**
-     * An empty string is representing the root
-     */
-    if (itemId === "") {
-      return data
-    }
-
-    const item = tree.find(data, itemId)
+  const getChildrenOfItem: any = useCallback((itemId: string) => {
+    if (itemId === "") return lastStateRef.current
+    const item = tree.find(lastStateRef.current, itemId)
     invariant(item)
     return item.children
   }, [])
 
+  /* ------------------------------------------------------------------ */
+  /* Context                                                             */
+  /* ------------------------------------------------------------------ */
+
   const context = useMemo<TreeContextValue>(
     () => ({
-      dispatch: updateState,
-      uniqueContextId: Symbol("unique-id"),
-      // memoizing this function as it is called by all tree items repeatedly
-      // An ideal refactor would be to update our data shape
-      // to allow quick lookups of parents
+      dispatch,
+      uniqueContextId: Symbol("tree-context"),
       getPathToItem: memoizeOne(
-        (targetId: string) => tree.getPathToItem({ current: lastStateRef.current, targetId }) ?? [],
+        (targetId: string) =>
+          tree.getPathToItem({
+            current: lastStateRef.current,
+            targetId,
+          }) ?? [],
       ),
       getMoveTargets,
       getChildrenOfItem,
       registerTreeItem,
     }),
-    [getChildrenOfItem, getMoveTargets, registerTreeItem],
+    [dispatch, getChildrenOfItem, getMoveTargets, registerTreeItem],
   )
 
-  const groupRef = useRef<HTMLDivElement | null>(null)
+  /* ------------------------------------------------------------------ */
+  /* Root drag & drop (hook-based)                                        */
+  /* ------------------------------------------------------------------ */
 
-  useEffect(() => {
-    invariant(ref.current)
-    invariant(groupRef.current)
+  const { groupState } = useDraggableTree({
+    rootRef,
+    groupRef,
+    uniqueContextId: context.uniqueContextId,
+    extractInstruction,
+    dispatch,
+  })
 
-    function onDropTargetChange({ location, self }: ElementDropTargetEventBasePayload) {
-      const [innerMost] = location.current.dropTargets.filter((dropTarget) => dropTarget.data.type === "group")
-
-      setDropTargetState(innerMost?.element === self.element ? "is-innermost-over" : "idle")
-    }
-
-    return combine(
-      monitorForElements({
-        canMonitor: ({ source }) =>
-          source.data.uniqueContextId === context.uniqueContextId && source.data.type === "tree-item",
-        onDrop(args) {
-          const { location, source } = args
-          // didn't drop on anything
-          if (!location.current.dropTargets.length) {
-            return
-          }
-
-          const itemId = source.data.id as string
-
-          const target: any = location.current.dropTargets[0]
-          const targetId = target.data.id as string
-
-          const instruction: Instruction | null = extractInstruction(target.data)
-
-          if (instruction !== null) {
-            updateState({
-              type: "instruction",
-              instruction,
-              itemId,
-              targetId,
-            })
-          }
-        },
-      }),
-      dropTargetForElements({
-        element: groupRef.current,
-        canDrop: ({ source }) =>
-          source.data.uniqueContextId === context.uniqueContextId && source.data.type === "tree-item",
-        getData: () => ({ type: "group" }),
-        onDragStart: onDropTargetChange,
-        onDropTargetChange: onDropTargetChange,
-        onDragLeave: () => setDropTargetState("idle"),
-        onDrop: () => setDropTargetState("idle"),
-      }),
-    )
-  }, [context, extractInstruction])
+  /* ------------------------------------------------------------------ */
+  /* Render                                                              */
+  /* ------------------------------------------------------------------ */
 
   return (
     <TreeContext.Provider value={context}>
-      <Container css={{ px: 24 }}>
-        <Box id="tree" ref={ref} css={{
-          display: 'flex',
-          boxSizing: 'border-box',
-          width: 280,
-          padding: 8,
-          flexDirection: 'column',
-          backgroundColor: 'bg.subtle',
-        }}>
-          <GroupDropIndicator isActive={dropTargetState === "is-innermost-over"} ref={groupRef}>
-            {data.map((item, index) => {
-              return <TreeItem item={item} key={item.id} level={0} index={index} />
-            })}
+      <Container px={24}>
+        <Center
+          ref={rootRef}
+          css={{ boxShadow: "sm", py: 10 }}
+        >
+          <GroupDropIndicator
+            ref={groupRef}
+            isActive={groupState === "is-innermost-over"}
+          >
+            {data.map((item, index) => (
+              <TreeItem
+                key={item.id}
+                item={item}
+                level={0}
+                index={index}
+              />
+            ))}
           </GroupDropIndicator>
-        </Box>
+          {/*<GroupDropIndicator*/}
+          {/*  ref={groupRef}*/}
+          {/*  isActive={groupState === "is-innermost-over"}*/}
+          {/*>*/}
+          {/*  {data.map((item, index) => (*/}
+          {/*    <TreeItem*/}
+          {/*      key={item.id}*/}
+          {/*      item={item}*/}
+          {/*      level={0}*/}
+          {/*      index={index}*/}
+          {/*    />*/}
+          {/*  ))}*/}
+          {/*</GroupDropIndicator>*/}
+        </Center>
       </Container>
     </TreeContext.Provider>
   )

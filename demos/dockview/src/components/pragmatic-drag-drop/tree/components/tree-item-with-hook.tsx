@@ -30,13 +30,9 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
   const toggleOpen = useCallback(() => dispatch({ type: "toggle", itemId: item.id }), [dispatch, item.id])
 
   const aria = (() => {
-    if (!item.children?.length || item.children?.length === 0) {
+    if (!item.children.length) {
       return undefined
     }
-
-    // if (!item.children.length) {
-    //   return undefined
-    // }
     return {
       "aria-expanded": item.isOpen,
       "aria-controls": `tree-item-${item.id}--subtree`,
@@ -90,7 +86,7 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
               }),
             }}
           >
-            {item.children?.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
+            {item.children.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
 
             <chakra.span
               css={{
@@ -123,10 +119,10 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
         </chakra.button>
       </chakra.div>
 
-      {item.children?.length > 0 && item.isOpen && (
+      {item.children.length > 0 && item.isOpen && (
         <chakra.div id={aria?.["aria-controls"]} pl={indentPerLevel}>
           <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
-            {item?.children.map((child: any, i: number) => (
+            {item.children.map((child: any, i: number) => (
               <TreeItem key={child.id} item={child} level={level + 1} index={i} />
             ))}
           </GroupDropIndicator>

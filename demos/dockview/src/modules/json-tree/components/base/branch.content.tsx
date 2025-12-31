@@ -8,7 +8,7 @@ export const BranchContent = forwardRef<HTMLDivElement, any>((props: any, ref: a
       data-scope="json-tree"
       data-part="branch-content"
       css={{
-        bg: "bg.panel",
+        // bg: "bg.panel",
         borderRadius: "md",
         pb: 2,
         px: 2,
@@ -22,7 +22,7 @@ export const BranchContent = forwardRef<HTMLDivElement, any>((props: any, ref: a
       <Stack
         css={{
           p: 2,
-          bg: "bg.muted",
+          // bg: "bg.muted",
           borderRadius: "md",
         }}
       >

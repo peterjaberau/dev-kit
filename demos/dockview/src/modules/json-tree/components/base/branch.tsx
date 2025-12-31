@@ -3,7 +3,7 @@ import { Collapsible } from "@chakra-ui/react"
 import { useNode } from "../../selectors"
 
 export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { nodeRef, children, ...rest } = props
+  const { nodeRef, children, dragState = 'idle', ...rest } = props
   const { sendToNode, isOpen } = useNode({ actorRef: nodeRef })
 
 
@@ -19,10 +19,10 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
           boxShadow: "sm",
         },
         '& [data-part="branch-control"]:is(:hover, :focus-visible)': {
-          bg: "bg.subtle",
+          // bg: "bg.subtle",
         },
         '& [data-part="branch-control"]:is(:hover, :focus-visible) + [data-part="branch-content"]': {
-          bg: "bg.subtle",
+          // bg: "bg.subtle",
         },
 
         '& [data-part="branch-control"]:is(:hover, :focus-visible) [data-part="toolbar"]': {
@@ -34,10 +34,10 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
           boxShadow: "sm",
         },
         '& [data-part="branch-trigger"]:is(:hover, :focus-visible)': {
-          bg: "bg.subtle",
+          // bg: "bg.subtle",
         },
         '& [data-part="branch-trigger"]:is(:hover, :focus-visible) + [data-part="branch-content"]': {
-          bg: "bg.subtle",
+          // bg: "bg.subtle",
         },
       }}
       defaultOpen={false}
