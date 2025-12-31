@@ -7,13 +7,13 @@ import invariant from "tiny-invariant"
 
 import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
 
-import { getInitialTreeState, tree, type TreeItem as TreeItemType, treeStateReducer } from "./data/tree"
+import { getInitialTreeState, tree, type TreeItem as TreeItemType, treeStateReducer } from "./data"
 
-import { DependencyContext, TreeContext, type TreeContextValue } from "./providers/tree-context"
+import { DependencyContext, TreeContext, type TreeContextValue } from "./tree-context"
 
-import TreeItem from "./components/tree-item"
-import { GroupDropIndicator } from "../../pragmatic-drag-drop/drop-indicator/group"
-import { useDraggableTree } from "./hooks/use-draggable-tree"
+import TreeItem from "./tree-item"
+import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
+import { useDraggableTree } from "../../../hooks/use-draggable-tree"
 
 function Index() {
   const [state, dispatch] = useReducer(treeStateReducer, null, getInitialTreeState)
@@ -93,19 +93,7 @@ function Index() {
               <TreeItem key={item.id} item={item} level={0} index={index} />
             ))}
           </GroupDropIndicator>
-          {/*<GroupDropIndicator*/}
-          {/*  ref={groupRef}*/}
-          {/*  isActive={groupState === "is-innermost-over"}*/}
-          {/*>*/}
-          {/*  {data.map((item, index) => (*/}
-          {/*    <TreeItem*/}
-          {/*      key={item.id}*/}
-          {/*      item={item}*/}
-          {/*      level={0}*/}
-          {/*      index={index}*/}
-          {/*    />*/}
-          {/*  ))}*/}
-          {/*</GroupDropIndicator>*/}
+
         </Center>
       </Container>
     </TreeContext.Provider>

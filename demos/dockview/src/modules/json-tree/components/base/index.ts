@@ -2,6 +2,7 @@
 
 // Composable JsonTree. See Render as an example />
 export { Root } from "./root"
+export { NodeRootDraggable } from "./node-draggable.root"
 export { Node } from "./node"
 export { NodeIndicator } from "./node.indicator"
 export { NodeKey } from "./node.key"

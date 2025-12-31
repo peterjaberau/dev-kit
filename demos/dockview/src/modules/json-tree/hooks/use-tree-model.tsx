@@ -3,14 +3,14 @@
 import { useCallback, useEffect, useRef } from "react"
 import invariant from "tiny-invariant"
 import memoizeOne from "memoize-one"
-import { tree, type TreeItem } from "../data/tree"
+import { tree } from "../components/base/tree/data"
 
 type Params = {
-  data: TreeItem[]
+  data: any[]
 }
 
 export function useTreeModel({ data }: Params) {
-  const lastStateRef = useRef<TreeItem[]>(data)
+  const lastStateRef = useRef<any[]>(data)
 
   useEffect(() => {
     lastStateRef.current = data
@@ -18,7 +18,7 @@ export function useTreeModel({ data }: Params) {
 
   const getMoveTargets = useCallback(
     ({ itemId }: { itemId: string }) => {
-      const targets: TreeItem[] = []
+      const targets: any[] = []
       const stack = [...lastStateRef.current]
 
       while (stack.length) {

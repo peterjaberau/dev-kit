@@ -9,9 +9,10 @@ const registryMeta: any = {
   // Json Tree
   'json-tree-tree': dynamic(() => import("#views/components/panels/json-tree/tree"), { ssr: false }),
   'json-tree-tree-draggable': dynamic(() => import("#views/components/panels/json-tree/tree-draggable"), { ssr: false }),
-
+  'json-tree-pdnd-tree': dynamic(() => import("#views/components/panels/json-tree/pdnd-tree"), { ssr: false }),
 
   // Drag & Drop
+
   'pdnd-tree': dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
   'pdnd-tree-simple': dynamic(() => import("#views/components/panels/pdnd/tree-simple"), { ssr: false }),
   'pdnd-tree-dxos': dynamic(() => import("#views/components/panels/pdnd/tree-dxos"), { ssr: false }),

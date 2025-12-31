@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import invariant from "tiny-invariant"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
-import { TreeItemDragPreview } from "../components/tree-item-drag-preview"
+import { TreeItemDragPreview } from "../components/base/tree/tree-item-drag-preview"
 import {
   draggable,
   dropTargetForElements,
@@ -39,6 +39,12 @@ type Params = {
   uniqueContextId: symbol
   attachInstruction: any
   extractInstruction: any
+
+  /** delegation */
+  hasChildren?: any
+  isOpen?: boolean
+  onExpand?: () => void
+  onCollapse?: () => void
 }
 
 export function useDraggableTreeItem({
@@ -49,6 +55,10 @@ export function useDraggableTreeItem({
   uniqueContextId,
   attachInstruction,
   extractInstruction,
+  hasChildren,
+  isOpen,
+  onExpand,
+  onCollapse,
 }: Params) {
   const [dragState, setDragState] = useState<"idle" | "dragging">("idle")
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
@@ -67,16 +77,17 @@ export function useDraggableTreeItem({
     function onChange({ self }: ElementDropTargetEventBasePayload) {
       const instr = extractInstruction(self.data)
 
-      if (instr?.operation === "combine" && item.children?.length && !item.isOpen && !cancelExpandRef.current) {
+      if (instr?.operation === "combine" && hasChildren && !isOpen && !cancelExpandRef.current) {
         cancelExpandRef.current = delay({
           waitMs: 500,
-          fn: () => dispatch({ type: "expand", itemId: item.id }),
+          fn: () => onExpand?.(),
         })
       }
 
-      if (instr?.operation !== "combine") cancelExpand()
+      if (instr?.operation !== "combine") {
+        cancelExpand()
+      }
 
-      // setInstruction(instr)
       setInstruction((prev) => (sameInstruction(prev, instr) ? prev : instr))
     }
 
@@ -87,32 +98,28 @@ export function useDraggableTreeItem({
           return {
             id: item.id,
             type: "tree-item",
-            isOpenOnDragStart: item.isOpen,
             uniqueContextId,
+            isOpenOnDragStart: isOpen,
           }
         },
         onDragStart: ({ source, location }) => {
           setDragState("dragging")
-
           if (source.data.isOpenOnDragStart) {
-            dispatch({ type: "collapse", itemId: item.id })
+            onCollapse?.()
           }
         },
         onDrop: ({ source, location }) => {
           setDragState("idle")
-
           if (source.data.isOpenOnDragStart) {
-            dispatch({ type: "expand", itemId: item.id })
+            onExpand?.()
           }
         },
         onGenerateDragPreview: ({ nativeSetDragImage }) => {
           setCustomNativeDragPreview({
             getOffset: pointerOutsideOfPreview({ x: "16px", y: "8px" }),
             render: ({ container }) => {
-              // root.render(null)
               const root = createRoot(container)
               root.render(<TreeItemDragPreview item={item} />)
-
               return () => root.unmount()
             },
             nativeSetDragImage,
@@ -122,27 +129,27 @@ export function useDraggableTreeItem({
       dropTargetForElements({
         element: buttonRef.current,
         getData: ({ input, element, source }) => {
-          return attachInstruction(
-            { id: item.id },
-            {
-              input,
-              element,
-              operations: item.isDraft
-                ? { combine: "blocked" }
-                : {
-                    combine: "available",
-                    "reorder-before": "available",
-                    "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
+          return attachInstruction({ id: item.id }, { input, element })
 
-                    // "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
-                    // "reorder-after": (item?.isOpen && item?.children?.length && item?.children?.length > 0 ) ? "not-available" : "available",
-                  },
-            },
-          )
+          // return attachInstruction(
+          //   { id: item.id },
+          //   {
+          //     input,
+          //     element,
+          //     operations: item.isDraft
+          //       ? { combine: "blocked" }
+          //       : {
+          //           combine: "available",
+          //           "reorder-before": "available",
+          //           "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
+          //
+          //         },
+          //   },
+          // )
         },
         canDrop: ({ source, input, element }) => {
           return (
-            source.element !== buttonRef.current &&
+            // source.element !== buttonRef.current &&
             source.data.type === "tree-item" &&
             source.data.id !== item.id &&
             source.data.uniqueContextId === uniqueContextId
@@ -161,15 +168,35 @@ export function useDraggableTreeItem({
         },
       }),
     )
-  }, [item, dispatch, uniqueContextId, attachInstruction, extractInstruction, cancelExpand])
+  }, [    item.id,
+    uniqueContextId,
+    attachInstruction,
+    extractInstruction,
+    hasChildren,
+    isOpen,
+    onExpand,
+    onCollapse,
+    cancelExpand,])
 
   useEffect(() => {
     if (!groupRef.current) return
 
     function onChange({ location, self, source }: ElementDropTargetEventBasePayload) {
-      const [inner] = location.current.dropTargets.filter((dt) =>
-        dt.data.type === "group")
-      setGroupState(inner?.element === self.element ? "is-innermost-over" : "idle")
+
+      const groups = location.current.dropTargets.filter(
+        (dt) => dt.data.type === "group"
+      )
+
+      const innermost = groups.at(-1)
+
+      setGroupState(
+        innermost?.element === self.element
+          ? "is-innermost-over"
+          : "idle"
+      )
+
+      // const [inner] = location.current.dropTargets.filter((dt) => dt.data.type === "group")
+      // setGroupState(inner?.element === self.element ? "is-innermost-over" : "idle")
     }
 
     return dropTargetForElements({

@@ -4,17 +4,15 @@ import {
   attachInstruction,
   extractInstruction,
 } from '@atlaskit/pragmatic-drag-and-drop-hitbox/list-item';
-// import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/list-item';
-import { DropIndicator } from '../../../pragmatic-drag-drop/drop-indicator/list-item';
+import { DropIndicator } from '#components/pragmatic-drag-drop/drop-indicator/list-item';
 
-import type { TreeAction, TreeItem } from '../data/tree';
 
 export type TreeContextValue = {
-  dispatch: (action: TreeAction) => void;
+  dispatch: (action: any) => void;
   uniqueContextId: symbol;
   getPathToItem: (itemId: string) => string[];
-  getMoveTargets: ({ itemId }: { itemId: string }) => TreeItem[];
-  getChildrenOfItem: (itemId: string) => TreeItem[];
+  getMoveTargets: ({ itemId }: { itemId: string }) => any[];
+  getChildrenOfItem: (itemId: string) => any[];
   registerTreeItem?: (args: {
     itemId: string;
     element: HTMLElement;

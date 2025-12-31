@@ -15,7 +15,10 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
       css={{
         borderRadius: "md",
         bg: "bg.panel",
+
+        // hover + drag state = idle
         '&[data-hovered="true"][data-drag-state="idle"]': {
+          cursor: "pointer",
           bg: "bg.info",
           boxShadow: "md",
         },
@@ -59,3 +62,7 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
     </Collapsible.Root>
   )
 })
+
+const CollapsibleProvider = () => {
+
+}

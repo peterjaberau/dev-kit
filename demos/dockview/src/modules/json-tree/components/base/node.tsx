@@ -47,15 +47,6 @@ export const Node = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
               <BranchTrigger>
                 <BranchIndicator />
                 <NodeKey flex={1}>{nodeId}</NodeKey>
-                <Toolbar>
-                  <ToolbarItemButton asChild>
-                    <ToolbarCommandCopy />
-                  </ToolbarItemButton>
-
-                  <ToolbarItemButton asChild>
-                    <ToolbarCommandBookmark />
-                  </ToolbarItemButton>
-                </Toolbar>
                 <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
               </BranchTrigger>

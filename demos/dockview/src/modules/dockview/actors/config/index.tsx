@@ -16,7 +16,8 @@ export const dockViewDynamicPanelConfig = {
               children: [
                 { id: "json-tree-tree", name: "Tree" },
                 { id: "json-tree-tree-draggable", name: "Tree Draggable" },
-
+                { id: "json-tree-pdnd-tree", name: "Pdnd Tree" },
+              // json-tree-pdnd-tree
               ],
             },
             // pdnd-tree-legacy
