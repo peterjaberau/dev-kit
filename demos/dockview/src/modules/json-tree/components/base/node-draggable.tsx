@@ -107,8 +107,7 @@ export const NodeDraggable = memo(
                 <BranchTrigger>
                   <BranchIndicator />
                   <NodeKey flex={1}>
-                    {dataName} [Oper:{instruction?.operation} | isOpen: {isOpen ? "true" : "false"} | Group:{groupState}{" "}
-                    | Drag:{dragState} | id:{nodeId} ]
+                    {dataName} [Oper:{instruction?.operation} | isOpen: {isOpen ? "true" : "false"} | Group:{groupState} | Drag:{dragState} | id:{nodeId}]
                   </NodeKey>
                   <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
                   <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
@@ -134,7 +133,7 @@ export const NodeDraggable = memo(
             <ItemDraggable>
               <ItemControl>
                 <NodeKey>{metadata?.name}</NodeKey>
-                <NodeKeyValue flex={1}>{dataValue}</NodeKeyValue>
+                <NodeKeyValue flex={1}>{dataValue} [Oper:{instruction?.operation} | isOpen: {isOpen ? "true" : "false"} | Group:{groupState} | Drag:{dragState} | id:{nodeId}]</NodeKeyValue>
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
                 {instruction && <DropIndicator instruction={instruction} />}
               </ItemControl>

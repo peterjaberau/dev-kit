@@ -34,7 +34,7 @@ export const useNode = ({ actorRef = null } = {}) => {
     ? keys(childNodes).map(Number)
     : dataRuntimeInfo?.isObject
       ? keys(childNodes)
-      : dataValue
+      : [dataValue]
 
   const getChildNode = (name: string | number) => {
     if (dataRuntimeInfo?.isArray || dataRuntimeInfo?.isObject) {
