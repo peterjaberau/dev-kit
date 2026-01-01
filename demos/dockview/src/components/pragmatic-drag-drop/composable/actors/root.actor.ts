@@ -1,24 +1,6 @@
 // root.machine.ts
-import { setup, assign, spawnChild, ActorRefFrom } from "xstate";
-import { createResourceActor } from "./resource.actor";
-
-type ResourceActor = ActorRefFrom<
-  ReturnType<typeof createResourceActor>
->;
-
-interface RootContext {
-  resources: Record<string, ResourceActor>;
-}
-
-type RootEvent =
-  | {
-  type: "spawn.resource";
-  key: string;
-}
-  | {
-  type: "remove.resource";
-  key: string;
-};
+import { setup, assign, spawnChild, ActorRefFrom } from "xstate"
+import { createResourceActor } from "./resource.actor"
 
 export const rootActor = setup({
   types: {
@@ -36,20 +18,17 @@ export const rootActor = setup({
       on: {
         "spawn.resource": {
           actions: assign({
-            resources: ({ context }, event) => {
+            resources: ({ context, event }: any) => {
               if (context.resources[event.key]) {
-                return context.resources;
+                return context.resources
               }
 
-              const actor = spawnChild(
-                createResourceActor(),
-                { id: event.key }
-              );
+              const actor = spawnChild(createResourceActor(), { id: event.key })
 
               return {
                 ...context.resources,
                 [event.key]: actor,
-              };
+              }
             },
           }),
         },
@@ -57,12 +36,12 @@ export const rootActor = setup({
         "remove.resource": {
           actions: assign({
             resources: ({ context }, event) => {
-              const { [event.key]: _, ...rest } = context.resources;
-              return rest;
+              const { [event.key]: _, ...rest } = context.resources
+              return rest
             },
           }),
         },
       },
     },
   },
-});
+})
