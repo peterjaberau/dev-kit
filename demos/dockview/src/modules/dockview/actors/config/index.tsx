@@ -35,6 +35,23 @@ export const dockViewDynamicPanelConfig = {
             },
 
             {
+              id: "pro-editor",
+              name: "Pro Editor",
+              children: [
+                { id: "pro-editor-sortable-tree-default", name: "Sortable Tree Default" },
+                { id: "pro-editor-sortable-tree-virtual", name: "Sortable Tree Virtual" },
+                { id: "pro-editor-sortable-tree-rules", name: "Sortable Tree Rules" },
+                { id: "pro-editor-sortable-tree-renderer", name: "Sortable Tree Renderer" },
+                { id: "pro-editor-sortable-tree-disabledrag", name: "Sortable Tree Disable Drag" },
+                { id: "pro-editor-sortable-tree-controlled", name: "Sortable Tree Controlled" },
+
+
+                { id: "pro-editor-columns", name: "Columns" },
+              ],
+            },
+
+
+            {
               id: "json-drafts-folder",
               name: "Json & Recursive Drafts",
               children: [

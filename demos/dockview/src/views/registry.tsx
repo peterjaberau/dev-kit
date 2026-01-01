@@ -6,6 +6,14 @@ import { cache, useEffect, useState } from "react"
 const registryMeta: any = {
   'default': dynamic(() => import("#views/components/panels/base/default"), { ssr: false }),
 
+  'pro-editor-columns': dynamic(() => import("#views/components/panels/pro-editor/columns"), { ssr: false }),
+  'pro-editor-sortable-tree-default': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-default"), { ssr: false }),
+  'pro-editor-sortable-tree-virtual': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-virtual"), { ssr: false }),
+  'pro-editor-sortable-tree-rules': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-rules"), { ssr: false }),
+  'pro-editor-sortable-tree-renderer': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-renderer"), { ssr: false }),
+  'pro-editor-sortable-tree-disabledrag': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-disabledrag"), { ssr: false }),
+  'pro-editor-sortable-tree-controlled': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-controlled"), { ssr: false }),
+
   // Json Tree
   'json-tree-tree': dynamic(() => import("#views/components/panels/json-tree/tree"), { ssr: false }),
   'json-tree-tree-draggable': dynamic(() => import("#views/components/panels/json-tree/tree-draggable"), { ssr: false }),
