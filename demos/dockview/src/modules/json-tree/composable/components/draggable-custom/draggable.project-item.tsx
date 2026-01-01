@@ -4,33 +4,20 @@ import { useState } from "react"
 import { useAtomValue, useSetAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { Folder } from "lucide-react"
-import {
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuBadge,
-} from "@/components/ui/custom/sidebar"
-import { EditableDiv } from "@/components/ui/custom/editable-div"
-import { ProjectContextMenu } from "@/components/navigation/project-context-menu"
-import { useContextMenuVisibility } from "@/hooks/use-context-menu-visibility"
-import { useSidebarDragDrop } from "@/hooks/use-sidebar-drag-drop"
-import { DraggableSidebarProject, DropTargetSidebarProject } from "./drag-drop"
-import { SharedBadge } from "@/components/navigation/shared-badge"
-import {
-  pathnameAtom,
-  editingProjectIdAtom,
-  stopEditingProjectAtom,
-} from "@tasktrove/atoms/ui/navigation"
-import { projectTaskCountsAtom } from "@tasktrove/atoms/ui/task-counts"
-import { projectAtoms } from "@tasktrove/atoms/core/projects"
-import type { Project } from "@tasktrove/types/core"
-import type { GroupId } from "@tasktrove/types/id"
-import { cn } from "@/lib/utils"
+import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui-custom/sidebar/sidebar"
+import { useSidebarDragDrop } from "../../hooks/use-sidebar-drag-drop"
+import { DraggableSidebarProject, DropTargetSidebarProject } from "."
+// import {
+//   pathnameAtom,
+// } from "@tasktrove/atoms/ui/navigation"
+// import { projectTaskCountsAtom } from "@tasktrove/atoms/ui/task-counts"
+// import { projectAtoms } from "@tasktrove/atoms/core/projects"
 
 interface DraggableProjectItemProps {
-  project: Project
+  project: any
   index: number
   isInGroup?: boolean
-  groupId?: GroupId
+  groupId?: any
   enableDragDrop?: boolean
 }
 
@@ -65,11 +52,7 @@ export function DraggableProjectItem({
   const isEditing = editingProjectId === project.id
 
   // Context menu visibility
-  const {
-    isVisible: contextMenuVisible,
-    isMenuOpen,
-    handleMenuOpenChange,
-  } = useContextMenuVisibility(isHovered)
+  const { isVisible: contextMenuVisible, isMenuOpen, handleMenuOpenChange } = useContextMenuVisibility(isHovered)
 
   const handleProjectNameChange = (newName: string) => {
     if (newName.trim() && newName !== project.name) {
@@ -81,7 +64,7 @@ export function DraggableProjectItem({
   const content = (
     <SidebarMenuItem>
       <div
-        className="relative group w-full"
+        className="group relative w-full"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -93,12 +76,9 @@ export function DraggableProjectItem({
               router.push(`/projects/${project.slug}`)
             }
           }}
-          className={cn(
-            "cursor-pointer",
-            isInGroup ? "ml-6 w-[calc(100%-calc(var(--spacing)*6))]" : "w-full",
-          )}
+          className={cn("cursor-pointer", isInGroup ? "ml-6 w-[calc(100%-calc(var(--spacing)*6))]" : "w-full")}
         >
-          <div className="flex items-center gap-2 w-full">
+          <div className="flex w-full items-center gap-2">
             <Folder className="h-4 w-4" style={{ color: project.color }} />
             {isEditing ? (
               <EditableDiv
@@ -111,12 +91,10 @@ export function DraggableProjectItem({
                 onClick={(e) => e.stopPropagation()}
               />
             ) : (
-              <span className="flex-1 truncate mr-6">{project.name}</span>
+              <span className="mr-6 flex-1 truncate">{project.name}</span>
             )}
             <SharedBadge project={project} />
-            <SidebarMenuBadge className={contextMenuVisible ? "opacity-0" : ""}>
-              {taskCount}
-            </SidebarMenuBadge>
+            <SidebarMenuBadge className={contextMenuVisible ? "opacity-0" : ""}>{taskCount}</SidebarMenuBadge>
           </div>
         </SidebarMenuButton>
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
@@ -136,12 +114,7 @@ export function DraggableProjectItem({
   }
 
   return (
-    <DropTargetSidebarProject
-      projectId={project.id}
-      index={index}
-      groupId={groupId}
-      onDrop={handleDrop}
-    >
+    <DropTargetSidebarProject projectId={project.id} index={index} groupId={groupId} onDrop={handleDrop}>
       <DraggableSidebarProject projectId={project.id} index={index} groupId={groupId}>
         {content}
       </DraggableSidebarProject>

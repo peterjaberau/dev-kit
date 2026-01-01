@@ -1,6 +1,6 @@
 import * as React from "react"
 
-function SidebarMenuBadge({ className, ...props }: React.ComponentProps<"div">) {
+export function SidebarMenuBadge({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-menu-badge"
