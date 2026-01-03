@@ -77,6 +77,12 @@ export function useDraggableTreeItem({
       const sourceData = source.data
       const targetData = target.data
       const selfData = self.data
+      //@ts-ignore
+      const sourceMetadata: any = source.data?.nodeSelector?.metadata
+      //@ts-ignore
+      const targetMetadata: any = target.data?.nodeSelector?.metadata
+
+      // sourceMetadata: source.data.nodeSelector.metadata, targetMetadata: target.data.parentSelector.metadata,
 
       // don't allow dropping on itself
       if (targetData.id === sourceData.id) {
@@ -103,13 +109,18 @@ export function useDraggableTreeItem({
       }
 
 
+      // metadata?.children
+      // if (instr?.operation !== "combine" &&
+      //   sourceData.node.
 
 
 
 
 
 
-      console.log("JSON-TREE ----> onChange --> ", { sourceData, targetData, selfData, self, data: self.data, location, source, instr })
+
+
+      console.log("JSON-TREE ----> onChange --> ", { sourceMetadata, targetMetadata, sourceData, targetData, selfData, self, data: self.data, location, source, instr })
 
 
       if (instr?.operation === "combine" && item.children?.length && !item.isOpen && !cancelExpandRef.current) {
@@ -177,6 +188,7 @@ export function useDraggableTreeItem({
 
         getData: ({ input, element, source  }) => {
 
+          // https://atlassian.design/components/navigation-system/side-nav-items/drag-and-drop
           const inst = attachInstruction(
             {
               ...item,
@@ -189,8 +201,8 @@ export function useDraggableTreeItem({
                 ? { combine: "blocked" }
                 : {
                   combine: "available",
-                  // "reorder-before": "available",
-                  "reorder-after": "available",
+                  "reorder-before": "available",
+                  // "reorder-after": "available",
                   // "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
 
                   // "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",

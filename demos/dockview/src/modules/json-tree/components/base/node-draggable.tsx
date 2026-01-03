@@ -47,6 +47,7 @@ export const NodeDraggable = memo(
       parentNodeRef = null,
       parentNodeId,
       parentContext,
+      parentState,
       nodeContext,
     } = nodeSelector
 
@@ -69,6 +70,8 @@ export const NodeDraggable = memo(
         parentId: parentNodeId,
         node: nodeContext,
         parent: parentContext,
+        nodeSelector: nodeSelector,
+        parentSelector: parentState
         // parent: getParentContext()
       },
       buttonRef: itemRef,
