@@ -7,7 +7,6 @@ const theme = createSystem(themeConfig);
 
 
 export const AppUIProvider = (props: { children: ReactNode }) => {
-  console.log("Legacy AppUIProvider props:", props)
 
   return (
     <ChakraProvider value={theme}>

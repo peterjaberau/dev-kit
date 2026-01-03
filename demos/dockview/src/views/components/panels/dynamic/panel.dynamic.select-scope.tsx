@@ -67,7 +67,6 @@ export const PanelDynamicSelectScope = (props: any) => {
               return
             }
             // sendToDynamicPanelLab({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
-            console.log('---details----', details.selectedValue)
             sendToPanelView({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
           }}
         >

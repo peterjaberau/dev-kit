@@ -11,12 +11,13 @@ export const createNode = (input: any) => {
         context.refs.childNodes = createChildNodes({
           context,
           spawn,
+          parentRef: context.refs.self // ensure direct parent is used when spawning
         })
       }),
 
 
       setBranchOpen: assign(({ context, event }: any) => {
-        context.viewConfig.isOpen = event.isOpen
+        context.viewConfig['isOpen'] = event?.isOpen
       }),
     },
     actors: {},
@@ -26,10 +27,21 @@ export const createNode = (input: any) => {
     context: ({ spawn, self }: any) => {
 
       const parentRef = input?.refs?.parent || null
-      const dataConfig = {
+      // const parentRef = input?.refs?.parent ? input?.refs?.parent : self
+
+      // const parentRef = input?.isRoot ? null : self
+
+
+
+      /*
+       const dataConfig = {
         name: input?.dataConfig?.name,
         value: input?.dataConfig?.value,
       }
+       */
+      const dataConfig = input?.dataConfig
+      const viewConfig = input?.viewConfig
+
       const dataRuntime = {
         info: {
           dataType: typeOf(input?.dataConfig?.value),
@@ -44,9 +56,10 @@ export const createNode = (input: any) => {
           isNull: isNull(input?.dataConfig?.value),
         }
       }
+
       const refs = {
-        self,
         parent: parentRef,
+        self
       }
 
 
@@ -57,7 +70,8 @@ export const createNode = (input: any) => {
             context: {
               refs,
               dataConfig,
-              dataRuntime
+              dataRuntime,
+              viewConfig,
             },
             spawn,
           }),
@@ -72,10 +86,8 @@ export const createNode = (input: any) => {
         viewSchema: {
           /* schema of the view including mapping with components */
         },
-        viewConfig: {
-          isOpen: input?.viewConfig?.value
-          /* props of the view */
-        },
+        viewConfig,
+
         viewRuntime: {
           /* manage the evaluated state of the view */
         },

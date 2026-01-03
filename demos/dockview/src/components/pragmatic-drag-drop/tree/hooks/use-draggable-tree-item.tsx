@@ -64,8 +64,11 @@ export function useDraggableTreeItem({
   useEffect(() => {
     invariant(buttonRef.current)
 
-    function onChange({ self }: ElementDropTargetEventBasePayload) {
+    function onChange({ self, location, source }: ElementDropTargetEventBasePayload) {
       const instr = extractInstruction(self.data)
+
+      console.log("Tree-ITEM -----> onChange --> ", { self, data: self.data, location, source, instr })
+
 
       if (instr?.operation === "combine" && item.children?.length && !item.isOpen && !cancelExpandRef.current) {
         cancelExpandRef.current = delay({
@@ -190,6 +193,8 @@ export function useDraggableTreeItem({
       onDrop: () => setGroupState("idle"),
     })
   }, [item.id, uniqueContextId])
+
+  console.log("Tree-ITEM --> useDraggableTreeItem --> ", { dragState, groupState, instruction, item })
 
   return { dragState, groupState, instruction }
 }

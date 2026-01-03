@@ -10,8 +10,15 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 
+type Params = {
+  rootRef: React.RefObject<HTMLDivElement | null>
+  groupRef: React.RefObject<HTMLDivElement | null>
+  uniqueContextId: symbol
+  extractInstruction: (data: any) => Instruction | null
+  dispatch: (action: any) => void
+}
 
-export function useDraggableTree({ rootRef, groupRef, uniqueContextId, extractInstruction, dispatch }: any) {
+export function useDraggableTree({ rootRef, groupRef, uniqueContextId, extractInstruction, dispatch }: Params) {
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
 
   useEffect(() => {

@@ -25,6 +25,8 @@ function Index() {
 
   const { extractInstruction } = useContext(DependencyContext)
 
+
+
   const lastStateRef = useRef<TreeItemType[]>(data)
 
   useEffect(() => {
@@ -56,6 +58,7 @@ function Index() {
     if (itemId === "") return lastStateRef.current
     const item = tree.find(lastStateRef.current, itemId)
     invariant(item)
+
     return item.children
   }, [])
 
@@ -83,6 +86,8 @@ function Index() {
     extractInstruction,
     dispatch,
   })
+
+
 
   return (
     <TreeContext.Provider value={context}>

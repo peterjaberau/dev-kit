@@ -1,15 +1,28 @@
 import React, { forwardRef, useState } from "react"
-import { Collapsible } from "@chakra-ui/react"
+import { Collapsible, Stack, useCollapsible } from "@chakra-ui/react"
 import { useNode } from "../../selectors"
 
 export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { nodeRef, children, dragState = "idle", ...rest } = props
   const { sendToNode, isOpen } = useNode({ actorRef: nodeRef })
+  const collapsible = useCollapsible({
+    open: isOpen,
+    onOpenChange: (e) => {
+      // if (dragState !== "idle") return
+
+      // sendToNode({
+      //   type: "BRANCH_OPEN_CHANGED",
+      //   isOpen: e.open,
+      // })
+    },
+  })
+
+
 
   return (
-    <Collapsible.Root
-      open={isOpen}
-      onOpenChange={(e: any) => sendToNode({ type: "BRANCH_OPEN_CHANGED", isOpen: e.open })}
+    <Stack
+      // open={isOpen}
+      // onOpenChange={(e: any) => sendToNode({ type: "BRANCH_OPEN_CHANGED", isOpen: e.open })}
       data-scope="json-tree"
       data-part="branch"
       css={{
@@ -24,8 +37,8 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
         },
 
         // '&:has([data-part="branch-control"]:hover)': {
-          // boxShadow: "sm",
-          // backgroundColor: 'bg.panel'
+        // boxShadow: "sm",
+        // backgroundColor: 'bg.panel'
         // },
         '&:has([data-part="branch-control"]:is(:hover, :focus-visible)), \
          &:has([data-part="branch-control"]:is(:hover, :focus-visible) + [data-part="branch-content"])': {
@@ -53,16 +66,15 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
           // bg: "bg.subtle",
         },
       }}
-      defaultOpen={false}
-      unstyled
+      // defaultOpen={false}
+      // unstyled
       ref={ref}
       {...rest}
     >
-      {children}
-    </Collapsible.Root>
+      <Collapsible.RootProvider value={collapsible}>
+        {children}
+      </Collapsible.RootProvider>
+    </Stack>
   )
 })
 
-const CollapsibleProvider = () => {
-
-}

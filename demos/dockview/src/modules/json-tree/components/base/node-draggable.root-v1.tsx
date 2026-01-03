@@ -2,16 +2,11 @@
 
 import { memo, useContext, useRef } from "react"
 import { Box, Stack } from "@chakra-ui/react"
-
-import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
-import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
-import { useDraggableTree } from "../../hooks/use-draggable-tree"
+import { DropTarget } from './drag-and-drop/drop-target'
 
 import { useNode } from "../../selectors"
-import { NodeDraggable } from "./node-draggable"
 
-export const NodeRootDraggable = memo(function RootNodeDraggable(props: any) {
-  /** ---------------- root node ---------------- */
+export const NodeRootDraggable = () => {
   const { childNames, dataRuntimeInfo, getChildNode, metadata } = useNode() // ⬅️ NO ARGUMENT (root)
 
   /** ---------------- refs ---------------- */
@@ -43,4 +38,4 @@ export const NodeRootDraggable = memo(function RootNodeDraggable(props: any) {
       </GroupDropIndicator>
     </Box>
   )
-})
+}

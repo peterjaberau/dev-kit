@@ -7,7 +7,6 @@ export const AppContext = createActorContext(appMachine)
 
 export const AppProvider = (props: any) => {
   const { children, ...rest } = props
-  console.log("JT AppProvider props:", props)
   return (
     <AppContext.Provider
       options={{

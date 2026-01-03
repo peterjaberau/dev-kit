@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import invariant from "tiny-invariant"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
-import { TreeItemDragPreview } from "../components/base/tree/tree-item-drag-preview"
+import { TreeItemDragPreview } from "#components/pragmatic-drag-drop/tree/components/tree-item-drag-preview"
 import {
   draggable,
   dropTargetForElements,
@@ -39,12 +39,6 @@ type Params = {
   uniqueContextId: symbol
   attachInstruction: any
   extractInstruction: any
-
-  /** delegation */
-  hasChildren?: any
-  isOpen?: boolean
-  onExpand?: () => void
-  onCollapse?: () => void
 }
 
 export function useDraggableTreeItem({
@@ -55,10 +49,6 @@ export function useDraggableTreeItem({
   uniqueContextId,
   attachInstruction,
   extractInstruction,
-  hasChildren,
-  isOpen,
-  onExpand,
-  onCollapse,
 }: Params) {
   const [dragState, setDragState] = useState<"idle" | "dragging">("idle")
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
@@ -74,21 +64,68 @@ export function useDraggableTreeItem({
   useEffect(() => {
     invariant(buttonRef.current)
 
-    function onChange({ self }: ElementDropTargetEventBasePayload) {
+    function onChange({ self, source, location }: ElementDropTargetEventBasePayload) {
+
+      // source: configure from - draggable.getInitialData
+      // target: configure from - dropTargetForElements.getData
       const instr = extractInstruction(self.data)
 
-      if (instr?.operation === "combine" && hasChildren && !isOpen && !cancelExpandRef.current) {
+
+      const target = location?.current.dropTargets[0]
+      if (!target ) return
+
+      const sourceData = source.data
+      const targetData = target.data
+      const selfData = self.data
+
+      // don't allow dropping on itself
+      if (targetData.id === sourceData.id) {
+        setInstruction(null)
+        return
+      }
+
+      // don't allow dropping on root level
+      if (!targetData.parentId) {
+        setInstruction(null)
+        return
+      }
+
+      // don't allow dropping between different trees
+      if (targetData.parentId !== selfData.parentId) {
+        setInstruction(null)
+        return
+      }
+
+      // don't allow dropping on own parent
+      if (sourceData.nodeId === selfData.parentId) {
+        setInstruction(null)
+        return
+      }
+
+
+
+
+
+
+
+
+      console.log("JSON-TREE ----> onChange --> ", { sourceData, targetData, selfData, self, data: self.data, location, source, instr })
+
+
+      if (instr?.operation === "combine" && item.children?.length && !item.isOpen && !cancelExpandRef.current) {
         cancelExpandRef.current = delay({
           waitMs: 500,
-          fn: () => onExpand?.(),
+          fn: () => dispatch({ type: "expand", itemId: item.id }),
         })
       }
 
-      if (instr?.operation !== "combine") {
-        cancelExpand()
-      }
+      if (instr?.operation !== "combine") cancelExpand()
 
+
+      // setInstruction(instr)
       setInstruction((prev) => (sameInstruction(prev, instr) ? prev : instr))
+
+      // setInstruction(null)
     }
 
     return combine(
@@ -96,30 +133,39 @@ export function useDraggableTreeItem({
         element: buttonRef.current,
         getInitialData: () => {
           return {
+            ...item,
             id: item.id,
             type: "tree-item",
+            // node: item?.node,
+            // parent: item?.parent,
+            isOpenOnDragStart: item.isOpen,
             uniqueContextId,
-            isOpenOnDragStart: isOpen,
+
           }
         },
         onDragStart: ({ source, location }) => {
           setDragState("dragging")
+
           if (source.data.isOpenOnDragStart) {
-            onCollapse?.()
+            dispatch({ type: "collapse", itemId: item.id })
           }
         },
         onDrop: ({ source, location }) => {
           setDragState("idle")
+
+
           if (source.data.isOpenOnDragStart) {
-            onExpand?.()
+            dispatch({ type: "expand", itemId: item.id })
           }
         },
         onGenerateDragPreview: ({ nativeSetDragImage }) => {
           setCustomNativeDragPreview({
             getOffset: pointerOutsideOfPreview({ x: "16px", y: "8px" }),
             render: ({ container }) => {
+              // root.render(null)
               const root = createRoot(container)
               root.render(<TreeItemDragPreview item={item} />)
+
               return () => root.unmount()
             },
             nativeSetDragImage,
@@ -128,32 +174,54 @@ export function useDraggableTreeItem({
       }),
       dropTargetForElements({
         element: buttonRef.current,
-        getData: ({ input, element, source }) => {
-          return attachInstruction({ id: item.id }, { input, element })
 
-          // return attachInstruction(
-          //   { id: item.id },
-          //   {
-          //     input,
-          //     element,
-          //     operations: item.isDraft
-          //       ? { combine: "blocked" }
-          //       : {
-          //           combine: "available",
-          //           "reorder-before": "available",
-          //           "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
-          //
-          //         },
-          //   },
-          // )
+        getData: ({ input, element, source  }) => {
+
+          const inst = attachInstruction(
+            {
+              ...item,
+              id: item.id
+            },
+            {
+              input,
+              element,
+              operations: item.isDraft
+                ? { combine: "blocked" }
+                : {
+                  combine: "available",
+                  // "reorder-before": "available",
+                  "reorder-after": "available",
+                  // "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
+
+                  // "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
+                  // "reorder-after": (item?.isOpen && item?.children?.length && item?.children?.length > 0 ) ? "not-available" : "available",
+                },
+            },
+          )
+
+
+          // console.log('---canDrop----', { source, inst, input, element })
+
+          return inst
         },
-        canDrop: ({ source, input, element }) => {
-          return (
-            // source.element !== buttonRef.current &&
+        canDrop: ({ source, input, element,  }) => {
+
+          const canDropValidation = source.element !== buttonRef.current &&
             source.data.type === "tree-item" &&
             source.data.id !== item.id &&
             source.data.uniqueContextId === uniqueContextId
-          )
+
+
+
+          // const canDropValidation = source.data.id==="node-2-1"
+
+          // console.log('---canDrop----', source)
+
+
+
+
+
+          return canDropValidation
         },
 
         onDragEnter: onChange,
@@ -168,55 +236,10 @@ export function useDraggableTreeItem({
         },
       }),
     )
-  }, [    item.id,
-    uniqueContextId,
-    attachInstruction,
-    extractInstruction,
-    hasChildren,
-    isOpen,
-    onExpand,
-    onCollapse,
-    cancelExpand,])
+  }, [item, dispatch, uniqueContextId, attachInstruction, extractInstruction, cancelExpand])
 
-  useEffect(() => {
-    if (!groupRef.current) return
 
-    function onChange({ location, self, source }: ElementDropTargetEventBasePayload) {
-
-      const groups = location.current.dropTargets.filter(
-        (dt) => dt.data.type === "group"
-      )
-
-      const innermost = groups.at(-1)
-
-      setGroupState(
-        innermost?.element === self.element
-          ? "is-innermost-over"
-          : "idle"
-      )
-
-      // const [inner] = location.current.dropTargets.filter((dt) => dt.data.type === "group")
-      // setGroupState(inner?.element === self.element ? "is-innermost-over" : "idle")
-    }
-
-    return dropTargetForElements({
-      element: groupRef.current,
-      getData: () => ({ type: "group" }),
-      getIsSticky: () => false,
-      canDrop: ({ source, input, element }) => {
-        return (
-          source.data.type === "tree-item" &&
-          source.data.id !== item.id &&
-          source.data.uniqueContextId === uniqueContextId
-        )
-      },
-
-      onDragStart: onChange,
-      onDropTargetChange: onChange,
-      onDragLeave: () => setGroupState("idle"),
-      onDrop: () => setGroupState("idle"),
-    })
-  }, [item.id, uniqueContextId])
+  // console.log("JSON-TREE --> useDraggableTreeItem --> ", { dragState, groupState, instruction, item })
 
   return { dragState, groupState, instruction }
 }

@@ -12,7 +12,7 @@ export const TreeDraggable = (props: any) => {
   return (
     <Base.Root>
       <Container mt={4} css={{ bg: "bg.muted", borderRadius: "md", boxShadow: "sm", px: 2, py: 3 }}>
-        <Base.NodeRootDraggable nodeRef={nodeRef} />
+        <Base.NodeDraggable nodeRef={nodeRef} />
       </Container>
     </Base.Root>
   )

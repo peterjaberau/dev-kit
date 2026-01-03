@@ -1,14 +1,11 @@
 "use client"
 
-// import { DropIndicator } from "#drag-drop/components/dnd-drop-indicator"
-// import { GroupDropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group';
 import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
 import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
-import { useDraggableTreeItem } from "../../hooks/use-draggable-tree-item"
-import { IoBugOutline as DebugIcon } from "react-icons/io5"
+import { useDraggableTreeItem } from "#drag-drop/hooks/use-draggable-tree-item"
 
-import React, { forwardRef, useContext, useRef, memo, Suspense } from "react"
-import { Stack, For, Box, Badge, HStack, IconButton, Button } from "@chakra-ui/react"
+import React, { forwardRef, useContext, useRef, memo } from "react"
+import { Stack, For, Box } from "@chakra-ui/react"
 import { useNode } from "../../selectors"
 import {
   Branch,
@@ -23,8 +20,6 @@ import {
   NodeIndicator,
   ItemDraggable,
   ItemControl,
-  Toolbar,
-  ToolbarItem,
 } from "."
 
 const indentPerLevel = 5
@@ -32,7 +27,6 @@ const indentPerLevel = 5
 export const NodeDraggable = memo(
   forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
     const { nodeRef, ...rest } = props
-    const nodeSelector = useNode({ actorRef: nodeRef })
     const {
       childNames,
       dataRuntimeInfo: dataInfo,
@@ -44,16 +38,7 @@ export const NodeDraggable = memo(
       isOpen,
       metadata,
       sendToNode,
-      parentNodeRef = null,
-      parentNodeId,
-      parentContext,
-      nodeContext,
-    } = nodeSelector
-
-    const handleLogs = (e: any) => {
-      e.stopPropagation()
-      console.log(`NODE LOGS---${nodeId} | childOf ${parentNodeId}-----`, { nodeContext, parentContext })
-    }
+    } = useNode({ actorRef: nodeRef })
 
     /** START drag-drop logic */
     const itemRef: any = useRef<HTMLDivElement | null>(null)
@@ -63,14 +48,7 @@ export const NodeDraggable = memo(
     const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
 
     const { dragState, groupState, instruction } = useDraggableTreeItem({
-      item: {
-        id: metadata.id,
-        nodeId: nodeId,
-        parentId: parentNodeId,
-        node: nodeContext,
-        parent: parentContext,
-        // parent: getParentContext()
-      },
+      item: { id: metadata.id },
       buttonRef: itemRef,
       groupRef: metadata?.data?.isBranch ? childrenGroupRef : { current: null },
       uniqueContextId,
@@ -124,38 +102,11 @@ export const NodeDraggable = memo(
             <Branch data-drag-state={dragState} data-id={nodeId} nodeRef={nodeRef} dragState={dragState}>
               {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
               <BranchControl asChild>
-                <BranchTrigger nodeRef={nodeRef} dragState={dragState}>
+                <BranchTrigger>
                   <BranchIndicator />
-                  <NodeKey>{dataName}</NodeKey>
-                  <HStack flex={1}>
-                    <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
-                      {isOpen ? "open" : "closed"}
-                    </Badge>
-                    <Badge size={"xs"} colorPalette={groupState !== "idle" ? "blue" : undefined} title={"Branch state"}>
-                      {groupState}
-                    </Badge>
-                    <Badge size={"xs"} colorPalette={dragState !== "idle" ? "blue" : undefined} title={"Drag state"}>
-                      {groupState}
-                    </Badge>
-                    <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
-                      {isOpen ? "open" : "closed"}
-                    </Badge>
-                    <Badge size={"xs"} title={"Node Parent ID"}>
-                      {parentNodeId || "root"}
-                    </Badge>
-                    <Badge size={"xs"} title={"Node ID"}>
-                      {nodeId}
-                    </Badge>
-                    {instruction?.operation && (
-                      <Badge size={"xs"} variant={"solid"}>
-                        {instruction?.operation}
-                      </Badge>
-                    )}
-                  </HStack>
-
-                  <Badge size={"sm"} variant={"outline"} onClick={handleLogs}>
-                    <DebugIcon />
-                  </Badge>
+                  <NodeKey flex={1}>
+                    {dataName} [Oper:{instruction?.operation} | isOpen: {isOpen ? "true" : "false"} | Group:{groupState} | Drag:{dragState} | id:{nodeId}]
+                  </NodeKey>
                   <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
                   <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
                   {instruction ? <DropIndicator instruction={instruction} /> : null}
@@ -180,35 +131,7 @@ export const NodeDraggable = memo(
             <ItemDraggable>
               <ItemControl>
                 <NodeKey>{metadata?.name}</NodeKey>
-                <NodeKeyValue>{dataValue}</NodeKeyValue>
-                <HStack flex={1}>
-                  <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
-                    {isOpen ? "open" : "closed"}
-                  </Badge>
-                  <Badge size={"xs"} colorPalette={groupState !== "idle" ? "blue" : undefined} title={"Branch state"}>
-                    {groupState}
-                  </Badge>
-                  <Badge size={"xs"} colorPalette={dragState !== "idle" ? "blue" : undefined} title={"Drag state"}>
-                    {groupState}
-                  </Badge>
-                  <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
-                    {isOpen ? "open" : "closed"}
-                  </Badge>
-                  <Badge size={"xs"} title={"Node Parent ID"}>
-                    {parentNodeId || "root"}
-                  </Badge>
-                  <Badge size={"xs"} title={"Node ID"}>
-                    {nodeId}
-                  </Badge>
-                  {instruction?.operation && (
-                    <Badge size={"xs"} variant={"solid"}>
-                      {instruction?.operation}
-                    </Badge>
-                  )}
-                </HStack>
-                <Badge size={"sm"} variant={"outline"} onClick={handleLogs}>
-                  <DebugIcon />
-                </Badge>
+                <NodeKeyValue flex={1}>{dataValue} [Oper:{instruction?.operation} | isOpen: {isOpen ? "true" : "false"} | Group:{groupState} | Drag:{dragState} | id:{nodeId}]</NodeKeyValue>
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
                 {instruction && <DropIndicator instruction={instruction} />}
               </ItemControl>

@@ -18,17 +18,25 @@ export const useNode = ({ actorRef = null } = {}) => {
   const dataValue = dataConfig.value
 
 
-
   const internal = {
     nodeLogic: nodeRef?.src,
   }
 
-  const childNodes = nodeContext?.refs?.childNodes
-  const parentNode = nodeContext?.refs?.parent
+
+
 
   // computed
   const dataRuntime = nodeContext?.dataRuntime
   const dataRuntimeInfo = dataRuntime?.info
+
+  // parent node
+  const parentNodeRef = nodeContext?.refs?.parent
+  const parentNodeId = parentNodeRef?.id
+  const parentState: any = useSelector(parentNodeRef, (state) => state)
+  const parentContext = parentState?.context
+
+  // child nodes
+  const childNodes = nodeContext?.refs?.childNodes
 
   const childNames = dataRuntimeInfo?.isArray
     ? keys(childNodes).map(Number)
@@ -78,7 +86,9 @@ export const useNode = ({ actorRef = null } = {}) => {
       isBranch: dataRuntimeInfo?.isBranch,
       isScalar: dataRuntimeInfo?.isScalar,
       isOpen: isOpen,
+      isRootNode: !parentNodeRef
     },
+    sibling: [],
     children: childNames
   }
 
@@ -90,8 +100,13 @@ export const useNode = ({ actorRef = null } = {}) => {
     nodeState,
     nodeContext,
 
+    // Parent
+    parentNodeRef,
+    parentNodeId,
+    parentState,
+    parentContext,
+
     childNodes,
-    parentNode,
 
     dataConfig,
     dataValue,

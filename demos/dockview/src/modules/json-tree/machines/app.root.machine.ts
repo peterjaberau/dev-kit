@@ -15,7 +15,7 @@ export const appRootMachine = setup({
       context.nodeRef = spawn(
         createNode({
           refs: {
-            parent: self,
+            // parent: self,
           },
           dataConfig: {
             name: machineConstants.NODE_ROOT_NAME,

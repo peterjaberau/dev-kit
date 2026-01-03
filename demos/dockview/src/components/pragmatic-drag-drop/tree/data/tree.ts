@@ -265,6 +265,7 @@ export function treeStateReducer(state: TreeState, action: TreeAction): TreeStat
 const dataReducer = (data: TreeItem[], action: TreeAction) => {
   const item = tree.find(data, action.itemId)
   if (!item) {
+    console.log('----dataReducer = !item ----', { item, data, action, tree })
     return data
   }
 
@@ -273,22 +274,36 @@ const dataReducer = (data: TreeItem[], action: TreeAction) => {
 
     // the rest of the actions require you to drop on something else
     if (action.itemId === action.targetId) {
+
+      console.log('----dataReducer: action.type instruction ----', { instruction, item, data, action, tree })
+
       return data
     }
 
     // instruction was blocked and should not do anything
     if (action.instruction.blocked) {
+
+      console.log('----dataReducer: action.instruction.blocked ----', { instruction, item, data, action, tree })
       return data
     }
 
     if (instruction.operation === "reorder-before") {
+
+
+
       let result = tree.remove(data, action.itemId)
+
+      console.log('----dataReducer: instruction.operation === "reorder-before" ----', { instruction, result, item, data, action, tree })
+
       result = tree.insertBefore(result, action.targetId, item)
       return result
     }
 
     if (instruction.operation === "reorder-after") {
       let result = tree.remove(data, action.itemId)
+
+      console.log('----dataReducer: instruction.operation === "reorder-before" ----', { instruction, result, item, data, action, tree })
+
       result = tree.insertAfter(result, action.targetId, item)
       return result
     }
@@ -296,10 +311,16 @@ const dataReducer = (data: TreeItem[], action: TreeAction) => {
     if (instruction.operation === "combine") {
       let result = tree.remove(data, action.itemId)
       result = tree.insertChild(result, action.targetId, item)
+
+
+      console.log('----dataReducer: instruction.operation === "combine" ----', { instruction, result, item, data, action, tree })
+
       return result
     }
 
     console.warn("TODO: action not implemented", instruction)
+
+    console.log('----dataReducer: else ----', { instruction, item, data, action, tree })
 
     return data
   }
