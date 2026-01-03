@@ -1,0 +1,43 @@
+import { chakra } from '@chakra-ui/react';
+
+import type { CSSColor, CSSSize } from '../internal-types';
+import { presetStrokeColors, presetStrokeWidth } from '../presets';
+
+export function Border({
+	strokeColor = presetStrokeColors.default,
+	strokeWidth = presetStrokeWidth,
+	borderRadius = '3px', // TODO: update to radius.small (4px) token
+	indent = '0px',
+}: {
+	strokeColor?: CSSColor;
+	borderRadius?: CSSSize;
+	strokeWidth?: CSSSize;
+	indent?: string;
+}) {
+	return (
+		<chakra.div
+			css={{
+        '--stroke-color': strokeColor,
+        '--stroke-width': strokeWidth,
+        '--border-radius': borderRadius,
+        '--indent': indent,
+        // To make things a bit clearer we are making the box that the indicator in as
+        // big as the whole tree item
+        position: 'absolute',
+        insetBlockStart: 0,
+        insetBlockEnd: 0,
+        insetInlineEnd: 0,
+        insetInlineStart: 'var(--indent)',
+
+        // We don't want to cause any additional 'dragenter' events
+        pointerEvents: 'none',
+
+        border: 'var(--stroke-width) solid var(--stroke-color)',
+        borderRadius: 'var(--border-radius)',
+      }}
+		/>
+	);
+}
+
+// For React.lazy
+export default Border;

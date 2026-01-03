@@ -150,8 +150,8 @@ export type TreeAction =
 export const tree = {
   remove(data: TreeItem[], id: string): TreeItem[] {
     return data
-      .filter((item) => item.id !== id)
-      .map((item) => {
+      .filter((item: any) => item.id !== id)
+      .map((item: any) => {
         if (tree.hasChildren(item)) {
           return {
             ...item,
@@ -162,7 +162,7 @@ export const tree = {
       })
   },
   insertBefore(data: TreeItem[], targetId: string, newItem: TreeItem): TreeItem[] {
-    return data.flatMap((item) => {
+    return data.flatMap((item: any) => {
       if (item.id === targetId) {
         return [newItem, item]
       }
@@ -175,8 +175,8 @@ export const tree = {
       return item
     })
   },
-  insertAfter(data: TreeItem[], targetId: string, newItem: TreeItem): TreeItem[] {
-    return data.flatMap((item) => {
+  insertAfter(data: TreeItem[] | any, targetId: string, newItem: TreeItem | any): TreeItem[] | any {
+    return data.flatMap((item: any) => {
       if (item.id === targetId) {
         return [item, newItem]
       }
@@ -191,8 +191,8 @@ export const tree = {
       return item
     })
   },
-  insertChild(data: TreeItem[], targetId: string, newItem: TreeItem): TreeItem[] {
-    return data.flatMap((item) => {
+  insertChild(data: TreeItem[] | any, targetId: string, newItem: TreeItem | any): TreeItem[] | any {
+    return data.flatMap((item: any) => {
       if (item.id === targetId) {
         // already a parent: add as first child
         return {
@@ -213,14 +213,14 @@ export const tree = {
       }
     })
   },
-  find(data: TreeItem[], itemId: string): TreeItem | undefined {
-    for (const item of data) {
+  find(data: TreeItem[] | any, itemId: string | any): any {
+    for (const item of data as any) {
       if (item.id === itemId) {
         return item
       }
 
       if (tree.hasChildren(item)) {
-        const result = tree.find(item.children, itemId)
+        const result: any = tree.find(item.children, itemId)
         if (result) {
           return result
         }
@@ -232,7 +232,7 @@ export const tree = {
     targetId,
     parentIds = [],
   }: {
-    current: TreeItem[]
+    current: TreeItem[] | any
     targetId: string
     parentIds?: string[]
   }): string[] | undefined {
@@ -250,7 +250,7 @@ export const tree = {
       }
     }
   },
-  hasChildren(item: TreeItem): boolean {
+  hasChildren(item: TreeItem | any): boolean {
     return item?.children?.length > 0
   },
 }
@@ -265,7 +265,7 @@ export function treeStateReducer(state: TreeState, action: TreeAction): TreeStat
 const dataReducer = (data: TreeItem[], action: TreeAction) => {
   const item = tree.find(data, action.itemId)
   if (!item) {
-    console.log('----dataReducer = !item ----', { item, data, action, tree })
+    console.log("----dataReducer = !item ----", { item, data, action, tree })
     return data
   }
 
@@ -274,26 +274,28 @@ const dataReducer = (data: TreeItem[], action: TreeAction) => {
 
     // the rest of the actions require you to drop on something else
     if (action.itemId === action.targetId) {
-
-      console.log('----dataReducer: action.type instruction ----', { instruction, item, data, action, tree })
+      console.log("----dataReducer: action.type instruction ----", { instruction, item, data, action, tree })
 
       return data
     }
 
     // instruction was blocked and should not do anything
     if (action.instruction.blocked) {
-
-      console.log('----dataReducer: action.instruction.blocked ----', { instruction, item, data, action, tree })
+      console.log("----dataReducer: action.instruction.blocked ----", { instruction, item, data, action, tree })
       return data
     }
 
     if (instruction.operation === "reorder-before") {
-
-
-
       let result = tree.remove(data, action.itemId)
 
-      console.log('----dataReducer: instruction.operation === "reorder-before" ----', { instruction, result, item, data, action, tree })
+      console.log('----dataReducer: instruction.operation === "reorder-before" ----', {
+        instruction,
+        result,
+        item,
+        data,
+        action,
+        tree,
+      })
 
       result = tree.insertBefore(result, action.targetId, item)
       return result
@@ -302,7 +304,14 @@ const dataReducer = (data: TreeItem[], action: TreeAction) => {
     if (instruction.operation === "reorder-after") {
       let result = tree.remove(data, action.itemId)
 
-      console.log('----dataReducer: instruction.operation === "reorder-before" ----', { instruction, result, item, data, action, tree })
+      console.log('----dataReducer: instruction.operation === "reorder-before" ----', {
+        instruction,
+        result,
+        item,
+        data,
+        action,
+        tree,
+      })
 
       result = tree.insertAfter(result, action.targetId, item)
       return result
@@ -312,20 +321,26 @@ const dataReducer = (data: TreeItem[], action: TreeAction) => {
       let result = tree.remove(data, action.itemId)
       result = tree.insertChild(result, action.targetId, item)
 
-
-      console.log('----dataReducer: instruction.operation === "combine" ----', { instruction, result, item, data, action, tree })
+      console.log('----dataReducer: instruction.operation === "combine" ----', {
+        instruction,
+        result,
+        item,
+        data,
+        action,
+        tree,
+      })
 
       return result
     }
 
     console.warn("TODO: action not implemented", instruction)
 
-    console.log('----dataReducer: else ----', { instruction, item, data, action, tree })
+    console.log("----dataReducer: else ----", { instruction, item, data, action, tree })
 
     return data
   }
 
-  function toggle(item: TreeItem): TreeItem {
+  function toggle(item: TreeItem | any): TreeItem {
     if (!tree.hasChildren(item)) {
       return item
     }

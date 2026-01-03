@@ -27,9 +27,6 @@
       "@/*": ["./*"],
       "~/*": ["./public/*"],
 
-      "#dxos/*": ["./src/components/dxos/*"],
-      "#dxos": ["./src/components/dxos/"],
-
       "#atlas-ui/*": ["./src/components/atlas/ui/*"],
       "#atlas-ui": ["./src/components/atlas/ui/"],
       "#atlas-packages/*": ["./src/components/atlas/packages/*"],
@@ -40,7 +37,6 @@
       "#shared/*": ["./src/modules/json-tree/*"],
       "#shared": ["./src/modules/json-tree/"],
 
-//      pragmatic-drag-drop
 
       "#json-tree/*": ["./src/modules/json-tree/*"],
       "#json-tree": ["./src/modules/json-tree/"],
@@ -54,13 +50,6 @@
 
       "#actor-kit/*": ["./src/actor-kit/*"],
       "#actor-kit": ["./src/actor-kit/"],
-
-      "#json-tree-view-react/*": ["./src/components/json-tree-view-react/*"],
-      "#json-tree-view-react": ["./src/components/json-tree-view-react/"],
-
-      "#json-tree-view/*": ["./src/components/json-tree-view/*"],
-      "#json-tree-view": ["./src/components/json-tree-view/"],
-
 
       "#datasets/*": ["./src/datasets/*"],
       "#datasets": ["./src/datasets/"],

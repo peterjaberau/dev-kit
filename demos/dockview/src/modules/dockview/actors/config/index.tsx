@@ -15,55 +15,12 @@ export const dockViewDynamicPanelConfig = {
               name: "Json Tree",
               children: [
                 { id: "json-tree-tree", name: "Tree" },
-                { id: "json-tree-tree-draggable", name: "Tree Draggable" },
-                { id: "json-tree-pdnd-tree", name: "Pdnd Tree" },
-              // json-tree-pdnd-tree
-              ],
-            },
-            // pdnd-tree-legacy
-            {
-              id: "dnd-folder",
-              name: "Drag & Drop",
-              children: [
-                { id: "pdnd-tree", name: "Pdnd Tree" },
-                { id: "pdnd-tree-simple", name: "Pdnd Tree Simple" },
-                { id: "pdnd-tree-sortable", name: "Pdnd Tree Sortable" },
-                { id: "pdnd-tree-dxos", name: "Pdnd Tree DXOS" },
-                { id: "pdnd-tree-atlas", name: "Pdnd Tree Atlas" },
-              // pdnd-tree-atlas
-              ],
-            },
-
-            {
-              id: "pro-editor",
-              name: "Pro Editor",
-              children: [
-                { id: "pro-editor-sortable-tree-default", name: "Sortable Tree Default" },
-                { id: "pro-editor-sortable-tree-virtual", name: "Sortable Tree Virtual" },
-                { id: "pro-editor-sortable-tree-rules", name: "Sortable Tree Rules" },
-                { id: "pro-editor-sortable-tree-renderer", name: "Sortable Tree Renderer" },
-                { id: "pro-editor-sortable-tree-disabledrag", name: "Sortable Tree Disable Drag" },
-                { id: "pro-editor-sortable-tree-controlled", name: "Sortable Tree Controlled" },
-
-
-                { id: "pro-editor-columns", name: "Columns" },
+                { id: "pdnd-tree", name: "Tree Pdnd" },
               ],
             },
 
 
-            {
-              id: "json-drafts-folder",
-              name: "Json & Recursive Drafts",
-              children: [
-                { id: "json-view-tree", name: "Json View Tree (React 18 custom)" },
-                { id: "json-tree-renderer", name: "Json Tree Renderer (ark json)" },
-                { id: "tree-view-pro", name: "Tree View Pro" },
-                { id: "json-tree-view-react", name: "Json Tree View React" },
-                { id: "json-viewer-custom", name: "Json Viewer Custom" },
-                { id: "json-viewer", name: "Json Viewer" },
-                { id: "recursive", name: "Recursive" },
-              ],
-            },
+
             {
               id: "oas-folder",
               name: "OAS",
@@ -84,7 +41,6 @@ export const dockViewDynamicPanelConfig = {
                 { id: "placeholder", name: "Placeholder" },
                 { id: "canvas-illa", name: "Canvas Illa" },
                 { id: "renderer", name: "Renderer" },
-                { id: "custom-collapsible", name: "Custom Collapsible" },
               ],
             },
           ],

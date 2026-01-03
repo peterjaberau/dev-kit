@@ -4,55 +4,31 @@ import { Center } from "@chakra-ui/react"
 import { cache, useEffect, useState } from "react"
 
 const registryMeta: any = {
-  'default': dynamic(() => import("#views/components/panels/base/default"), { ssr: false }),
-
-  'pro-editor-columns': dynamic(() => import("#views/components/panels/pro-editor/columns"), { ssr: false }),
-  'pro-editor-sortable-tree-default': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-default"), { ssr: false }),
-  'pro-editor-sortable-tree-virtual': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-virtual"), { ssr: false }),
-  'pro-editor-sortable-tree-rules': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-rules"), { ssr: false }),
-  'pro-editor-sortable-tree-renderer': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-renderer"), { ssr: false }),
-  'pro-editor-sortable-tree-disabledrag': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-disabledrag"), { ssr: false }),
-  'pro-editor-sortable-tree-controlled': dynamic(() => import("#views/components/panels/pro-editor/sortable-tree-controlled"), { ssr: false }),
+  default: dynamic(() => import("#views/components/panels/base/default"), { ssr: false }),
 
   // Json Tree
-  'json-tree-tree': dynamic(() => import("#views/components/panels/json-tree/tree"), { ssr: false }),
-  'json-tree-tree-draggable': dynamic(() => import("#views/components/panels/json-tree/tree-draggable"), { ssr: false }),
-  'json-tree-pdnd-tree': dynamic(() => import("#views/components/panels/json-tree/pdnd-tree"), { ssr: false }),
+  "json-tree-tree": dynamic(() => import("#views/components/panels/json-tree/tree"), { ssr: false }),
 
   // Drag & Drop
-
-  'pdnd-tree': dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
-  'pdnd-tree-simple': dynamic(() => import("#views/components/panels/pdnd/tree-simple"), { ssr: false }),
-  'pdnd-tree-dxos': dynamic(() => import("#views/components/panels/pdnd/tree-dxos"), { ssr: false }),
-  'pdnd-tree-atlas': dynamic(() => import("#views/components/panels/pdnd/tree-atlas"), { ssr: false }),
-
-  'pdnd-tree-sortable': dynamic(() => import("#views/components/panels/pdnd/tree-sortable"), { ssr: false }),
+  "pdnd-tree": dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
 
   // Json Drafts
-  'json-view-tree': dynamic(() => import("#views/components/panels/base/json-view-tree"), { ssr: false }),
-  'json-tree-renderer': dynamic(() => import("#views/components/panels/base/json-tree-renderer"), { ssr: false }),
-  'tree-view-pro': dynamic(() => import("#views/components/panels/base/tree-view-pro"), { ssr: false }),
-  'json-tree-view-react': dynamic(() => import("#views/components/panels/base/json-tree-view-react"), { ssr: false }),
-  'json-viewer-custom': dynamic(() => import("#views/components/panels/custom/json-viewer-custom"), { ssr: false }),
-  'json-viewer': dynamic(() => import("#views/components/panels/base/json-viewer"), { ssr: false }),
-  'recursive': dynamic(() => import("#views/components/panels/custom/recursive"), { ssr: false }),
+  "json-viewer-custom": dynamic(() => import("#views/components/panels/custom/json-viewer-custom"), { ssr: false }),
+  "json-viewer": dynamic(() => import("#views/components/panels/base/json-viewer"), { ssr: false }),
 
   // Oas
-  'oas': dynamic(() => import("#views/components/panels/custom/oas"), { ssr: false }),
-  'oas-manager': dynamic(() => import("#views/components/panels/oas-panels/manager"), { ssr: false }),
-  'oas-doc': dynamic(() => import("#views/components/panels/custom/oas-doc"), { ssr: false }),
-  'oas-json-viewer': dynamic(() => import("#views/components/panels/custom/oas-json-viewer"), { ssr: false }),
+  oas: dynamic(() => import("#views/components/panels/custom/oas"), { ssr: false }),
+  "oas-manager": dynamic(() => import("#views/components/panels/oas-panels/manager"), { ssr: false }),
+  "oas-doc": dynamic(() => import("#views/components/panels/custom/oas-doc"), { ssr: false }),
+  "oas-json-viewer": dynamic(() => import("#views/components/panels/custom/oas-json-viewer"), { ssr: false }),
 
   // Misc dockables
-  'ai-chat': dynamic(() => import("#views/components/panels/base/ai-chat"), { ssr: false }),
-  'code': dynamic(() => import("#views/components/panels/base/code"), { ssr: false }),
-  'empty': dynamic(() => import("#views/components/panels/base/empty"), { ssr: false }),
-  'placeholder': dynamic(() => import("#views/components/panels/base/placeholder"), { ssr: false }),
-  'canvas-illa': dynamic(() => import("#views/components/panels/custom/canvas-illa"), { ssr: false }),
-  'renderer': dynamic(() => import("#views/components/panels/base/renderer"), { ssr: false }),
-  'custom-collapsible': dynamic(() => import("#views/components/panels/custom/custom-collapsible"), { ssr: false }),
-
-
+  "ai-chat": dynamic(() => import("#views/components/panels/base/ai-chat"), { ssr: false }),
+  code: dynamic(() => import("#views/components/panels/base/code"), { ssr: false }),
+  empty: dynamic(() => import("#views/components/panels/base/empty"), { ssr: false }),
+  placeholder: dynamic(() => import("#views/components/panels/base/placeholder"), { ssr: false }),
+  "canvas-illa": dynamic(() => import("#views/components/panels/custom/canvas-illa"), { ssr: false }),
+  renderer: dynamic(() => import("#views/components/panels/base/renderer"), { ssr: false }),
 }
 
 export const registryComponentsObj = (id: any) => {

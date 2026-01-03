@@ -1,8 +1,6 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { createNode } from "./node.create"
 import { machineConstants } from "../utils/constants"
-import { data as resourcesData } from "../composable/data"
-import { createResource } from "../composable/actors/resource.machine"
 
 export const appRootMachine = setup({
   types: {
@@ -28,17 +26,6 @@ export const appRootMachine = setup({
       )
     }),
 
-    spawnResources: assign(({ context, spawn, self }) => {
-      const resourcesKeys = Object.keys(resourcesData) || []
-      resourcesKeys.map((key) => {
-        context.resourcesRef[key] = spawn(
-          createResource({
-            data: resourcesData[key],
-          }),
-        )
-      })
-      context.resources = resourcesData
-    }),
   },
   actors: {},
   guards: {},
@@ -76,6 +63,5 @@ export const appRootMachine = setup({
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
     enqueue("spawnRootNode")
-    enqueue("spawnResources")
   }),
 })
