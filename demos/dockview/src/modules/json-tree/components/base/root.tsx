@@ -32,7 +32,7 @@ export const Root = forwardRef<HTMLDivElement, any>((props: any, forwardedRef) =
       if (!branch) return
 
       // 3️⃣ Only when branch is closed
-      if (branch.getAttribute("data-state") !== "closed") return
+      if (branch.getAttribute("data-open") !== "closed") return
 
       // 4️⃣ Enforce single hovered branch
       root.querySelectorAll("[data-hovered]").forEach((el) => el.removeAttribute("data-hovered"))

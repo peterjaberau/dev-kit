@@ -5,10 +5,10 @@ export const BranchContent = forwardRef<HTMLDivElement, any>((props: any, ref: a
   const { children, ...rest } = props
   return (
     <Collapsible.Content data-scope="json-tree" data-part="branch-content" ref={ref} {...props}>
-      <Box
+      <Stack
         css={{
           borderRadius: "md",
-          '&:not([data-state="closed"])': {
+          '&:not([data-open="closed"])': {
             borderTopRadius: "none",
           },
           pb: 2,
@@ -24,7 +24,7 @@ export const BranchContent = forwardRef<HTMLDivElement, any>((props: any, ref: a
         >
           {children}
         </Stack>
-      </Box>
+      </Stack>
     </Collapsible.Content>
   )
 })
