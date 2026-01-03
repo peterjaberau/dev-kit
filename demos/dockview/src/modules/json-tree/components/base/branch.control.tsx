@@ -16,7 +16,9 @@ export const BranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: a
           pt: 2,
         },
       }}
-      _closed={{ borderRadius: "md", py: 2 }}
+      _closed={{ borderRadius: "md",
+        py: 2
+    }}
       justifyContent="flex-start"
       alignItems={"center"}
       flex={1}

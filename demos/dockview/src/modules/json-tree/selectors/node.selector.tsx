@@ -86,6 +86,7 @@ export const useNode = ({ actorRef = null } = {}) => {
       isBranch: dataRuntimeInfo?.isBranch,
       isScalar: dataRuntimeInfo?.isScalar,
       isOpen: isOpen,
+      open: isOpen ? 'open' : 'closed',
       isRootNode: !parentNodeRef
     },
     sibling: [],

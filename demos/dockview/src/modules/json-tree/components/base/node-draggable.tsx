@@ -121,16 +121,19 @@ export const NodeDraggable = memo(
           }}
         >
           {dataInfo?.isBranch && (
-            <Branch data-drag-state={dragState} data-id={nodeId} nodeRef={nodeRef} dragState={dragState}>
+            <Branch
+              data-open={metadata.data.open}
+              data-drag-state={dragState}
+              data-id={nodeId}
+              nodeRef={nodeRef}
+              dragState={dragState}
+            >
               {/* always BranchControl or BranchTrigger when it comes first, consider asChild*/}
-              <BranchControl asChild>
-                <BranchTrigger nodeRef={nodeRef} dragState={dragState}>
+              <BranchControl data-open={metadata.data.open}>
+                <BranchTrigger data-open={metadata.data.open} nodeRef={nodeRef} dragState={dragState}>
                   <BranchIndicator />
                   <NodeKey>{dataName}</NodeKey>
                   <HStack flex={1}>
-                    <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
-                      {isOpen ? "open" : "closed"}
-                    </Badge>
                     <Badge size={"xs"} colorPalette={groupState !== "idle" ? "blue" : undefined} title={"Branch state"}>
                       {groupState}
                     </Badge>
@@ -151,6 +154,9 @@ export const NodeDraggable = memo(
                         {instruction?.operation}
                       </Badge>
                     )}
+                    <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
+                      {isOpen ? "open" : "closed"}
+                    </Badge>
                   </HStack>
 
                   <Badge size={"sm"} variant={"outline"} onClick={handleLogs}>
@@ -161,7 +167,7 @@ export const NodeDraggable = memo(
                   {instruction ? <DropIndicator instruction={instruction} /> : null}
                 </BranchTrigger>
               </BranchControl>
-              <BranchContent>
+              <BranchContent data-open={metadata.data.open}>
                 <GroupDropIndicator ref={childrenGroupRef} isActive={groupState === "is-innermost-over"}>
                   {metadata?.data?.isBranch && metadata?.data?.isOpen && (
                     <Stack gap={2}>
@@ -182,9 +188,6 @@ export const NodeDraggable = memo(
                 <NodeKey>{metadata?.name}</NodeKey>
                 <NodeKeyValue>{dataValue}</NodeKeyValue>
                 <HStack flex={1}>
-                  <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
-                    {isOpen ? "open" : "closed"}
-                  </Badge>
                   <Badge size={"xs"} colorPalette={groupState !== "idle" ? "blue" : undefined} title={"Branch state"}>
                     {groupState}
                   </Badge>
@@ -205,6 +208,9 @@ export const NodeDraggable = memo(
                       {instruction?.operation}
                     </Badge>
                   )}
+                  <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
+                    {isOpen ? "open" : "closed"}
+                  </Badge>
                 </HStack>
                 <Badge size={"sm"} variant={"outline"} onClick={handleLogs}>
                   <DebugIcon />

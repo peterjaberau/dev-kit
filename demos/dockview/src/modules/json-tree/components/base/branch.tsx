@@ -28,6 +28,7 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
       css={{
         borderRadius: "md",
         bg: "bg.panel",
+        gap: 0,
 
         // hover + drag state = idle
         '&[data-hovered="true"][data-drag-state="idle"]': {

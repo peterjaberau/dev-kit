@@ -1,32 +1,30 @@
 import React, { forwardRef } from "react"
-import { Stack, Collapsible } from "@chakra-ui/react"
+import { Stack, Collapsible, Box } from "@chakra-ui/react"
 
 export const BranchContent = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { children, ...rest } = props
   return (
-    <Collapsible.Content
-      data-scope="json-tree"
-      data-part="branch-content"
-      css={{
-        borderRadius: "md",
-        '&:not([data-state="closed"])': {
-          borderTopRadius: "none",
-        },
-        pb: 2,
-        px: 2,
-      }}
-      ref={ref}
-      {...props}
-    >
-      <Stack
+    <Collapsible.Content data-scope="json-tree" data-part="branch-content" ref={ref} {...props}>
+      <Box
         css={{
-          p: 2,
-          bg: "bg.muted",
           borderRadius: "md",
+          '&:not([data-state="closed"])': {
+            borderTopRadius: "none",
+          },
+          pb: 2,
+          px: 2,
         }}
       >
-        {children}
-      </Stack>
+        <Stack
+          css={{
+            p: 2,
+            bg: "bg.muted",
+            borderRadius: "md",
+          }}
+        >
+          {children}
+        </Stack>
+      </Box>
     </Collapsible.Content>
   )
 })
