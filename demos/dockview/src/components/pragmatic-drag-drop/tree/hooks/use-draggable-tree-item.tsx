@@ -135,7 +135,7 @@ export function useDraggableTreeItem({
                 : {
                     combine: "available",
                     "reorder-before": "available",
-                    "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
+                    // "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
 
                     // "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
                     // "reorder-after": (item?.isOpen && item?.children?.length && item?.children?.length > 0 ) ? "not-available" : "available",

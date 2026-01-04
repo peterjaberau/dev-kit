@@ -1,9 +1,13 @@
 "use client"
 
 import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
-import { DropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/list-item"
-import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
-import { useDraggableTreeItem } from "../../hooks/use-draggable-tree-item"
+// import {
+//   attachClosestEdge,
+//   type Edge,
+//   extractClosestEdge,
+// } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { DependencyContext, TreeContext } from "../../providers/tree-context"
+import { useDnd } from "./use-dnd"
 import { IoBugOutline as DebugIcon } from "react-icons/io5"
 
 import React, { forwardRef, useContext, useRef, memo, Suspense } from "react"
@@ -56,13 +60,13 @@ export const Node = memo(
     }
 
     /** START drag-drop logic */
-    const itemRef: any = useRef<HTMLDivElement | null>(null)
-    const childrenGroupRef = useRef<HTMLDivElement | null>(null)
+    const buttonRef: any = useRef<HTMLDivElement | null>(null)
+    const groupRef = useRef<HTMLDivElement | null>(null)
 
-    const { dispatch, uniqueContextId } = useContext(TreeContext)
+    const { uniqueContextId } = useContext(TreeContext)
     const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
 
-    const { dragState, groupState, instruction,  } = useDraggableTreeItem({
+    const { dragState, groupState, instruction } = useDnd({
       item: {
         id: metadata.id,
         nodeId: nodeId,
@@ -70,11 +74,12 @@ export const Node = memo(
         node: nodeContext,
         parent: parentContext,
         nodeSelector: nodeSelector,
-        parentSelector: parentState
+        parentSelector: parentState,
         // parent: getParentContext()
       },
-      buttonRef: itemRef,
-      groupRef: metadata?.data?.isBranch ? childrenGroupRef : { current: null },
+      buttonRef: buttonRef,
+      groupRef: groupRef,
+      // groupRef: metadata?.data?.isBranch ? childrenGroupRef : { current: null },
       uniqueContextId,
       attachInstruction,
       extractInstruction,
@@ -83,7 +88,6 @@ export const Node = memo(
       isOpen,
       onExpand: () => sendToNode({ type: "BRANCH_OPEN_CHANGED", isOpen: true }),
       onCollapse: () => sendToNode({ type: "BRANCH_OPEN_CHANGED", isOpen: false }),
-
     })
 
     return (
@@ -104,7 +108,7 @@ export const Node = memo(
         {...rest}
       >
         <Box
-          ref={itemRef}
+          ref={buttonRef}
           css={{
             opacity: dragState === "dragging" ? 0.4 : 1,
           }}
@@ -153,11 +157,11 @@ export const Node = memo(
                   </Badge>
                   <NodeLabel>{displayLabels.childrenCountLabel}</NodeLabel>
                   <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
-                  {instruction ? <DropIndicator instruction={instruction} /> : null}
                 </BranchTrigger>
+                {instruction ? <DropIndicator instruction={instruction} /> : null}
               </BranchControl>
               <BranchContent data-open={metadata.data.open}>
-                <GroupDropIndicator ref={childrenGroupRef} isActive={groupState === "is-innermost-over"}>
+                <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
                   {metadata?.data?.isBranch && metadata?.data?.isOpen && (
                     <Stack gap={2}>
                       <For each={metadata?.children}>
@@ -205,7 +209,7 @@ export const Node = memo(
                   <DebugIcon />
                 </Badge>
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
-                {instruction && <DropIndicator  instruction={instruction} />}
+                {instruction && <DropIndicator instruction={instruction} />}
               </ItemControl>
             </Item>
           )}
