@@ -183,6 +183,14 @@ export function useDnd({
 
           const data = { id: item.id };
 
+          console.log('----button ref-----', {
+            sourceId: source.data.id,
+            //@ts-ignore
+            sourceSCALAR: source.data.nodeSelector?.metadata?.data?.isScalar,
+            //@ts-ignore
+            sourceBRANCH: source.data.nodeSelector?.metadata?.data?.isBranch,
+          })
+
           return attachInstruction(data, {
             input,
             element,
@@ -256,7 +264,7 @@ export function useDnd({
     if (!group) return
 
     function onChange({ location, self, source }: ElementDropTargetEventBasePayload) {
-      console.log("DND - change groupRef-------", { groupState, dragState, location, source, self })
+      console.log("DND - change groupRef-------", { dragState, groupState, location, source, self })
 
       const [inner] = location.current.dropTargets.filter((dt) => dt.data.type === "group")
       setGroupState(inner?.element === self.element ? "is-innermost-over" : "idle")

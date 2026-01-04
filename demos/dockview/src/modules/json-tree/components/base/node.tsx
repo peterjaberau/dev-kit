@@ -131,7 +131,7 @@ export const Node = memo(
                       {groupState}
                     </Badge>
                     <Badge size={"xs"} colorPalette={dragState !== "idle" ? "blue" : undefined} title={"Drag state"}>
-                      {groupState}
+                      {dragState}
                     </Badge>
                     <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
                       {isOpen ? "open" : "closed"}
@@ -142,16 +142,15 @@ export const Node = memo(
                     <Badge size={"xs"} title={"Node ID"}>
                       {nodeId}
                     </Badge>
-                    {instruction?.operation && (
-                      <Badge size={"xs"} variant={"solid"}>
-                        {instruction?.operation}
-                      </Badge>
-                    )}
                     <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
                       {isOpen ? "open" : "closed"}
                     </Badge>
                   </HStack>
-
+                  {instruction?.operation && (
+                    <Badge size={"xs"} variant={"solid"}>
+                      {instruction?.operation}
+                    </Badge>
+                  )}
                   <Badge size={"sm"} variant={"outline"} onClick={handleLogs}>
                     <DebugIcon />
                   </Badge>
@@ -185,7 +184,7 @@ export const Node = memo(
                     {groupState}
                   </Badge>
                   <Badge size={"xs"} colorPalette={dragState !== "idle" ? "blue" : undefined} title={"Drag state"}>
-                    {groupState}
+                    {dragState}
                   </Badge>
                   <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
                     {isOpen ? "open" : "closed"}
@@ -196,15 +195,15 @@ export const Node = memo(
                   <Badge size={"xs"} title={"Node ID"}>
                     {nodeId}
                   </Badge>
-                  {instruction?.operation && (
-                    <Badge size={"xs"} variant={"solid"}>
-                      {instruction?.operation}
-                    </Badge>
-                  )}
                   <Badge size={"xs"} colorPalette={isOpen ? "blue" : undefined}>
                     {isOpen ? "open" : "closed"}
                   </Badge>
                 </HStack>
+                {instruction?.operation && (
+                  <Badge size={"xs"} variant={"solid"}>
+                    {instruction?.operation}
+                  </Badge>
+                )}
                 <Badge size={"sm"} variant={"outline"} onClick={handleLogs}>
                   <DebugIcon />
                 </Badge>
