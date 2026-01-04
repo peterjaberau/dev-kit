@@ -2,6 +2,7 @@ import React, { forwardRef } from "react"
 import { Collapsible } from "@chakra-ui/react"
 import { LuChevronRight } from "react-icons/lu"
 
+
 export const BranchIndicator = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   return (
     <Collapsible.Indicator

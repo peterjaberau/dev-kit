@@ -1,6 +1,7 @@
 "use client"
 
 import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
+import { DropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/list-item"
 import { DependencyContext, TreeContext } from "#drag-drop/providers/tree-context"
 import { useDraggableTreeItem } from "../../hooks/use-draggable-tree-item"
 import { IoBugOutline as DebugIcon } from "react-icons/io5"
@@ -61,7 +62,7 @@ export const Node = memo(
     const { dispatch, uniqueContextId } = useContext(TreeContext)
     const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
 
-    const { dragState, groupState, instruction } = useDraggableTreeItem({
+    const { dragState, groupState, instruction,  } = useDraggableTreeItem({
       item: {
         id: metadata.id,
         nodeId: nodeId,
@@ -204,7 +205,7 @@ export const Node = memo(
                   <DebugIcon />
                 </Badge>
                 <NodeCode>{displayLabels.dataTypeLabel}</NodeCode>
-                {instruction && <DropIndicator instruction={instruction} />}
+                {instruction && <DropIndicator  instruction={instruction} />}
               </ItemControl>
             </Item>
           )}

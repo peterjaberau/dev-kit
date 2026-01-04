@@ -44,11 +44,23 @@ export const useNode = ({ actorRef = null } = {}) => {
       ? keys(childNodes)
       : [dataValue]
 
-  const getChildNode = (name: string | number) => {
+  const getChildNode = (name: any) => {
     if (dataRuntimeInfo?.isArray || dataRuntimeInfo?.isObject) {
       return childNodes?.[name]
     }
     return null
+  }
+
+  const getChildNodeState: any = (name: any) => {
+    const childNodeRef = getChildNode(name)
+    if (childNodeRef) {
+      return useSelector(childNodeRef, (state) => state)
+    }
+  }
+
+  const getChildNodeMetadata = (name: any) => {
+    const childNodeSelector = getChildNodeState(name)
+    return childNodeSelector?.context?.metadata
   }
 
   const childrenLength = childNames?.length ?? 0
@@ -108,6 +120,8 @@ export const useNode = ({ actorRef = null } = {}) => {
     parentContext,
 
     childNodes,
+    getChildNodeState,
+    getChildNodeMetadata,
 
     dataConfig,
     dataValue,

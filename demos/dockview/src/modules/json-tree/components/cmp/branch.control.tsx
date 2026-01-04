@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react"
-import { HStack } from "@chakra-ui/react"
+import { chakra, HStack } from "@chakra-ui/react"
 
 export const BranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   return (
@@ -18,7 +18,7 @@ export const BranchControl = forwardRef<HTMLDivElement, any>((props: any, ref: a
       }}
       _closed={{ borderRadius: "md",
         py: 2
-    }}
+      }}
       justifyContent="flex-start"
       alignItems={"center"}
       flex={1}
