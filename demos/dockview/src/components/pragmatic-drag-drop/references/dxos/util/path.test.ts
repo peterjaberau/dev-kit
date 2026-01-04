@@ -1,0 +1,24 @@
+//
+// Copyright 2023 DXOS.org
+//
+
+import { describe, expect, test } from 'vitest';
+
+import { Path } from './path';
+
+describe('paths', () => {
+  test('create', () => {
+    const path = Path.create('a', 'b', 'c');
+    expect(Path.first(path)).to.eq('a');
+    expect(Path.last(path)).to.eq('c');
+
+    expect(Path.hasRoot(path, 'a')).to.be.true;
+    expect(Path.hasRoot(path, 'x')).to.be.false;
+
+    expect(Path.hasChild(Path.create('a', 'b'), path)).to.be.true;
+    expect(Path.hasChild(Path.create('a'), path)).to.be.false;
+
+    expect(Path.hasDescendent(Path.create('a', 'b'), path)).to.be.true;
+    expect(Path.hasDescendent(Path.create('a'), path)).to.be.true;
+  });
+});
