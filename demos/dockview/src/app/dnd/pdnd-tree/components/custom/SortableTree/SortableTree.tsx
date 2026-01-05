@@ -1,184 +1,186 @@
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import SortableTreeItem from '../SortableTreeItem/SortableTreeItem';
-import type { Instruction, ItemMode } from '../tree-item-hitbox';
-import { extractInstruction } from '../tree-item-hitbox';
-import type {
-	DataType,
-	DropPayloadType,
-	IdType,
-	ItemType,
-	PropsType,
-} from '../types';
-import { getPathToItem } from '../utilities';
-import { chakra } from '@chakra-ui/react';
+import { useEffect, useMemo, useRef, useState } from "react"
+import { chakra } from "@chakra-ui/react"
+
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
+
+import SortableTreeItem from "../SortableTreeItem/SortableTreeItem"
+import { extractInstruction } from "../tree-item-hitbox"
+import type { Instruction, ItemMode } from "../tree-item-hitbox"
+
+import type { DataType, DropPayloadType, IdType, ItemType, PropsType } from "../types"
+
+import { getPathToItem } from "../utilities"
 
 const defaultGetAllowedDropInstructions = () => [
-	'reorder-above' as const,
-	'reorder-below' as const,
-	'make-child' as const,
-	'reparent' as const,
-];
+  "reorder-above" as const,
+  "reorder-below" as const,
+  "make-child" as const,
+  "reparent" as const,
+]
 
-// TODO: Find a better way to handle empty renderers
-const NOOP = () => <chakra.div />;
+const defaultGetAllowedDropCustomInstructions = () => [
+  "reorder-above" as const,
+  "reorder-below" as const,
+  "combine" as const,
+]
 
+// fallback renderers
+const NOOP = () => <chakra.div />
+
+/* ------------------------------------------------------------------ */
+/* Component                                                          */
+/* ------------------------------------------------------------------ */
 
 const SortableTree = <ID extends IdType, D extends DataType>({
-	children,
-	flashClass,
-	flashStyle,
-	getAllowedDropInstructions = defaultGetAllowedDropInstructions,
-	indentSize = 16,
-	indicatorType = 'line',
-	items,
-	onDrop,
-	onExpandToggle,
-	renderIndicator,
-	renderPreview,
-	renderRow,
+  children,
+  flashClass,
+  flashStyle,
+  getAllowedDropInstructions = defaultGetAllowedDropCustomInstructions,
+  // getAllowedDropInstructions = defaultGetAllowedDropInstructions,
+  indentSize = 16,
+  indicatorType = "line",
+  items,
+  onDrop,
+  onExpandToggle,
+  onDebugToggle,
+  renderIndicator,
+  renderPreview,
+  renderRow,
 }: PropsType<ID, D>) => {
-	const [lastAction, setLastAction] = useState<DropPayloadType<ID, D> | null>(
-		null,
-	);
-	const [draggedItem, setDraggedItem] = useState<ItemType<ID, D> | null>(null);
+  const [lastAction, setLastAction] = useState<DropPayloadType<ID, D> | null>(null)
 
-	const containerRef = useRef<HTMLElement | null>(null);
-	const lastStateRef = useRef<typeof items>(items);
+  const [draggedItem, setDraggedItem] = useState<ItemType<ID, D> | null>(null)
 
-	const uniqueContextId = useMemo(() => Symbol('unique-id'), []);
+  const containerRef = useRef<HTMLElement | null>(null)
+  const lastStateRef = useRef(items)
 
-	useEffect(() => {
-		lastStateRef.current = items;
-	}, [items]);
+  const uniqueContextId = useMemo(() => Symbol("unique-id"), [])
 
-	// Highlight last dragged item after drop. This is essentially a clone of
-	// the `triggerPostMoveFlash` function from the `pragmatic-drag-and-drop`
-	// library.
-	useEffect(() => {
-		let raf: number | null = null;
+  /* ------------------------------------------------------------------ */
+  /* Keep latest tree state for hitbox calculations                      */
+  /* ------------------------------------------------------------------ */
 
-		if (lastAction && flashStyle) {
-			raf = requestAnimationFrame(() => {
-				lastAction.source.element.style=flashStyle;
-			});
-		}
+  useEffect(() => {
+    lastStateRef.current = items
+  }, [items])
 
-		if (lastAction && flashClass) {
-			raf = requestAnimationFrame(() => {
-				lastAction.source.element.classList.add(flashClass);
-			});
-		}
+  /* ------------------------------------------------------------------ */
+  /* Flash last moved element                                           */
+  /* ------------------------------------------------------------------ */
 
-		return () => {
+  useEffect(() => {
+    let raf: number | null = null
 
-			if (lastAction && flashStyle) {
-				raf = requestAnimationFrame(() => {
-					lastAction.source.element.style="";
-				});
-			}
+    if (lastAction?.source.element && flashStyle) {
+      raf = requestAnimationFrame(() => {
+        Object.assign(lastAction.source.element.style, flashStyle)
+      })
+    }
 
+    if (lastAction?.source.element && flashClass) {
+      raf = requestAnimationFrame(() => {
+        lastAction.source.element.classList.add(flashClass)
+      })
+    }
 
-			if (lastAction && flashClass) {
-				lastAction.source.element.classList.remove(flashClass);
-			}
+    return () => {
+      if (lastAction?.source.element && flashStyle) {
+        raf = requestAnimationFrame(() => {
+          lastAction.source.element.removeAttribute("style")
+        })
+      }
 
-			if (raf) cancelAnimationFrame(raf);
-		};
-	}, [flashClass, lastAction]);
+      if (lastAction?.source.element && flashClass) {
+        lastAction.source.element.classList.remove(flashClass)
+      }
 
-	useEffect(() => {
-		return combine(
-			monitorForElements({
-				canMonitor: ({ source }) =>
-					source.data.uniqueContextId === uniqueContextId,
-				onDragStart({ source }) {
-					setDraggedItem(source.data as ItemType<ID, D>);
-				},
-				onDrop(args) {
-					const { location, source } = args;
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [flashClass, flashStyle, lastAction])
 
-					setDraggedItem(null);
+  /* ------------------------------------------------------------------ */
+  /* Global drag monitor                                                */
+  /* ------------------------------------------------------------------ */
 
-					// Didn't drop on anything
-					if (!location.current.dropTargets.length) return;
+  useEffect(() => {
+    return combine(
+      monitorForElements({
+        canMonitor: ({ source }) => source.data.uniqueContextId === uniqueContextId,
 
-					const target = location.current
-						.dropTargets[0] as (typeof location.current.dropTargets)[number] & {
-						data: ItemType<ID, D>;
-					};
+        onDragStart: ({ source }) => {
+          setDraggedItem(source.data as ItemType<ID, D>)
+        },
 
-					const instruction: Instruction | null = extractInstruction(
-						target.data,
-					);
+        onDrop: ({ location, source }: any) => {
+          setDraggedItem(null)
 
-					if (instruction !== null) {
-						const typedSource = source as typeof source & {
-							data: ItemType<ID, D>;
-						};
+          // Didn't drop on anything
+          if (!location.current.dropTargets.length) return
 
-						setLastAction({
-							instruction,
-							source: typedSource,
-							target,
-						});
+          const target = location.current.dropTargets[0] as any
 
-						// Don't fire onDrop for `instruction-blocked`
-						if (instruction.type === 'instruction-blocked') return;
+          const instruction: Instruction | null = extractInstruction(target.data)
 
-						onDrop?.({
-							instruction,
-							source: typedSource,
-							target,
-						});
-					}
-				},
-			}),
-		);
-	}, [onDrop, uniqueContextId]);
+          if (instruction !== null) {
+            const typedSource = source as any
 
-	const childRenderer = children ?? (() => null);
+            setLastAction({
+              instruction,
+              source: typedSource,
+              target,
+            })
 
-	return childRenderer({
-		children: items.map((item, index, array) => {
-			const type: ItemMode = (() => {
-				if (item.items?.length && item.isOpen) {
-					return 'expanded';
-				}
+            // Don't fire onDrop for `instruction-blocked`
+            if (instruction.type === "instruction-blocked") return
 
-				if (index === array.length - 1) {
-					return 'last-in-group';
-				}
+            onDrop?.({
+              instruction,
+              source: typedSource,
+              target,
+            })
+          }
+        },
+      }),
+    )
+  }, [onDrop, uniqueContextId])
 
-				return 'standard';
-			})();
+  return children({
+    containerRef,
+    children: items.map((item, index, array) => {
+      const mode: ItemMode = (() => {
+        if (item.items?.length && item.isOpen) return "expanded"
+        if (index === array.length - 1) return "last-in-group"
+        return "standard"
+      })()
 
-			return (
-				<SortableTreeItem<ID, D>
-					draggedItem={draggedItem}
-					getAllowedDropInstructions={getAllowedDropInstructions}
-					getPathToItem={(targetId: ItemType<ID, D>['id']) =>
-						getPathToItem<ID, D>({ current: lastStateRef.current, targetId }) ??
-						[]
-					}
-					indentLevel={0}
-					indentSize={indentSize}
-					indicatorType={indicatorType}
-					item={item}
-					key={item.id}
-					mode={type}
-					onExpandToggle={onExpandToggle}
-					renderIndicator={renderIndicator ?? NOOP}
-					renderPreview={renderPreview ?? NOOP}
-					uniqueContextId={uniqueContextId}
-				>
-					{renderRow}
-				</SortableTreeItem>
-			);
-		}),
-		containerRef,
-	});
-};
+      return (
+        <SortableTreeItem<ID, D>
+          draggedItem={draggedItem}
+          getAllowedDropInstructions={getAllowedDropInstructions}
+          getPathToItem={(targetId) =>
+            getPathToItem<ID, D>({
+              current: lastStateRef.current,
+              targetId,
+            }) ?? []
+          }
+          indentLevel={0}
+          indentSize={indentSize}
+          indicatorType={indicatorType}
+          item={item}
+          key={item.id}
+          mode={mode}
+          uniqueContextId={uniqueContextId}
+          onExpandToggle={onExpandToggle}
+          onDebugToggle={onDebugToggle}
+          renderIndicator={renderIndicator ?? NOOP}
+          renderPreview={renderPreview ?? NOOP}
+        >
+          {renderRow}
+        </SortableTreeItem>
+      )
+    }),
+  })
+}
 
-export default SortableTree;
+export default SortableTree

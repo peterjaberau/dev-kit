@@ -21,164 +21,162 @@ const defaultGetAllowedDropInstructions = () => [
 	'reparent' as const,
 ];
 
+const defaultGetAllowedDropCustomInstructions = () => [
+  "reorder-above" as const,
+  "reorder-below" as const,
+  "combine" as const,
+]
+
 // TODO: Find a better way to handle empty renderers
 const NOOP = () => <chakra.div />;
 
 
 const SortableTree = <ID extends IdType, D extends DataType>({
-	children,
-	flashClass,
-	flashStyle,
-	getAllowedDropInstructions = defaultGetAllowedDropInstructions,
-	indentSize = 16,
-	indicatorType = 'line',
-	items,
-	onDrop,
-	onExpandToggle,
-	renderIndicator,
-	renderPreview,
-	renderRow,
+  children,
+  flashClass,
+  flashStyle,
+  // getAllowedDropInstructions = defaultGetAllowedDropCustomInstructions,
+  getAllowedDropInstructions = defaultGetAllowedDropInstructions,
+  indentSize = 16,
+  indicatorType = "line",
+  items,
+  onDrop,
+  onExpandToggle,
+  renderIndicator,
+  renderPreview,
+  renderRow,
 }: PropsType<ID, D>) => {
-	const [lastAction, setLastAction] = useState<DropPayloadType<ID, D> | null>(
-		null,
-	);
-	const [draggedItem, setDraggedItem] = useState<ItemType<ID, D> | null>(null);
+  const [lastAction, setLastAction] = useState<DropPayloadType<ID, D> | null>(null)
+  const [draggedItem, setDraggedItem] = useState<ItemType<ID, D> | null>(null)
 
-	const containerRef = useRef<HTMLElement | null>(null);
-	const lastStateRef = useRef<typeof items>(items);
+  const containerRef = useRef<HTMLElement | null>(null)
+  const lastStateRef = useRef<typeof items>(items)
 
-	const uniqueContextId = useMemo(() => Symbol('unique-id'), []);
+  const uniqueContextId = useMemo(() => Symbol("unique-id"), [])
 
-	useEffect(() => {
-		lastStateRef.current = items;
-	}, [items]);
+  useEffect(() => {
+    lastStateRef.current = items
+  }, [items])
 
-	// Highlight last dragged item after drop. This is essentially a clone of
-	// the `triggerPostMoveFlash` function from the `pragmatic-drag-and-drop`
-	// library.
-	useEffect(() => {
-		let raf: number | null = null;
+  // Highlight last dragged item after drop. This is essentially a clone of
+  // the `triggerPostMoveFlash` function from the `pragmatic-drag-and-drop`
+  // library.
+  useEffect(() => {
+    let raf: number | null = null
 
-		if (lastAction && flashStyle) {
-			raf = requestAnimationFrame(() => {
-				lastAction.source.element.style=flashStyle;
-			});
-		}
+    if (lastAction && flashStyle) {
+      raf = requestAnimationFrame(() => {
+        lastAction.source.element.style = flashStyle
+      })
+    }
 
-		if (lastAction && flashClass) {
-			raf = requestAnimationFrame(() => {
-				lastAction.source.element.classList.add(flashClass);
-			});
-		}
+    if (lastAction && flashClass) {
+      raf = requestAnimationFrame(() => {
+        lastAction.source.element.classList.add(flashClass)
+      })
+    }
 
-		return () => {
+    return () => {
+      if (lastAction && flashStyle) {
+        raf = requestAnimationFrame(() => {
+          lastAction.source.element.style = ""
+        })
+      }
 
-			if (lastAction && flashStyle) {
-				raf = requestAnimationFrame(() => {
-					lastAction.source.element.style="";
-				});
-			}
+      if (lastAction && flashClass) {
+        lastAction.source.element.classList.remove(flashClass)
+      }
 
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [flashClass, lastAction])
 
-			if (lastAction && flashClass) {
-				lastAction.source.element.classList.remove(flashClass);
-			}
+  useEffect(() => {
+    return combine(
+      monitorForElements({
+        canMonitor: ({ source }) => source.data.uniqueContextId === uniqueContextId,
+        onDragStart({ source }) {
+          setDraggedItem(source.data as ItemType<ID, D>)
+        },
+        onDrop(args) {
+          const { location, source } = args
 
-			if (raf) cancelAnimationFrame(raf);
-		};
-	}, [flashClass, lastAction]);
+          setDraggedItem(null)
 
-	useEffect(() => {
-		return combine(
-			monitorForElements({
-				canMonitor: ({ source }) =>
-					source.data.uniqueContextId === uniqueContextId,
-				onDragStart({ source }) {
-					setDraggedItem(source.data as ItemType<ID, D>);
-				},
-				onDrop(args) {
-					const { location, source } = args;
+          // Didn't drop on anything
+          if (!location.current.dropTargets.length) return
 
-					setDraggedItem(null);
+          const target = location.current.dropTargets[0] as (typeof location.current.dropTargets)[number] & {
+            data: ItemType<ID, D>
+          }
 
-					// Didn't drop on anything
-					if (!location.current.dropTargets.length) return;
+          const instruction: Instruction | null = extractInstruction(target.data)
 
-					const target = location.current
-						.dropTargets[0] as (typeof location.current.dropTargets)[number] & {
-						data: ItemType<ID, D>;
-					};
+          if (instruction !== null) {
+            const typedSource = source as typeof source & {
+              data: ItemType<ID, D>
+            }
 
-					const instruction: Instruction | null = extractInstruction(
-						target.data,
-					);
+            setLastAction({
+              instruction,
+              source: typedSource,
+              target,
+            })
 
-					if (instruction !== null) {
-						const typedSource = source as typeof source & {
-							data: ItemType<ID, D>;
-						};
+            // Don't fire onDrop for `instruction-blocked`
+            if (instruction.type === "instruction-blocked") return
 
-						setLastAction({
-							instruction,
-							source: typedSource,
-							target,
-						});
+            onDrop?.({
+              instruction,
+              source: typedSource,
+              target,
+            })
+          }
+        },
+      }),
+    )
+  }, [onDrop, uniqueContextId])
 
-						// Don't fire onDrop for `instruction-blocked`
-						if (instruction.type === 'instruction-blocked') return;
+  const childRenderer = children ?? (() => null)
 
-						onDrop?.({
-							instruction,
-							source: typedSource,
-							target,
-						});
-					}
-				},
-			}),
-		);
-	}, [onDrop, uniqueContextId]);
+  return childRenderer({
+    children: items.map((item, index, array) => {
+      const type: ItemMode = (() => {
+        if (item.items?.length && item.isOpen) {
+          return "expanded"
+        }
 
-	const childRenderer = children ?? (() => null);
+        if (index === array.length - 1) {
+          return "last-in-group"
+        }
 
-	return childRenderer({
-		children: items.map((item, index, array) => {
-			const type: ItemMode = (() => {
-				if (item.items?.length && item.isOpen) {
-					return 'expanded';
-				}
+        return "standard"
+      })()
 
-				if (index === array.length - 1) {
-					return 'last-in-group';
-				}
-
-				return 'standard';
-			})();
-
-			return (
-				<SortableTreeItem<ID, D>
-					draggedItem={draggedItem}
-					getAllowedDropInstructions={getAllowedDropInstructions}
-					getPathToItem={(targetId: ItemType<ID, D>['id']) =>
-						getPathToItem<ID, D>({ current: lastStateRef.current, targetId }) ??
-						[]
-					}
-					indentLevel={0}
-					indentSize={indentSize}
-					indicatorType={indicatorType}
-					item={item}
-					key={item.id}
-					mode={type}
-					onExpandToggle={onExpandToggle}
-					renderIndicator={renderIndicator ?? NOOP}
-					renderPreview={renderPreview ?? NOOP}
-					uniqueContextId={uniqueContextId}
-				>
-					{renderRow}
-				</SortableTreeItem>
-			);
-		}),
-		containerRef,
-	});
-};
+      return (
+        <SortableTreeItem<ID, D>
+          draggedItem={draggedItem}
+          getAllowedDropInstructions={getAllowedDropInstructions}
+          getPathToItem={(targetId: ItemType<ID, D>["id"]) =>
+            getPathToItem<ID, D>({ current: lastStateRef.current, targetId }) ?? []
+          }
+          indentLevel={0}
+          indentSize={indentSize}
+          indicatorType={indicatorType}
+          item={item}
+          key={item.id}
+          mode={type}
+          onExpandToggle={onExpandToggle}
+          renderIndicator={renderIndicator ?? NOOP}
+          renderPreview={renderPreview ?? NOOP}
+          uniqueContextId={uniqueContextId}
+        >
+          {renderRow}
+        </SortableTreeItem>
+      )
+    }),
+    containerRef,
+  })
+}
 
 export default SortableTree;

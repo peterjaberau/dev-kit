@@ -36,7 +36,6 @@
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
 
-
       /** modules */
 
       "#json-tree/*": ["./src/modules/json-tree/*"],
@@ -44,7 +43,9 @@
       "#drag-and-drop/*": ["./src/modules/drag-and-drop/*"],
       "#drag-and-drop": ["./src/modules/drag-and-drop/"],
 
-
+      /** experiments */
+      "#tree-with-actor/*": ["./src/components/pragmatic-drag-drop/tree-with-actor/*"],
+      "#tree-with-actor": ["./src/components/pragmatic-drag-drop/tree-with-actor/"],
 
       /** possible deletion */
 
@@ -74,15 +75,8 @@
       "#hooks/*": ["./src/hooks/*"],
       "#hooks": ["./src/hooks"],
 
-
-
       "#views/*": ["./src/views/*"],
       "#views": ["./src/views"],
-
-
-
-
-
 
       "#xflows-plugin-react/*": ["./src/orchestrator/packages/plugin-react/*"],
       "#xflows-plugin-react": ["./src/orchestrator/packages/plugin-react"],
@@ -98,7 +92,6 @@
 
       "#xflows-renderer-core/*": ["./src/orchestrator/packages/renderer-core/*"],
       "#xflows-renderer-core": ["./src/orchestrator/packages/renderer-core"],
-
 
       "#orchestrator/*": ["./src/orchestrator/*"],
       "#orchestrator": ["./src/orchestrator"],

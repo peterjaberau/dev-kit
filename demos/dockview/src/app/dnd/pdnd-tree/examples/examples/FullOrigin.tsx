@@ -8,8 +8,6 @@ import {
   SampleRow,
 } from "../components"
 import { Wrapper } from "./wrapper"
-import { chakra, Box, Container, Stack } from "@chakra-ui/react"
-import { ScrollAreaWrapper } from "#components/ui-common/scroll-area-wrapper"
 
 export const FullOrigin = () => {
   const { getAllowedDropInstructions, handleDrop, handleExpandToggle, items } = useLocalTreeData()

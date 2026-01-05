@@ -4,7 +4,7 @@ import { useCallback, useContext, useEffect, useMemo, useReducer, useRef, useSta
 import { Container, Center } from "@chakra-ui/react"
 import memoizeOne from "memoize-one"
 import invariant from "tiny-invariant"
-
+import DebuggerCardWrapper from "#components/ui-common/debugger-card-wrapper"
 import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
 
 import { getInitialTreeState, tree, type TreeItem as TreeItemType, treeStateReducer } from "./data/tree"
@@ -15,7 +15,14 @@ import TreeItem from "./components/tree-item"
 import { GroupDropIndicator } from "../../pragmatic-drag-drop/drop-indicator/group"
 import { useDraggableTree } from "./hooks/use-draggable-tree"
 
-function Index() {
+import { useTreeManager } from "./machines/tree-manager.selector"
+import { useTreeActor } from "./machines/tree-actor.selector"
+
+export function RenderTree() {
+  const { treeManagerRef, treeManagerContext, dataTreeManager, lastActionTreeManager } = useTreeManager()
+
+  const treeActorSelector = useTreeActor()
+
   const [state, dispatch] = useReducer(treeStateReducer, null, getInitialTreeState)
 
   const { data, lastAction } = state
@@ -24,8 +31,6 @@ function Index() {
   const groupRef = useRef<HTMLDivElement>(null)
 
   const { extractInstruction } = useContext(DependencyContext)
-
-
 
   const lastStateRef = useRef<TreeItemType[]>(data)
 
@@ -87,21 +92,39 @@ function Index() {
     dispatch,
   })
 
-
-
   return (
     <TreeContext.Provider value={context}>
-      <Container px={24}>
-        <Center ref={rootRef} css={{ boxShadow: "sm", py: 10 }}>
+      <Container ref={rootRef} px={24} css={{ boxShadow: "sm", py: 10 }}>
+        <DebuggerCardWrapper
+          title="Tree with Actor"
+          autoScroll={false}
+          args={{
+            initialApproach: {
+              data,
+              state,
+              extractInstruction,
+              lastStateRef,
+              context,
+              groupState,
+            },
+            dataDrivenApproach: {
+              ref: treeManagerRef,
+              context: treeManagerContext,
+              data: dataTreeManager,
+              lastAction: lastActionTreeManager,
+            },
+            actorDrivenApproach: {
+              selector: treeActorSelector,
+            },
+          }}
+        >
           <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
             {data.map((item, index) => (
               <TreeItem key={item.id} item={item} level={0} index={index} />
             ))}
           </GroupDropIndicator>
-        </Center>
+        </DebuggerCardWrapper>
       </Container>
     </TreeContext.Provider>
   )
 }
-
-export default Index

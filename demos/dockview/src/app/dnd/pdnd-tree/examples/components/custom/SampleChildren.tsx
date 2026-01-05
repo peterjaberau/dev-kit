@@ -6,6 +6,7 @@ export const SampleChildren = ({ children, containerRef }: ChildPropsType) => (
 	<chakra.ol
 		css={{
 			// width: '300px',
+      width: 'full',
 			padding: 0,
 			margin: '0 auto',
 			listStyle: 'none',

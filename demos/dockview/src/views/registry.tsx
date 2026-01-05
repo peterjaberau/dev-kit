@@ -11,6 +11,7 @@ const registryMeta: any = {
 
   // Drag & Drop
   "pdnd-tree": dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
+  "tree-with-actor": dynamic(() => import("#views/components/panels/pdnd/tree-with-actor"), { ssr: false }),
 
   // Json Drafts
   "json-viewer-custom": dynamic(() => import("#views/components/panels/custom/json-viewer-custom"), { ssr: false }),

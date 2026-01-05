@@ -11,33 +11,35 @@ import type { Input, Position } from '@atlaskit/pragmatic-drag-and-drop/types';
 export type ItemMode = 'standard' | 'expanded' | 'last-in-group';
 
 export type Instruction =
-	| {
-			type: 'reorder-above';
-			currentLevel: number;
-			indentSize: number;
-	  }
-	| {
-			type: 'reorder-below';
-			currentLevel: number;
-			indentSize: number;
-	  }
-	| {
-			type: 'make-child';
-			currentLevel: number;
-			indentSize: number;
-	  }
-	| {
-			// Used when the last item in a group needs to be moved down a level
-			// without changing its order global order
-			type: 'reparent';
-			currentLevel: number;
-			indentSize: number;
-			desiredLevel: number;
-	  }
-	| {
-			type: 'instruction-blocked';
-			desired: Exclude<Instruction, { type: 'instruction-blocked' }>;
-	  };
+  | {
+      type: "reorder-above"
+      currentLevel: number
+      indentSize: number
+    }
+  | {
+      type: "reorder-below"
+      currentLevel: number
+      indentSize: number
+    }
+  | {
+      type: "make-child"
+      currentLevel: number
+      indentSize: number
+    }
+  | {
+      // Used when the last item in a group needs to be moved down a level
+      // without changing its order global order
+      type: "reparent"
+      currentLevel: number
+      indentSize: number
+      desiredLevel: number
+    }
+  | {
+      type: "instruction-blocked"
+      desired: Exclude<Instruction, { type: "instruction-blocked" }>
+    }
+  | any
+
 
 // Using a symbol so we can guarantee a key with a unique value
 const uniqueKey = Symbol('tree-item-instruction');
@@ -205,7 +207,6 @@ export function applyInstructionBlock({
 		};
 
 	return {
-		// @ts-expect-error TODO: Fix me
 		desired,
 		type: 'instruction-blocked',
 	};

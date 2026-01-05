@@ -1,5 +1,6 @@
-import useLocalTreeData from "../data/custom/useLocalTreeData"
 import SortableTree from "../../components/custom"
+import useLocalTreeData from "../data/custom/useLocalTreeData"
+
 import {
   SampleChildren,
   SampleDropGhostIndicator,
@@ -7,31 +8,30 @@ import {
   SamplePreview,
   SampleRow,
 } from "../components/custom"
+
 import { Wrapper } from "./wrapper"
-import { chakra, Box, Container, Stack } from "@chakra-ui/react"
-import { ScrollAreaWrapper } from "#components/ui-common/scroll-area-wrapper"
 
 export const FullCustom = () => {
-  const { getAllowedDropInstructions, handleDrop, handleExpandToggle, items } = useLocalTreeData()
+  const { items, getAllowedDropInstructions, handleDrop, handleExpandToggle, handleDebugToggle } = useLocalTreeData()
 
   return (
     <Wrapper
-      title={"Full Custom"}
-      autoScroll={true}
+      title="Full Custom"
+      autoScroll
       args={{
-        getAllowedDropInstructions,
         items,
+        getAllowedDropInstructions,
       }}
     >
       <SortableTree
-        // flashClass={rowStyles.flash}
+        items={items}
+        getAllowedDropInstructions={getAllowedDropInstructions}
+        onDrop={handleDrop}
+        onExpandToggle={handleExpandToggle}
+        onDebugToggle={handleDebugToggle}
         flashStyle={{
           animation: "flash 250ms cubic-bezier(0.25, 0.1, 0.25, 1)",
         }}
-        getAllowedDropInstructions={getAllowedDropInstructions}
-        items={items}
-        onDrop={handleDrop}
-        onExpandToggle={handleExpandToggle}
         renderIndicator={SampleDropLineIndicator}
         renderPreview={SamplePreview}
         renderRow={SampleRow}
