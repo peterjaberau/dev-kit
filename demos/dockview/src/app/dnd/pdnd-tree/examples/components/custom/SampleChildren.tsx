@@ -1,4 +1,4 @@
-import type { ChildPropsType } from '../../components/types';
+import type { ChildPropsType } from '../../../components/custom/types';
 import type React from 'react';
 import { chakra } from '@chakra-ui/react';
 

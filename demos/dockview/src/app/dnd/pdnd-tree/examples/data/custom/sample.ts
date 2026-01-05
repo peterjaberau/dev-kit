@@ -1,4 +1,4 @@
-import type { ItemType } from '../../components/types';
+import type { ItemType } from '../../../components/custom/types';
 
 export type DataType = {
 	name: string;
