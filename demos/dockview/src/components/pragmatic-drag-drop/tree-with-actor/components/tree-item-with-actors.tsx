@@ -1,36 +1,61 @@
 "use client"
-
+import JsonView from "react18-json-view"
 import { Fragment, memo, useCallback, useContext, useRef } from "react"
-import { chakra, HStack, Icon, Text } from "@chakra-ui/react"
+import { chakra, HStack, Stack, Icon, Text, Button, Container, Badge } from "@chakra-ui/react"
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "../../../pragmatic-drag-drop/drop-indicator/group"
 import { DependencyContext, TreeContext } from "../providers/tree-context"
-import { useDraggableTreeItem } from "../hooks/use-draggable-tree-item"
-import { Button } from "@chakra-ui/react"
+import { useDraggableTreeItemWithActors } from "../hooks/use-draggable-tree-item-with-actors"
+import { useTreeItem } from "../selectors/tree.item.selector"
+import { useTree } from "../selectors/tree.selector"
 const indentPerLevel = 5
 
-const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; level: number; index: number }) {
+const TreeItemWithActors = memo(function TreeItem({
+  itemRef,
+  level,
+  index,
+}: {
+  itemRef?: any
+  level: number
+  index: number
+}) {
   // const { sendToTreeManager, attachInstructionTreeManager, extractInstructionTreeManager } = useTreeItem()
   // const treeSelector = useTreeItem()
   // const treeItemSelector = useTreeItem()
 
+  const {
+    viewConfig,
+    treeItemContext,
+    dataValue: item,
+    childItemsRef,
+    treeItemChildrenRef,
+    treeItemChildrenIds,
+    sendToTreeItem,
+    isOpen,
+  } = useTreeItem({ actorRef: itemRef })
+
+  const { uniqueContextId, dependencies } = useTree()
+  const { attachInstruction, extractInstruction, DropIndicator } = dependencies
+
   const buttonRef = useRef<HTMLButtonElement>(null)
   const groupRef = useRef<HTMLDivElement>(null)
 
-  const { dispatch, uniqueContextId } = useContext(TreeContext)
-  const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
+  // const { dispatch } = useContext(TreeContext)
+  // const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
 
-  const { dragState, groupState, instruction } = useDraggableTreeItem({
-    item,
+  const toggleHandler = () => sendToTreeItem({ type: "toggle" })
+
+  // const toggleOpen = useCallback(() => dispatch({ type: "toggle", itemId: item.id }), [dispatch, item.id])
+
+  const { dragState, groupState, instruction } = useDraggableTreeItemWithActors({
+    itemRef,
     buttonRef,
     groupRef,
-    dispatch,
+    // dispatch,
     uniqueContextId,
     attachInstruction,
     extractInstruction,
   })
-
-  const toggleOpen = useCallback(() => dispatch({ type: "toggle", itemId: item.id }), [dispatch, item.id])
 
   const aria = (() => {
     if (!item.children?.length || item.children?.length === 0) {
@@ -76,7 +101,7 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
               // border: "4px solid yellow",
             }}
             id={`tree-item-${item.id}`}
-            onClick={toggleOpen}
+            onClick={toggleHandler}
             ref={buttonRef}
             data-index={index}
             data-level={level}
@@ -107,6 +132,14 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
                 }}
               >
                 Item {item.id}
+                {/*<Badge size={"xs"} variant={"subtle"}>*/}
+                {/*  {treeItemId}*/}
+                {/*</Badge>*/}
+                {/*{treeItemContext.viewRuntime?.dragItemId && (*/}
+                {/*  <Badge size={"xs"} variant={"subtle"}>*/}
+                {/*    {treeItemContext.viewRuntime?.dragItemId}*/}
+                {/*  </Badge>*/}
+                {/*)}*/}
               </chakra.span>
 
               <chakra.small
@@ -141,12 +174,17 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
               // e.preventDefault()
               // e.stopPropagation()
               console.log("inspect item - WITHOUT actor", {
-                item,
                 level,
                 index,
                 dragState,
                 groupState,
                 instruction,
+                item,
+                viewConfig,
+                treeItemContext,
+                childItemsRef,
+                treeItemChildrenRef,
+                treeItemChildrenIds,
               })
             }}
           >
@@ -158,9 +196,21 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
       {item.children?.length > 0 && item.isOpen && (
         <chakra.div id={aria?.["aria-controls"]} pl={indentPerLevel}>
           <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
-            {item?.children.map((child: any, i: number) => (
-              <TreeItem key={child.id} item={child} level={level + 1} index={i} />
-            ))}
+            {treeItemChildrenIds?.map((child: any, i: number) => {
+              // <JsonView
+              //   src={{
+              //     child,
+              //     level: level + 1,
+              //     index: i,
+              //
+              //     treeItemChildrenIds, treeItemChildrenRef, childItemsRef, item
+              //   }}
+              //   collapsed={1}
+              //   key={child.id}
+              // />
+
+              return <TreeItemWithActors key={child} itemRef={treeItemChildrenRef[child]} level={level + 1} index={i} />
+            })}
           </GroupDropIndicator>
         </chakra.div>
       )}
@@ -168,4 +218,5 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
   )
 })
 
-export default TreeItem
+export default TreeItemWithActors
+

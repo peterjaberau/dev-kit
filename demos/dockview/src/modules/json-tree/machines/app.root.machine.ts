@@ -1,7 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { createNode } from "./node.create"
 import { machineConstants } from "../utils/constants"
-import { treeMachine } from "#tree-with-actor/machines/tree.machines"
+import { treeMachine } from "#tree-with-actor/machines"
 
 export const appRootMachine = setup({
   types: {

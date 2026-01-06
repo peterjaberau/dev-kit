@@ -57,6 +57,7 @@ export function useDnd({
   // was the node open when drag started?
   const wasOpenOnDragStartRef = useRef(false)
 
+
   // delayed expand cancel fn
   // const cancelExpandRef = useRef<null | (() => void)>(null)
 

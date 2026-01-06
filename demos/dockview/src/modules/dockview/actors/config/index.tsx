@@ -67,17 +67,17 @@ export const dockViewAdapterConfig = {
       },
       model: {},
     },
-    {
-      id: "panel__2",
-      view: {
-        type: "DOCK_PANEL",
-        component: "default",
-        title: "Panel - 2",
-        renderer: "always",
-        position: { referencePanel: "panel__1", direction: "right" },
-      },
-      model: {},
-    },
+    // {
+    //   id: "panel__2",
+    //   view: {
+    //     type: "DOCK_PANEL",
+    //     component: "default",
+    //     title: "Panel - 2",
+    //     renderer: "always",
+    //     position: { referencePanel: "panel__1", direction: "right" },
+    //   },
+    //   model: {},
+    // },
 
     /*
 

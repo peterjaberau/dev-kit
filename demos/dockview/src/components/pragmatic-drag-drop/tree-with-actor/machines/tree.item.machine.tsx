@@ -1,9 +1,6 @@
-import { assign, enqueueActions, setup, emit } from "xstate"
-import { omit } from "lodash"
-
+import { assign, emit, enqueueActions, setup } from "xstate"
 import { isArray, isObject } from "#shared/utils"
-
-//import { attachInstruction, extractInstruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
+import { omit } from "lodash"
 
 export const createTreeItem = (input: any) => {
   return setup({
@@ -85,15 +82,90 @@ export const createTreeItem = (input: any) => {
         viewConfig,
 
         viewRuntime: {
+          dragItemId: null,
           /* manage the evaluated state of the view */
         },
       }
     },
     on: {
-      BRANCH_OPEN_CHANGED: {
-        actions: "setBranchOpen",
-      },
+      toggle: {
+        actions: assign(({ context, event, self }) => {
+          const { open = true, itemId = null } = event
 
+          const hasChildren = context.dataConfig?.value?.children?.length > 0
+          const isOpen = context.dataConfig?.value?.isOpen
+
+          // has children, no change keep it as it
+          if (!hasChildren) {
+
+            return
+          }
+
+          // auto toggle
+          if (self.id === itemId) {
+
+            context.dataConfig?.value && (context.dataConfig.value.isOpen = !context.dataConfig.value.isOpen)
+          }
+
+          // explicit open
+          if (open) {
+            if (hasChildren && !isOpen) {
+              context.dataConfig?.value && (context.dataConfig.value.isOpen = true)
+            }
+          }
+
+          // explicit close
+          if (!open) {
+            if (hasChildren && isOpen) {
+              context.dataConfig?.value && (context.dataConfig.value.isOpen = false)
+            }
+          }
+
+          // context.dataConfig?.value && (context.dataConfig.value.isOpen = event?.open)
+        }),
+      },
+      instruction: {
+        actions: assign(({ context, event }) => {
+          const { type, instruction, itemId, targetId } = event
+
+          // the rest of the actions require you to drop on something else
+          if (itemId === targetId) {
+            return
+          }
+
+          //instruction was blocked and should not do anything
+          if (instruction.blocked) {
+            return
+          }
+
+          if (instruction.operation === "reorder-before") {
+            /* TODO: actor way
+            let result = tree.remove(data, action.itemId)
+            result = tree.insertBefore(result, action.targetId, item)
+            return result
+           */
+          }
+
+          if (instruction.operation === "reorder-after") {
+            /* TODO: actor way
+            let result = tree.remove(data, action.itemId)
+            result = tree.insertAfter(result, action.targetId, item)
+            return result
+           */
+          }
+
+          if (instruction.operation === "combine") {
+            /* TODO: actor way
+            let result = tree.remove(data, action.itemId)
+            result = tree.insertChild(result, action.targetId, item)
+            return result
+           */
+          }
+
+          //TODO: everything
+          return
+        }),
+      },
     },
 
     // entry: ["emitTreeItemSpawned"],
@@ -160,65 +232,3 @@ export const createChildTreeItems = ({ context, spawn }: any) => {
     )
   })
 }
-
-export const treeMachine = setup({
-  types: {
-    context: {} as any,
-    events: {} as any,
-  } as any,
-  actions: {
-    handleInitiate: assign(({ context }) => {}),
-
-    spawnDataTreeItems: assign(({ context, spawn, self }) => {
-      context.dataRef = spawn(
-        createTreeItem({
-          refs: {
-            // parent: self,
-          },
-          dataConfig: {
-            name: "_TREE_ITEMS_ROOT_",
-            value: context?.data,
-          },
-          dataRuntime: {
-            info: {
-              // path: "/",
-              // dataPath: "$"
-            },
-          },
-          viewConfig: {
-            isOpen: true,
-          },
-        }),
-      )
-    }),
-    addTreeItemReference: assign(({ context, event }) => {
-      console.log("---event.treeMachine----", event)
-
-      context.dataTreeReferences.push({
-        ...event,
-      })
-    }),
-  },
-  actors: {},
-  guards: {},
-}).createMachine({
-  context: ({ input }: any) => {
-    return {
-      //extractInstruction: extractInstruction, attachInstruction: attachInstruction
-      dependencies: null,
-
-      data: input?.data || null,
-      dataRef: input?.dataRef || null,
-      dataTreeReferences: [],
-    }
-  },
-  on: {
-    TREE_ITEM_SPAWNED: {
-      actions: ["addTreeItemReference"],
-    },
-  },
-  entry: enqueueActions(({ context, enqueue, check, event }) => {
-    enqueue("spawnDataTreeItems")
-  }),
-})
-

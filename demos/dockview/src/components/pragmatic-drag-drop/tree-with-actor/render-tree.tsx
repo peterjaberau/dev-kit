@@ -15,14 +15,9 @@ import TreeItem from "./components/tree-item"
 import { GroupDropIndicator } from "../../pragmatic-drag-drop/drop-indicator/group"
 import { useDraggableTree } from "./hooks/use-draggable-tree"
 
-import { useTree, useTreeItem } from "./machines/tree.selectors"
 
 export function RenderTree() {
   // const { treeManagerRef, treeManagerContext, dataTreeManager, lastActionTreeManager } = useTreeManager()
-
-  const { treeRef, treeContext, dataTreeRef, treeChildren, treeChildrenIds } = useTree()
-  const { treeItemRef, treeItemContext } = useTreeItem()
-
 
 
   const [state, dispatch] = useReducer(treeStateReducer, null, getInitialTreeState)
@@ -96,33 +91,18 @@ export function RenderTree() {
 
   return (
     <TreeContext.Provider value={context}>
-      <Container ref={rootRef} px={24} css={{ boxShadow: "sm", py: 10 }}>
+      <Container  ref={rootRef} px={10} css={{  py: 10 }} >
         <DebuggerCardWrapper
-          title="Tree with Actor"
+          title="without Actor"
           autoScroll={false}
           args={{
-            initialApproach: {
+            withoutActor: {
               data,
               state,
               extractInstruction,
               lastStateRef,
               context,
               groupState,
-            },
-            actorsApproach: {
-              tree: {
-                treeRef,
-                treeContext,
-                dataTreeRef,
-                treeChildren,
-                treeChildrenIds,
-                // JSONtreeSnapshot,
-              },
-              treeItem: {
-                treeItemRef,
-                treeItemContext,
-                path: treeItemContext?.dataRuntime?.info?.path,
-              },
             },
           }}
         >
