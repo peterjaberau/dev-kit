@@ -5,16 +5,30 @@ export const useTree = () => {
   const { appRootContext } = useAppRoot()
   const treeRef = appRootContext?.treeRef
 
+  const treeId = treeRef?.id
   const treeState: any = useSelector(treeRef, (state) => state)
   const sendToTree = treeRef?.send
   const treeContext = treeState?.context
+  // const JSONtreeSnapshot = treeState.getSnapshot().toJSON()
 
-  const treeId = treeRef?.id
 
+  /** Data Tree **/
   const dataTree = treeContext?.data
-
   // spawned data actors
   const dataTreeRef = treeContext?.dataRef
+
+  /** children **/
+  // spawned children actors
+  const treeChildren = treeState?.children
+  const treeChildrenIds = Object.keys(treeChildren || [])
+  const getTreeItemById = (itemId: string) => {
+    if (treeChildren) {
+      return treeChildren[itemId] ?? null
+    }
+    return null
+  }
+
+
 
   return {
     treeRef,
@@ -22,9 +36,14 @@ export const useTree = () => {
     sendToTree,
     treeState,
     treeContext,
+    // JSONtreeSnapshot,
 
     dataTree,
     dataTreeRef,
+
+    treeChildren,
+    treeChildrenIds,
+    getTreeItemById,
   }
 }
 
@@ -51,6 +70,7 @@ export const useTreeItem = ({ actorRef = null } = {}) => {
   const childItemsRef = refs?.childItems || []
 
 
+
   // spawned children actors
 
   return {
@@ -68,7 +88,6 @@ export const useTreeItem = ({ actorRef = null } = {}) => {
 
     parentRef,
     childItemsRef,
-
   }
 
 }

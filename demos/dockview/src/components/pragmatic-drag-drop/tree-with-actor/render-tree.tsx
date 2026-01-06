@@ -15,12 +15,15 @@ import TreeItem from "./components/tree-item"
 import { GroupDropIndicator } from "../../pragmatic-drag-drop/drop-indicator/group"
 import { useDraggableTree } from "./hooks/use-draggable-tree"
 
-import { useTree } from "./machines/tree.selectors"
+import { useTree, useTreeItem } from "./machines/tree.selectors"
 
 export function RenderTree() {
   // const { treeManagerRef, treeManagerContext, dataTreeManager, lastActionTreeManager } = useTreeManager()
 
-  const treeSelector = useTree()
+  const { treeRef, treeContext, dataTreeRef, treeChildren, treeChildrenIds } = useTree()
+  const { treeItemRef, treeItemContext } = useTreeItem()
+
+
 
   const [state, dispatch] = useReducer(treeStateReducer, null, getInitialTreeState)
 
@@ -107,7 +110,19 @@ export function RenderTree() {
               groupState,
             },
             actorsApproach: {
-              selector: treeSelector,
+              tree: {
+                treeRef,
+                treeContext,
+                dataTreeRef,
+                treeChildren,
+                treeChildrenIds,
+                // JSONtreeSnapshot,
+              },
+              treeItem: {
+                treeItemRef,
+                treeItemContext,
+                path: treeItemContext?.dataRuntime?.info?.path,
+              },
             },
           }}
         >

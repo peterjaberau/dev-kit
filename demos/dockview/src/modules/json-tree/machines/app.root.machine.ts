@@ -28,13 +28,20 @@ export const appRootMachine = setup({
     }),
 
     spawnTree: assign(({ context, spawn, self }) => {
-      context.treeRef = spawn("treeMachine", {
+
+      const treeRef = spawn("treeMachine", {
         id: "tree",
         systemId: "tree",
         input: {
           data: context?.data,
         },
       })
+      treeRef.on("TREE_ITEM_SPAWNED", (event: any) => {
+        self.send(event)
+      })
+      context.treeRef = treeRef
+
+
     }),
   },
   actors: {
