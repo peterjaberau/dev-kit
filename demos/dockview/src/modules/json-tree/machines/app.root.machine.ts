@@ -1,7 +1,6 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { createNode } from "./node.create"
 import { machineConstants } from "../utils/constants"
-import { treeMachine } from "#tree-with-actor/machines"
 
 export const appRootMachine = setup({
   types: {
@@ -27,25 +26,8 @@ export const appRootMachine = setup({
       )
     }),
 
-    spawnTree: assign(({ context, spawn, self }) => {
-
-      const treeRef = spawn("treeMachine", {
-        id: "tree",
-        systemId: "tree",
-        input: {
-          data: context?.data,
-        },
-      })
-      treeRef.on("TREE_ITEM_SPAWNED", (event: any) => {
-        self.send(event)
-      })
-      context.treeRef = treeRef
-
-
-    }),
   },
   actors: {
-    treeMachine,
   },
   guards: {},
 }).createMachine({
@@ -88,6 +70,5 @@ export const appRootMachine = setup({
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
     enqueue("spawnRootNode")
-    enqueue("spawnTree")
   }),
 })

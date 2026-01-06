@@ -44,8 +44,6 @@
       "#drag-and-drop": ["./src/modules/drag-and-drop/"],
 
       /** experiments */
-      "#tree-with-actor/*": ["./src/components/pragmatic-drag-drop/tree-with-actor/*"],
-      "#tree-with-actor": ["./src/components/pragmatic-drag-drop/tree-with-actor/"],
 
       /** possible deletion */
 
@@ -57,8 +55,6 @@
       "#shared/*": ["./src/modules/json-tree/*"],
       "#shared": ["./src/modules/json-tree/"],
 
-      "#drag-drop/*": ["./src/components/pragmatic-drag-drop/tree/*"],
-      "#drag-drop": ["./src/components/pragmatic-drag-drop/tree/"],
 
       "#rui/*": ["./src/rui/*"],
       "#rui": ["./src/rui/"],

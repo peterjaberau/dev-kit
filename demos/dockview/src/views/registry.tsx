@@ -10,8 +10,7 @@ const registryMeta: any = {
   "json-tree-tree": dynamic(() => import("#views/components/panels/json-tree/tree"), { ssr: false }),
 
   // Drag & Drop
-  "pdnd-tree": dynamic(() => import("#views/components/panels/pdnd/tree"), { ssr: false }),
-  "tree-with-actor": dynamic(() => import("#views/components/panels/pdnd/tree-with-actor"), { ssr: false }),
+  "drag-and-drop": dynamic(() => import("#views/components/panels/json-tree/drag-and-drop"), { ssr: false }),
 
   // Json Drafts
   "json-viewer-custom": dynamic(() => import("#views/components/panels/custom/json-viewer-custom"), { ssr: false }),

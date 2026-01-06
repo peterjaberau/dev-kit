@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import invariant from "tiny-invariant"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
-import { TreeItemDragPreview } from "#components/pragmatic-drag-drop/tree/components/tree-item-drag-preview"
+import { DragPreview as TreeItemDragPreview } from "#drag-and-drop/components/dnd/drag.preview"
 import {
   draggable,
   dropTargetForElements,
@@ -17,7 +17,7 @@ import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-
 /* ----------------------------- helpers ----------------------------- */
 
 function delay(ms: number, fn: () => void) {
-  const id = window.setTimeout(fn, ms)
+  const id = window.setTimeout(fn, ms)``
   return () => window.clearTimeout(id)
 }
 

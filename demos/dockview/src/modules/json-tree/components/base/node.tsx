@@ -1,6 +1,6 @@
 "use client"
 
-import { GroupDropIndicator } from "#components/pragmatic-drag-drop/drop-indicator/group"
+import { GroupDropIndicator } from "#drag-and-drop/components/dnd/drop-indicator/group"
 // import {
 //   attachClosestEdge,
 //   type Edge,
