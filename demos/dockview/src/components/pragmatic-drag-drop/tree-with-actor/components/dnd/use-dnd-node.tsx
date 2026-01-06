@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import invariant from "tiny-invariant"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
-import { TreeItemDragPreview } from "../components/tree-item-drag-preview"
+import { DragPreview } from "."
 import {
   draggable,
   dropTargetForElements,
@@ -13,6 +13,7 @@ import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/eleme
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview"
 import { createRoot } from "react-dom/client"
 import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
+import { useTreeItem } from "#tree-with-actor/selectors"
 
 function delay({ waitMs, fn }: { waitMs: number; fn: () => void }) {
   let id: number | null = window.setTimeout(() => {
@@ -32,34 +33,38 @@ function sameInstruction(a: any, b: any) {
 }
 
 type Params = {
-  item: any
+  itemRef: any
   buttonRef: React.RefObject<HTMLButtonElement | null>
   groupRef: React.RefObject<HTMLDivElement | null>
-  dispatch: any
   uniqueContextId: symbol
   attachInstruction: any
   extractInstruction: any
+  onToggleChange?: (isOpen: boolean) => void
 }
 
-export function useDraggableTreeItem({
-  item,
+export function useDndNode({
+  itemRef, //item is the actorRef
   buttonRef,
   groupRef,
-  dispatch,
   uniqueContextId,
   attachInstruction,
   extractInstruction,
 }: Params) {
+  const {
+    viewConfig,
+    treeItemContext,
+    dataValue: item,
+    childItemsRef,
+    treeItemChildrenRef,
+    treeItemChildrenIds,
+    sendToTreeItem,
+    isOpen,
+    treeItemId,
+  } = useTreeItem({ actorRef: itemRef })
+
   const [dragState, setDragState] = useState<"idle" | "dragging">("idle")
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
   const [instruction, setInstruction] = useState<Instruction | null>(null)
-
-  const cancelExpandRef = useRef<null | (() => void)>(null)
-
-  const cancelExpand = useCallback(() => {
-    cancelExpandRef.current?.()
-    cancelExpandRef.current = null
-  }, [])
 
   useEffect(() => {
     invariant(buttonRef.current)
@@ -67,19 +72,15 @@ export function useDraggableTreeItem({
     function onChange({ self, location, source }: ElementDropTargetEventBasePayload) {
       const instr = extractInstruction(self.data)
 
-      // console.log("Tree-ITEM -----> onChange --> ", { self, data: self.data, location, source, instr })
-
-
-      if (instr?.operation === "combine" && item.children?.length && !item.isOpen && !cancelExpandRef.current) {
-        cancelExpandRef.current = delay({
+      if (instr?.operation === "combine" && item.children?.length && !isOpen) {
+        delay({
           waitMs: 500,
-          fn: () => dispatch({ type: "expand", itemId: item.id }),
+          fn: () => {
+            sendToTreeItem({ type: "toggle", open: true, itemId: item.id })
+          },
         })
       }
 
-      if (instr?.operation !== "combine") cancelExpand()
-
-      // setInstruction(instr)
       setInstruction((prev) => (sameInstruction(prev, instr) ? prev : instr))
     }
 
@@ -90,7 +91,7 @@ export function useDraggableTreeItem({
           return {
             id: item.id,
             type: "tree-item",
-            isOpenOnDragStart: item.isOpen,
+            isOpenOnDragStart: isOpen,
             uniqueContextId,
           }
         },
@@ -98,14 +99,14 @@ export function useDraggableTreeItem({
           setDragState("dragging")
 
           if (source.data.isOpenOnDragStart) {
-            dispatch({ type: "collapse", itemId: item.id })
+            sendToTreeItem({ type: "toggle", open: false, itemId: item.id })
           }
         },
         onDrop: ({ source, location }) => {
           setDragState("idle")
 
           if (source.data.isOpenOnDragStart) {
-            dispatch({ type: "expand", itemId: item.id })
+            sendToTreeItem({ type: "toggle", open: true, itemId: item.id })
           }
         },
         onGenerateDragPreview: ({ nativeSetDragImage }) => {
@@ -114,7 +115,7 @@ export function useDraggableTreeItem({
             render: ({ container }) => {
               // root.render(null)
               const root = createRoot(container)
-              root.render(<TreeItemDragPreview item={item} />)
+              root.render(<DragPreview item={item} />)
 
               return () => root.unmount()
             },
@@ -155,23 +156,22 @@ export function useDraggableTreeItem({
         onDragEnter: onChange,
         onDrag: onChange,
         onDragLeave: () => {
-          cancelExpand()
+          // sendToTreeItem({ type: "toggle", open: false })
           setInstruction(null)
         },
         onDrop: () => {
-          cancelExpand()
+          // sendToTreeItem({ type: "toggle", open: false })
           setInstruction(null)
         },
       }),
     )
-  }, [item, dispatch, uniqueContextId, attachInstruction, extractInstruction, cancelExpand])
+  }, [item, uniqueContextId, attachInstruction, extractInstruction])
 
   useEffect(() => {
     if (!groupRef.current) return
 
     function onChange({ location, self, source }: ElementDropTargetEventBasePayload) {
-      const [inner] = location.current.dropTargets.filter((dt) =>
-        dt.data.type === "group")
+      const [inner] = location.current.dropTargets.filter((dt) => dt.data.type === "group")
       setGroupState(inner?.element === self.element ? "is-innermost-over" : "idle")
     }
 
@@ -193,8 +193,6 @@ export function useDraggableTreeItem({
       onDrop: () => setGroupState("idle"),
     })
   }, [item.id, uniqueContextId])
-
-  // console.log("Tree-ITEM --> useDraggableTreeItem --> ", { dragState, groupState, instruction, item })
 
   return { dragState, groupState, instruction }
 }

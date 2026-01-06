@@ -1,7 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
-import { createTreeItem } from "./tree.item.machine"
+import { createTreeItem } from "./tree-item.machine"
 import { attachInstruction, extractInstruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
-import { DropIndicator } from "../../../pragmatic-drag-drop/drop-indicator/list-item"
+import { DropIndicator } from "../components/dnd/drop-indicator/list-item"
 
 export const treeMachine = setup({
   types: {
@@ -67,4 +67,3 @@ export const treeMachine = setup({
     enqueue("spawnDataTreeItems")
   }),
 })
-

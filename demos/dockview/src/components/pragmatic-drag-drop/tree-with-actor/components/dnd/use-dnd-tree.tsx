@@ -9,16 +9,27 @@ import {
   type ElementDropTargetEventBasePayload,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
+import { useTreeItem } from "../../selectors"
 
 type Params = {
+  itemRef: any
   rootRef: React.RefObject<HTMLDivElement | null>
   groupRef: React.RefObject<HTMLDivElement | null>
   uniqueContextId: symbol
   extractInstruction: (data: any) => Instruction | null
-  dispatch: (action: any) => void
 }
 
-export function useDraggableTree({ rootRef, groupRef, uniqueContextId, extractInstruction, dispatch }: Params) {
+export function useDndTree({
+  itemRef,
+  rootRef,
+  groupRef,
+  uniqueContextId,
+  extractInstruction,
+}: Params) {
+  const {
+    sendToTreeItem,
+  } = useTreeItem({ actorRef: itemRef })
+
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
 
   useEffect(() => {
@@ -43,12 +54,14 @@ export function useDraggableTree({ rootRef, groupRef, uniqueContextId, extractIn
 
           if (!instruction) return
 
-          dispatch({
+          sendToTreeItem({
             type: "instruction",
             instruction,
             itemId: source.data.id,
             targetId: target.data.id,
           })
+
+
         },
       }),
 
@@ -62,7 +75,7 @@ export function useDraggableTree({ rootRef, groupRef, uniqueContextId, extractIn
         onDrop: () => setGroupState("idle"),
       }),
     )
-  }, [dispatch, extractInstruction, uniqueContextId, rootRef, groupRef])
+  }, [extractInstruction, uniqueContextId, rootRef, groupRef])
 
   return { groupState }
 }

@@ -1,45 +1,50 @@
 "use client"
-
-import { Fragment, memo, useCallback, useContext, useRef } from "react"
-import { chakra, HStack, Icon, Text } from "@chakra-ui/react"
+import { Fragment, memo, useRef } from "react"
+import { chakra, HStack, Stack, Icon, Text, Button, Container, Badge } from "@chakra-ui/react"
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "../../../pragmatic-drag-drop/drop-indicator/group"
-import { DependencyContext, TreeContext } from "../providers/tree-context"
-import { useDraggableTreeItem } from "../hooks/use-draggable-tree-item"
-import { Button } from "@chakra-ui/react"
+import { useDndNode } from './dnd'
+import { useTree, useTreeItem } from "../selectors"
 const indentPerLevel = 5
 
-const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; level: number; index: number }) {
-  // const { sendToTreeManager, attachInstructionTreeManager, extractInstructionTreeManager } = useTreeItem()
-  // const treeSelector = useTreeItem()
-  // const treeItemSelector = useTreeItem()
+export const TreeItem = memo(function TreeItem({
+  itemRef,
+  level,
+  index,
+}: {
+  itemRef?: any
+  level: number
+  index: number
+}) {
+  const {
+    dataValue: item,
+    treeItemChildrenRef,
+    treeItemChildrenIds,
+    sendToTreeItem,
+    isOpen,
+  } = useTreeItem({ actorRef: itemRef })
+
+  const { uniqueContextId, dependencies } = useTree()
+  const { attachInstruction, extractInstruction, DropIndicator } = dependencies
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const groupRef = useRef<HTMLDivElement>(null)
 
-  const { dispatch, uniqueContextId } = useContext(TreeContext)
-  const { attachInstruction, extractInstruction, DropIndicator } = useContext(DependencyContext)
+  const toggleHandler = () => sendToTreeItem({ type: "toggle" })
 
-  const { dragState, groupState, instruction } = useDraggableTreeItem({
-    item,
+  const { dragState, groupState, instruction } = useDndNode({
+    itemRef,
     buttonRef,
     groupRef,
-    dispatch,
     uniqueContextId,
     attachInstruction,
     extractInstruction,
   })
 
-  const toggleOpen = useCallback(() => dispatch({ type: "toggle", itemId: item.id }), [dispatch, item.id])
-
   const aria = (() => {
     if (!item.children?.length || item.children?.length === 0) {
       return undefined
     }
-
-    // if (!item.children.length) {
-    //   return undefined
-    // }
     return {
       "aria-expanded": item.isOpen,
       "aria-controls": `tree-item-${item.id}--subtree`,
@@ -73,10 +78,9 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
               borderRadius: 3,
               cursor: "pointer",
               border: 0,
-              // border: "4px solid yellow",
             }}
             id={`tree-item-${item.id}`}
-            onClick={toggleOpen}
+            onClick={toggleHandler}
             ref={buttonRef}
             data-index={index}
             data-level={level}
@@ -129,38 +133,15 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
               }}
             />
           </chakra.button>
-
-          <Button
-            size={"2xs"}
-            variant={"outline"}
-            // onPointerDownCapture={(e) => {
-            //   e.preventDefault()
-            //   e.stopPropagation()
-            // }}
-            onClick={(e) => {
-              // e.preventDefault()
-              // e.stopPropagation()
-              console.log("inspect item - WITHOUT actor", {
-                item,
-                level,
-                index,
-                dragState,
-                groupState,
-                instruction,
-              })
-            }}
-          >
-            Inspect
-          </Button>
         </HStack>
       </chakra.div>
 
       {item.children?.length > 0 && item.isOpen && (
         <chakra.div id={aria?.["aria-controls"]} pl={indentPerLevel}>
           <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
-            {item?.children.map((child: any, i: number) => (
-              <TreeItem key={child.id} item={child} level={level + 1} index={i} />
-            ))}
+            {treeItemChildrenIds?.map((child: any, i: number) => {
+              return <TreeItem key={child} itemRef={treeItemChildrenRef[child]} level={level + 1} index={i} />
+            })}
           </GroupDropIndicator>
         </chakra.div>
       )}
@@ -168,4 +149,3 @@ const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; lev
   )
 })
 
-export default TreeItem

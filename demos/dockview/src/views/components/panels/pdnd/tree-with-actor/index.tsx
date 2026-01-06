@@ -1,11 +1,6 @@
-import TreeWithActor from "#components/pragmatic-drag-drop/tree-with-actor"
-import React from "react"
-
-import { getInitialData } from "#components/pragmatic-drag-drop/tree-with-actor/data/tree"
-
+import { TreeSimpleExample } from "#components/pragmatic-drag-drop/tree-with-actor/examples/tree-simple.example"
 
 const Index = () => {
-  return <TreeWithActor  data={getInitialData()} />
+  return <TreeSimpleExample />
 }
 export default Index
-
