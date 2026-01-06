@@ -1,8 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { createNode } from "./node.create"
 import { machineConstants } from "../utils/constants"
-import { treeManagerMachine } from "#tree-with-actor/machines/tree-manager.machine"
-import { createTreeItem } from "#tree-with-actor/machines/tree-item.create"
+import { treeMachine } from "#tree-with-actor/machines/tree.machines"
 
 export const appRootMachine = setup({
   types: {
@@ -28,27 +27,10 @@ export const appRootMachine = setup({
       )
     }),
 
-    spawnTreeActor: assign(({ context, spawn, self }) => {
-      context.treeActorRef = spawn(
-        createTreeItem({
-          refs: {
-            // parent: self,
-          },
-          dataConfig: {
-            name: '_TREE_ACTOR_ROOT_',
-            value: context?.data,
-          },
-          viewConfig: {
-            isOpen: true,
-          },
-        }),
-      )
-    }),
-
-    spawnTreeManager: assign(({ context, spawn, self }) => {
-      context.treeManagerRef = spawn("treeManagerMachine", {
-        id: "tree-manager",
-        systemId: "tree-manager",
+    spawnTree: assign(({ context, spawn, self }) => {
+      context.treeRef = spawn("treeMachine", {
+        id: "tree",
+        systemId: "tree",
         input: {
           data: context?.data,
         },
@@ -56,12 +38,14 @@ export const appRootMachine = setup({
     }),
   },
   actors: {
-    treeManagerMachine,
+    treeMachine,
   },
   guards: {},
 }).createMachine({
   context: ({ input }: any) => {
     return {
+      treeRef: null,
+
       resources: {
         tasks: null,
         projects: null,
@@ -97,7 +81,6 @@ export const appRootMachine = setup({
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
     enqueue("spawnRootNode")
-    enqueue("spawnTreeManager")
-    enqueue("spawnTreeActor")
+    enqueue("spawnTree")
   }),
 })

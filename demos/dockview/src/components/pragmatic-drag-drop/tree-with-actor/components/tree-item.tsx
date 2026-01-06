@@ -6,12 +6,15 @@ import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "../../../pragmatic-drag-drop/drop-indicator/group"
 import { DependencyContext, TreeContext } from "../providers/tree-context"
 import { useDraggableTreeItem } from "../hooks/use-draggable-tree-item"
-import { useTreeManager } from '../machines/tree-manager.selector'
+import { useTreeItem } from '../machines/tree.selectors'
 const indentPerLevel = 5
 
 const TreeItem = memo(function TreeItem({ item, level, index }: { item: any; level: number; index: number }) {
 
-  const { sendToTreeManager, attachInstructionTreeManager, extractInstructionTreeManager } = useTreeManager()
+  // const { sendToTreeManager, attachInstructionTreeManager, extractInstructionTreeManager } = useTreeItem()
+  // const treeSelector = useTreeItem()
+  // const treeItemSelector = useTreeItem()
+
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const groupRef = useRef<HTMLDivElement>(null)
