@@ -1,12 +1,12 @@
 import { AppProvider, ThemeProvider } from "./providers"
-import { Tree } from "./components"
 
 const App = (props: any) => {
+  const {children, ...rest} = props
   return (
     <>
-      <AppProvider {...props}>
+      <AppProvider {...rest}>
         <ThemeProvider>
-          <Tree />
+          {children}
         </ThemeProvider>
       </AppProvider>
     </>

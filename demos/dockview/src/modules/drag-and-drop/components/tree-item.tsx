@@ -1,6 +1,6 @@
 "use client"
 import { Fragment, memo, useRef } from "react"
-import { chakra, HStack, Stack, Icon, Text, Button, Container, Badge } from "@chakra-ui/react"
+import { chakra, HStack, Icon } from "@chakra-ui/react"
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "./dnd/drop-indicator/group"
 import { useDndNode } from './dnd'
@@ -24,21 +24,18 @@ export const TreeItem = memo(function TreeItem({
     isOpen,
   } = useTreeItem({ actorRef: itemRef })
 
-  const { uniqueContextId, dependencies } = useTree()
-  const { attachInstruction, extractInstruction, DropIndicator } = dependencies
+  const { dependencies } = useTree()
+  const { DropIndicator } = dependencies
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const groupRef = useRef<HTMLDivElement>(null)
 
-  const toggleHandler = () => sendToTreeItem({ type: "toggle" })
+  const toggleHandler = () => sendToTreeItem({ type: "toggle", open: !isOpen })
 
   const { dragState, groupState, instruction } = useDndNode({
     itemRef,
     buttonRef,
     groupRef,
-    uniqueContextId,
-    attachInstruction,
-    extractInstruction,
   })
 
   const aria = (() => {

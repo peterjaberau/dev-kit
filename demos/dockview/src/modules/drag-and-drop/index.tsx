@@ -1,8 +1,8 @@
 "use client"
 import App from "./app"
 
-const Index = ({ data }: any) => {
-  return <App data={data} />
+const Index = ({ children, data }: any) => {
+  return <App data={data}>{children}</App>
 }
 
 export default Index

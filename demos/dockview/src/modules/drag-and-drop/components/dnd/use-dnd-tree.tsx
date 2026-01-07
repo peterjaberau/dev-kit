@@ -8,27 +8,19 @@ import {
   monitorForElements,
   type ElementDropTargetEventBasePayload,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
-import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
-import { useTreeItem } from "../../selectors"
+import { useTree, useTreeItem } from "../../selectors"
 
 type Params = {
   itemRef: any
   rootRef: React.RefObject<HTMLDivElement | null>
   groupRef: React.RefObject<HTMLDivElement | null>
-  uniqueContextId: symbol
-  extractInstruction: (data: any) => Instruction | null
 }
 
-export function useDndTree({
-  itemRef,
-  rootRef,
-  groupRef,
-  uniqueContextId,
-  extractInstruction,
-}: Params) {
-  const {
-    sendToTreeItem,
-  } = useTreeItem({ actorRef: itemRef })
+export function useDndTree({ itemRef, rootRef, groupRef }: Params) {
+  const { uniqueContextId, dependencies } = useTree()
+  const { extractInstruction } = dependencies
+
+  const { sendToTreeItem } = useTreeItem({ actorRef: itemRef })
 
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
 
@@ -60,8 +52,6 @@ export function useDndTree({
             itemId: source.data.id,
             targetId: target.data.id,
           })
-
-
         },
       }),
 

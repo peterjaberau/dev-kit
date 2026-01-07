@@ -13,7 +13,7 @@ import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/eleme
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview"
 import { createRoot } from "react-dom/client"
 import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
-import { useTreeItem } from "../../selectors"
+import { useTree, useTreeItem } from "../../selectors"
 
 function delay({ waitMs, fn }: { waitMs: number; fn: () => void }) {
   let id: number | null = window.setTimeout(() => {
@@ -36,20 +36,17 @@ type Params = {
   itemRef: any
   buttonRef: React.RefObject<HTMLButtonElement | null>
   groupRef: React.RefObject<HTMLDivElement | null>
-  uniqueContextId: symbol
-  attachInstruction: any
-  extractInstruction: any
-  onToggleChange?: (isOpen: boolean) => void
 }
 
 export function useDndNode({
   itemRef, //item is the actorRef
   buttonRef,
   groupRef,
-  uniqueContextId,
-  attachInstruction,
-  extractInstruction,
 }: Params) {
+  const { uniqueContextId, dependencies } = useTree()
+  const { attachInstruction, extractInstruction } = dependencies
+
+
   const {
     viewConfig,
     treeItemContext,
