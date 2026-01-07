@@ -101,4 +101,18 @@ export const dataTree = [
       },
     ],
   },
+  {
+    id: "5",
+    isOpen: true,
+    children: [
+      {
+        id: "5.1",
+        isOpen: true,
+      },
+      {
+        id: "5.2",
+        isOpen: true,
+      },
+    ],
+  },
 ]

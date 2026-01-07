@@ -46,7 +46,6 @@ export function useDndNode({
   const { uniqueContextId, dependencies } = useTree()
   const { attachInstruction, extractInstruction } = dependencies
 
-
   const {
     viewConfig,
     treeItemContext,
@@ -123,23 +122,84 @@ export function useDndNode({
       dropTargetForElements({
         element: buttonRef.current,
         getData: ({ input, element, source }) => {
+          const PRIORITY: any = {
+            "not-available": 3,
+            blocked: 2,
+            available: 1,
+          }
+
+          const rules: any[] = [
+            {
+              when: (item: any) => item.isDraft,
+              operations: { combine: "blocked" },
+            },
+            {
+              // leaf node
+              when: (item: any) => !item?.children,
+              operations: {
+                "reorder-before": "available",
+                "combine": "not-available",
+                "reorder-after": "available",
+              },
+            },
+            {
+              // has children and is expanded, dont allow reorder-after
+              when: (item: any) => item.isOpen && item.children?.length,
+              operations: {
+                "reorder-before": "available",
+                combine: "available",
+                "reorder-after": "not-available",
+              },
+            },
+            {
+              // fallback
+              when: () => true,
+              operations: {
+                combine: "available",
+                "reorder-before": "available",
+              },
+            },
+          ]
+
+          const resolveOperations = (item: any) => {
+            const collected: any = {}
+
+            for (const { when, operations } of rules) {
+              if (typeof when === "function" && !when(item)) continue
+
+              for (const [op, value] of Object.entries(operations)) {
+                const prev = collected[op]
+                if (!prev || PRIORITY[value as any] > PRIORITY[prev]) {
+                  collected[op] = value
+                }
+              }
+            }
+
+            return collected
+          }
+
           return attachInstruction(
             { id: item.id },
             {
               input,
               element,
-              operations: item.isDraft
-                ? { combine: "blocked" }
-                : {
-                    combine: "available",
-                    "reorder-before": "available",
-                    // "reorder-after": item.isOpen && item?.children?.length > 0 ? "available" : "not-available",
-
-                    // "reorder-after": item.isOpen && item.children.length ? "not-available" : "available",
-                    // "reorder-after": (item?.isOpen && item?.children?.length && item?.children?.length > 0 ) ? "not-available" : "available",
-                  },
+              operations: resolveOperations(item),
             },
           )
+
+          // return attachInstruction(
+          //   { id: item.id },
+          //   {
+          //     input,
+          //     element,
+          //     operations: item.isDraft
+          //       ? { "combine": "blocked" }
+          //       : {
+          //           "combine": "available",
+          //           "reorder-before": "available",
+          //         },
+          //   },
+          // )
         },
         canDrop: ({ source, input, element }) => {
           return (

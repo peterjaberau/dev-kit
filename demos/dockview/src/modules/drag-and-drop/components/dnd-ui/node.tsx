@@ -31,16 +31,6 @@ export const Node = memo(
     const nodeRef = useRef<HTMLDivElement>(null)
     const groupRef = useRef<HTMLDivElement>(null)
 
-    const toggleHandler = () => {
-      sendToTreeItem({ type: "toggle", open: !isOpen })
-      console.log("item--->", {
-        item: item,
-        length: item?.children?.length,
-        children: item?.children,
-        hasChildren: !!item?.children,
-      })
-    }
-
     const { dragState, groupState, instruction } = useDndNode({
       itemRef,
       buttonRef: nodeRef,
@@ -81,6 +71,7 @@ export const Node = memo(
                 {item.children.length > 0 && <BranchTriggerIndicator />}
                 <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
+                <NodeTag>Branch</NodeTag>
               </BranchTrigger>
               {instruction ? <DropIndicator instruction={instruction} /> : null}
             </Branch>
@@ -93,8 +84,9 @@ export const Node = memo(
               <ItemContent data-draggable={dragState}>
                 <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
-                {instruction ? <DropIndicator instruction={instruction} /> : null}
+                <NodeTag>Item</NodeTag>
               </ItemContent>
+              {instruction ? <DropIndicator instruction={instruction} /> : null}
             </Item>
           )}
         </chakra.div>

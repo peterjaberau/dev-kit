@@ -206,7 +206,8 @@ export const createChildTreeItems = ({ context, spawn }: any) => {
 
     const childObject = {
       ...omit(child, ["children"]),
-      children: child?.children ?? [],
+      // children: child?.children ?? [],
+      children: child?.children ?? undefined,
     }
     const currentDataPath = `${parentDataPath}['children'][${index}]`
 
