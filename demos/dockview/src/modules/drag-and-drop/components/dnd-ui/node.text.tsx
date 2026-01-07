@@ -1,0 +1,19 @@
+import React, { forwardRef } from "react"
+import { Text } from "@chakra-ui/react"
+
+export const NodeText = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
+  return (
+    <Text
+      data-scope="node"
+      data-part="text"
+      css={{
+        overflow: "hidden",
+        textAlign: "left",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      }}
+      {...props}
+      ref={ref}
+    />
+  )
+})
