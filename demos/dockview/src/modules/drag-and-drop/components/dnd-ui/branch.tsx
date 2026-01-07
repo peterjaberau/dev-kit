@@ -12,7 +12,7 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
   })
 
   return (
-    <Stack data-scope="branch" data-part="branch" ref={ref} {...rest} >
+    <Stack data-scope="branch" data-part="branch" css={{ gap: 0 }} ref={ref} {...rest}>
       <Collapsible.RootProvider value={collapsible}>{children}</Collapsible.RootProvider>
     </Stack>
   )

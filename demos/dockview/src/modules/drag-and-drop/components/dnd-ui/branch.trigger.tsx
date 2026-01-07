@@ -37,6 +37,7 @@ export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: a
         alignItems: "center",
         justifyContent: "flex-start",
         p: 1,
+        gap: 0
       }}
       {...props}
       ref={ref}

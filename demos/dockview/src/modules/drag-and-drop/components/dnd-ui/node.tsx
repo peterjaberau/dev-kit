@@ -11,8 +11,10 @@ import { NodeText } from "./node.text"
 import { NodeTag } from "./node.tag"
 import { Item } from "./item"
 import { ItemContent } from "./item.content"
+import { NodeIndent } from "./node.indent"
 
-const indentPerLevel = 12
+const indentPerLevel = 2
+const toggleWidth = 4
 
 
 export const Node = memo(
@@ -73,6 +75,8 @@ export const Node = memo(
             <Branch itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
               <BranchTrigger data-draggable={dragState} itemRef={itemRef}>
                 {item.children.length > 0 && <BranchTriggerIndicator />}
+                <NodeIndent data-children={String(item.children.length)} data-level={level} />
+
                 <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
                 <NodeTag>Branch</NodeTag>
@@ -86,6 +90,7 @@ export const Node = memo(
           {!item?.children && (
             <Item data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
               <ItemContent data-draggable={dragState}>
+                <NodeIndent data-level={level} />
                 <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
                 <NodeTag>Item</NodeTag>
@@ -98,7 +103,7 @@ export const Node = memo(
         {item.children?.length > 0 && item.isOpen && (
           <chakra.div
             id={aria?.["aria-controls"]}
-            pl={indentPerLevel}
+            // pl={indentPerLevel}
             data-scope="drag-drop"
             data-part="branch-content"
           >

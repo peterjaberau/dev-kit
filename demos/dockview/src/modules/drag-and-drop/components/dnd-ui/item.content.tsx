@@ -14,6 +14,7 @@ export const ItemContent = forwardRef<HTMLDivElement, any>((props: any, ref: any
         alignItems: "center",
         justifyContent: "flex-start",
         p: 1,
+        gap: 0,
       }}
       {...props}
       ref={ref}

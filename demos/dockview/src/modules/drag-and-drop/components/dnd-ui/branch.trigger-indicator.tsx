@@ -7,7 +7,7 @@ export const BranchTriggerIndicator = forwardRef<HTMLDivElement, any>((props: an
     <Collapsible.Indicator
       data-scope="branch"
       data-part="indicator"
-      transition="transform 0.2s" _open={{ transform: "rotate(90deg)" }} {...props} ref={ref}>
+      transition="transform 0.2s" _open={{ transform: "rotate(90deg)" }} css={{ backgroundColor: 'bg.muted'}} {...props} ref={ref}>
       <LuChevronRight />
     </Collapsible.Indicator>
   )
