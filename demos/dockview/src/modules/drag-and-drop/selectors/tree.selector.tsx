@@ -7,7 +7,6 @@ import { useMemo } from "react"
 export const useTree = () => {
   const { appRef } = useApp()
   const treeRef = getSpawnedActor(CONSTANTS.TREE, appRef)
-  console.log('----treeRef', treeRef)
 
   const treeId = treeRef?.id
   const treeState: any = useSelector(treeRef, (state) => state)

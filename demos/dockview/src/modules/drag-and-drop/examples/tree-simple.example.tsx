@@ -10,9 +10,7 @@ export const TreeSimpleExample = () => {
       <GridItem colSpan={2}>
         <DraggableTree data={dataTree}>
           <DragDrop.Root>
-            <DragDrop.Tree>
-              <DragDrop.Node />
-            </DragDrop.Tree>
+            <DragDrop.Tree />
           </DragDrop.Root>
         </DraggableTree>
       </GridItem>

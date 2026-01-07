@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useRef } from "react"
 import { chakra } from "@chakra-ui/react"
 import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
 import { GroupDropIndicator } from "../dnd/drop-indicator/group"
-import { TreeItem, useDndTree } from ".."
+import { DragDrop, useDndTree } from ".."
 import { useTreeItem } from "../../selectors"
 import { mergeRefs } from "@chakra-ui/react"
 
@@ -26,10 +26,10 @@ export const Tree = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
 
 
   return (
-    <chakra.div {...props} ref={mergedRef}>
+    <chakra.div data-scope="drag-drop" data-part="tree" {...props} ref={mergedRef}>
       <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
         {treeItemChildrenIds.map((item: any, index: any) => {
-          return <TreeItem key={item} itemRef={treeItemChildrenRef[item]} level={0} index={index} />
+          return <DragDrop.Node key={item} itemRef={treeItemChildrenRef[item]} level={0} index={index} />
         })}
       </GroupDropIndicator>
     </chakra.div>

@@ -1,10 +1,10 @@
-import { forwardRef, memo, useRef } from "react"
+import { forwardRef, Fragment, memo, useRef } from "react"
 import { useTree, useTreeItem } from "../../selectors"
 import { useDndNode } from "../dnd/use-dnd-node"
-import { chakra, HStack, Icon } from "@chakra-ui/react"
+import { chakra, HStack, Box, Icon, Text, Badge } from "@chakra-ui/react"
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "../dnd/drop-indicator/group"
-const indentPerLevel = 5
+const indentPerLevel = 9
 
 export const Node = memo(
   forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
@@ -21,14 +21,22 @@ export const Node = memo(
     const { dependencies } = useTree()
     const { DropIndicator } = dependencies
 
-    const buttonRef = useRef<HTMLButtonElement>(null)
+    const nodeRef = useRef<HTMLDivElement>(null)
     const groupRef = useRef<HTMLDivElement>(null)
 
-    const toggleHandler = () => sendToTreeItem({ type: "toggle", open: !isOpen })
+    const toggleHandler = () => {
+      sendToTreeItem({ type: "toggle", open: !isOpen })
+      console.log("item--->", {
+        item: item,
+        length: item?.children?.length,
+        children: item?.children,
+        hasChildren: !!item?.children,
+      })
+    }
 
     const { dragState, groupState, instruction } = useDndNode({
       itemRef,
-      buttonRef,
+      buttonRef: nodeRef,
       groupRef,
     })
 
@@ -43,92 +51,82 @@ export const Node = memo(
     })()
 
     return (
-      <div ref={ref}>
+      <Fragment>
         <chakra.div
-          position="relative"
+          data-scope="drag-drop"
+          data-part="node"
           css={{
+            position: "relative",
+            flexGrow: 1,
             ...(dragState === "idle" && {
-              borderRadius: 3,
-              cursor: "pointer",
               _hover: {
-                backgroundColor: "rgba(9, 30, 66, 0.06)",
+                backgroundColor: "bg.subtle",
               },
             }),
           }}
+          ref={ref}
         >
-          <HStack>
-            <chakra.button
-              {...aria}
+          <chakra.div
+            data-scope="drag-drop"
+            data-part={!!item?.children ? "branch" : "item"}
+            data-index={index}
+            data-level={level}
+            id={`tree-item-${item.id}`}
+            {...aria}
+            css={{
+              cursor: "pointer",
+              p: 1,
+            }}
+            onClick={!!item?.children ? toggleHandler : undefined}
+            ref={nodeRef}
+          >
+            <HStack
+              data-scope="drag-drop"
+              data-part={!!item?.children ? "branch-trigger" : "item-content"}
               css={{
-                color: "currentColor",
-                width: "100%",
-                position: "relative",
-                background: "transparent",
-                margin: 0,
-                padding: 0,
-                borderRadius: 3,
-                cursor: "pointer",
-                border: 0,
+                alignItems: "center",
+                justifyContent: "flex-start",
+                ...(dragState === "dragging" && {
+                  opacity: 0.4,
+                }),
               }}
-              id={`tree-item-${item.id}`}
-              onClick={toggleHandler}
-              ref={buttonRef}
-              data-index={index}
-              data-level={level}
             >
-              <chakra.span
+              {item.children?.length > 0 && (
+                <Icon data-scope="drag-drop" data-part="trigger-indicator">
+                  {item.isOpen ? <LuChevronDown /> : <LuChevronRight />}
+                </Icon>
+              )}
+
+              <Text
+                data-scope="drag-drop"
+                data-part="node-title"
                 css={{
-                  padding: 1,
-                  paddingRight: "40px",
-                  alignItems: "center",
-                  display: "flex",
-                  flexDirection: "row",
-                  backgroundColor: "transparent",
-                  borderRadius: 3,
-                  ...(dragState === "dragging" && {
-                    opacity: 0.4,
-                  }),
+                  flexGrow: 1,
+                  overflow: "hidden",
+                  textAlign: "left",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                 }}
               >
-                {item.children?.length > 0 && <Icon>{item.isOpen ? <LuChevronDown /> : <LuChevronRight />}</Icon>}
-
-                <chakra.span
-                  css={{
-                    flexGrow: 1,
-                    overflow: "hidden",
-                    textAlign: "left",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Item {item.id}
-                </chakra.span>
-
-                <chakra.small
-                  css={{
-                    margin: 0,
-                    color: "fg.muted",
-                  }}
-                >
-                  {item.isDraft ? <code>Draft</code> : null}
-                </chakra.small>
-              </chakra.span>
-              {instruction ? <DropIndicator instruction={instruction} /> : null}
-
-              <chakra.span
-                css={{
-                  // border: "4px solid blue",
-                  position: "absolute",
-                  inset: 0,
-                  left: `calc(-1 * ${level} * ${indentPerLevel}`,
-                }}
-              />
-            </chakra.button>
-          </HStack>
+                Item {item.id}
+              </Text>
+              {item.isDraft && (
+                <Badge data-scope="drag-drop" data-part="tag-indicator" variant={"outline"}>
+                  Draft
+                </Badge>
+              )}
+            </HStack>
+            {instruction ? <DropIndicator instruction={instruction} /> : null}
+          </chakra.div>
         </chakra.div>
 
         {item.children?.length > 0 && item.isOpen && (
-          <chakra.div id={aria?.["aria-controls"]} pl={indentPerLevel}>
+          <chakra.div
+            id={aria?.["aria-controls"]}
+            pl={indentPerLevel}
+            data-scope="drag-drop"
+            data-part="branch-content"
+          >
             <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
               {treeItemChildrenIds?.map((child: any, i: number) => {
                 return <Node key={child} itemRef={treeItemChildrenRef[child]} level={level + 1} index={i} />
@@ -136,7 +134,7 @@ export const Node = memo(
             </GroupDropIndicator>
           </chakra.div>
         )}
-      </div>
+      </Fragment>
     )
   }),
 )
