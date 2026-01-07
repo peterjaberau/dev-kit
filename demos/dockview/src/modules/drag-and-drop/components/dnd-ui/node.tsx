@@ -66,58 +66,112 @@ export const Node = memo(
           }}
           ref={ref}
         >
-          <chakra.div
-            data-scope="drag-drop"
-            data-part={!!item?.children ? "branch" : "item"}
-            data-index={index}
-            data-level={level}
-            id={`tree-item-${item.id}`}
-            {...aria}
-            css={{
-              cursor: "pointer",
-              p: 1,
-            }}
-            onClick={!!item?.children ? toggleHandler : undefined}
-            ref={nodeRef}
-          >
-            <HStack
-              data-scope="drag-drop"
-              data-part={!!item?.children ? "branch-trigger" : "item-content"}
-              css={{
-                alignItems: "center",
-                justifyContent: "flex-start",
-                ...(dragState === "dragging" && {
-                  opacity: 0.4,
-                }),
-              }}
-            >
-              {item.children?.length > 0 && (
-                <Icon data-scope="drag-drop" data-part="trigger-indicator">
-                  {item.isOpen ? <LuChevronDown /> : <LuChevronRight />}
-                </Icon>
-              )}
+          {/* BRANCH */}
 
-              <Text
+          {!!item?.children && (
+            <chakra.div
+              data-scope="drag-drop"
+              data-part={!!item?.children ? "branch" : "item"}
+              data-index={index}
+              data-level={level}
+              id={`tree-item-${item.id}`}
+              {...aria}
+              css={{
+                cursor: "pointer",
+                p: 1,
+              }}
+              onClick={!!item?.children ? toggleHandler : undefined}
+              ref={nodeRef}
+            >
+              <HStack
                 data-scope="drag-drop"
-                data-part="node-title"
+                data-part={!!item?.children ? "branch-trigger" : "item-content"}
                 css={{
-                  flexGrow: 1,
-                  overflow: "hidden",
-                  textAlign: "left",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  ...(dragState === "dragging" && {
+                    opacity: 0.4,
+                  }),
                 }}
               >
-                Item {item.id}
-              </Text>
-              {item.isDraft && (
-                <Badge data-scope="drag-drop" data-part="tag-indicator" variant={"outline"}>
-                  Draft
-                </Badge>
-              )}
-            </HStack>
-            {instruction ? <DropIndicator instruction={instruction} /> : null}
-          </chakra.div>
+                {item.children?.length > 0 && (
+                  <Icon data-scope="drag-drop" data-part="trigger-indicator">
+                    {item.isOpen ? <LuChevronDown /> : <LuChevronRight />}
+                  </Icon>
+                )}
+
+                <Text
+                  data-scope="drag-drop"
+                  data-part="node-title"
+                  css={{
+                    flexGrow: 1,
+                    overflow: "hidden",
+                    textAlign: "left",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Item {item.id}
+                </Text>
+                {item.isDraft && (
+                  <Badge data-scope="drag-drop" data-part="tag-indicator" variant={"outline"}>
+                    Draft
+                  </Badge>
+                )}
+              </HStack>
+              {instruction ? <DropIndicator instruction={instruction} /> : null}
+            </chakra.div>
+          )}
+
+          {/* ITEM (LEAF) */}
+
+          {!item?.children && (
+            <chakra.div
+              data-scope="drag-drop"
+              data-part={"item"}
+              data-index={index}
+              data-level={level}
+              id={`tree-item-${item.id}`}
+              {...aria}
+              css={{
+                cursor: "pointer",
+                p: 1,
+              }}
+              ref={nodeRef}
+            >
+              <HStack
+                data-scope="drag-drop"
+                data-part={"item-content"}
+                css={{
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  ...(dragState === "dragging" && {
+                    opacity: 0.4,
+                  }),
+                }}
+              >
+                <Text
+                  data-scope="drag-drop"
+                  data-part="node-title"
+                  css={{
+                    flexGrow: 1,
+                    overflow: "hidden",
+                    textAlign: "left",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Item {item.id}
+                </Text>
+                {item.isDraft && (
+                  <Badge data-scope="drag-drop" data-part="tag-indicator" variant={"outline"}>
+                    Draft
+                  </Badge>
+                )}
+              </HStack>
+              {instruction ? <DropIndicator instruction={instruction} /> : null}
+            </chakra.div>
+          )}
         </chakra.div>
 
         {item.children?.length > 0 && item.isOpen && (
