@@ -2,25 +2,25 @@
 import DraggableTree from ".."
 import { DragDrop, Tree } from "../components"
 import { dataTree } from "./data"
-import { SimpleGrid, GridItem } from "@chakra-ui/react"
+import { SimpleGrid, GridItem, Container } from "@chakra-ui/react"
 
 export const TreeSimpleExample = () => {
   return (
-    <SimpleGrid columns={3} gap={6}>
-      <GridItem colSpan={2}>
-        <DraggableTree data={dataTree}>
-          <DragDrop.Root>
-            <DragDrop.Tree />
-          </DragDrop.Root>
-        </DraggableTree>
-      </GridItem>
-      <GridItem>
-        <DraggableTree data={dataTree}>
-          <DragDrop.Root>
-            <Tree />
-          </DragDrop.Root>
-        </DraggableTree>
-      </GridItem>
-    </SimpleGrid>
+    <Container width={"full"} backgroundColor={"bg.subtle"} boxShadow={"sm"} p={4} borderRadius={"md"}>
+      <DraggableTree data={dataTree}>
+        <DragDrop.Root
+          css={{
+            backgroundColor: "bg.panel",
+            width: "320px",
+            border: "1px solid",
+            borderColor: "border",
+            borderRadius: 'sm',
+            padding: 3
+          }}
+        >
+          <DragDrop.Tree />
+        </DragDrop.Root>
+      </DraggableTree>
+    </Container>
   )
 }

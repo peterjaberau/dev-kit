@@ -4,7 +4,6 @@ import { useDndNode } from "../dnd/use-dnd-node"
 import { chakra, HStack, Box, Icon, Text, Badge } from "@chakra-ui/react"
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "../dnd/drop-indicator/group"
-const indentPerLevel = 9
 import { Branch } from "./branch"
 import { BranchTrigger } from "./branch.trigger"
 import { BranchTriggerIndicator } from "./branch.trigger-indicator"
@@ -12,6 +11,9 @@ import { NodeText } from "./node.text"
 import { NodeTag } from "./node.tag"
 import { Item } from "./item"
 import { ItemContent } from "./item.content"
+
+const indentPerLevel = 12
+
 
 export const Node = memo(
   forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
@@ -54,10 +56,12 @@ export const Node = memo(
           data-part="node"
           css={{
             position: "relative",
+            borderRadius: "sm",
+            paddingX: 1,
             flexGrow: 1,
             ...(dragState === "idle" && {
               _hover: {
-                backgroundColor: "bg.subtle",
+                backgroundColor: "bg.muted",
               },
             }),
           }}

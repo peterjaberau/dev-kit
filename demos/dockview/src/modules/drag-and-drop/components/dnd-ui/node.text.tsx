@@ -6,6 +6,9 @@ export const NodeText = forwardRef<HTMLDivElement, any>((props: any, ref: any) =
     <Text
       data-scope="node"
       data-part="text"
+      fontWeight={"medium"}
+      textAlign={"start"}
+      fontSize={'15px'}
       css={{
         overflow: "hidden",
         textAlign: "left",

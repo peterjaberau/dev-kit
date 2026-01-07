@@ -30,6 +30,8 @@ export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: a
         '&[data-draggable="dragging"]': {
           opacity: 0.4,
         },
+        height: '2rem',
+        padding: '4px',
         w: "full",
         cursor: "pointer",
         alignItems: "center",
