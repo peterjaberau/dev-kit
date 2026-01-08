@@ -6,7 +6,7 @@ import {
   splitRenderStrategyProps,
 } from './helpers/utils/render-strategy'
 import { useTreeView } from './hooks/use-tree-view'
-import { TreeViewProvider } from './hooks/use-tree-view-context'
+import { TreeViewProvider } from "./context"
 import { chakra } from '@chakra-ui/react'
 
 const TreeViewImpl = (props: any, ref: React.Ref<HTMLDivElement>) => {

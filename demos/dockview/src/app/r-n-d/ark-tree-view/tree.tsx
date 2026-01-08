@@ -1,6 +1,6 @@
 import { mergeProps } from "@zag-js/react"
 import { forwardRef } from "react"
-import { useTreeViewContext } from "./hooks/use-tree-view-context"
+import { useTreeViewContext } from "./context"
 import { chakra } from "@chakra-ui/react"
 
 export const Tree = forwardRef<HTMLDivElement, any>((props, ref) => {
