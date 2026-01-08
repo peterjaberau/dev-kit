@@ -11,28 +11,20 @@ const ControlTriggerProvider = forwardRef<HTMLDivElement, any>((props: any, ref:
     onOpenChange: (e) => {},
   })
 
-  return <Collapsible.RootProvider value={collapsible} ref={ref}>{children}</Collapsible.RootProvider>
+  return (
+    <Collapsible.RootProvider value={collapsible} ref={ref}>
+      {children}
+    </Collapsible.RootProvider>
+  )
 })
 
 const ControlTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { itemRef, children, ...rest } = props
+  const { itemRef, css, children, ...rest } = props
   const { sendToTreeItem, isOpen } = useTreeItem({ actorRef: itemRef })
   const handleClick = () => {
     sendToTreeItem({ type: "toggle", open: !isOpen })
   }
 
-  return (
-    <chakra.div
-      ref={ref}
-      onClick={handleClick}
-      {...rest}
-      // display="contents" // keeps grid children direct
-    />
-  )
-})
-
-const ControlWrapper = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { css, ...rest } = props
   return (
     <Grid
       data-scope="control"
@@ -47,12 +39,34 @@ const ControlWrapper = forwardRef<HTMLDivElement, any>((props: any, ref: any) =>
       // unstyled
       ref={ref}
       {...rest}
-    />
+      onClick={handleClick}
+    >
+      {children}
+    </Grid>
   )
 })
 
 export const Control = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const dataChildren = props["data-children"]
+  const { itemRef, children, css, ...rest } = props
+  const { isOpen } = useTreeItem({ actorRef: itemRef })
+
+  const collapsible = useCollapsible({
+    open: isOpen,
+    onOpenChange: (e) => {},
+  })
+
+  return (
+    <Collapsible.RootProvider value={collapsible}>
+      {/*{children}*/}
+      <ControlTrigger css={{...css}} ref={ref} itemRef={itemRef} {...rest}>
+        {children}
+      </ControlTrigger>
+    </Collapsible.RootProvider>
+  )
+})
+/*
+
+const dataChildren = props["data-children"]
 
   if (!dataChildren) {
     return <ControlWrapper {...props} ref={ref} />
@@ -73,4 +87,5 @@ export const Control = forwardRef<HTMLDivElement, any>((props: any, ref: any) =>
       </ControlTriggerProvider>
     </ControlWrapper>
   )
-})
+
+ */

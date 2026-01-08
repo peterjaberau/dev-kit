@@ -78,6 +78,7 @@ export const Node = memo(
             id={`tree-item-${item.id}`}
             ref={nodeRef}
           >
+
             <ControlSpacer />
             <ControlToggleIndicator />
             <ControlContent>
