@@ -1,18 +1,18 @@
+"use client"
 import { forwardRef, Fragment, memo, useRef } from "react"
 import { useTree, useTreeItem } from "../../selectors"
 import { useDndNode } from "../dnd/use-dnd-node"
 import { chakra, HStack, Box, Icon, Text, Badge } from "@chakra-ui/react"
-import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "../dnd/drop-indicator/group"
-import { Branch } from "./branch/branch"
-import { BranchTrigger } from "./branch/branch.trigger"
-import { BranchTriggerIndicator } from "./branch/branch.trigger-indicator"
 import { NodeText } from "./node.text"
 import { NodeTag } from "./node.tag"
-import { Item } from "./branch/item"
-import { ItemContent } from "./branch/item.content"
+import { Control } from "./control"
+import { ControlSpacer } from "./control.spacer"
+import { ControlToggleIndicator } from "./control.toggle-indicator"
+import { ControlContent } from "./control.content"
 
-const indentPerLevel = 12
+const indentPerLevel = 5
+const toggleWidth = 4
 
 export const Node = memo(
   forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
@@ -25,6 +25,8 @@ export const Node = memo(
       sendToTreeItem,
       isOpen,
     } = useTreeItem({ actorRef: itemRef })
+
+    const hasChildren = !!item?.children
 
     const { dependencies } = useTree()
     const { DropIndicator } = dependencies
@@ -51,13 +53,13 @@ export const Node = memo(
     return (
       <Fragment>
         <chakra.div
-          data-scope="drag-drop"
+          data-scope="node"
           data-part="node"
           css={{
             position: "relative",
             borderRadius: "sm",
-            paddingX: 1,
             flexGrow: 1,
+            // ml: !!item?.children && item.children.length > 0 && -2,
             ...(dragState === "idle" && {
               _hover: {
                 backgroundColor: "bg.muted",
@@ -67,39 +69,34 @@ export const Node = memo(
           ref={ref}
         >
           {/* BRANCH */}
-
-          {!!item?.children && (
-            <Branch itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
-              <BranchTrigger data-draggable={dragState} itemRef={itemRef}>
-                {item.children.length > 0 && <BranchTriggerIndicator />}
-                <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
+          <Control
+            {...aria}
+            itemRef={itemRef}
+            data-children={item?.children ? item.children.length : undefined}
+            data-index={index}
+            data-level={level}
+            id={`tree-item-${item.id}`}
+            ref={nodeRef}
+          >
+            <ControlSpacer />
+            <ControlToggleIndicator />
+            <ControlContent>
+              <HStack>
+                <NodeText flex={1}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
-                <NodeTag>Branch</NodeTag>
-              </BranchTrigger>
-              {instruction ? <DropIndicator instruction={instruction} /> : null}
-            </Branch>
-          )}
-
-          {/* ITEM (LEAF) */}
-
-          {!item?.children && (
-            <Item data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
-              <ItemContent data-draggable={dragState}>
-                <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
-                {item.isDraft && <NodeTag>Draft</NodeTag>}
-                <NodeTag>Item</NodeTag>
-              </ItemContent>
-              {instruction ? <DropIndicator instruction={instruction} /> : null}
-            </Item>
-          )}
+                <NodeTag>{hasChildren ? "Branch" : "Leaf"}</NodeTag>
+              </HStack>
+            </ControlContent>
+            {instruction ? <DropIndicator instruction={instruction} /> : null}
+          </Control>
         </chakra.div>
 
         {item.children?.length > 0 && item.isOpen && (
           <chakra.div
             id={aria?.["aria-controls"]}
-            pl={indentPerLevel}
-            data-scope="drag-drop"
-            data-part="branch-content"
+            // pl={indentPerLevel}
+            data-scope="node"
+            data-part="children"
           >
             <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
               {treeItemChildrenIds?.map((child: any, i: number) => {

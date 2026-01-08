@@ -12,8 +12,8 @@ import { useTree, useTreeItem } from "../../selectors"
 
 type Params = {
   itemRef: any
-  rootRef: React.RefObject<HTMLDivElement | null>
-  groupRef: React.RefObject<HTMLDivElement | null>
+  rootRef: React.RefObject<HTMLDivElement | null | any>
+  groupRef: React.RefObject<HTMLDivElement | null | any>
 }
 
 export function useDndTree({ itemRef, rootRef, groupRef }: Params) {

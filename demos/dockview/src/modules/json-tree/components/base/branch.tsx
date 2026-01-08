@@ -9,15 +9,12 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
     open: isOpen,
     onOpenChange: (e) => {
       // if (dragState !== "idle") return
-
       // sendToNode({
       //   type: "BRANCH_OPEN_CHANGED",
       //   isOpen: e.open,
       // })
     },
   })
-
-
 
   return (
     <Stack
@@ -72,10 +69,7 @@ export const Branch = forwardRef<HTMLDivElement, any>((props: any, ref: any) => 
       ref={ref}
       {...rest}
     >
-      <Collapsible.RootProvider value={collapsible}>
-        {children}
-      </Collapsible.RootProvider>
+      <Collapsible.RootProvider value={collapsible}>{children}</Collapsible.RootProvider>
     </Stack>
   )
 })
-

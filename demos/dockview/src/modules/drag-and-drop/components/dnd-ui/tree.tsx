@@ -26,7 +26,7 @@ export const Tree = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
 
 
   return (
-    <chakra.div data-scope="drag-drop" data-part="tree" {...props} ref={mergedRef}>
+    <chakra.div data-scope="tree" data-part="tree" {...props} ref={mergedRef}>
       <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
         {treeItemChildrenIds.map((item: any, index: any) => {
           return <DragDrop.Node key={item} itemRef={treeItemChildrenRef[item]} level={0} index={index} />

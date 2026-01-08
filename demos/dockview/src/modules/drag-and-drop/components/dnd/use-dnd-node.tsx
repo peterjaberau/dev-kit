@@ -34,8 +34,8 @@ function sameInstruction(a: any, b: any) {
 
 type Params = {
   itemRef: any
-  buttonRef: React.RefObject<HTMLButtonElement | HTMLDivElement | null>
-  groupRef: React.RefObject<HTMLDivElement | null>
+  buttonRef: React.RefObject<HTMLButtonElement | HTMLDivElement | any>
+  groupRef: React.RefObject<HTMLDivElement | null | any>
 }
 
 export function useDndNode({

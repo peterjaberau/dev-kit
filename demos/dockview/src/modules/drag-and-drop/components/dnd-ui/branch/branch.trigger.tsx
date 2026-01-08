@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react"
 import { Collapsible, HStack } from "@chakra-ui/react"
-import { useTreeItem } from "../../selectors"
+import { useTreeItem } from "../../../selectors"
 
 export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   // export const BranchTrigger = forwardRef<HTMLDivElement, any>((props, ref) => {
@@ -30,14 +30,13 @@ export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: a
         '&[data-draggable="dragging"]': {
           opacity: 0.4,
         },
-        height: '2rem',
-        padding: '4px',
+        height: "2rem",
+        padding: "4px",
         w: "full",
         cursor: "pointer",
         alignItems: "center",
         justifyContent: "flex-start",
         p: 1,
-        gap: 0
       }}
       {...props}
       ref={ref}
