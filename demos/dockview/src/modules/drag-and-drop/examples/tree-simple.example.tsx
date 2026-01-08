@@ -12,20 +12,7 @@ export const TreeSimpleExample = () => {
     <Container width={"full"} backgroundColor={"bg.subtle"} boxShadow={"sm"} p={4} borderRadius={"md"}>
       <SimpleGrid columns={2} gap={10}>
         <GridItem>
-          <DraggableTree data={dataTree}>
-            <DragDrop.Root
-              css={{
-                backgroundColor: "bg.panel",
-                width: "320px",
-                border: "1px solid",
-                borderColor: "border",
-                borderRadius: "sm",
-                padding: 3,
-              }}
-            >
-              <TreeExample />
-            </DragDrop.Root>
-          </DraggableTree>
+
         </GridItem>
 
         <GridItem>

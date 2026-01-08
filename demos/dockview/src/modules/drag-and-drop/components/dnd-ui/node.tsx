@@ -1,14 +1,15 @@
 import { forwardRef, Fragment, memo, useRef } from "react"
 import { useTree, useTreeItem } from "../../selectors"
 import { useDndNode } from "../dnd/use-dnd-node"
-import { chakra, HStack, Box, Icon, Text, Badge } from "@chakra-ui/react"
+import { chakra, HStack } from "@chakra-ui/react"
 import { GroupDropIndicator } from "../dnd/drop-indicator/group"
-import { Branch } from "./branch/branch"
-import { BranchTrigger } from "./branch/branch.trigger"
-import { BranchTriggerIndicator } from "./branch/branch.trigger-indicator"
-import { NodeIndent } from "./branch/node.indent"
 import { NodeText } from "./node.text"
 import { NodeTag } from "./node.tag"
+
+import { Control  } from "./control"
+import { ControlTrigger } from "./control.trigger"
+import { ControlTriggerIndicator } from "./control.trigger-indicator"
+
 
 const indentPerLevel = 4
 
@@ -76,19 +77,17 @@ export const Node = memo(
         >
           {/* BRANCH */}
 
-          <Branch itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
-            <BranchTrigger data-draggable={dragState} itemRef={itemRef}>
+          <Control itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
+            <ControlTrigger data-draggable={dragState} itemRef={itemRef}>
               <HStack alignItems="center" w="full" gap={0}>
-                {/*{!isBranchNotEmptyData && <NodeIndent />}*/}
-                {/*{isBranchNotEmptyData && <BranchTriggerIndicator />}*/}
-                <BranchTriggerIndicator itemRef={itemRef} />
+                <ControlTriggerIndicator itemRef={itemRef} />
                 <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
                 <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
               </HStack>
-            </BranchTrigger>
+            </ControlTrigger>
             {instruction ? <DropIndicator instruction={instruction} /> : null}
-          </Branch>
+          </Control>
         </chakra.div>
 
         {item.children?.length > 0 && item.isOpen && (

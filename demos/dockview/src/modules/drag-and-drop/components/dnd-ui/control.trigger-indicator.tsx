@@ -4,13 +4,13 @@ import { LuChevronRight } from "react-icons/lu"
 import { TiDocument } from "react-icons/ti"
 import { useTreeItem } from "#drag-and-drop/selectors"
 
-export const BranchTriggerIndicator = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
+export const ControlTriggerIndicator = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { itemRef, css, ...rest } = props
   const { isOpen, isBranchNotEmptyData, isBranchData, isBranchEmptyData, isLeafData } = useTreeItem({ actorRef: itemRef })
 
   return (
     <Collapsible.Indicator
-      data-scope="branch"
+      data-scope="control"
       data-part="indicator"
       css={{
         display: "inline-block",

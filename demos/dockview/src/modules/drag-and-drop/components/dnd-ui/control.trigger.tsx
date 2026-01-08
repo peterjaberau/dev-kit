@@ -1,8 +1,8 @@
 import React, { forwardRef } from "react"
 import { Collapsible, HStack } from "@chakra-ui/react"
-import { useTreeItem } from "../../../selectors"
+import { useTreeItem } from "../../selectors"
 
-export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
+export const ControlTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   // export const BranchTrigger = forwardRef<HTMLDivElement, any>((props, ref) => {
 
   const { itemRef, children, ...rest } = props
@@ -16,7 +16,7 @@ export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: a
 
   return (
     <HStack
-      data-scope="branch"
+      data-scope="control"
       data-part="trigger"
       onClick={handleClick}
       gap={0}
