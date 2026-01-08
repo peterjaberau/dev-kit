@@ -16,19 +16,27 @@ export const useTree = () => {
 
   /** Data Tree **/
   const dataTree = treeContext?.data
-  // spawned data actors
   const dataTreeRef = treeContext?.dataRef
 
+
   /** children **/
-  // spawned children actors
   const treeChildren = treeState?.children
   const treeChildrenIds = Object.keys(treeChildren || [])
+  const hasChildren = treeChildrenIds.length > 0
+  const hasChildrenEmpty = hasChildren && treeChildrenIds.length === 0
   const getTreeItemById = (itemId: string) => {
     if (treeChildren) {
       return treeChildren[itemId] ?? null
     }
     return null
   }
+
+
+  /** meta info */
+
+
+
+
 
 
   //drag related

@@ -1,14 +1,15 @@
 import React, { forwardRef } from "react"
-import { chakra, Badge, Box } from "@chakra-ui/react"
+import { chakra, Badge, Box, HStack } from "@chakra-ui/react"
 
 export const ControlSpacer = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
 
   return (
-    <chakra.div
+    <HStack
       data-scope="control"
       data-part="spacer"
-      gridArea="spacer"
+      // gridArea="spacer"
       css={{
+        height: "full",
         gridArea: "spacer",
         backgroundColor: "yellow",
       }}

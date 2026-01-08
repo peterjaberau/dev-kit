@@ -13,6 +13,7 @@ import { ControlContent } from "./control.content"
 
 const indentPerLevel = 5
 const toggleWidth = 4
+const spacerWidth = 4
 
 export const Node = memo(
   forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
@@ -22,8 +23,17 @@ export const Node = memo(
       dataValue: item,
       treeItemChildrenRef,
       treeItemChildrenIds,
+      treeItemChildrenLength,
+      isBranch,
+      isBranchEmpty,
+      isBranchNotEmpty,
+      isLeaf,
       sendToTreeItem,
       isOpen,
+      isBranchData,
+      isBranchNotEmptyData,
+      isBranchEmptyData,
+      isLeafData,
     } = useTreeItem({ actorRef: itemRef })
 
     const hasChildren = !!item?.children
@@ -55,7 +65,9 @@ export const Node = memo(
         <chakra.div
           data-scope="node"
           data-part="node"
+          flex={1}
           css={{
+            display: "flex",
             position: "relative",
             borderRadius: "sm",
             flexGrow: 1,
@@ -69,33 +81,49 @@ export const Node = memo(
           ref={ref}
         >
           {/* BRANCH */}
-          <Control
-            {...aria}
-            itemRef={itemRef}
-            data-children={item?.children ? item.children.length : undefined}
-            data-index={index}
-            data-level={level}
-            id={`tree-item-${item.id}`}
-            ref={nodeRef}
-          >
-
-            <ControlSpacer />
-            <ControlToggleIndicator />
-            <ControlContent>
-              <HStack>
-                <NodeText flex={1}>Item {item.id}</NodeText>
-                {item.isDraft && <NodeTag>Draft</NodeTag>}
-                <NodeTag>{hasChildren ? "Branch" : "Leaf"}</NodeTag>
-              </HStack>
-            </ControlContent>
-            {instruction ? <DropIndicator instruction={instruction} /> : null}
-          </Control>
+          {/*<HStack css={{*/}
+          {/*  display: "flex",*/}
+          {/*  alignItems: "center",*/}
+          {/*  width: "100%",*/}
+          {/*}}>*/}
+            <Control
+              data-children={item?.children ? item.children.length : undefined}
+              data-index={index}
+              data-level={level}
+              id={`tree-item-${item.id}`}
+              level={level}
+              itemRef={itemRef}
+              ref={nodeRef}
+              flex={1}
+              css={{
+                width: "full",
+                position: "relative",
+                background: "transparent",
+                margin: 0,
+                padding: 0,
+                borderRadius: 3,
+                cursor: "pointer",
+                border: 0,
+              }}
+            >
+              <ControlToggleIndicator data-children={isBranchData ? treeItemChildrenLength : undefined} />
+              <ControlContent>
+                  <NodeText flex={1}>Item {item.id}</NodeText>
+                  {item.isDraft && <NodeTag>Draft</NodeTag>}
+                  <NodeTag>{hasChildren ? "Branch" : "Leaf"}</NodeTag>
+              </ControlContent>
+              {instruction ? <DropIndicator instruction={instruction} /> : null}
+            </Control>
+          {/*</HStack>*/}
         </chakra.div>
 
         {item.children?.length > 0 && item.isOpen && (
           <chakra.div
             id={aria?.["aria-controls"]}
-            // pl={indentPerLevel}
+            pl={indentPerLevel}
+            // css={{
+            //   paddingLeft: "var(--spacer-size)",
+            // }}
             data-scope="node"
             data-part="children"
           >

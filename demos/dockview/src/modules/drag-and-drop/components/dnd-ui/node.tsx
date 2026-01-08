@@ -2,17 +2,14 @@ import { forwardRef, Fragment, memo, useRef } from "react"
 import { useTree, useTreeItem } from "../../selectors"
 import { useDndNode } from "../dnd/use-dnd-node"
 import { chakra, HStack, Box, Icon, Text, Badge } from "@chakra-ui/react"
-import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { GroupDropIndicator } from "../dnd/drop-indicator/group"
 import { Branch } from "./branch/branch"
 import { BranchTrigger } from "./branch/branch.trigger"
 import { BranchTriggerIndicator } from "./branch/branch.trigger-indicator"
 import { NodeText } from "./node.text"
 import { NodeTag } from "./node.tag"
-import { Item } from "./branch/item"
-import { ItemContent } from "./branch/item.content"
 
-const indentPerLevel = 12
+const indentPerLevel = 4
 
 export const Node = memo(
   forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
@@ -22,9 +19,19 @@ export const Node = memo(
       dataValue: item,
       treeItemChildrenRef,
       treeItemChildrenIds,
+      isBranch,
+      isBranchEmpty,
+      isBranchNotEmpty,
+      isLeaf,
+      isBranchData,
+      isBranchNotEmptyData,
+      isBranchEmptyData,
+      isLeafData,
       sendToTreeItem,
       isOpen,
     } = useTreeItem({ actorRef: itemRef })
+
+    const hasChildren = !!item?.children
 
     const { dependencies } = useTree()
     const { DropIndicator } = dependencies
@@ -68,30 +75,25 @@ export const Node = memo(
         >
           {/* BRANCH */}
 
-          {!!item?.children && (
-            <Branch itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
-              <BranchTrigger data-draggable={dragState} itemRef={itemRef}>
-                {item.children.length > 0 && <BranchTriggerIndicator />}
+          <Branch itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
+            <BranchTrigger data-draggable={dragState} itemRef={itemRef}>
+              <Box display="flex" alignItems="center" w="full">
+                {!isBranchNotEmptyData && (
+                  <Box
+                    as="span"
+                    display="inline-block"
+                    width={isBranchEmptyData ? 2 : 3} // same visual width as indicator
+                    flexShrink={0}
+                  />
+                )}
+                {isBranchNotEmptyData && <BranchTriggerIndicator />}
                 <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
-                <NodeTag>Branch</NodeTag>
-              </BranchTrigger>
-              {instruction ? <DropIndicator instruction={instruction} /> : null}
-            </Branch>
-          )}
-
-          {/* ITEM (LEAF) */}
-
-          {!item?.children && (
-            <Item data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
-              <ItemContent data-draggable={dragState}>
-                <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
-                {item.isDraft && <NodeTag>Draft</NodeTag>}
-                <NodeTag>Item</NodeTag>
-              </ItemContent>
-              {instruction ? <DropIndicator instruction={instruction} /> : null}
-            </Item>
-          )}
+                <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
+              </Box>
+            </BranchTrigger>
+            {instruction ? <DropIndicator instruction={instruction} /> : null}
+          </Branch>
         </chakra.div>
 
         {item.children?.length > 0 && item.isOpen && (

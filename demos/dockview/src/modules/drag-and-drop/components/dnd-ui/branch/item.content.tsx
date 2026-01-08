@@ -13,7 +13,8 @@ export const ItemContent = forwardRef<HTMLDivElement, any>((props: any, ref: any
         w: "full",
         alignItems: "center",
         justifyContent: "flex-start",
-        p: 1,
+        px: 0,
+        // p: 1,
       }}
       {...props}
       ref={ref}

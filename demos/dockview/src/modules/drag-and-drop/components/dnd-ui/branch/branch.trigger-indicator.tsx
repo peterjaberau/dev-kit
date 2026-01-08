@@ -9,6 +9,7 @@ export const BranchTriggerIndicator = forwardRef<HTMLDivElement, any>((props: an
       data-part="indicator"
       transition="transform 0.2s"
       _open={{ transform: "rotate(90deg)" }}
+      css={{ display: "inline-block" }} // keeps width consistent
       {...props}
       ref={ref}
     >

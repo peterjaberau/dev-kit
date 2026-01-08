@@ -30,7 +30,7 @@ export const createTreeItem = (input: any) => {
       // fist call will be considered as root item, then parentRef and parentPath will be null
       const parentRef = input?.refs?.parent || null
 
-      const viewConfig = input?.viewConfig
+
       const dataRuntime = {
         info: {
           path: input?.dataRuntime?.info?.path,
@@ -57,6 +57,16 @@ export const createTreeItem = (input: any) => {
         parent: parentRef,
         self,
       }
+
+      const viewConfig = input?.viewConfig
+      const viewRuntime = {
+        control: {
+          open: !!viewConfig?.control?.open || false,
+        }
+      }
+
+
+
       return {
         refs: {
           ...refs,
@@ -83,6 +93,9 @@ export const createTreeItem = (input: any) => {
         viewConfig,
 
         viewRuntime: {
+          control: {
+            open: false
+          },
           dragItemId: null,
           /* manage the evaluated state of the view */
         },

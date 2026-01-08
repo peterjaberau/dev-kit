@@ -28,6 +28,9 @@ export const treeMachine = setup({
             },
           },
           viewConfig: {
+            control: {
+              open: false
+            },
             isOpen: true,
           },
         }),

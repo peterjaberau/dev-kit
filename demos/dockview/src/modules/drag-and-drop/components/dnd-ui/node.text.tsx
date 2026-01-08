@@ -12,6 +12,7 @@ export const NodeText = forwardRef<HTMLDivElement, any>((props: any, ref: any) =
       css={{
         overflow: "hidden",
         textAlign: "left",
+        verticalAlign: "middle",
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",
       }}
