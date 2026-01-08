@@ -6,6 +6,7 @@ import { GroupDropIndicator } from "../dnd/drop-indicator/group"
 import { Branch } from "./branch/branch"
 import { BranchTrigger } from "./branch/branch.trigger"
 import { BranchTriggerIndicator } from "./branch/branch.trigger-indicator"
+import { NodeIndent } from "./branch/node.indent"
 import { NodeText } from "./node.text"
 import { NodeTag } from "./node.tag"
 
@@ -77,20 +78,14 @@ export const Node = memo(
 
           <Branch itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
             <BranchTrigger data-draggable={dragState} itemRef={itemRef}>
-              <Box display="flex" alignItems="center" w="full">
-                {!isBranchNotEmptyData && (
-                  <Box
-                    as="span"
-                    display="inline-block"
-                    width={isBranchEmptyData ? 2 : 3} // same visual width as indicator
-                    flexShrink={0}
-                  />
-                )}
-                {isBranchNotEmptyData && <BranchTriggerIndicator />}
+              <HStack alignItems="center" w="full" gap={0}>
+                {/*{!isBranchNotEmptyData && <NodeIndent />}*/}
+                {/*{isBranchNotEmptyData && <BranchTriggerIndicator />}*/}
+                <BranchTriggerIndicator itemRef={itemRef} />
                 <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
                 <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
-              </Box>
+              </HStack>
             </BranchTrigger>
             {instruction ? <DropIndicator instruction={instruction} /> : null}
           </Branch>

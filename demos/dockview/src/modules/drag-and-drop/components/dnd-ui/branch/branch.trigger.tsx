@@ -3,10 +3,11 @@ import { Collapsible, HStack } from "@chakra-ui/react"
 import { useTreeItem } from "../../../selectors"
 
 export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
+  // export const BranchTrigger = forwardRef<HTMLDivElement, any>((props, ref) => {
 
   const { itemRef, children, ...rest } = props
 
-  const { sendToTreeItem, isBranchEmptyData, isOpen } = useTreeItem({ actorRef: itemRef })
+  const { sendToTreeItem, isOpen } = useTreeItem({ actorRef: itemRef })
 
 
   const handleClick = (e: any) => {
@@ -19,6 +20,7 @@ export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: a
       data-part="trigger"
       onClick={handleClick}
       gap={0}
+      {...props}
       css={{
         '&[data-draggable="dragging"]': {
           opacity: 0.4,
@@ -29,10 +31,7 @@ export const BranchTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: a
         alignItems: "center",
         justifyContent: "flex-start",
       }}
-      {...props}
       ref={ref}
-
-
     />
   )
 })
