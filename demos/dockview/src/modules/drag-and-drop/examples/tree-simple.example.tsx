@@ -10,11 +10,7 @@ import { SimpleGrid, GridItem, Container } from "@chakra-ui/react"
 export const TreeSimpleExample = () => {
   return (
     <Container width={"full"} backgroundColor={"bg.subtle"} boxShadow={"sm"} p={4} borderRadius={"md"}>
-      <SimpleGrid columns={2} gap={10}>
-        <GridItem>
-
-        </GridItem>
-
+      <SimpleGrid columns={1} gap={10}>
         <GridItem>
           <DraggableTree data={dataTree}>
             <DragDrop.Root
