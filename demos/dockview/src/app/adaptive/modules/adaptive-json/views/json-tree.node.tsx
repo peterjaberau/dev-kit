@@ -1,14 +1,10 @@
-'use client'
-import {
-  getAccessibleDescription,
-  jsonNodeToElement,
-  keyPathToKey,
-} from '@zag-js/json-tree-utils'
-import { useMemo } from 'react'
-import { AdaptiveTree, useAdaptiveTreeContext } from '#adaptive-tree'
-import { JsonTreeNodeKey } from './json-tree.node.key'
-import { useJsonTreePropsContext } from '../providers'
-import { JsonTreeNodeValue } from './json-tree.node.value'
+"use client"
+import { getAccessibleDescription, jsonNodeToElement, keyPathToKey } from "@zag-js/json-tree-utils"
+import { useMemo } from "react"
+import { AdaptiveTree, useAdaptiveTreeContext } from "#adaptive-tree"
+import { JsonTreeNodeKey } from "./json-tree.node.key"
+import { useJsonTreePropsContext } from "../providers"
+import { JsonTreeNodeValue } from "./json-tree.node.value"
 
 const scopeProps = {
   "data-scope": "json-tree-view",
@@ -30,9 +26,9 @@ export function JsonTreeNode(props: any) {
     const lineLength = indexPath.length - 1
     return {
       ...scopeProps,
-      'aria-label': desc,
-      'data-line': line,
-      style: { ['--line-length' as any]: lineLength },
+      "aria-label": desc,
+      "data-line": line,
+      style: { ["--line-length" as any]: lineLength },
     }
   }, [indexPath, node])
 

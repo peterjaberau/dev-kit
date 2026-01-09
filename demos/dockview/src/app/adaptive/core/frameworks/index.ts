@@ -1,1 +1,1 @@
-export * as ReactFramework from './react'
+export * as ReactFramework from "./react"

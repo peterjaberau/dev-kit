@@ -1,4 +1,3 @@
-
 export function getBranchValues(tree: any, depth: number | any) {
   let values: string[] = []
   tree.visit({

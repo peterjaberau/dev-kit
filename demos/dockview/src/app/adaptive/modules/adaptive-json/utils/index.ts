@@ -1,1 +1,1 @@
-export * from './get-branch-value'
+export * from "./get-branch-value"

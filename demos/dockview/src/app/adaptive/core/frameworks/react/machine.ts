@@ -7,10 +7,7 @@ import { useRefs } from "./refs"
 import { useTrack } from "./track"
 import { useSafeLayoutEffect } from "./use-layout-effect"
 
-export function useMachine(
-  machine: any,
-  userProps: any = {},
-) {
+export function useMachine(machine: any, userProps: any = {}) {
   const scope = useMemo(() => {
     const { id, ids, getRootNode } = userProps as any
     return createScope({ id, ids, getRootNode })

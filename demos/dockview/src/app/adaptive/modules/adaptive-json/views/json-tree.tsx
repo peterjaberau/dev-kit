@@ -1,9 +1,8 @@
-'use client'
-import { forwardRef } from 'react'
-import { createSplitProps } from '#adaptive-shared'
+"use client"
+import { forwardRef } from "react"
+import { createSplitProps } from "#adaptive-shared"
 import { AdaptiveTree, useAdaptiveTreeContext } from "#adaptive-tree"
-import { JsonTreeNode } from './json-tree.node'
-
+import { JsonTreeNode } from "./json-tree.node"
 
 const splitNodeProps = createSplitProps<any>()
 
@@ -19,4 +18,3 @@ export const JsonTree = forwardRef<HTMLDivElement, any>((props, ref) => {
     </AdaptiveTree.Tree>
   )
 })
-

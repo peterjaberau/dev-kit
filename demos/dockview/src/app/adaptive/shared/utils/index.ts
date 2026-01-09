@@ -1,2 +1,2 @@
 export * from "./create-split-props"
-export * from './render-strategy'
+export * from "./render-strategy"

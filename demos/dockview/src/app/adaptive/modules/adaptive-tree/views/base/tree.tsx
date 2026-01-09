@@ -9,4 +9,3 @@ export const Tree = forwardRef<HTMLDivElement, any>((props, ref) => {
 
   return <chakra.div {...mergedProps} ref={ref} />
 })
-

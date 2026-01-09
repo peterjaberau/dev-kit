@@ -1,6 +1,5 @@
-import { createContext } from '@chakra-ui/react'
-import { createSplitProps } from './create-split-props'
-
+import { createContext } from "@chakra-ui/react"
+import { createSplitProps } from "./create-split-props"
 
 export interface RenderStrategyProps {
   /**
@@ -16,10 +15,10 @@ export interface RenderStrategyProps {
 }
 
 export const [RenderStrategyPropsProvider, useRenderStrategyPropsContext] = createContext<RenderStrategyProps>({
-  name: 'RenderStrategyContext',
-  hookName: 'useRenderStrategyContext',
-  providerName: '<RenderStrategyPropsProvider />',
+  name: "RenderStrategyContext",
+  hookName: "useRenderStrategyContext",
+  providerName: "<RenderStrategyPropsProvider />",
 })
 
 export const splitRenderStrategyProps = <T extends RenderStrategyProps>(props: T) =>
-  createSplitProps<RenderStrategyProps>()(props, ['lazyMount', 'unmountOnExit'])
+  createSplitProps<RenderStrategyProps>()(props, ["lazyMount", "unmountOnExit"])

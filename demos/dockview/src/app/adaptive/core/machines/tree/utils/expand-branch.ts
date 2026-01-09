@@ -75,7 +75,7 @@ export function expandBranches(params: any, values: string[]) {
     let collection = prop("collection")
 
     results.forEach((result, index) => {
-      const { id, indexPath, node, valuePath }: any  = nodesToLoad[index]
+      const { id, indexPath, node, valuePath }: any = nodesToLoad[index]
       if (result.status === "fulfilled") {
         nextLoadingStatus[id] = "loaded"
         loadedValues.push(id)

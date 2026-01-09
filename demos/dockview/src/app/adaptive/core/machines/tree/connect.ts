@@ -14,7 +14,6 @@ import { add, uniq } from "@zag-js/utils"
 import { parts, dom } from "./lib"
 import { getCheckedState, getCheckedValueMap } from "./utils"
 
-
 export function connect(service: any, normalize: any) {
   const { context, scope, computed, prop, send } = service
   const collection = prop("collection")

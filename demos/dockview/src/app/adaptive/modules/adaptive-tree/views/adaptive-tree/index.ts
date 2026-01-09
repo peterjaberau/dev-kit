@@ -23,13 +23,10 @@ export * as AdaptiveTree from "./namespace"
 export {
   TreeContext as AdaptiveTreeContext,
   NodeContext as AdaptiveTreeNodeContext,
-  NodeProvider as AdaptiveTreeNodeProvider
+  NodeProvider as AdaptiveTreeNodeProvider,
 } from "../../providers"
 
 export { useTree as useAdaptiveTree } from "../../hooks"
-export {
-  useTreeContext as useAdaptiveTreeContext,
-  useNodeContext as useAdaptiveTreeNodeContext
-} from "../../providers"
+export { useTreeContext as useAdaptiveTreeContext, useNodeContext as useAdaptiveTreeNodeContext } from "../../providers"
 
 export { NodeCheckboxIndicator } from "../base/namespace"

@@ -1,8 +1,8 @@
-'use client'
+"use client"
 export const JsonTreeNodeValue = (props: any): React.ReactNode => {
   const { node, renderValue } = props
 
-  if (node.type === 'text') {
+  if (node.type === "text") {
     return <>{renderValue?.(node) ?? node.value}</>
   }
 

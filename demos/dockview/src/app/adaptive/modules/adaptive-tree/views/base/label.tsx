@@ -1,7 +1,7 @@
-import { mergeProps } from '@zag-js/react'
-import { forwardRef } from 'react'
-import { useTreeContext } from '../../providers'
-import { chakra } from '@chakra-ui/react'
+import { mergeProps } from "@zag-js/react"
+import { forwardRef } from "react"
+import { useTreeContext } from "../../providers"
+import { chakra } from "@chakra-ui/react"
 
 export const Label = forwardRef<HTMLHeadingElement, any>((props, ref) => {
   const tree: any = useTreeContext()
@@ -9,4 +9,3 @@ export const Label = forwardRef<HTMLHeadingElement, any>((props, ref) => {
 
   return <chakra.h3 {...mergedProps} ref={ref} />
 })
-

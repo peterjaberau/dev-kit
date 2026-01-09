@@ -2,7 +2,6 @@ import { chakra, mergeProps } from "@chakra-ui/react"
 import { forwardRef } from "react"
 import { useTreeContext, useNodeContext, useNodePropsContext } from "../../providers"
 
-
 export const NodeCheckbox = forwardRef<HTMLSpanElement, any>((props, ref) => {
   const treeView: any = useTreeContext()
   const nodeProps = useNodePropsContext()

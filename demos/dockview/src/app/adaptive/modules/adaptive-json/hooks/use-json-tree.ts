@@ -11,7 +11,7 @@ export const useJsonTree: any = (props: any) => {
     return createTreeCollection({
       nodeToValue,
       nodeToString,
-      rootNode: getRootNode(data)
+      rootNode: getRootNode(data),
     })
   }, [data])
 

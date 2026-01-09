@@ -72,7 +72,6 @@ export const Tree: any = withContext(BaseTree.Tree, "tree", {
 
 export const NodeCheckbox: any = withContext(BaseTree.NodeCheckbox, "nodeCheckbox", { forwardAsChild: true })
 
-
 export const Node: any = (props: any) => {
   const { render, indentGuide, branchProps, branchContentProps } = props
   const tree: any = useBaseTreeContext()

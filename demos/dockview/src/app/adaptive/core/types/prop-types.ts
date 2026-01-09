@@ -1,4 +1,3 @@
-
 export function createNormalizer(fn: (props: any) => any) {
   return new Proxy({} as any, {
     get(_target, key: string) {

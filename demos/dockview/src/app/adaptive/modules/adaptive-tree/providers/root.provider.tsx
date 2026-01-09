@@ -1,7 +1,7 @@
-import { mergeProps } from '@zag-js/react'
-import { forwardRef } from 'react'
+import { mergeProps } from "@zag-js/react"
+import { forwardRef } from "react"
 import { createSplitProps, RenderStrategyPropsProvider, splitRenderStrategyProps } from "#adaptive/shared"
-import { chakra } from '@chakra-ui/react'
+import { chakra } from "@chakra-ui/react"
 import { TreeProvider } from "../providers"
 
 const TreeImpl = (props: any, ref: React.Ref<HTMLDivElement | any>) => {
@@ -20,4 +20,3 @@ const TreeImpl = (props: any, ref: React.Ref<HTMLDivElement | any>) => {
 }
 
 export const RootProvider: any = forwardRef(TreeImpl)
-

@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { AdaptiveJson } from "#adaptive-json"
 import { ChevronRightIcon } from "lucide-react"
 

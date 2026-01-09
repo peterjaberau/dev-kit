@@ -1,4 +1,3 @@
-
 export function skipFn(params: any) {
   const { prop, context } = params
   return function skip({ indexPath }: any) {
