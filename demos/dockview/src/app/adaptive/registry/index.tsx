@@ -4,7 +4,16 @@ import { Center } from "@chakra-ui/react"
 import { cache, useEffect, useState } from "react"
 
 const registryMeta: any = {
-  "adaptive-tree-basic": dynamic(() => import("#adaptive-tree/views/adaptive-tree/stories/adaptive-tree-basic"), { ssr: false }),
+  "adaptive-tree-basic": dynamic(() => import("#adaptive-tree/views/adaptive-tree/stories/adaptive-tree-basic"), {
+    ssr: false,
+  }),
+
+  "adaptive-json-basic": dynamic(() => import("#adaptive-json/stories/basic"), {
+    ssr: false,
+  }),
+
+
+  //adaptive-json
 }
 
 export const registryComponentsObj = (id: any) => {

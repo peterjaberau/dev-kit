@@ -18,5 +18,8 @@ export {
   Tree,
 } from "./render"
 
+export { NodeProvider, NodeContext } from "../../providers"
+
+
 
 

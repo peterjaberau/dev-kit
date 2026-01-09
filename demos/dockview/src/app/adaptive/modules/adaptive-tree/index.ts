@@ -1,8 +1,10 @@
 export { createFileTreeCollection, createTreeCollection } from "@chakra-ui/react"
-export { anatomy as treeAnatomy } from "./lib"
+export { anatomy as treeAnatomy } from "#adaptive-core/machines/tree"
 
-export { BaseTree } from './views/base'
-export { AdaptiveTree } from "./views/adaptive-tree"
+// BaseTree
+export * from './views/base'
 
+// AdaptiveTree
+export * from "./views/adaptive-tree"
 
 
