@@ -1,8 +1,8 @@
-import { useTreeViewNodeContext } from './context'
+import { useNodeContext } from './context'
 
 export const NodeCheckboxIndicator = (props: any) => {
   const { children, indeterminate, fallback } = props
-  const nodeState: any = useTreeViewNodeContext()
+  const nodeState: any = useNodeContext()
   const checkedState = nodeState.checked
 
   if (checkedState === 'indeterminate' && indeterminate) {
@@ -16,4 +16,4 @@ export const NodeCheckboxIndicator = (props: any) => {
   return <>{fallback}</>
 }
 
-NodeCheckboxIndicator.displayName = 'TreeViewNodeCheckboxIndicator'
+NodeCheckboxIndicator.displayName = 'NodeCheckboxIndicator'

@@ -1,11 +1,9 @@
 import { normalizeProps, useMachine } from "@zag-js/react"
-import { treeviewControls } from "@zag-js/shared"
+import { treeviewControls } from "../../shared"
 import * as tree from "@zag-js/tree-view"
 import { ChevronRightIcon, FileIcon, FolderIcon } from "lucide-react"
 import { JSX, useId } from "react"
-import { StateVisualizer } from "../components/state-visualizer"
-import { Toolbar } from "../components/toolbar"
-import { useControls } from "../hooks/use-controls"
+import { useControls } from "./hooks/use-controls"
 
 interface Node {
   id: string
@@ -123,10 +121,6 @@ export default function Page() {
           </div>
         </div>
       </main>
-
-      <Toolbar controls={controls.ui}>
-        <StateVisualizer state={service} />
-      </Toolbar>
     </>
   )
 }

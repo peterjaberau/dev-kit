@@ -1,3 +1,3 @@
-import { useTreeViewNodeContext } from './context'
+import { useNodeContext } from './context'
 
-export const NodeContext = (props: any) => props.children(useTreeViewNodeContext())
+export const NodeContext = (props: any) => props.children(useNodeContext())

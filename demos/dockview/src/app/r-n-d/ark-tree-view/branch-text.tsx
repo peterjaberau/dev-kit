@@ -1,15 +1,15 @@
 import { mergeProps } from '@zag-js/react'
 import { forwardRef } from 'react'
 import { useTreeViewContext } from './context'
-import { useTreeViewNodePropsContext } from './context'
+import { useNodePropsContext } from './context'
 import { chakra } from '@chakra-ui/react'
 
-export const TreeViewBranchText = forwardRef<HTMLSpanElement, any>((props, ref) => {
+export const BranchText = forwardRef<HTMLSpanElement, any>((props, ref) => {
   const treeView: any = useTreeViewContext()
-  const nodeProps = useTreeViewNodePropsContext()
+  const nodeProps = useNodePropsContext()
   const mergedProps = mergeProps(treeView.getBranchTextProps(nodeProps), props)
 
   return <chakra.span {...mergedProps} ref={ref} />
 })
 
-TreeViewBranchText.displayName = 'TreeViewBranchText'
+BranchText.displayName = 'BranchText'

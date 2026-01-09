@@ -1,1 +1,1 @@
-export { anatomy as treeViewAnatomy } from '@zag-js/tree-view'
+export { anatomy } from '@zag-js/tree-view'

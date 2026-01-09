@@ -30,6 +30,30 @@
       "#app/*": ["./src/app/*"],
       "#app": ["./src/app"],
 
+      "#adaptive/*": ["./src/app/adaptive/*"],
+      "#adaptive": ["./src/app/adaptive"],
+
+      "#adaptive-components/*": ["./src/app/adaptive/components/*"],
+      "#adaptive-components": ["./src/app/adaptive/components"],
+
+      "#adaptive-core/*": ["./src/app/adaptive/core/*"],
+      "#adaptive-core": ["./src/app/adaptive/core"],
+
+      "#adaptive-shared/*": ["./src/app/adaptive/shared/*"],
+      "#adaptive-shared": ["./src/app/adaptive/shared"],
+
+      "#adaptive-modules/*": ["./src/app/adaptive/modules/*"],
+      "#adaptive-modules": ["./src/app/adaptive/modules"],
+
+      "#adaptive-dnd/*": ["./src/app/adaptive/modules/adaptive-dnd/*"],
+      "#adaptive-dnd": ["./src/app/adaptive/modules/adaptive-dnd"],
+
+      "#adaptive-json/*": ["./src/app/adaptive/modules/adaptive-json/*"],
+      "#adaptive-json": ["./src/app/adaptive/modules/adaptive-json"],
+
+      "#adaptive-tree/*": ["./src/app/adaptive/modules/adaptive-tree/*"],
+      "#adaptive-tree": ["./src/app/adaptive/modules/adaptive-tree"],
+
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
 
@@ -54,7 +78,6 @@
 
       "#shared/*": ["./src/modules/json-tree/*"],
       "#shared": ["./src/modules/json-tree/"],
-
 
       "#rui/*": ["./src/rui/*"],
       "#rui": ["./src/rui/"],

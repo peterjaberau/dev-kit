@@ -1,25 +1,18 @@
 import { useVirtualizer, type Virtualizer } from "@tanstack/react-virtual"
 import { normalizeProps, useMachine } from "@zag-js/react"
-import { treeviewControls } from "@zag-js/shared"
-import * as tree from "@zag-js/tree-view"
+import { treeviewControls } from "../../shared"
+import * as tree from "../index"
 import { ChevronRightIcon, FileIcon, FolderIcon } from "lucide-react"
 import { useId, useRef } from "react"
-import { StateVisualizer } from "../components/state-visualizer"
-import { Toolbar } from "../components/toolbar"
-import { useControls } from "../hooks/use-controls"
+import { useControls } from "./hooks/use-controls"
 
-interface Node {
-  id: string
-  name: string
-  children?: Node[]
-}
 
 // Generate a large tree for virtualization demo
-function generateLargeTree(): Node {
-  const folders: Node[] = []
+function generateLargeTree(): any {
+  const folders: any[] = []
 
   for (let i = 0; i < 50; i++) {
-    const children: Node[] = []
+    const children: any[] = []
     for (let j = 0; j < 20; j++) {
       children.push({
         id: `folder-${i}/file-${j}.ts`,
@@ -40,21 +33,16 @@ function generateLargeTree(): Node {
   }
 }
 
-const collection = tree.collection<Node>({
-  nodeToValue: (node) => node.id,
-  nodeToString: (node) => node.name,
+const collection = tree.collection({
+  nodeToValue: (node: any) => node.id,
+  nodeToString: (node: any) => node.name,
   rootNode: generateLargeTree(),
 })
 
 const ROW_HEIGHT = 32
 
-interface TreeNodeProps {
-  node: Node
-  indexPath: number[]
-  api: tree.Api
-}
 
-const TreeNode = (props: TreeNodeProps) => {
+const TreeNode = (props: any) => {
   const { node, indexPath, api } = props
 
   const nodeProps = { indexPath, node }
@@ -116,12 +104,12 @@ export default function Page() {
     id: useId(),
     collection,
     ...controls.context,
-    scrollToIndexFn(details) {
+    scrollToIndexFn(details: any) {
       virtualizerRef.current?.scrollToIndex(details.index, { align: "auto" })
     },
   })
 
-  const api = tree.connect(service, normalizeProps)
+  const api: any = tree.connect(service, normalizeProps)
 
   // Get visible nodes (now returns { node, indexPath }[])
   const visibleNodes = api.getVisibleNodes()
@@ -196,10 +184,6 @@ export default function Page() {
           </div>
         </div>
       </main>
-
-      <Toolbar controls={controls.ui}>
-        <StateVisualizer state={service} omit={["collection"]} />
-      </Toolbar>
     </>
   )
 }

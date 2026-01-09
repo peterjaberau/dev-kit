@@ -3,16 +3,13 @@ import { forwardRef } from 'react'
 import { useRenderStrategyPropsContext } from './helpers/utils/render-strategy'
 import { Collapsible } from '@chakra-ui/react'
 import { useTreeViewContext } from './context'
-import { useTreeViewNodeContext } from './context'
-import { useTreeViewNodePropsContext } from './context'
+import { useNodeContext } from './context'
+import { useNodePropsContext } from './context'
 
-import { TreeViewBranchBaseProps, TreeViewBranchProps } from '@ark-ui/react'
-
-
-export const Branch = forwardRef<HTMLDivElement, TreeViewBranchProps>((props, ref) => {
+export const Branch = forwardRef<HTMLDivElement, any>((props, ref) => {
   const treeView: any = useTreeViewContext()
-  const nodeProps = useTreeViewNodePropsContext()
-  const nodeState: any = useTreeViewNodeContext()
+  const nodeProps = useNodePropsContext()
+  const nodeState: any = useNodeContext()
   const renderStrategyProps = useRenderStrategyPropsContext()
   const mergedProps = mergeProps(treeView.getBranchProps(nodeProps), props)
   const branchContentProps = treeView.getBranchContentProps(nodeProps)
@@ -28,4 +25,4 @@ export const Branch = forwardRef<HTMLDivElement, TreeViewBranchProps>((props, re
   )
 })
 
-Branch.displayName = 'TreeViewBranch'
+Branch.displayName = 'Branch'

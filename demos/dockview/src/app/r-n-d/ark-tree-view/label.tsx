@@ -10,4 +10,4 @@ export const Label = forwardRef<HTMLHeadingElement, any>((props, ref) => {
   return <chakra.h3 {...mergedProps} ref={ref} />
 })
 
-Label.displayName = 'TreeViewLabel'
+Label.displayName = 'Label'

@@ -1,12 +1,12 @@
 import { mergeProps } from '@zag-js/react'
-import { type JSX, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { createSplitProps } from './helpers/utils/create-split-props'
 import {
   RenderStrategyPropsProvider,
   splitRenderStrategyProps,
 } from './helpers/utils/render-strategy'
 import { chakra } from '@chakra-ui/react'
-import { TreeViewProvider } from './context'
+import { TreeViewProvider } from "./context"
 
 
 const TreeViewImpl = (props: any, ref: React.Ref<HTMLDivElement>) => {
