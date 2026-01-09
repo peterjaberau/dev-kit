@@ -1,5 +1,0 @@
-export { anatomy } from "./anatomy"
-export { collection, filePathCollection } from "./collection"
-export { connect } from "./connect"
-export { machine } from "./machine"
-export * from "./props"

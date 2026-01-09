@@ -17,14 +17,12 @@ export {
   NodeRenameInput,
   Tree,
   Item,
-} from "./parts"
+} from "../../app"
 
-export { anatomy } from "./lib"
-export { useTree } from './hooks'
 
 export {
   RootProvider,
   NodeProvider,
   useTreeContext,
   useNodeContext,
-} from "./providers"
+} from "../../providers"
