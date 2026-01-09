@@ -2,7 +2,7 @@ import { chakra, mergeProps } from "@chakra-ui/react"
 import { forwardRef } from "react"
 import { useRenderStrategyPropsContext, createSplitProps } from "#adaptive-shared"
 import { Collapsible } from "@chakra-ui/react"
-import { useTreeContext, useNodeContext, useNodePropsContext } from "../providers"
+import { useTreeContext, useNodeContext, useNodePropsContext } from "../../providers"
 
 const splitVisibilityProps = createSplitProps()
 

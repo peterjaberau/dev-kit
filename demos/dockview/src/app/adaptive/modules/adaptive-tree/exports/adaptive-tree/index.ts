@@ -1,1 +1,0 @@
-export * as AdaptiveTree from './namespace'

@@ -4,7 +4,7 @@ import { createSplitProps, RenderStrategyPropsProvider, splitRenderStrategyProps
 import { chakra } from '@chakra-ui/react'
 import { TreeProvider } from "../providers"
 
-const TreeImpl = (props: any, ref: React.Ref<HTMLDivElement>) => {
+const TreeImpl = (props: any, ref: React.Ref<HTMLDivElement | any>) => {
   const [renderStrategyProps, treeProps] = splitRenderStrategyProps(props)
   //@ts-ignore
   const [{ value: tree }, localProps]: any = createSplitProps()(treeProps, ["value" as any])
@@ -19,5 +19,5 @@ const TreeImpl = (props: any, ref: React.Ref<HTMLDivElement>) => {
   )
 }
 
-export const RootProvider = forwardRef(TreeImpl)
+export const RootProvider: any = forwardRef(TreeImpl)
 

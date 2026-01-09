@@ -1,6 +1,6 @@
 import { chakra, mergeProps } from "@chakra-ui/react"
 import { forwardRef } from "react"
-import { useTreeContext, useNodePropsContext } from "../providers"
+import { useTreeContext, useNodePropsContext } from "../../providers"
 
 export const Item = forwardRef<HTMLDivElement, any>((props, ref) => {
   const treeView: any = useTreeContext()

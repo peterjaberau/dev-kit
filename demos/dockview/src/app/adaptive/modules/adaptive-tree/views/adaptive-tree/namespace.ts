@@ -1,7 +1,5 @@
 
-
 export {
-  Root,
   Branch,
   BranchContent,
   BranchControl,
@@ -9,19 +7,16 @@ export {
   BranchIndicator,
   BranchText,
   BranchTrigger,
+  Item,
   ItemIndicator,
   ItemText,
   Label,
+  Node,
   NodeCheckbox,
-  NodeCheckboxIndicator,
-  NodeRenameInput,
-  Tree,
-  Item,
-} from "../../parts"
-
-
-export {
+  Root,
   RootProvider,
-  NodeProvider,
-  NodeContext
-} from "../../providers"
+  Tree,
+} from "./render"
+
+
+

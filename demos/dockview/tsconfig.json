@@ -39,6 +39,9 @@
       "#adaptive-core/*": ["./src/app/adaptive/core/*"],
       "#adaptive-core": ["./src/app/adaptive/core"],
 
+      "#adaptive-registry/*": ["./src/app/adaptive/registry/*"],
+      "#adaptive-registry": ["./src/app/adaptive/registry"],
+
       "#adaptive-shared/*": ["./src/app/adaptive/shared/*"],
       "#adaptive-shared": ["./src/app/adaptive/shared"],
 

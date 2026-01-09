@@ -1,6 +1,6 @@
 "use client"
 
-import { BaseTree, useBaseTreeContext } from ".."
+import { BaseTree, useBaseTreeContext } from "../base"
 import type React from "react"
 import { createSlotRecipeContext } from "@chakra-ui/react"
 import { treeSlotRecipe } from "./style"
@@ -14,65 +14,66 @@ const {
 
 export { useTreeStyles }
 
-export const RootProvider = withProvider(BaseTree.RootProvider, "root", {
+export const RootProvider: any = withProvider(BaseTree.RootProvider, "root", {
   forwardAsChild: true,
 })
 
-export const Root = withProvider(BaseTree.Root, "root", {
+export const Root: any = withProvider(BaseTree.Root, "root", {
   forwardAsChild: true,
 })
 
-export const PropsProvider = TreeStylesPropsProvider
+export const PropsProvider: any = TreeStylesPropsProvider
 
-export const Branch = withContext(BaseTree.Branch, "branch", {
+export const Branch: any = withContext(BaseTree.Branch, "branch", {
   forwardAsChild: true,
 })
 
-export const BranchContent = withContext(BaseTree.BranchContent, "branchContent", {
+export const BranchContent: any = withContext(BaseTree.BranchContent, "branchContent", {
   forwardAsChild: true,
 })
 
-export const BranchControl = withContext(BaseTree.BranchControl, "branchControl", {
+export const BranchControl: any = withContext(BaseTree.BranchControl, "branchControl", {
   forwardAsChild: true,
 })
 
-export const BranchTrigger = withContext(BaseTree.BranchTrigger, "branchTrigger", {
+export const BranchTrigger: any = withContext(BaseTree.BranchTrigger, "branchTrigger", {
   forwardAsChild: true,
 })
 
-export const BranchIndicator = withContext(BaseTree.BranchIndicator, "branchIndicator", {
+export const BranchIndicator: any = withContext(BaseTree.BranchIndicator, "branchIndicator", {
   forwardAsChild: true,
 })
 
-export const BranchText = withContext(BaseTree.BranchText, "branchText", { forwardAsChild: true })
+export const BranchText: any = withContext(BaseTree.BranchText, "branchText", { forwardAsChild: true })
 
-export const BranchIndentGuide = withContext(BaseTree.BranchIndentGuide, "branchIndentGuide", {
+export const BranchIndentGuide: any = withContext(BaseTree.BranchIndentGuide, "branchIndentGuide", {
   forwardAsChild: true,
 })
 
-export const Item = withContext(BaseTree.Item, "item", {
+export const Item: any = withContext(BaseTree.Item, "item", {
   forwardAsChild: true,
 })
 
-export const ItemIndicator = withContext(BaseTree.ItemIndicator, "itemIndicator", {
+export const ItemIndicator: any = withContext(BaseTree.ItemIndicator, "itemIndicator", {
   forwardAsChild: true,
 })
 
-export const ItemText = withContext(BaseTree.ItemText, "itemText", {
+export const ItemText: any = withContext(BaseTree.ItemText, "itemText", {
   forwardAsChild: true,
 })
 
-export const Label = withContext(BaseTree.Label, "label", {
+export const Label: any = withContext(BaseTree.Label, "label", {
   forwardAsChild: true,
 })
 
-export const Tree = withContext(BaseTree.Tree, "tree", {
+export const Tree: any = withContext(BaseTree.Tree, "tree", {
   forwardAsChild: true,
 })
 
-export const NodeCheckbox = withContext(BaseTree.NodeCheckbox, "nodeCheckbox", { forwardAsChild: true })
+export const NodeCheckbox: any = withContext(BaseTree.NodeCheckbox, "nodeCheckbox", { forwardAsChild: true })
 
-export function Node(props: any) {
+
+export const Node: any = (props: any) => {
   const { render, indentGuide, branchProps, branchContentProps } = props
   const tree: any = useBaseTreeContext()
 

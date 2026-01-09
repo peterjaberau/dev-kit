@@ -1,10 +1,10 @@
 import { chakra, mergeProps } from "@chakra-ui/react"
 import { forwardRef } from "react"
 import { createSplitProps, splitRenderStrategyProps, RenderStrategyPropsProvider } from "#adaptive/shared"
-import { TreeProvider } from "../providers"
-import { useTree } from "../hooks"
+import { TreeProvider } from "../../providers"
+import { useTree } from "../../hooks"
 
-const Treempl = (props: any, ref: React.Ref<HTMLDivElement>) => {
+const TreeImpl = (props: any, ref: React.Ref<HTMLDivElement | any>) => {
   const [renderStrategyProps, treeProps] = splitRenderStrategyProps(props)
   const [useTreeProps, localProps]: any = createSplitProps()(treeProps, [
     "canRename",
@@ -47,4 +47,4 @@ const Treempl = (props: any, ref: React.Ref<HTMLDivElement>) => {
   )
 }
 
-export const Root = forwardRef(Treempl)
+export const Root = forwardRef(TreeImpl)
