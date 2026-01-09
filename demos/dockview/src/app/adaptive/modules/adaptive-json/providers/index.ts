@@ -1,2 +1,2 @@
 export * from './json-tree.props.provider'
-export * from './root.provider'
+export * from './json-tree.root.provider'

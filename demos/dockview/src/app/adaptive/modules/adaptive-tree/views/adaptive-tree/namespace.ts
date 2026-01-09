@@ -1,4 +1,3 @@
-
 export {
   Branch,
   BranchContent,
@@ -18,7 +17,8 @@ export {
   Tree,
 } from "./render"
 
-export { NodeProvider, NodeContext } from "../../providers"
+export { TreeContext as Context, NodeContext, NodeProvider } from "../../providers"
+export { NodeCheckboxIndicator } from "../base"
 
 
 

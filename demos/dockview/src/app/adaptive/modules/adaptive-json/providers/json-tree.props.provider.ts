@@ -1,7 +1,7 @@
 import { createContext } from '@chakra-ui/react'
 
 export const [JsonTreePropsProvider, useJsonTreePropsContext] = createContext({
-  name: "JsonTreeTreePropsContext",
-  hookName: "useJsonTreeTreePropsContext",
-  providerName: "<JsonTreeTreePropsProvider />",
+  name: "JsonTreePropsContext",
+  hookName: "useJsonTreePropsContext",
+  providerName: "<JsonTreePropsProvider />",
 })

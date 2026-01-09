@@ -1,7 +1,3 @@
-export { JsonTreeRoot as Root } from "./root"
+export { JsonTreeRoot as Root } from "./json-tree.root"
+export { JsonTreeRootProvider } from "../providers"
 export { JsonTree as Tree } from "./json-tree"
-export { Node } from "./node"
-export { NodeKey } from './node.key'
-export { NodeValue } from "./node.value"
-
-export { JsonTreePropsProvider as PropsProvider, RootProvider } from "../providers"

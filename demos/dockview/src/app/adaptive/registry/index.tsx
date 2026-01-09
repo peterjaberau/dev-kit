@@ -12,6 +12,11 @@ const registryMeta: any = {
     ssr: false,
   }),
 
+  "adaptive-json-array-data": dynamic(() => import("#adaptive-json/stories/array-data"), {
+    ssr: false,
+  }),
+
+  //array-data
 
   //adaptive-json
 }

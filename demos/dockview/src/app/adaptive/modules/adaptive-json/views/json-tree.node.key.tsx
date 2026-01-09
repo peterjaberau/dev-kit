@@ -1,7 +1,7 @@
 import { keyPathToKey } from '@zag-js/json-tree-utils'
 
 
-export const NodeKey = (props: any): React.ReactNode => {
+export const JsonTreeNodeKey = (props: any): React.ReactNode => {
   const { node, showQuotes } = props
   const key = keyPathToKey(node.keyPath)
   return (

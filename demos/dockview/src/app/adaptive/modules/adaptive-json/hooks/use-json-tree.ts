@@ -1,3 +1,4 @@
+"use client"
 import { getRootNode, nodeToString, nodeToValue } from "@zag-js/json-tree-utils"
 import { useMemo } from "react"
 import { createTreeCollection, useAdaptiveTree } from "#adaptive-tree"
@@ -18,7 +19,7 @@ export const useJsonTree: any = (props: any) => {
     return defaultExpandedDepth != null ? getBranchValues(collection, defaultExpandedDepth) : undefined
   }, [collection, defaultExpandedDepth])
 
-  return useJsonTree({
+  return useAdaptiveTree({
     defaultExpandedValue,
     ...restProps,
     collection,

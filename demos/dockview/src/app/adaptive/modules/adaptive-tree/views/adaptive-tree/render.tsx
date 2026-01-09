@@ -1,6 +1,6 @@
 "use client"
 
-import { BaseTree, useBaseTreeContext } from "../base"
+import { BaseTree, useTreeContext as useBaseTreeContext } from "../base"
 import type React from "react"
 import { createSlotRecipeContext } from "@chakra-ui/react"
 import { treeSlotRecipe } from "./style"
@@ -9,7 +9,7 @@ const {
   withProvider,
   withContext,
   useStyles: useTreeStyles,
-  PropsProvider: TreeStylesPropsProvider,
+  PropsProvider: TreePropsProvider,
 } = createSlotRecipeContext({ recipe: treeSlotRecipe })
 
 export { useTreeStyles }
@@ -22,7 +22,7 @@ export const Root: any = withProvider(BaseTree.Root, "root", {
   forwardAsChild: true,
 })
 
-export const PropsProvider: any = TreeStylesPropsProvider
+export const PropsProvider: any = TreePropsProvider
 
 export const Branch: any = withContext(BaseTree.Branch, "branch", {
   forwardAsChild: true,

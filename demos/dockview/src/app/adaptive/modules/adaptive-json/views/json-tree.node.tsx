@@ -1,3 +1,4 @@
+'use client'
 import {
   getAccessibleDescription,
   jsonNodeToElement,
@@ -5,15 +6,15 @@ import {
 } from '@zag-js/json-tree-utils'
 import { useMemo } from 'react'
 import { AdaptiveTree, useAdaptiveTreeContext } from '#adaptive-tree'
-import { NodeKey } from './node.key'
+import { JsonTreeNodeKey } from './json-tree.node.key'
 import { useJsonTreePropsContext } from '../providers'
-import { NodeValue } from './node.value'
+import { JsonTreeNodeValue } from './json-tree.node.value'
 
 const scopeProps = {
-  'data-scope': 'json-tree',
+  "data-scope": "json-tree-view",
 }
 
-export function Node(props: any) {
+export function JsonTreeNode(props: any) {
   const { node, indexPath, arrow, indentGuide, renderValue } = props
 
   const options: any = useJsonTreePropsContext()
@@ -42,22 +43,22 @@ export function Node(props: any) {
           <AdaptiveTree.BranchControl {...nodeProps}>
             {arrow && <AdaptiveTree.BranchIndicator {...scopeProps}>{arrow}</AdaptiveTree.BranchIndicator>}
             <AdaptiveTree.BranchText {...scopeProps}>
-              {key && <NodeKey node={node} showQuotes={options.quotesOnKeys} />}
-              <NodeValue node={valueNode} renderValue={renderValue} />
+              {key && <JsonTreeNodeKey node={node} showQuotes={options.quotesOnKeys} />}
+              <JsonTreeNodeValue node={valueNode} renderValue={renderValue} />
             </AdaptiveTree.BranchText>
           </AdaptiveTree.BranchControl>
           <AdaptiveTree.BranchContent {...scopeProps}>
             {typeof indentGuide === "boolean" ? <AdaptiveTree.BranchIndentGuide /> : indentGuide}
-            {node.children?.map((child: any, index: any) => (
-              <Node key={index} {...props} node={child} indexPath={[...indexPath, index]} />
-            ))}
+            {node.children?.map((child: any, index: any) => {
+              return <JsonTreeNode key={index} {...props} node={child} indexPath={[...indexPath, index]} />
+            })}
           </AdaptiveTree.BranchContent>
         </AdaptiveTree.Branch>
       ) : (
         <AdaptiveTree.Item {...nodeProps}>
           <AdaptiveTree.ItemText {...scopeProps}>
-            {key && <NodeValue node={node} showQuotes={options.quotesOnKeys} />}
-            <NodeValue node={valueNode} renderValue={renderValue} />
+            {key && <JsonTreeNodeValue node={node} showQuotes={options.quotesOnKeys} />}
+            <JsonTreeNodeValue node={valueNode} renderValue={renderValue} />
           </AdaptiveTree.ItemText>
         </AdaptiveTree.Item>
       )}

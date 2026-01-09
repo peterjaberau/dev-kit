@@ -1,7 +1,3 @@
-export { Root } from "./root"
-
-export { Tree } from "./tree"
-export { NodeCheckbox, NodeCheckboxIndicator, NodeRenameInput } from "./node"
 export {
   Branch,
   BranchContent,
@@ -11,8 +7,18 @@ export {
   BranchText,
   BranchTrigger,
 } from "./branch"
+
+export { TreeContext } from "../../providers"
+
 export { Item, ItemIndicator, ItemText } from "./item"
+
 export { Label } from "./label"
 
-export { RootProvider, NodeProvider, NodeContext } from "../../providers"
+export { NodeContext, NodeProvider } from "../../providers"
 
+export { Root } from "./root"
+export { RootProvider } from "../../providers"
+
+export { Tree } from "./tree"
+
+export { NodeCheckbox, NodeCheckboxIndicator, NodeRenameInput } from "./node"

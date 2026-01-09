@@ -1,9 +1,15 @@
-
-export const NodeValue = (props: any): React.ReactNode => {
+'use client'
+export const JsonTreeNodeValue = (props: any): React.ReactNode => {
   const { node, renderValue } = props
 
   if (node.type === 'text') {
     return <>{renderValue?.(node) ?? node.value}</>
+  }
+
+  console.log("--- from inside json0tree.node.value ---", { node, renderValue })
+
+  if (!node?.properties) {
+    return null
   }
 
   const Element = node.tagName
@@ -15,7 +21,7 @@ export const NodeValue = (props: any): React.ReactNode => {
       suppressHydrationWarning
     >
       {node.children.map((child: any, index: any) => (
-        <NodeValue key={index} node={child} renderValue={renderValue} />
+        <JsonTreeNodeValue key={index} node={child} renderValue={renderValue} />
       ))}
     </Element>
   )

@@ -1,11 +1,12 @@
-import { type JsonNode, getRootNode, nodeToString, nodeToValue } from '@zag-js/json-tree-utils'
+"use client"
+import { getRootNode, nodeToString, nodeToValue } from '@zag-js/json-tree-utils'
 import { forwardRef, useMemo } from 'react'
 import { createSplitProps } from '#adaptive-shared'
 import { AdaptiveTree, createTreeCollection } from '#adaptive-tree'
 import { getBranchValues } from '../utils'
 import { JsonTreePropsProvider } from '../providers'
 
-const splitJsonTreeProps = createSplitProps<any>()
+const splitJsonTreeProps = createSplitProps()
 
 export const JsonTreeRoot = forwardRef<HTMLDivElement, any>((props, ref) => {
   const [jsonTreeProps, localProps] = splitJsonTreeProps(props, [
@@ -18,8 +19,9 @@ export const JsonTreeRoot = forwardRef<HTMLDivElement, any>((props, ref) => {
 
   const { data, defaultExpandedDepth, ...restProps }: any = localProps
 
+
   const collection = useMemo(() => {
-    return createTreeCollection<JsonNode>({
+    return createTreeCollection({
       nodeToValue,
       nodeToString,
       rootNode: getRootNode(data),
@@ -33,7 +35,7 @@ export const JsonTreeRoot = forwardRef<HTMLDivElement, any>((props, ref) => {
   return (
     <JsonTreePropsProvider value={jsonTreeProps}>
       <AdaptiveTree.Root
-        data-scope="json-tree"
+        data-scope="json-tree-view"
         collection={collection}
         defaultExpandedValue={defaultExpandedValue}
         {...restProps}
