@@ -8,11 +8,38 @@ const registryMeta: any = {
     ssr: false,
   }),
 
+  "adaptive-json-all": dynamic(() => import("#adaptive-json/stories/all"), {
+    ssr: false,
+  }),
+
   "adaptive-json-basic": dynamic(() => import("#adaptive-json/stories/basic"), {
     ssr: false,
   }),
 
-  "adaptive-json-array-data": dynamic(() => import("#adaptive-json/stories/array-data"), {
+  "adaptive-json-errors": dynamic(() => import("#adaptive-json/stories/errors"), {
+    ssr: false,
+  }),
+
+  "adaptive-json-expand-level": dynamic(() => import("#adaptive-json/stories/expand-level"), {
+    ssr: false,
+  }),
+
+  "adaptive-json-functions": dynamic(() => import("#adaptive-json/stories/functions"), {
+    ssr: false,
+  }),
+  "adaptive-json-map-and-set": dynamic(() => import("#adaptive-json/stories/map-and-set"), {
+    ssr: false,
+  }),
+
+  "adaptive-json-regex": dynamic(() => import("#adaptive-json/stories/regex"), {
+    ssr: false,
+  }),
+
+  "adaptive-json-render-value": dynamic(() => import("#adaptive-json/stories/render-value"), {
+    ssr: false,
+  }),
+
+  "adaptive-json-root-provider": dynamic(() => import("#adaptive-json/stories/root-provider"), {
     ssr: false,
   }),
 
