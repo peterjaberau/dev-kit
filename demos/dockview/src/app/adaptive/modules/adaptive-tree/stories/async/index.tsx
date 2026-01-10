@@ -1,11 +1,10 @@
 "use client"
-import { AdaptiveTree } from "#adaptive-tree"
-import { createTreeCollection } from "@chakra-ui/react"
+import { AdaptiveTree, createTreeCollection } from "#adaptive-tree"
 import { useState } from "react"
 import { LuFile, LuFolder, LuLoaderCircle } from "react-icons/lu"
 
 // mock api result
-const response: Record<string, Node[]> = {
+const response: Record<string, any> = {
   node_modules: [
     { id: "zag-js", name: "zag-js" },
     { id: "pandacss", name: "panda" },
@@ -22,7 +21,7 @@ const response: Record<string, Node[]> = {
 }
 
 // function to load children of a node
-function loadChildren(details: AdaptiveTree.LoadChildrenDetails<Node>): Promise<Node[]> {
+function loadChildren(details: any): Promise<any[]> {
   const value = details.valuePath.join("/")
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -31,19 +30,19 @@ function loadChildren(details: AdaptiveTree.LoadChildrenDetails<Node>): Promise<
   })
 }
 
-export const TreeViewAsync = () => {
+const Index = () => {
   const [collection, setCollection] = useState(initialCollection)
   return (
     <AdaptiveTree.Root
       collection={collection}
       loadChildren={loadChildren}
-      onLoadChildrenComplete={(e) => setCollection(e.collection)}
+      onLoadChildrenComplete={(e: any) => setCollection(e.collection)}
     >
       <AdaptiveTree.Label>Tree</AdaptiveTree.Label>
       <AdaptiveTree.Tree>
-        <AdaptiveTree.Node<Node>
+        <AdaptiveTree.Node
           indentGuide={<AdaptiveTree.BranchIndentGuide />}
-          render={({ node, nodeState }) =>
+          render={({ node, nodeState }: any) =>
             nodeState.isBranch ? (
               <AdaptiveTree.BranchControl>
                 {nodeState.loading ? <LuLoaderCircle style={{ animation: "spin 1s infinite" }} /> : <LuFolder />}
@@ -62,14 +61,7 @@ export const TreeViewAsync = () => {
   )
 }
 
-interface Node {
-  id: string
-  name: string
-  children?: Node[]
-  childrenCount?: number
-}
-
-const initialCollection = createTreeCollection<Node>({
+const initialCollection = createTreeCollection({
   nodeToValue: (node) => node.id,
   nodeToString: (node) => node.name,
   rootNode: {

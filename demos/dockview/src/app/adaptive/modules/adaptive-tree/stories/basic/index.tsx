@@ -1,41 +1,49 @@
 "use client"
 
+import { useContext, useEffect, useMemo, useRef } from "react"
+import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
 import { AdaptiveTree, createTreeCollection } from "#adaptive-tree"
-import { LuFile, LuFolder } from "react-icons/lu"
+import { TreeContext, DependencyContext } from "#adaptive-modules/adaptive-dnd/dnd-tree-context"
+import { useDndTree } from "#adaptive-modules/adaptive-dnd/use-dnd-tree"
+import { TreeNode } from "./TreeNode"
+import { GroupDropIndicator } from "#modules/drag-and-drop/components/dnd/drop-indicator/group"
 
-const Index = () => {
+function Index() {
+  const rootRef = useRef<HTMLDivElement>(null)
+  const groupRef = useRef<HTMLDivElement>(null)
+
+  const context = useMemo(() => ({ uniqueContextId: Symbol("tree") }), [])
+
+  const { extractInstruction } = useContext(DependencyContext)
+
+  useEffect(() => {
+    return () => {
+      liveRegion.cleanup()
+    }
+  }, [])
+
+  const { groupState } = useDndTree({
+    rootRef,
+    groupRef,
+    uniqueContextId: context.uniqueContextId,
+    extractInstruction,
+  })
+
   return (
-    <AdaptiveTree.Root collection={collection} maxW="sm">
-      <AdaptiveTree.Label>Tree</AdaptiveTree.Label>
-      <AdaptiveTree.Tree>
-        <AdaptiveTree.Node
-          indentGuide={<AdaptiveTree.BranchIndentGuide />}
-          render={({ node, nodeState }: any) =>
-            nodeState.isBranch ? (
-              <AdaptiveTree.BranchControl>
-                <LuFolder />
-                <AdaptiveTree.BranchText>{node.name}</AdaptiveTree.BranchText>
-              </AdaptiveTree.BranchControl>
-            ) : (
-              <AdaptiveTree.Item>
-                <LuFile />
-                <AdaptiveTree.ItemText>{node.name}</AdaptiveTree.ItemText>
-              </AdaptiveTree.Item>
-            )
-          }
-        />
-      </AdaptiveTree.Tree>
-    </AdaptiveTree.Root>
+    <TreeContext.Provider value={context}>
+      <AdaptiveTree.Root collection={collection}>
+        <AdaptiveTree.Label>Tree</AdaptiveTree.Label>
+        <AdaptiveTree.Tree ref={rootRef}>
+          <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
+            <AdaptiveTree.Node render={({ node, nodeState }: any) => <TreeNode node={node} nodeState={nodeState} />} />
+          </GroupDropIndicator>
+        </AdaptiveTree.Tree>
+      </AdaptiveTree.Root>
+    </TreeContext.Provider>
   )
 }
 
-interface Node {
-  id: string
-  name: string
-  children?: Node[]
-}
-
-const collection = createTreeCollection<Node>({
+const collection = createTreeCollection({
   nodeToValue: (node) => node.id,
   nodeToString: (node) => node.name,
   rootNode: {

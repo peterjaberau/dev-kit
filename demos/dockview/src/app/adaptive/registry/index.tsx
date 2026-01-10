@@ -2,54 +2,22 @@
 import dynamic from "next/dynamic"
 import { Center } from "@chakra-ui/react"
 import { cache, useEffect, useState } from "react"
+import { registerAdaptiveJson } from "#adaptive-json/stories/registry"
+import { registerAdaptiveTree } from "#adaptive-tree/stories/registry"
+// import { registerAdaptiveTreeStories } from "#adaptive-tree/stories/registry"
 
-const registryMeta: any = {
-  "adaptive-tree-basic": dynamic(() => import("#adaptive-tree/views/adaptive-tree/stories/adaptive-tree-basic"), {
-    ssr: false,
-  }),
+export const makeRegistry = (loaders: any, prefix: string) =>
+  Object.fromEntries(
+    Object.entries(loaders).map(([key, loader]: any) => [`${prefix}${key}`, dynamic(loader, { ssr: false })]),
+  )
 
-  "adaptive-json-all": dynamic(() => import("#adaptive-json/stories/all"), {
-    ssr: false,
-  }),
-
-  "adaptive-json-basic": dynamic(() => import("#adaptive-json/stories/basic"), {
-    ssr: false,
-  }),
-
-  "adaptive-json-errors": dynamic(() => import("#adaptive-json/stories/errors"), {
-    ssr: false,
-  }),
-
-  "adaptive-json-expand-level": dynamic(() => import("#adaptive-json/stories/expand-level"), {
-    ssr: false,
-  }),
-
-  "adaptive-json-functions": dynamic(() => import("#adaptive-json/stories/functions"), {
-    ssr: false,
-  }),
-  "adaptive-json-map-and-set": dynamic(() => import("#adaptive-json/stories/map-and-set"), {
-    ssr: false,
-  }),
-
-  "adaptive-json-regex": dynamic(() => import("#adaptive-json/stories/regex"), {
-    ssr: false,
-  }),
-
-  "adaptive-json-render-value": dynamic(() => import("#adaptive-json/stories/render-value"), {
-    ssr: false,
-  }),
-
-  "adaptive-json-root-provider": dynamic(() => import("#adaptive-json/stories/root-provider"), {
-    ssr: false,
-  }),
-
-  //array-data
-
-  //adaptive-json
+const registry = {
+  ...makeRegistry(registerAdaptiveJson.loaders, registerAdaptiveJson.prefix),
+  ...makeRegistry(registerAdaptiveTree.loaders, registerAdaptiveTree.prefix),
 }
 
 export const registryComponentsObj = (id: any) => {
-  const getComponentMeta = registryMeta[id]
+  const getComponentMeta = registry[id]
 
   if (!getComponentMeta) {
     return () => <Center>Invalid example ID</Center>
@@ -75,3 +43,7 @@ export const ComponentRenderer = (props: { id: string; withCache?: boolean; [key
 
   return <ComponentRendered key={id} {...rest} />
 }
+
+export const getRegistryNamesFromRegistry = (registry: Record<string, any>): string[] => Object.keys(registry)
+export const registryNames: any = getRegistryNamesFromRegistry(registry)
+
