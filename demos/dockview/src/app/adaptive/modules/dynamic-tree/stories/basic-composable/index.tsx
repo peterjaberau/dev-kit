@@ -1,52 +1,38 @@
 "use client"
 
+import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
+import { GroupDropIndicator } from "#drag-and-drop/components/dnd/drop-indicator/group"
+import { DropIndicator } from "#drag-and-drop/components/dnd/drop-indicator/list-item"
+import { useDndTree, useDndNode } from "#drag-and-drop/components"
 import { DynamicTree, createTreeCollection, useDynamicTree } from "#dynamic-tree"
-import { LuFile, LuFolder } from "react-icons/lu"
-import { SquareCheckBigIcon, ChevronRightIcon, FileIcon, FolderIcon } from "lucide-react"
+import { TreeNodeComposed } from "./tree-node"
+import { useEffect, useRef } from "react"
 
 const Index = () => {
   const dynamicTree = useDynamicTree({ collection })
 
+  const rootRef = useRef<HTMLDivElement>(null)
+  const groupRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    return () => liveRegion.cleanup()
+  }, [])
+
+  const { groupState } = useDndTree({
+    rootRef: rootRef,
+    groupRef,
+  })
+
   return (
     <DynamicTree.RootProvider value={dynamicTree}>
-      <DynamicTree.Label>Tree</DynamicTree.Label>
-      <DynamicTree.Tree>
+      <DynamicTree.Tree ref={rootRef}>
         {collection.rootNode.children?.map((node, index) => (
-          <TreeNodeComposed key={node.id} node={node} indexPath={[index]} />
+          <GroupDropIndicator key={node.id} ref={groupRef} isActive={groupState === "is-innermost-over"}>
+            <TreeNodeComposed  node={node} indexPath={[index]} />
+          </GroupDropIndicator>
         ))}
       </DynamicTree.Tree>
     </DynamicTree.RootProvider>
-  )
-}
-
-const TreeNodeComposed = (props: any) => {
-  const { node, indexPath } = props
-  return (
-    <DynamicTree.NodeProvider key={node.id} node={node} indexPath={indexPath}>
-      {node.children ? (
-        <DynamicTree.Branch>
-          <DynamicTree.BranchControl>
-            <FolderIcon />
-            <DynamicTree.BranchText>{node.name}</DynamicTree.BranchText>
-            <DynamicTree.BranchIndicator>
-              <ChevronRightIcon />
-            </DynamicTree.BranchIndicator>
-          </DynamicTree.BranchControl>
-          <DynamicTree.BranchContent>
-            <DynamicTree.BranchIndentGuide />
-            {node.children.map((child: any, index: any) => (
-              <TreeNodeComposed key={child.id} node={child} indexPath={[...indexPath, index]} />
-            ))}
-          </DynamicTree.BranchContent>
-        </DynamicTree.Branch>
-      ) : (
-        <DynamicTree.Item>
-          <SquareCheckBigIcon />
-          {/*<DynamicTree.ItemIndicator />*/}
-          <DynamicTree.ItemText>{node.name}</DynamicTree.ItemText>
-        </DynamicTree.Item>
-      )}
-    </DynamicTree.NodeProvider>
   )
 }
 

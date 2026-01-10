@@ -9,7 +9,7 @@ import { mergeRefs } from "@chakra-ui/react"
 
 export const Tree = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
 
-  const { treeItemChildrenIds, treeItemChildrenRef, treeItemRef } = useTreeItem()
+  const { treeItemChildrenIds, treeItemChildrenRef, treeItemRef, sendToTreeItem } = useTreeItem()
   const rootRef = useRef<HTMLDivElement>(null)
   const groupRef = useRef<HTMLDivElement>(null)
   const mergedRef = mergeRefs(rootRef, ref)
@@ -19,7 +19,8 @@ export const Tree = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   }, [])
 
   const { groupState } = useDndTree({
-    itemRef: treeItemRef,
+    // itemRef: treeItemRef,
+    sender: sendToTreeItem,
     rootRef: rootRef,
     groupRef,
   })

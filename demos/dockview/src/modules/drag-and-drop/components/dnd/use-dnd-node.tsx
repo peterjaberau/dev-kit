@@ -124,8 +124,17 @@ export function useDndNode({
               operations: { combine: "blocked" },
             },
             {
+              // node for dynamic tree example
+              when: (item: any) => item?.scope === "dynamic-tree-node",
+              operations: {
+                "reorder-before": "available",
+                combine: "available",
+                "reorder-after": "available",
+              },
+            },
+            {
               // leaf node
-              when: (item: any) => !item?.children,
+              when: (item: any) => !item?.children && !item?.isBranchData,
               operations: {
                 "reorder-before": "available",
                 combine: "not-available",
