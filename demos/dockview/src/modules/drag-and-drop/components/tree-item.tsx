@@ -33,6 +33,11 @@ export const TreeItem = memo(function TreeItem({
   const toggleHandler = () => sendToTreeItem({ type: "toggle", open: !isOpen })
 
   const { dragState, groupState, instruction } = useDndNode({
+    item: {
+      id: item.id,
+    },
+    isOpen: isOpen || false,
+    sender: sendToTreeItem,
     itemRef,
     buttonRef,
     groupRef,

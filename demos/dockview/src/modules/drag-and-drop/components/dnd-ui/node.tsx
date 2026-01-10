@@ -42,6 +42,11 @@ export const Node = memo(
     const groupRef = useRef<HTMLDivElement>(null)
 
     const { dragState, groupState, instruction } = useDndNode({
+      item: {
+        id: item.id,
+      },
+      isOpen: isOpen || false,
+      sender: sendToTreeItem,
       itemRef,
       buttonRef: nodeRef,
       groupRef,

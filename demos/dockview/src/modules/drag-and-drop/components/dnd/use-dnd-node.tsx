@@ -12,7 +12,11 @@ import {
 import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview"
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview"
 import { createRoot } from "react-dom/client"
-import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
+import {
+  type Instruction,
+  extractInstruction,
+  attachInstruction,
+} from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 import { useTree, useTreeItem } from "../../selectors"
 
 function delay({ waitMs, fn }: { waitMs: number; fn: () => void }) {
@@ -32,31 +36,17 @@ function sameInstruction(a: any, b: any) {
   return a.operation === b.operation && a.position === b.position
 }
 
-type Params = {
-  itemRef: any
-  buttonRef: React.RefObject<HTMLButtonElement | HTMLDivElement | any>
-  groupRef: React.RefObject<HTMLDivElement | null | any>
-}
-
 export function useDndNode({
-  itemRef, //item is the actorRef
+  item,
+  sender,
+  isOpen,
+  // itemRef, //item is the actorRef
   buttonRef,
   groupRef,
-}: Params) {
-  const { uniqueContextId, dependencies } = useTree()
-  const { attachInstruction, extractInstruction } = dependencies
-
-  const {
-    viewConfig,
-    treeItemContext,
-    dataValue: item,
-    childItemsRef,
-    treeItemChildrenRef,
-    treeItemChildrenIds,
-    sendToTreeItem,
-    isOpen,
-    treeItemId,
-  } = useTreeItem({ actorRef: itemRef })
+}: any) {
+  // const { uniqueContextId, dependencies } = useTree()
+  // const { attachInstruction, extractInstruction } = dependencies
+  // const { dataValue: item, sendToTreeItem, isOpen } = useTreeItem({ actorRef: itemRef })
 
   const [dragState, setDragState] = useState<"idle" | "dragging">("idle")
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
@@ -72,7 +62,7 @@ export function useDndNode({
         delay({
           waitMs: 500,
           fn: () => {
-            sendToTreeItem({ type: "toggle", open: true, itemId: item.id })
+            sender && sender({ type: "toggle", open: true, itemId: item.id })
           },
         })
       }
@@ -88,21 +78,21 @@ export function useDndNode({
             id: item.id,
             type: "tree-item",
             isOpenOnDragStart: isOpen,
-            uniqueContextId,
+            // uniqueContextId,
           }
         },
         onDragStart: ({ source, location }) => {
           setDragState("dragging")
 
           if (source.data.isOpenOnDragStart) {
-            sendToTreeItem({ type: "toggle", open: false, itemId: item.id })
+            sender && sender({ type: "toggle", open: false, itemId: item.id })
           }
         },
         onDrop: ({ source, location }) => {
           setDragState("idle")
 
           if (source.data.isOpenOnDragStart) {
-            sendToTreeItem({ type: "toggle", open: true, itemId: item.id })
+            sender && sender({ type: "toggle", open: true, itemId: item.id })
           }
         },
         onGenerateDragPreview: ({ nativeSetDragImage }) => {
@@ -138,7 +128,7 @@ export function useDndNode({
               when: (item: any) => !item?.children,
               operations: {
                 "reorder-before": "available",
-                "combine": "not-available",
+                combine: "not-available",
                 "reorder-after": "available",
               },
             },
@@ -203,10 +193,9 @@ export function useDndNode({
         },
         canDrop: ({ source, input, element }) => {
           return (
-            source.element !== buttonRef.current &&
-            source.data.type === "tree-item" &&
-            source.data.id !== item.id &&
-            source.data.uniqueContextId === uniqueContextId
+            source.element !== buttonRef.current && source.data.type === "tree-item" && source.data.id !== item.id
+            // source.data.id !== item.id &&
+            // source.data.uniqueContextId === uniqueContextId
           )
         },
 
@@ -222,7 +211,9 @@ export function useDndNode({
         },
       }),
     )
-  }, [item, uniqueContextId, attachInstruction, extractInstruction])
+
+    //item, uniqueContextId, attachInstruction, extractInstruction
+  }, [item, attachInstruction, extractInstruction])
 
   useEffect(() => {
     if (!groupRef.current) return
@@ -238,9 +229,9 @@ export function useDndNode({
       getIsSticky: () => false,
       canDrop: ({ source, input, element }) => {
         return (
-          source.data.type === "tree-item" &&
-          source.data.id !== item.id &&
-          source.data.uniqueContextId === uniqueContextId
+          source.data.type === "tree-item" && source.data.id !== item.id
+          // source.data.id !== item.id &&
+          // source.data.uniqueContextId === uniqueContextId
         )
       },
 
@@ -249,7 +240,8 @@ export function useDndNode({
       onDragLeave: () => setGroupState("idle"),
       onDrop: () => setGroupState("idle"),
     })
-  }, [item.id, uniqueContextId])
+    //item.id, uniqueContextId
+  }, [item.id])
 
   return { dragState, groupState, instruction }
 }

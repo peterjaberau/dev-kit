@@ -39,7 +39,7 @@ export default function Page() {
         </DevPanel>
       </GridItem>
       <GridItem colSpan={1} flex={1}  data-page="story-col-3">
-        <DevPanel title={"DynamicTree (collectionless)"}>
+        <DevPanel title={"DynamicTree (Dynamic data model)"}>
           <DynamicTreeStory/>
         </DevPanel>
       </GridItem>

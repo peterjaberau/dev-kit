@@ -3,7 +3,6 @@ import DraggableTree from ".."
 
 import DraggableTreeExample from "../index-example"
 import { DragDrop, Tree } from "../components"
-import { TreeExample } from "../components/dnd-ui/tree-example"
 import { dataTree } from "./data"
 import { SimpleGrid, GridItem, Container } from "@chakra-ui/react"
 

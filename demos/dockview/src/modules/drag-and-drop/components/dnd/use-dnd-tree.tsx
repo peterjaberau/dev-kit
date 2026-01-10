@@ -8,19 +8,16 @@ import {
   monitorForElements,
   type ElementDropTargetEventBasePayload,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
-import { useTree, useTreeItem } from "../../selectors"
+import { extractInstruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 
-type Params = {
-  itemRef: any
-  rootRef: React.RefObject<HTMLDivElement | null | any>
-  groupRef: React.RefObject<HTMLDivElement | null | any>
-}
+// import { useTree, useTreeItem } from "../../selectors"
 
-export function useDndTree({ itemRef, rootRef, groupRef }: Params) {
-  const { uniqueContextId, dependencies } = useTree()
-  const { extractInstruction } = dependencies
+//itemRef,
+export function useDndTree({ sender, rootRef, groupRef }: any) {
+  // const { uniqueContextId, dependencies } = useTree()
+  // const { extractInstruction } = dependencies
 
-  const { sendToTreeItem } = useTreeItem({ actorRef: itemRef })
+  // const { sendToTreeItem } = useTreeItem({ actorRef: itemRef })
 
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
 
@@ -36,7 +33,8 @@ export function useDndTree({ itemRef, rootRef, groupRef }: Params) {
 
     return combine(
       monitorForElements({
-        canMonitor: ({ source }) => source.data.type === "tree-item" && source.data.uniqueContextId === uniqueContextId,
+        //&& source.data.uniqueContextId === uniqueContextId
+        canMonitor: ({ source }) => source.data.type === "tree-item",
 
         onDrop({ location, source }) {
           if (!location.current.dropTargets.length) return
@@ -46,7 +44,7 @@ export function useDndTree({ itemRef, rootRef, groupRef }: Params) {
 
           if (!instruction) return
 
-          sendToTreeItem({
+          sender && sender({
             type: "instruction",
             instruction,
             itemId: source.data.id,
@@ -58,14 +56,16 @@ export function useDndTree({ itemRef, rootRef, groupRef }: Params) {
       dropTargetForElements({
         element: groupRef.current!,
         getData: () => ({ type: "group" }),
-        canDrop: ({ source }) => source.data.type === "tree-item" && source.data.uniqueContextId === uniqueContextId,
+        //&& source.data.uniqueContextId === uniqueContextId
+        canDrop: ({ source }) => source.data.type === "tree-item",
         onDragStart: onGroupChange,
         onDropTargetChange: onGroupChange,
         onDragLeave: () => setGroupState("idle"),
         onDrop: () => setGroupState("idle"),
       }),
     )
-  }, [extractInstruction, uniqueContextId, rootRef, groupRef])
+    //uniqueContextId,
+  }, [extractInstruction, rootRef, groupRef])
 
   return { groupState }
 }
