@@ -123,15 +123,7 @@ export function useDndNode({
               when: (item: any) => item.isDraft,
               operations: { combine: "blocked" },
             },
-            {
-              // node for dynamic tree example
-              when: (item: any) => item?.scope === "dynamic-tree-node",
-              operations: {
-                "reorder-before": "available",
-                combine: "available",
-                "reorder-after": "available",
-              },
-            },
+
             {
               // leaf node
               when: (item: any) => !item?.children && !item?.isBranchData,
@@ -148,14 +140,16 @@ export function useDndNode({
                 "reorder-before": "available",
                 combine: "available",
                 "reorder-after": "not-available",
+                // "reorder-after": "not-available",
               },
             },
             {
               // fallback
               when: () => true,
               operations: {
-                combine: "available",
                 "reorder-before": "available",
+                combine: "available",
+                // "reorder-after": "available",
               },
             },
           ]
@@ -176,6 +170,12 @@ export function useDndNode({
 
             return collected
           }
+
+          console.log("------dynamicTree", {
+            item,
+            operation: resolveOperations(item),
+          })
+
 
           return attachInstruction(
             { id: item.id },

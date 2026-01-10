@@ -33,16 +33,16 @@ export default function Page() {
           </DraggableTree>
         </DevPanel>
       </GridItem>
-      <GridItem colSpan={1} flex={1}  data-page="story-col-2">
+      <GridItem colSpan={2} flex={1}  data-page="story-col-2">
         <DevPanel title={"AdaptiveTree (collection)"}>
           <ComponentRenderer id={paramValue} />
         </DevPanel>
       </GridItem>
-      <GridItem colSpan={1} flex={1}  data-page="story-col-3">
-        <DevPanel title={"DynamicTree (Dynamic data model)"}>
-          <DynamicTreeStory/>
-        </DevPanel>
-      </GridItem>
+      {/*<GridItem colSpan={1} flex={1}  data-page="story-col-3">*/}
+      {/*  <DevPanel title={"DynamicTree (Dynamic data model)"}>*/}
+      {/*    <DynamicTreeStory/>*/}
+      {/*  </DevPanel>*/}
+      {/*</GridItem>*/}
     </SimpleGrid>
   )
 }

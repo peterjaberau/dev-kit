@@ -16,7 +16,9 @@ export const TreeNodeComposed = (props: any) => {
   const { dragState, groupState, instruction } = useDndNode({
     item: {
       id: node.id,
-      scope: 'dynamic-tree-node',
+      children: node.children,
+      isBranchData: true,
+      isOpen: false,
     },
     isOpen: true,
     buttonRef: nodeRef,
@@ -37,11 +39,12 @@ export const TreeNodeComposed = (props: any) => {
             <DynamicTree.BranchIndicator>
               <ChevronRightIcon />
             </DynamicTree.BranchIndicator>
-            {instruction ? <DropIndicator instruction={instruction} /> : null}
           </DynamicTree.BranchControl>
+          {instruction ? <DropIndicator instruction={instruction} /> : null}
           <DynamicTree.BranchContent>
-            <DynamicTree.BranchIndentGuide />
             <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
+              <DynamicTree.BranchIndentGuide />
+
               {node.children.map((child: any, index: any) => (
                 <TreeNodeComposed key={child.id} node={child} indexPath={[...indexPath, index]} />
               ))}
@@ -52,19 +55,26 @@ export const TreeNodeComposed = (props: any) => {
         <chakra.div
           css={{
             position: "relative",
+            ...(dragState === "idle" && {
+              _hover: {
+                backgroundColor: "bg.muted",
+              },
+            }),
           }}
         >
-          <DynamicTree.Item
-            ref={nodeRef}
-            css={{
-              opacity: dragState === "dragging" ? 0.5 : 1,
-            }}
-          >
-            <SquareCheckBigIcon />
-            {/*<DynamicTree.ItemIndicator />*/}
-            <DynamicTree.ItemText>{node.name}</DynamicTree.ItemText>
+          <chakra.div>
+            <DynamicTree.Item
+              css={{
+                opacity: dragState === "dragging" ? 0.5 : 1,
+              }}
+              ref={nodeRef}
+            >
+              <SquareCheckBigIcon />
+              {/*<DynamicTree.ItemIndicator />*/}
+              <DynamicTree.ItemText>{node.name}</DynamicTree.ItemText>
+            </DynamicTree.Item>
             {instruction ? <DropIndicator instruction={instruction} /> : null}
-          </DynamicTree.Item>
+          </chakra.div>
         </chakra.div>
       )}
     </DynamicTree.NodeProvider>

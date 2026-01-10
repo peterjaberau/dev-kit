@@ -1,6 +1,6 @@
 import { createAnatomy } from "#adaptive-core"
 
-export const anatomy = createAnatomy("tree-view").parts(
+export const anatomy = createAnatomy("dynamic-tree").parts(
   "branch",
   "branchContent",
   "branchControl",

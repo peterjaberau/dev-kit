@@ -40,6 +40,7 @@ export const treeSlotRecipe = defineSlotRecipe({
     },
     branch: {
       position: "relative",
+      // p: 2
     },
     branchContent: {
       position: "relative",
@@ -85,12 +86,12 @@ export const treeSlotRecipe = defineSlotRecipe({
       ps: "var(--tree-offset)",
       pe: "var(--tree-padding-inline)",
       py: "var(--tree-padding-block)",
-      focusVisibleRing: "inside",
-      focusRingColor: "border.emphasized",
-      focusRingWidth: "2px",
-      "&:hover, &:focus-visible": {
-        bg: "bg.muted",
-      },
+      // focusVisibleRing: "inside",
+      // focusRingColor: "border.emphasized",
+      // focusRingWidth: "2px",
+      // "&:hover, &:focus-visible": {
+      //   bg: "bg.muted",
+      // },
       _disabled: {
         layerStyle: "disabled",
       },
@@ -109,12 +110,12 @@ export const treeSlotRecipe = defineSlotRecipe({
       ps: "var(--tree-offset)",
       pe: "var(--tree-padding-inline)",
       py: "var(--tree-padding-block)",
-      focusVisibleRing: "inside",
-      focusRingColor: "border.emphasized",
-      focusRingWidth: "2px",
-      "&:hover, &:focus-visible": {
-        bg: "bg.muted",
-      },
+      // focusVisibleRing: "inside",
+      // focusRingColor: "border.emphasized",
+      // focusRingWidth: "2px",
+      // "&:hover, &:focus-visible": {
+      //   bg: "bg.muted",
+      // },
       _disabled: {
         layerStyle: "disabled",
       },
@@ -163,26 +164,26 @@ export const treeSlotRecipe = defineSlotRecipe({
       subtle: {
         branchControl: {
           _selected: {
-            bg: "colorPalette.subtle",
-            color: "colorPalette.fg",
+            // bg: "colorPalette.subtle",
+            // color: "colorPalette.fg",
           },
         },
         item: {
           _selected: {
-            bg: "colorPalette.subtle",
-            color: "colorPalette.fg",
+            // bg: "colorPalette.subtle",
+            // color: "colorPalette.fg",
           },
         },
       },
       solid: {
         branchControl: {
           _selected: {
-            layerStyle: "fill.solid",
+            // layerStyle: "fill.solid",
           },
         },
         item: {
           _selected: {
-            layerStyle: "fill.solid",
+            // layerStyle: "fill.solid",
           },
         },
       },
@@ -204,6 +205,6 @@ export const treeSlotRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: "md",
-    variant: "subtle",
+    // variant: "subtle",
   },
 })

@@ -60,6 +60,9 @@
       "#dynamic-tree/*": ["./src/app/adaptive/modules/dynamic-tree/*"],
       "#dynamic-tree": ["./src/app/adaptive/modules/dynamic-tree"],
 
+      "#query-builder/*": ["./src/app/adaptive/modules/query-builder/*"],
+      "#query-builder": ["./src/app/adaptive/modules/query-builder"],
+
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
 

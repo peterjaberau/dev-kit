@@ -25,12 +25,12 @@ const Index = () => {
 
   return (
     <DynamicTree.RootProvider value={dynamicTree}>
-      <DynamicTree.Tree ref={rootRef}>
-        {collection.rootNode.children?.map((node, index) => (
-          <GroupDropIndicator key={node.id} ref={groupRef} isActive={groupState === "is-innermost-over"}>
-            <TreeNodeComposed  node={node} indexPath={[index]} />
-          </GroupDropIndicator>
-        ))}
+      <DynamicTree.Tree unstyled={false} animateContent={false} size={"sm"} variant={"subtle"} ref={rootRef}>
+        <GroupDropIndicator  ref={groupRef} isActive={groupState === "is-innermost-over"}>
+          {collection.rootNode.children?.map((node, index) => (
+            <TreeNodeComposed key={node.id} node={node} indexPath={[index]} />
+          ))}
+        </GroupDropIndicator>
       </DynamicTree.Tree>
     </DynamicTree.RootProvider>
   )
