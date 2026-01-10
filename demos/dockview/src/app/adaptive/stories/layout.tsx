@@ -3,6 +3,7 @@
 import NextLink from "next/link"
 import { useParams } from "next/navigation"
 import { registryNames } from "#adaptive-registry"
+import DevPanel from '#components/ui-common/dev-panel'
 import { Button, Stack, Container, SimpleGrid, GridItem } from "@chakra-ui/react"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -11,10 +12,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 
   return (
-    <Container p={10}>
-      <SimpleGrid columns={4}>
-        <GridItem>
-          <Stack gap="3" p={4} align="stretch">
+    <SimpleGrid w={"full"} columns={10} p={4} h={"vh"} overflow={"hidden"} gap={4} data-page="adaptive-stories-layout">
+      <GridItem colSpan={2} p={2} bg="bg.panel">
+        <DevPanel title="Stories">
+          <Stack gap="3" p={4} align="stretch" boxShadow="sm" borderRadius="md">
             {registryNames.map((name: any, index: any) => (
               <Button
                 css={{
@@ -31,10 +32,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Button>
             ))}
           </Stack>
-        </GridItem>
+        </DevPanel>
+      </GridItem>
 
-        <GridItem colSpan={3}>{children}</GridItem>
-      </SimpleGrid>
-    </Container>
+      <GridItem colSpan={8}>{children}</GridItem>
+    </SimpleGrid>
   )
 }

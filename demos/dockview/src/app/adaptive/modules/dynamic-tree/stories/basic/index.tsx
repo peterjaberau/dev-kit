@@ -1,31 +1,31 @@
 "use client"
 
-import { AdaptiveTree, createTreeCollection } from "#adaptive-tree"
+import { DynamicTree, createTreeCollection } from "#dynamic-tree"
 import { LuFile, LuFolder } from "react-icons/lu"
 
 const Index = () => {
   return (
-    <AdaptiveTree.Root collection={collection} maxW="sm">
-      <AdaptiveTree.Label>Tree</AdaptiveTree.Label>
-      <AdaptiveTree.Tree>
-        <AdaptiveTree.Node
-          indentGuide={<AdaptiveTree.BranchIndentGuide />}
+    <DynamicTree.Root collection={collection} maxW="sm">
+      <DynamicTree.Label>Tree</DynamicTree.Label>
+      <DynamicTree.Tree>
+        <DynamicTree.Node
+          indentGuide={<DynamicTree.BranchIndentGuide />}
           render={({ node, nodeState }: any) =>
             nodeState.isBranch ? (
-              <AdaptiveTree.BranchControl>
+              <DynamicTree.BranchControl>
                 <LuFolder />
-                <AdaptiveTree.BranchText>{node.name}</AdaptiveTree.BranchText>
-              </AdaptiveTree.BranchControl>
+                <DynamicTree.BranchText>{node.name}</DynamicTree.BranchText>
+              </DynamicTree.BranchControl>
             ) : (
-              <AdaptiveTree.Item>
+              <DynamicTree.Item>
                 <LuFile />
-                <AdaptiveTree.ItemText>{node.name}</AdaptiveTree.ItemText>
-              </AdaptiveTree.Item>
+                <DynamicTree.ItemText>{node.name}</DynamicTree.ItemText>
+              </DynamicTree.Item>
             )
           }
         />
-      </AdaptiveTree.Tree>
-    </AdaptiveTree.Root>
+      </DynamicTree.Tree>
+    </DynamicTree.Root>
   )
 }
 

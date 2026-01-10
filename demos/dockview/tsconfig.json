@@ -57,6 +57,9 @@
       "#adaptive-tree/*": ["./src/app/adaptive/modules/adaptive-tree/*"],
       "#adaptive-tree": ["./src/app/adaptive/modules/adaptive-tree"],
 
+      "#dynamic-tree/*": ["./src/app/adaptive/modules/dynamic-tree/*"],
+      "#dynamic-tree": ["./src/app/adaptive/modules/dynamic-tree"],
+
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
 

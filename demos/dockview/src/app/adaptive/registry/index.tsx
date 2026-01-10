@@ -4,6 +4,7 @@ import { Center } from "@chakra-ui/react"
 import { cache, useEffect, useState } from "react"
 import { registerAdaptiveJson } from "#adaptive-json/stories/registry"
 import { registerAdaptiveTree } from "#adaptive-tree/stories/registry"
+import { registerDynamicTree } from "#dynamic-tree/stories/registry"
 // import { registerAdaptiveTreeStories } from "#adaptive-tree/stories/registry"
 
 export const makeRegistry = (loaders: any, prefix: string) =>
@@ -14,6 +15,7 @@ export const makeRegistry = (loaders: any, prefix: string) =>
 const registry = {
   ...makeRegistry(registerAdaptiveJson.loaders, registerAdaptiveJson.prefix),
   ...makeRegistry(registerAdaptiveTree.loaders, registerAdaptiveTree.prefix),
+  ...makeRegistry(registerDynamicTree.loaders, registerDynamicTree.prefix),
 }
 
 export const registryComponentsObj = (id: any) => {
