@@ -31,7 +31,7 @@ export const Root = ({
     <Card.Root size={"sm"} h={"full"} w={"full"}>
       <Card.Header borderBottom={"1px solid"} borderBottomColor={"border"} pb={3}>
         <HStack>
-          <HStack>
+          <HStack flex={1}>
             <Title>{title}</Title>
           </HStack>
           {actions && (
