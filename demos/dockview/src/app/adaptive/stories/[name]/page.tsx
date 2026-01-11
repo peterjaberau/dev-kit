@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation"
 import { ComponentRenderer } from "#adaptive-registry"
-import { Container, GridItem, SimpleGrid } from "@chakra-ui/react"
+import { Center, Container, GridItem, SimpleGrid } from "@chakra-ui/react"
 import DraggableTree from "#drag-and-drop"
 import { dataTree } from "#drag-and-drop/examples/data"
 import { DragDrop } from "#drag-and-drop/components"
@@ -15,7 +15,7 @@ export default function Page() {
   const paramValue = params.name as string
   return (
     <SimpleGrid columns={3} gap={10} h={"full"}>
-      <GridItem colSpan={1} flex={1}  data-page="story-col-1">
+      <GridItem colSpan={1} flex={1} data-page="story-col-1">
         <DevPanel title={"Custom Tree + Dnd"}>
           <DraggableTree data={dataTree}>
             <DragDrop.Root
@@ -33,9 +33,21 @@ export default function Page() {
           </DraggableTree>
         </DevPanel>
       </GridItem>
-      <GridItem colSpan={2} flex={1}  data-page="story-col-2">
-        <DevPanel title={"AdaptiveTree (collection)"}>
-          <ComponentRenderer id={paramValue} />
+      <GridItem colSpan={2} flex={1} data-page="story-col-2">
+        <DevPanel title={paramValue}>
+          <Center
+            p={4}
+            css={
+              {
+                // backgroundColor: "bg.panel",
+                p: 2,
+                boxShadow: "sm",
+                borderRadius: "sm",
+              }
+            }
+          >
+            <ComponentRenderer id={paramValue} />
+          </Center>
         </DevPanel>
       </GridItem>
       {/*<GridItem colSpan={1} flex={1}  data-page="story-col-3">*/}

@@ -48,6 +48,9 @@
       "#adaptive-modules/*": ["./src/app/adaptive/modules/*"],
       "#adaptive-modules": ["./src/app/adaptive/modules"],
 
+      "#adaptive-tool/*": ["./src/app/adaptive/modules/adaptive-tool/*"],
+      "#adaptive-tool": ["./src/app/adaptive/modules/adaptive-tool"],
+
       "#adaptive-dnd/*": ["./src/app/adaptive/modules/adaptive-dnd/*"],
       "#adaptive-dnd": ["./src/app/adaptive/modules/adaptive-dnd"],
 

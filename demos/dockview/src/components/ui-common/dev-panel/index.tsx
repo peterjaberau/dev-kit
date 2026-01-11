@@ -4,8 +4,8 @@ import { ScrollAreaWrapper } from "#components/ui-common/scroll-area-wrapper"
 const Index = ({ title, children, autoScroll = true, args }: any) => {
   return (
     <Card.Root size={"sm"} h={"full"} w={'full'} >
-      <Card.Header>{title}</Card.Header>
-      <Card.Body p={0}>
+      <Card.Header borderBottom={'1px solid'} borderBottomColor={'border'} pb={3}>{title}</Card.Header>
+      <Card.Body p={0} pt={6} backgroundColor={"bg.subtle"}>
         <Flex
           css={{
 
