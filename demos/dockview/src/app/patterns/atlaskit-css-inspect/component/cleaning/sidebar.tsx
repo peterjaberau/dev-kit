@@ -1,10 +1,18 @@
-import React from "react";
-import './style.css'
-import { chakra, Heading } from "@chakra-ui/react"
+import React from "react"
+import "./style.css"
+import { chakra, Heading, Text } from "@chakra-ui/react"
 
 export default function Sidebar() {
   return (
-    <chakra.div style={{ margin: "0px", padding: "12pt" }}>
+    <chakra.div
+      style={{
+        color: "#172B4D",
+        font: "var(--ds-font-body, normal 400 14px/1.42857142857143 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif)",
+        textDecorationSkipInk: "auto",
+        margin: "0px",
+        padding: "12pt",
+      }}
+    >
       <chakra.div
         style={{
           margin: "0px",
@@ -24,6 +32,7 @@ export default function Sidebar() {
             flex: "1 1 0px",
             overflow: "auto",
           }}
+          data-auto-scrollable={true}
         >
           <chakra.div
             style={{
@@ -36,28 +45,35 @@ export default function Sidebar() {
             }}
           >
             <chakra.div role="list" style={{ margin: "0px", padding: "0px" }}>
-              <chakra.div style={{ margin: "0px", padding: "0px" }}>
+              <chakra.div data-drop-target-for-element="true" style={{ margin: "0px", padding: "0px" }}>
                 <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
                   <chakra.div
-                    style={{
+                    css={{
+                      "--actions-on-hover-padding": 0,
+                      "--actions-on-hover-opacity": 0,
+                      "--actions-on-hover-width": 0,
+                      "--element-after-display": "flex",
+                      "--notch-color": "transparent",
                       margin: "0px",
                       padding: "0px",
                       borderRadius: "sm",
-                      gridTemplate:
-                        '"elem-before interactive elem-after actions" 1fr / minmax(0px, auto) 1fr minmax(0px, auto) minmax(0px, auto)',
+                      gridTemplateColumns: "minmax(0px, auto) 1fr minmax(0px, auto) minmax(0px, auto)",
+                      gridTemplateAreas: '"elem-before interactive elem-after actions"',
+                      gridTemplateRows: "1fr",
                       boxSizing: "border-box",
                       display: "grid",
                       minWidth: "72px",
                       height: "2rem",
                       alignItems: "center",
                       userSelect: "none",
-                      
                     }}
+                    data-drop-target-for-element="true"
                   >
                     <chakra.button
                       type="button"
-                      draggable
-                      style={{
+                      draggable={true}
+                      css={{
+                        "--drag-handle-display": "none",
                         borderRadius: "sm",
                         border: "none",
                         gridArea: "1 / 1 / auto / -1",
@@ -65,7 +81,7 @@ export default function Sidebar() {
                         boxSizing: "border-box",
                         display: "grid",
                         alignItems: "center",
-                        
+
                         position: "relative",
                         gridTemplateColumns: "subgrid",
                         gridTemplateRows: "subgrid",
@@ -119,23 +135,18 @@ export default function Sidebar() {
                               WebkitLineClamp: "1",
                               fontStyle: "",
                               fontVariantLigatures: "",
-                              
-                              
-                              
-                              
-                              
-                              
+
                               fontStretch: "",
                               fontSize: "",
-                              
+
                               fontFamily: "",
-                              
+
                               fontSizeAdjust: "",
-                              
+
                               fontFeatureSettings: "",
                               fontVariationSettings: "",
                               fontLanguageOverride: "",
-                              
+
                               overflowWrap: "anywhere",
                               display: "-webkit-box",
                               WebkitBoxOrient: "vertical",
@@ -153,7 +164,7 @@ export default function Sidebar() {
                             padding: "0px",
                             insetBlock: "0px",
                             justifyContent: "center",
-                            
+
                             flexDirection: "column",
                             position: "absolute",
                             display: "none",
@@ -272,19 +283,14 @@ export default function Sidebar() {
                           paddingBlock: "2px",
                           fontStyle: "",
                           fontVariantLigatures: "",
-                          
-                          
-                          
-                          
-                          
-                          
+
                           fontStretch: "",
                           fontSize: "",
-                          
+
                           fontFamily: "",
-                          
+
                           fontSizeAdjust: "",
-                          
+
                           fontFeatureSettings: "",
                           fontVariationSettings: "",
                           fontLanguageOverride: "",
@@ -292,7 +298,7 @@ export default function Sidebar() {
                           verticalAlign: "middle",
                           justifyContent: "center",
                           boxSizing: "border-box",
-                          
+
                           position: "relative",
                           appearance: "none",
                           cursor: "pointer",
@@ -391,7 +397,6 @@ export default function Sidebar() {
                       height: "2rem",
                       alignItems: "center",
                       userSelect: "none",
-                      
                     }}
                   >
                     <chakra.button
@@ -408,7 +413,7 @@ export default function Sidebar() {
                         boxSizing: "border-box",
                         display: "grid",
                         alignItems: "center",
-                        
+
                         position: "relative",
                         gridTemplateColumns: "subgrid",
                         gridTemplateRows: "subgrid",
@@ -462,23 +467,18 @@ export default function Sidebar() {
                               WebkitLineClamp: "1",
                               fontStyle: "",
                               fontVariantLigatures: "",
-                              
-                              
-                              
-                              
-                              
-                              
+
                               fontStretch: "",
                               fontSize: "",
-                              
+
                               fontFamily: "",
-                              
+
                               fontSizeAdjust: "",
-                              
+
                               fontFeatureSettings: "",
                               fontVariationSettings: "",
                               fontLanguageOverride: "",
-                              
+
                               overflowWrap: "anywhere",
                               display: "-webkit-box",
                               WebkitBoxOrient: "vertical",
@@ -496,7 +496,7 @@ export default function Sidebar() {
                             padding: "0px",
                             insetBlock: "0px",
                             justifyContent: "center",
-                            
+
                             flexDirection: "column",
                             position: "absolute",
                             display: "none",
@@ -659,7 +659,6 @@ export default function Sidebar() {
                       height: "2rem",
                       alignItems: "center",
                       userSelect: "none",
-                      
                     }}
                   >
                     <chakra.button
@@ -676,7 +675,7 @@ export default function Sidebar() {
                         boxSizing: "border-box",
                         display: "grid",
                         alignItems: "center",
-                        
+
                         position: "relative",
                         gridTemplateColumns: "subgrid",
                         gridTemplateRows: "subgrid",
@@ -730,23 +729,18 @@ export default function Sidebar() {
                               WebkitLineClamp: "1",
                               fontStyle: "",
                               fontVariantLigatures: "",
-                              
-                              
-                              
-                              
-                              
-                              
+
                               fontStretch: "",
                               fontSize: "",
-                              
+
                               fontFamily: "",
-                              
+
                               fontSizeAdjust: "",
-                              
+
                               fontFeatureSettings: "",
                               fontVariationSettings: "",
                               fontLanguageOverride: "",
-                              
+
                               overflowWrap: "anywhere",
                               display: "-webkit-box",
                               WebkitBoxOrient: "vertical",
@@ -764,7 +758,7 @@ export default function Sidebar() {
                             padding: "0px",
                             insetBlock: "0px",
                             justifyContent: "center",
-                            
+
                             flexDirection: "column",
                             position: "absolute",
                             display: "none",
@@ -931,7 +925,6 @@ export default function Sidebar() {
                           height: "2rem",
                           alignItems: "center",
                           userSelect: "none",
-                          
                         }}
                       >
                         <chakra.button
@@ -947,7 +940,7 @@ export default function Sidebar() {
                             boxSizing: "border-box",
                             display: "grid",
                             alignItems: "center",
-                            
+
                             position: "relative",
                             gridTemplateColumns: "subgrid",
                             gridTemplateRows: "subgrid",
@@ -1001,23 +994,18 @@ export default function Sidebar() {
                                   WebkitLineClamp: "1",
                                   fontStyle: "",
                                   fontVariantLigatures: "",
-                                  
-                                  
-                                  
-                                  
-                                  
-                                  
+
                                   fontStretch: "",
                                   fontSize: "",
-                                  
+
                                   fontFamily: "",
-                                  
+
                                   fontSizeAdjust: "",
-                                  
+
                                   fontFeatureSettings: "",
                                   fontVariationSettings: "",
                                   fontLanguageOverride: "",
-                                  
+
                                   overflowWrap: "anywhere",
                                   display: "-webkit-box",
                                   WebkitBoxOrient: "vertical",
@@ -1035,7 +1023,7 @@ export default function Sidebar() {
                                 padding: "0px",
                                 insetBlock: "0px",
                                 justifyContent: "center",
-                                
+
                                 flexDirection: "column",
                                 position: "absolute",
                                 display: "none",
@@ -1203,19 +1191,14 @@ export default function Sidebar() {
                               paddingBlock: "2px",
                               fontStyle: "",
                               fontVariantLigatures: "",
-                              
-                              
-                              
-                              
-                              
-                              
+
                               fontStretch: "",
                               fontSize: "",
-                              
+
                               fontFamily: "",
-                              
+
                               fontSizeAdjust: "",
-                              
+
                               fontFeatureSettings: "",
                               fontVariationSettings: "",
                               fontLanguageOverride: "",
@@ -1223,7 +1206,7 @@ export default function Sidebar() {
                               verticalAlign: "middle",
                               justifyContent: "center",
                               boxSizing: "border-box",
-                              
+
                               position: "relative",
                               appearance: "none",
                               cursor: "pointer",
@@ -1316,19 +1299,14 @@ export default function Sidebar() {
                               paddingBlock: "2px",
                               fontStyle: "",
                               fontVariantLigatures: "",
-                              
-                              
-                              
-                              
-                              
-                              
+
                               fontStretch: "",
                               fontSize: "",
-                              
+
                               fontFamily: "",
-                              
+
                               fontSizeAdjust: "",
-                              
+
                               fontFeatureSettings: "",
                               fontVariationSettings: "",
                               fontLanguageOverride: "",
@@ -1336,7 +1314,7 @@ export default function Sidebar() {
                               verticalAlign: "middle",
                               justifyContent: "center",
                               boxSizing: "border-box",
-                              
+
                               position: "relative",
                               appearance: "none",
                               cursor: "pointer",
@@ -1431,23 +1409,28 @@ export default function Sidebar() {
                     >
                       <chakra.div style={{ margin: "0px", padding: "0px" }}>
                         <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
-                          <chakra.div aria-labelledby="uid14-heading" role="group" style={{ margin: "0px", padding: "0px" }}>
-                            <p
-                              id="uid14-heading"
+                          <chakra.div
+                            aria-labelledby="uid14-heading"
+                            role="group"
+                            style={{ margin: "0px", padding: "0px" }}
+                          >
+                            <Text
+                              textStyle="sm"
                               style={{
+                                textTransform: "capitalize",
+                                fontWeight: "medium",
                                 padding: "0px",
-                                font: 'var(\n                                    --ds-font-heading-xxsmall,\n                                    normal 600 9pt/1pc ui-sans-serif,\n                                    -apple-system,\n                                    BlinkMacSystemFont,\n                                    "Segoe UI",\n                                    Ubuntu,\n                                    "Helvetica Neue",\n                                    sans-serif\n                                  )',
-                                paddingBlock: "var(--ds-space-100, 8px)",
+                                paddingBlock: "8px",
                                 marginRight: "",
                                 marginBottom: "",
                                 marginLeft: "",
                                 paddingInlineStart: "6px",
-                                color: "var(--ds-text-subtlest, #6b6e76)",
+                                color: "#6b6e76",
                                 marginTop: "0px",
                               }}
                             >
-                              <chakra.span style={{ textTransform: "capitalize" }}>starred</chakra.span>
-                            </p>
+                              starred
+                            </Text>
                             <chakra.div role="list" style={{ margin: "0px", padding: "0px" }}>
                               <chakra.div
                                 role="listitem"
@@ -1470,7 +1453,6 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-
                                   }}
                                 >
                                   <a
@@ -1478,7 +1460,7 @@ export default function Sidebar() {
                                     href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
 
                                       boxSizing: "border-box",
@@ -1549,11 +1531,6 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-
-
-
-
-
 
                                             fontStretch: "",
                                             fontSize: "",
@@ -1648,12 +1625,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-purple-bolder, #964ac0)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#964ac0",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -1718,11 +1695,6 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-
-
-
-
-
 
                                         fontStretch: "",
                                         fontSize: "",
@@ -1844,15 +1816,14 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-
                                   }}
                                 >
                                   <a
                                     draggable
-                                    href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
+                                    href="#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
 
                                       boxSizing: "border-box",
@@ -1923,11 +1894,6 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-
-
-
-
-
 
                                             fontStretch: "",
                                             fontSize: "",
@@ -2022,12 +1988,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-yellow-bolder, #946f00)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#946f00",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -2092,11 +2058,6 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-
-
-
-
-
 
                                         fontStretch: "",
                                         fontSize: "",
@@ -2218,7 +2179,6 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-
                                   }}
                                 >
                                   <a
@@ -2226,7 +2186,7 @@ export default function Sidebar() {
                                     href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
 
                                       boxSizing: "border-box",
@@ -2297,11 +2257,6 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-
-
-
-
-
 
                                             fontStretch: "",
                                             fontSize: "",
@@ -2396,12 +2351,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-green-bolder, #1f845a)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#1f845a",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -2466,11 +2421,6 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-
-
-
-
-
 
                                         fontStretch: "",
                                         fontSize: "",
@@ -2577,13 +2527,16 @@ export default function Sidebar() {
                       </chakra.div>
                       <chakra.div style={{ margin: "0px", padding: "0px" }}>
                         <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
-                          <chakra.div aria-labelledby="uid30-heading" role="group" style={{ margin: "0px", padding: "0px" }}>
-                            <Heading
-                              css={{
-                                size: 'sm'
-                              }}
-                              id="uid30-heading"
+                          <chakra.div
+                            aria-labelledby="uid30-heading"
+                            role="group"
+                            style={{ margin: "0px", padding: "0px" }}
+                          >
+                            <Text
+                              textStyle="sm"
                               style={{
+                                textTransform: "capitalize",
+                                fontWeight: "medium",
                                 padding: "0px",
                                 paddingBlock: "8px",
                                 marginRight: "",
@@ -2594,8 +2547,8 @@ export default function Sidebar() {
                                 marginTop: "0px",
                               }}
                             >
-                              <chakra.span style={{ textTransform: "capitalize" }}>recent</chakra.span>
-                            </Heading>
+                              Recent
+                            </Text>
                             <chakra.div role="list" style={{ margin: "0px", padding: "0px" }}>
                               <chakra.div
                                 role="listitem"
@@ -2618,7 +2571,6 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-                                    
                                   }}
                                 >
                                   <a
@@ -2626,9 +2578,9 @@ export default function Sidebar() {
                                     href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
-                                      
+
                                       boxSizing: "border-box",
                                       display: "grid",
                                       alignItems: "center",
@@ -2697,23 +2649,18 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
                                             fontStretch: "",
                                             fontSize: "",
-                                            
+
                                             fontFamily: "",
-                                            
+
                                             fontSizeAdjust: "",
-                                            
+
                                             fontFeatureSettings: "",
                                             fontVariationSettings: "",
                                             fontLanguageOverride: "",
-                                            
+
                                             overflowWrap: "anywhere",
                                             display: "-webkit-box",
                                             WebkitBoxOrient: "vertical",
@@ -2731,7 +2678,7 @@ export default function Sidebar() {
                                           padding: "0px",
                                           insetBlock: "0px",
                                           justifyContent: "center",
-                                          
+
                                           flexDirection: "column",
                                           position: "absolute",
                                           display: "none",
@@ -2796,12 +2743,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-lime-bolder, #5b7f24)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#5b7f24",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -2870,19 +2817,14 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
+
                                         fontStretch: "",
                                         fontSize: "",
-                                        
+
                                         fontFamily: "",
-                                        
+
                                         fontSizeAdjust: "",
-                                        
+
                                         fontFeatureSettings: "",
                                         fontVariationSettings: "",
                                         fontLanguageOverride: "",
@@ -2890,7 +2832,7 @@ export default function Sidebar() {
                                         verticalAlign: "middle",
                                         justifyContent: "center",
                                         boxSizing: "border-box",
-                                        
+
                                         position: "relative",
                                         appearance: "none",
                                         cursor: "pointer",
@@ -2996,7 +2938,6 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-                                    
                                   }}
                                 >
                                   <a
@@ -3004,9 +2945,9 @@ export default function Sidebar() {
                                     href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
-                                      
+
                                       boxSizing: "border-box",
                                       display: "grid",
                                       alignItems: "center",
@@ -3075,23 +3016,18 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
                                             fontStretch: "",
                                             fontSize: "",
-                                            
+
                                             fontFamily: "",
-                                            
+
                                             fontSizeAdjust: "",
-                                            
+
                                             fontFeatureSettings: "",
                                             fontVariationSettings: "",
                                             fontLanguageOverride: "",
-                                            
+
                                             overflowWrap: "anywhere",
                                             display: "-webkit-box",
                                             WebkitBoxOrient: "vertical",
@@ -3109,7 +3045,7 @@ export default function Sidebar() {
                                           padding: "0px",
                                           insetBlock: "0px",
                                           justifyContent: "center",
-                                          
+
                                           flexDirection: "column",
                                           position: "absolute",
                                           display: "none",
@@ -3174,12 +3110,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-magenta-bolder, #ae4787)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#ae4787",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -3244,19 +3180,14 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
+
                                         fontStretch: "",
                                         fontSize: "",
-                                        
+
                                         fontFamily: "",
-                                        
+
                                         fontSizeAdjust: "",
-                                        
+
                                         fontFeatureSettings: "",
                                         fontVariationSettings: "",
                                         fontLanguageOverride: "",
@@ -3264,7 +3195,7 @@ export default function Sidebar() {
                                         verticalAlign: "middle",
                                         justifyContent: "center",
                                         boxSizing: "border-box",
-                                        
+
                                         position: "relative",
                                         appearance: "none",
                                         cursor: "pointer",
@@ -3370,7 +3301,6 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-                                    
                                   }}
                                 >
                                   <a
@@ -3378,9 +3308,9 @@ export default function Sidebar() {
                                     href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
-                                      
+
                                       boxSizing: "border-box",
                                       display: "grid",
                                       alignItems: "center",
@@ -3449,23 +3379,18 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
                                             fontStretch: "",
                                             fontSize: "",
-                                            
+
                                             fontFamily: "",
-                                            
+
                                             fontSizeAdjust: "",
-                                            
+
                                             fontFeatureSettings: "",
                                             fontVariationSettings: "",
                                             fontLanguageOverride: "",
-                                            
+
                                             overflowWrap: "anywhere",
                                             display: "-webkit-box",
                                             WebkitBoxOrient: "vertical",
@@ -3483,7 +3408,7 @@ export default function Sidebar() {
                                           padding: "0px",
                                           insetBlock: "0px",
                                           justifyContent: "center",
-                                          
+
                                           flexDirection: "column",
                                           position: "absolute",
                                           display: "none",
@@ -3548,12 +3473,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-gray-bolder, #6b6e76)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#6b6e76",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -3618,19 +3543,14 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
+
                                         fontStretch: "",
                                         fontSize: "",
-                                        
+
                                         fontFamily: "",
-                                        
+
                                         fontSizeAdjust: "",
-                                        
+
                                         fontFeatureSettings: "",
                                         fontVariationSettings: "",
                                         fontLanguageOverride: "",
@@ -3638,7 +3558,7 @@ export default function Sidebar() {
                                         verticalAlign: "middle",
                                         justifyContent: "center",
                                         boxSizing: "border-box",
-                                        
+
                                         position: "relative",
                                         appearance: "none",
                                         cursor: "pointer",
@@ -3744,7 +3664,6 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-                                    
                                   }}
                                 >
                                   <a
@@ -3752,9 +3671,9 @@ export default function Sidebar() {
                                     href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
-                                      
+
                                       boxSizing: "border-box",
                                       display: "grid",
                                       alignItems: "center",
@@ -3823,23 +3742,18 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
                                             fontStretch: "",
                                             fontSize: "",
-                                            
+
                                             fontFamily: "",
-                                            
+
                                             fontSizeAdjust: "",
-                                            
+
                                             fontFeatureSettings: "",
                                             fontVariationSettings: "",
                                             fontLanguageOverride: "",
-                                            
+
                                             overflowWrap: "anywhere",
                                             display: "-webkit-box",
                                             WebkitBoxOrient: "vertical",
@@ -3857,7 +3771,7 @@ export default function Sidebar() {
                                           padding: "0px",
                                           insetBlock: "0px",
                                           justifyContent: "center",
-                                          
+
                                           flexDirection: "column",
                                           position: "absolute",
                                           display: "none",
@@ -3922,12 +3836,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-blue-bolder, #1868db)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#1868db",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -3994,19 +3908,14 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
+
                                         fontStretch: "",
                                         fontSize: "",
-                                        
+
                                         fontFamily: "",
-                                        
+
                                         fontSizeAdjust: "",
-                                        
+
                                         fontFeatureSettings: "",
                                         fontVariationSettings: "",
                                         fontLanguageOverride: "",
@@ -4014,7 +3923,7 @@ export default function Sidebar() {
                                         verticalAlign: "middle",
                                         justifyContent: "center",
                                         boxSizing: "border-box",
-                                        
+
                                         position: "relative",
                                         appearance: "none",
                                         cursor: "pointer",
@@ -4120,7 +4029,6 @@ export default function Sidebar() {
                                     height: "2rem",
                                     alignItems: "center",
                                     userSelect: "none",
-                                    
                                   }}
                                 >
                                   <a
@@ -4128,9 +4036,9 @@ export default function Sidebar() {
                                     href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
                                     style={{
                                       textDecoration: "underline",
-                                      borderRadius: "var(--ds-radius-small, 4px)",
+                                      borderRadius: "4px",
                                       gridArea: "1 / 1 / auto / -1",
-                                      
+
                                       boxSizing: "border-box",
                                       display: "grid",
                                       alignItems: "center",
@@ -4199,23 +4107,18 @@ export default function Sidebar() {
                                             WebkitLineClamp: "1",
                                             fontStyle: "",
                                             fontVariantLigatures: "",
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
                                             fontStretch: "",
                                             fontSize: "",
-                                            
+
                                             fontFamily: "",
-                                            
+
                                             fontSizeAdjust: "",
-                                            
+
                                             fontFeatureSettings: "",
                                             fontVariationSettings: "",
                                             fontLanguageOverride: "",
-                                            
+
                                             overflowWrap: "anywhere",
                                             display: "-webkit-box",
                                             WebkitBoxOrient: "vertical",
@@ -4233,7 +4136,7 @@ export default function Sidebar() {
                                           padding: "0px",
                                           insetBlock: "0px",
                                           justifyContent: "center",
-                                          
+
                                           flexDirection: "column",
                                           position: "absolute",
                                           display: "none",
@@ -4298,12 +4201,12 @@ export default function Sidebar() {
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
-                                        borderRadius: "var(--ds-radius-small, 4px)",
-                                        backgroundColor: "var(--ds-background-accent-orange-bolder, #bd5b00)",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#bd5b00",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        color: "var(--ds-text-inverse, #fff)",
+                                        color: "#fff",
                                         width: "20px",
                                         height: "20px",
                                       }}
@@ -4368,19 +4271,14 @@ export default function Sidebar() {
                                         paddingBlock: "2px",
                                         fontStyle: "",
                                         fontVariantLigatures: "",
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
+
                                         fontStretch: "",
                                         fontSize: "",
-                                        
+
                                         fontFamily: "",
-                                        
+
                                         fontSizeAdjust: "",
-                                        
+
                                         fontFeatureSettings: "",
                                         fontVariationSettings: "",
                                         fontLanguageOverride: "",
@@ -4388,7 +4286,7 @@ export default function Sidebar() {
                                         verticalAlign: "middle",
                                         justifyContent: "center",
                                         boxSizing: "border-box",
-                                        
+
                                         position: "relative",
                                         appearance: "none",
                                         cursor: "pointer",
@@ -4480,23 +4378,57 @@ export default function Sidebar() {
                     </chakra.div>
                   </chakra.div>
                 </chakra.div>
-                <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
+
+                <chakra.div
+                  role="listitem"
+                  data-scope="list-item"
+                  style={{ margin: "0px", padding: "0px" }}
+                  data-drop-target-for-element="true"
+                >
                   <chakra.div style={{ margin: "0px", padding: "0px" }}>
-                    <chakra.div style={{ margin: "0px", padding: "0px" }}>
+                    <chakra.div
+                      data-scope="menu-item"
+                      data-part="root"
+                      css={{
+                        "--expandable-provided-elembefore-display": "contents",
+                        "--expandable-chevron-display": "none",
+                        _hover: {
+                          "--expandable-provided-elembefore-display": "none",
+                          "--expandable-chevron-display": "flex",
+                        },
+
+                        margin: "0px",
+                        padding: "0px",
+                      }}
+                    >
                       <chakra.div
-                        style={{
+                        css={{
+                          "--actions-on-hover-padding": "4px",
+                          "--actions-on-hover-width": "auto",
+                          "--actions-on-hover-opacity": "1",
+                          "--elem-after-display": "flex",
+                          "--notch-color": "transparent",
+                          _hover: {
+                            backgroundColor: "#f0f1f2",
+                            "--actions-on-hover-padding": "4px",
+                            "--actions-on-hover-width": "auto",
+                            "--actions-on-hover-opacity": "1",
+                          },
+                          color: "#505258",
+                          gridTemplateAreas: '"elem-before interactive elem-after actions"',
+                          gridTemplateRows: "1fr",
+                          gridTemplateColumns: "minmax(0px, auto) 1fr minmax(0px, auto) minmax(0px, auto)",
+                          boxSizing: "border-box",
+
                           margin: "0px",
                           padding: "0px",
                           borderRadius: "sm",
-                          gridTemplate:
-                            '"elem-before interactive elem-after actions" 1fr / minmax(0px, auto) 1fr minmax(0px, auto) minmax(0px, auto)',
-                          boxSizing: "border-box",
+
                           display: "grid",
                           minWidth: "72px",
                           height: "2rem",
                           alignItems: "center",
                           userSelect: "none",
-                          
                         }}
                       >
                         <chakra.button
@@ -4504,15 +4436,23 @@ export default function Sidebar() {
                           type="button"
                           aria-expanded="true"
                           draggable
-                          style={{
+                          css={{
+                            _hover: {
+                              animationFillMode: "forwards",
+                              animationDelay: "0.8s",
+                              animationDuration: "0s",
+                              animationName: "k1xyysw3",
+                              "--drag-handle-display": "flex",
+                            },
                             borderRadius: "sm",
                             border: "none",
-                            gridArea: "1 / 1 / auto / -1",
+                            gridRow: "1",
+                            gridColumn: "1 / -1",
+                            // gridArea: "1 / 1 / auto / -1",
                             fontFamily: "inherit",
                             boxSizing: "border-box",
                             display: "grid",
                             alignItems: "center",
-                            
                             position: "relative",
                             gridTemplateColumns: "subgrid",
                             gridTemplateRows: "subgrid",
@@ -4564,25 +4504,6 @@ export default function Sidebar() {
                                   overflow: "hidden",
                                   margin: "0px",
                                   WebkitLineClamp: "1",
-                                  fontStyle: "",
-                                  fontVariantLigatures: "",
-                                  
-                                  
-                                  
-                                  
-                                  
-                                  
-                                  fontStretch: "",
-                                  fontSize: "",
-                                  
-                                  fontFamily: "",
-                                  
-                                  fontSizeAdjust: "",
-                                  
-                                  fontFeatureSettings: "",
-                                  fontVariationSettings: "",
-                                  fontLanguageOverride: "",
-                                  
                                   overflowWrap: "anywhere",
                                   display: "-webkit-box",
                                   WebkitBoxOrient: "vertical",
@@ -4600,10 +4521,10 @@ export default function Sidebar() {
                                 padding: "0px",
                                 insetBlock: "0px",
                                 justifyContent: "center",
-                                
+
                                 flexDirection: "column",
                                 position: "absolute",
-                                display: "none",
+                                display: "var(--drag-handle-display, none)",
                                 insetInlineStart: "0px",
                                 marginInlineStart: "-9pt",
                               }}
@@ -4642,6 +4563,9 @@ export default function Sidebar() {
                             </chakra.div>
                           </chakra.div>
                         </chakra.button>
+
+                        {/*filter button end*/}
+                        {/*filter button left*/}
                         <chakra.div
                           style={{
                             margin: "0px",
@@ -4662,9 +4586,10 @@ export default function Sidebar() {
                         >
                           <chakra.div
                             style={{
+                              display: "var(--expandable-chevron-display)",
                               margin: "0px",
                               padding: "0px",
-                              display: "none",
+                              pointerEvents: "none",
                             }}
                           >
                             <chakra.span
@@ -4703,7 +4628,7 @@ export default function Sidebar() {
                             style={{
                               margin: "0px",
                               padding: "0px",
-                              display: "contents",
+                              display: "var(--expandable-provided-elembefore-display)",
                             }}
                           >
                             <chakra.span
@@ -4764,19 +4689,14 @@ export default function Sidebar() {
                               paddingBlock: "2px",
                               fontStyle: "",
                               fontVariantLigatures: "",
-                              
-                              
-                              
-                              
-                              
-                              
+
                               fontStretch: "",
                               fontSize: "",
-                              
+
                               fontFamily: "",
-                              
+
                               fontSizeAdjust: "",
-                              
+
                               fontFeatureSettings: "",
                               fontVariationSettings: "",
                               fontLanguageOverride: "",
@@ -4784,7 +4704,7 @@ export default function Sidebar() {
                               verticalAlign: "middle",
                               justifyContent: "center",
                               boxSizing: "border-box",
-                              
+
                               position: "relative",
                               appearance: "none",
                               cursor: "pointer",
@@ -4877,19 +4797,14 @@ export default function Sidebar() {
                               paddingBlock: "2px",
                               fontStyle: "",
                               fontVariantLigatures: "",
-                              
-                              
-                              
-                              
-                              
-                              
+
                               fontStretch: "",
                               fontSize: "",
-                              
+
                               fontFamily: "",
-                              
+
                               fontSizeAdjust: "",
-                              
+
                               fontFeatureSettings: "",
                               fontVariationSettings: "",
                               fontLanguageOverride: "",
@@ -4897,7 +4812,7 @@ export default function Sidebar() {
                               verticalAlign: "middle",
                               justifyContent: "center",
                               boxSizing: "border-box",
-                              
+
                               position: "relative",
                               appearance: "none",
                               cursor: "pointer",
@@ -4990,12 +4905,18 @@ export default function Sidebar() {
                         paddingInlineStart: "9pt",
                       }}
                     >
-                      <chakra.div style={{ margin: "0px", padding: "0px" }}>
+                      <chakra.div data-drop-target-for-element="true" style={{ margin: "0px", padding: "0px" }}>
                         <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
                           <chakra.div style={{ margin: "0px", padding: "0px" }}>
                             <chakra.div style={{ margin: "0px", padding: "0px" }}>
                               <chakra.div
-                                style={{
+                                css={{
+                                  "--expandable-provided-elembefore-display": "content",
+                                  "--expandable-chevron-display": "none",
+                                  _hover: {
+                                    "--expandable-provided-elembefore-display": "none",
+                                    "--expandable-chevron-display": "flex",
+                                  },
                                   margin: "0px",
                                   padding: "0px",
                                   borderRadius: "sm",
@@ -5007,7 +4928,6 @@ export default function Sidebar() {
                                   height: "2rem",
                                   alignItems: "center",
                                   userSelect: "none",
-                                  
                                 }}
                               >
                                 <a
@@ -5018,7 +4938,7 @@ export default function Sidebar() {
                                     textDecoration: "underline",
                                     borderRadius: "sm",
                                     gridArea: "1 / 1 / auto / -1",
-                                    
+
                                     boxSizing: "border-box",
                                     display: "grid",
                                     alignItems: "center",
@@ -5087,23 +5007,18 @@ export default function Sidebar() {
                                           WebkitLineClamp: "1",
                                           fontStyle: "",
                                           fontVariantLigatures: "",
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
+
                                           fontStretch: "",
                                           fontSize: "",
-                                          
+
                                           fontFamily: "",
-                                          
+
                                           fontSizeAdjust: "",
-                                          
+
                                           fontFeatureSettings: "",
                                           fontVariationSettings: "",
                                           fontLanguageOverride: "",
-                                          
+
                                           overflowWrap: "anywhere",
                                           display: "-webkit-box",
                                           WebkitBoxOrient: "vertical",
@@ -5121,7 +5036,7 @@ export default function Sidebar() {
                                         padding: "0px",
                                         insetBlock: "0px",
                                         justifyContent: "center",
-                                        
+
                                         flexDirection: "column",
                                         position: "absolute",
                                         display: "none",
@@ -5192,19 +5107,14 @@ export default function Sidebar() {
                                       paddingBlock: "2px",
                                       fontStyle: "",
                                       fontVariantLigatures: "",
-                                      
-                                      
-                                      
-                                      
-                                      
-                                      
+
                                       fontStretch: "",
                                       fontSize: "",
-                                      
+
                                       fontFamily: "",
-                                      
+
                                       fontSizeAdjust: "",
-                                      
+
                                       fontFeatureSettings: "",
                                       fontVariationSettings: "",
                                       fontLanguageOverride: "",
@@ -5212,7 +5122,7 @@ export default function Sidebar() {
                                       verticalAlign: "middle",
                                       justifyContent: "center",
                                       boxSizing: "border-box",
-                                      
+
                                       position: "relative",
                                       appearance: "none",
                                       cursor: "pointer",
@@ -5365,19 +5275,14 @@ export default function Sidebar() {
                                       paddingBlock: "2px",
                                       fontStyle: "",
                                       fontVariantLigatures: "",
-                                      
-                                      
-                                      
-                                      
-                                      
-                                      
+
                                       fontStretch: "",
                                       fontSize: "",
-                                      
+
                                       fontFamily: "",
-                                      
+
                                       fontSizeAdjust: "",
-                                      
+
                                       fontFeatureSettings: "",
                                       fontVariationSettings: "",
                                       fontLanguageOverride: "",
@@ -5385,7 +5290,7 @@ export default function Sidebar() {
                                       verticalAlign: "middle",
                                       justifyContent: "center",
                                       boxSizing: "border-box",
-                                      
+
                                       position: "relative",
                                       appearance: "none",
                                       cursor: "pointer",
@@ -5488,7 +5393,6 @@ export default function Sidebar() {
                                   height: "2rem",
                                   alignItems: "center",
                                   userSelect: "none",
-                                  
                                 }}
                               >
                                 <a
@@ -5499,7 +5403,7 @@ export default function Sidebar() {
                                     textDecoration: "underline",
                                     borderRadius: "sm",
                                     gridArea: "1 / 1 / auto / -1",
-                                    
+
                                     boxSizing: "border-box",
                                     display: "grid",
                                     alignItems: "center",
@@ -5568,23 +5472,18 @@ export default function Sidebar() {
                                           WebkitLineClamp: "1",
                                           fontStyle: "",
                                           fontVariantLigatures: "",
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
+
                                           fontStretch: "",
                                           fontSize: "",
-                                          
+
                                           fontFamily: "",
-                                          
+
                                           fontSizeAdjust: "",
-                                          
+
                                           fontFeatureSettings: "",
                                           fontVariationSettings: "",
                                           fontLanguageOverride: "",
-                                          
+
                                           overflowWrap: "anywhere",
                                           display: "-webkit-box",
                                           WebkitBoxOrient: "vertical",
@@ -5602,7 +5501,7 @@ export default function Sidebar() {
                                         padding: "0px",
                                         insetBlock: "0px",
                                         justifyContent: "center",
-                                        
+
                                         flexDirection: "column",
                                         position: "absolute",
                                         display: "none",
@@ -5673,19 +5572,14 @@ export default function Sidebar() {
                                       paddingBlock: "2px",
                                       fontStyle: "",
                                       fontVariantLigatures: "",
-                                      
-                                      
-                                      
-                                      
-                                      
-                                      
+
                                       fontStretch: "",
                                       fontSize: "",
-                                      
+
                                       fontFamily: "",
-                                      
+
                                       fontSizeAdjust: "",
-                                      
+
                                       fontFeatureSettings: "",
                                       fontVariationSettings: "",
                                       fontLanguageOverride: "",
@@ -5693,7 +5587,7 @@ export default function Sidebar() {
                                       verticalAlign: "middle",
                                       justifyContent: "center",
                                       boxSizing: "border-box",
-                                      
+
                                       position: "relative",
                                       appearance: "none",
                                       cursor: "pointer",
@@ -5846,19 +5740,14 @@ export default function Sidebar() {
                                       paddingBlock: "2px",
                                       fontStyle: "",
                                       fontVariantLigatures: "",
-                                      
-                                      
-                                      
-                                      
-                                      
-                                      
+
                                       fontStretch: "",
                                       fontSize: "",
-                                      
+
                                       fontFamily: "",
-                                      
+
                                       fontSizeAdjust: "",
-                                      
+
                                       fontFeatureSettings: "",
                                       fontVariationSettings: "",
                                       fontLanguageOverride: "",
@@ -5866,7 +5755,7 @@ export default function Sidebar() {
                                       verticalAlign: "middle",
                                       justifyContent: "center",
                                       boxSizing: "border-box",
-                                      
+
                                       position: "relative",
                                       appearance: "none",
                                       cursor: "pointer",
@@ -5974,7 +5863,6 @@ export default function Sidebar() {
                               height: "2rem",
                               alignItems: "center",
                               userSelect: "none",
-                              
                             }}
                           >
                             <a
@@ -5983,7 +5871,7 @@ export default function Sidebar() {
                                 textDecoration: "underline",
                                 borderRadius: "sm",
                                 gridArea: "1 / 1 / auto / -1",
-                                
+
                                 boxSizing: "border-box",
                                 display: "grid",
                                 alignItems: "center",
@@ -6052,23 +5940,18 @@ export default function Sidebar() {
                                       WebkitLineClamp: "1",
                                       fontStyle: "",
                                       fontVariantLigatures: "",
-                                      
-                                      
-                                      
-                                      
-                                      
-                                      
+
                                       fontStretch: "",
                                       fontSize: "",
-                                      
+
                                       fontFamily: "",
-                                      
+
                                       fontSizeAdjust: "",
-                                      
+
                                       fontFeatureSettings: "",
                                       fontVariationSettings: "",
                                       fontLanguageOverride: "",
-                                      
+
                                       overflowWrap: "anywhere",
                                       display: "-webkit-box",
                                       WebkitBoxOrient: "vertical",
@@ -6086,7 +5969,7 @@ export default function Sidebar() {
                                     padding: "0px",
                                     insetBlock: "0px",
                                     justifyContent: "center",
-                                    
+
                                     flexDirection: "column",
                                     position: "absolute",
                                     display: "none",
@@ -6205,19 +6088,14 @@ export default function Sidebar() {
                                   paddingBlock: "2px",
                                   fontStyle: "",
                                   fontVariantLigatures: "",
-                                  
-                                  
-                                  
-                                  
-                                  
-                                  
+
                                   fontStretch: "",
                                   fontSize: "",
-                                  
+
                                   fontFamily: "",
-                                  
+
                                   fontSizeAdjust: "",
-                                  
+
                                   fontFeatureSettings: "",
                                   fontVariationSettings: "",
                                   fontLanguageOverride: "",
@@ -6330,7 +6208,6 @@ export default function Sidebar() {
                               height: "2rem",
                               alignItems: "center",
                               userSelect: "none",
-                              
                             }}
                           >
                             <a
@@ -6340,7 +6217,7 @@ export default function Sidebar() {
                                 textDecoration: "underline",
                                 borderRadius: "sm",
                                 gridArea: "1 / 1 / auto / -1",
-                                
+
                                 boxSizing: "border-box",
                                 display: "grid",
                                 alignItems: "center",
@@ -6409,23 +6286,18 @@ export default function Sidebar() {
                                       WebkitLineClamp: "1",
                                       fontStyle: "",
                                       fontVariantLigatures: "",
-                                      
-                                      
-                                      
-                                      
-                                      
-                                      
+
                                       fontStretch: "",
                                       fontSize: "",
-                                      
+
                                       fontFamily: "",
-                                      
+
                                       fontSizeAdjust: "",
-                                      
+
                                       fontFeatureSettings: "",
                                       fontVariationSettings: "",
                                       fontLanguageOverride: "",
-                                      
+
                                       overflowWrap: "anywhere",
                                       display: "-webkit-box",
                                       WebkitBoxOrient: "vertical",
@@ -6443,7 +6315,7 @@ export default function Sidebar() {
                                     padding: "0px",
                                     insetBlock: "0px",
                                     justifyContent: "center",
-                                    
+
                                     flexDirection: "column",
                                     position: "absolute",
                                     display: "none",
@@ -6562,19 +6434,14 @@ export default function Sidebar() {
                                   paddingBlock: "2px",
                                   fontStyle: "",
                                   fontVariantLigatures: "",
-                                  
-                                  
-                                  
-                                  
-                                  
-                                  
+
                                   fontStretch: "",
                                   fontSize: "",
-                                  
+
                                   fontFamily: "",
-                                  
+
                                   fontSizeAdjust: "",
-                                  
+
                                   fontFeatureSettings: "",
                                   fontVariationSettings: "",
                                   fontLanguageOverride: "",
@@ -6582,7 +6449,7 @@ export default function Sidebar() {
                                   verticalAlign: "middle",
                                   justifyContent: "center",
                                   boxSizing: "border-box",
-                                  
+
                                   position: "relative",
                                   appearance: "none",
                                   cursor: "pointer",
