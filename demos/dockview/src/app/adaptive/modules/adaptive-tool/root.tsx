@@ -19,16 +19,19 @@ export const Root = ({
   actions,
   inspect,
   children,
+  css,
+  ...rest
 }: {
   title: string
   actions?: ActionProps[]
   inspect?: any
   children?: any
+  [key: string]: any
 }) => {
   const inspectHandler = (e: any) => console.log(`[INSPECT ${title}]----->`, inspect)
 
   return (
-    <Card.Root size={"sm"} h={"full"} w={"full"}>
+    <Card.Root size={"sm"} h={"full"} w={"full"} css={{...css}} {...rest}>
       <Card.Header borderBottom={"1px solid"} borderBottomColor={"border"} pb={3}>
         <HStack>
           <HStack flex={1}>
