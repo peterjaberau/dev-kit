@@ -6,6 +6,7 @@ const nextConfig = {
   /* config options here */
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   experimental: {
+    optimizeCss: false,
     inlineCss: true,
     useCache: true,
     clientSegmentCache: true,

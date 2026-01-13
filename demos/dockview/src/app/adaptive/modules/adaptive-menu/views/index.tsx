@@ -1,145 +1,133 @@
 import "./style.css"
 import { Center, chakra } from "@chakra-ui/react"
 import { AdaptiveMenu } from ".."
-import { forwardRef } from "react"
+import { forwardRef, useRef } from "react"
 
-
-
-
-// List > MenuList
-export const NodeList = forwardRef((props: any, ref: any) => {
+export const ViewContainer = forwardRef((props: any, ref: any) => {
   const { children, css, ...rest } = props
-
   return (
-    <AdaptiveMenu.List {...css} {...rest} ref={ref}>
-      <AdaptiveMenu.MenuList>{children}</AdaptiveMenu.MenuList>
-    </AdaptiveMenu.List>
-  )
-})
-
-
-// ListItem > MenuListItem
-export const Node = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-
-  return (
-    <AdaptiveMenu.ListItem {...css} {...rest} ref={ref}>
-      <AdaptiveMenu.MenuListItem>{children}</AdaptiveMenu.MenuListItem>
-    </AdaptiveMenu.ListItem>
-  )
-})
-
-
-// MenuItem
-export const NodeControl = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-
-  return (
-    <AdaptiveMenu.MenuItem {...css} {...rest} ref={ref}>
+    <Center
+      data-scope='view-container'
+      css={{
+      margin: "0px",
+      padding: "0px",
+      borderRadius: "sm",
+      borderColor: "#0b120e24",
+      borderWidth: "thin",
+      borderStyle: "solid",
+      width: "20pc",
+      backgroundColor: "#fff",
+      ...css
+    }} ref={ref} {...css} {...rest}>
       {children}
-    </AdaptiveMenu.MenuItem>
+    </Center>
   )
 })
-
-
-export const NodeIndicatorBefore = forwardRef((props: any, ref: any) => {
+export const ViewSidebar = forwardRef((props: any, ref: any) => {
   const { children, css, ...rest } = props
-
   return (
-    <AdaptiveMenu.MenuItem {...css} {...rest} ref={ref}>
-      {children}
-    </AdaptiveMenu.MenuItem>
-  )
-})
-export const NodeIndicatorAfter = forwardRef((props: any, ref: any) => {
+    <chakra.div
+      data-scope='view-sidebar'
+      data-auto-scrollable={true}
+      ref={ref}
+      css={{
+        ...css,
+        margin: "0px",
+        padding: "0px",
+        flex: "1 1 0px",
+        overflow: "auto",
+      }}
+      {...rest}
+    ></chakra.div>
+  )})
+export const ViewSidebarContent = forwardRef((props: any, ref: any) => {
   const { children, css, ...rest } = props
-
   return (
-    <AdaptiveMenu.MenuItem {...css} {...rest} ref={ref}>
-      {children}
-    </AdaptiveMenu.MenuItem>
-  )
-})
-export const NodeActions = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
+    <chakra.div
+      data-scope="view-sidebar-content"
+      ref={ref}
+      css={{
+        ...css,
+        margin: "0px",
+        padding: "0px",
+        paddingBlockStart: "9pt",
+        paddingInlineEnd: "9pt",
+        paddingBlockEnd: "9pt",
+        paddingInlineStart: "9pt",
+      }}
+      {...rest}
+    ></chakra.div>
+  )})
 
-  return (
-    <AdaptiveMenu.MenuItem {...css} {...rest} ref={ref}>
-      {children}
-    </AdaptiveMenu.MenuItem>
-  )
-})
-
-export const NodeBranch = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-  return <AdaptiveMenu.ExpandableMenuItem {...css} {...rest} ref={ref} />
-})
-export const NodeBranchTrigger = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-  return <AdaptiveMenu.ExpandableMenuItemTrigger {...css} {...rest} ref={ref} />
-})
-export const NodeBranchContent = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-  return <AdaptiveMenu.ExpandableMenuItemContent {...css} {...rest} ref={ref} />
-})
-
-export const Item = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-  return <AdaptiveMenu.MenuItem {...css} {...rest} ref={ref} />
-})
 
 
 export const AdaptiveMenuView = () => {
+  const ref = useRef<any | null>(null)
+
   return (
-    <AdaptiveMenu.List>
-      <AdaptiveMenu.MenuList>
-        {/* Node */}
-        <AdaptiveMenu.ListItem>
-          {/* ItemButton | ItemText | ItemLink | ItemCustom */}
-          <AdaptiveMenu.MenuListItem>
-            <AdaptiveMenu.MenuItem>
-              <AdaptiveMenu.MenuItemElementInteractive>
-                <AdaptiveMenu.ItemText> example text item </AdaptiveMenu.ItemText>
-              </AdaptiveMenu.MenuItemElementInteractive>
-              <AdaptiveMenu.MenuItemElementBefore />
-              <AdaptiveMenu.MenuItemElementAfter />
-            </AdaptiveMenu.MenuItem>
+    <ViewContainer>
+      <ViewSidebar>
+        <ViewSidebarContent>
+          <AdaptiveMenu.MenuList>
+            <AdaptiveMenu.DndGroupIndicator ref={ref} isActive={state === "is-over"}>
 
-            <AdaptiveMenu.MenuItem>
-              <AdaptiveMenu.MenuItemElementInteractive>
-                <AdaptiveMenu.ItemButton> example button item </AdaptiveMenu.ItemButton>
-              </AdaptiveMenu.MenuItemElementInteractive>
-              <AdaptiveMenu.MenuItemElementBefore />
-              <AdaptiveMenu.MenuItemElementAfter />
-            </AdaptiveMenu.MenuItem>
-
-            <AdaptiveMenu.MenuItem>
-              <AdaptiveMenu.MenuItemElementInteractive>
-                <AdaptiveMenu.ItemCustom> example custom item </AdaptiveMenu.ItemCustom>
-              </AdaptiveMenu.MenuItemElementInteractive>
-              <AdaptiveMenu.MenuItemElementBefore />
-              <AdaptiveMenu.MenuItemElementAfter />
-            </AdaptiveMenu.MenuItem>
-          </AdaptiveMenu.MenuListItem>
-        </AdaptiveMenu.ListItem>
-
-        <AdaptiveMenu.ExpandableMenuItem>
-          <AdaptiveMenu.ExpandableMenuItemTrigger>
-            <AdaptiveMenu.MenuItem>{/* render  */}</AdaptiveMenu.MenuItem>
-          </AdaptiveMenu.ExpandableMenuItemTrigger>
-          <AdaptiveMenu.ExpandableMenuItemContent>
-
-            {/*Primitive list*/}
-            <AdaptiveMenu.List>
-
-              <AdaptiveMenu.ItemButton />
-              <AdaptiveMenu.ItemText />
-              <AdaptiveMenu.ItemLink />
-
-            </AdaptiveMenu.List>
-          </AdaptiveMenu.ExpandableMenuItemContent>
-        </AdaptiveMenu.ExpandableMenuItem>
-      </AdaptiveMenu.MenuList>
-    </AdaptiveMenu.List>
+            </AdaptiveMenu.DndGroupIndicator>
+          </AdaptiveMenu.MenuList>
+        </ViewSidebarContent>
+      </ViewSidebar>
+    </ViewContainer>
   )
 }
+
+
+/*
+
+
+
+
+      <AdaptiveMenu.List>
+        <AdaptiveMenu.MenuList>
+<AdaptiveMenu.ListItem>
+  <AdaptiveMenu.MenuListItem>
+    <AdaptiveMenu.MenuItem>
+      <AdaptiveMenu.MenuItemElementInteractive>
+        <AdaptiveMenu.ItemText> example text item </AdaptiveMenu.ItemText>
+      </AdaptiveMenu.MenuItemElementInteractive>
+      <AdaptiveMenu.MenuItemElementBefore />
+      <AdaptiveMenu.MenuItemElementAfter />
+    </AdaptiveMenu.MenuItem>
+
+    <AdaptiveMenu.MenuItem>
+      <AdaptiveMenu.MenuItemElementInteractive>
+        <AdaptiveMenu.ItemButton> example button item </AdaptiveMenu.ItemButton>
+      </AdaptiveMenu.MenuItemElementInteractive>
+      <AdaptiveMenu.MenuItemElementBefore />
+      <AdaptiveMenu.MenuItemElementAfter />
+    </AdaptiveMenu.MenuItem>
+
+    <AdaptiveMenu.MenuItem>
+      <AdaptiveMenu.MenuItemElementInteractive>
+        <AdaptiveMenu.ItemCustom> example custom item </AdaptiveMenu.ItemCustom>
+      </AdaptiveMenu.MenuItemElementInteractive>
+      <AdaptiveMenu.MenuItemElementBefore />
+      <AdaptiveMenu.MenuItemElementAfter />
+    </AdaptiveMenu.MenuItem>
+  </AdaptiveMenu.MenuListItem>
+</AdaptiveMenu.ListItem>
+
+<AdaptiveMenu.ExpandableMenuItem>
+  <AdaptiveMenu.ExpandableMenuItemTrigger>
+    <AdaptiveMenu.MenuItem></AdaptiveMenu.MenuItem>
+  </AdaptiveMenu.ExpandableMenuItemTrigger>
+  <AdaptiveMenu.ExpandableMenuItemContent>
+    <AdaptiveMenu.List>
+      <AdaptiveMenu.ItemButton />
+      <AdaptiveMenu.ItemText />
+      <AdaptiveMenu.ItemLink />
+    </AdaptiveMenu.List>
+  </AdaptiveMenu.ExpandableMenuItemContent>
+</AdaptiveMenu.ExpandableMenuItem>
+</AdaptiveMenu.MenuList>
+</AdaptiveMenu.List>
+
+ */

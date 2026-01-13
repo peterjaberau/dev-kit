@@ -1,71 +1,19 @@
+'use client'
 import React, { forwardRef } from "react"
 import "./style.css"
 import { Center, chakra, Heading, Text } from "@chakra-ui/react"
-
-export const ViewContainer = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-  return (
-    <Center
-      data-scope="view-container"
-      css={{
-        margin: "0px",
-        padding: "0px",
-        borderRadius: "sm",
-        borderColor: "#0b120e24",
-        borderWidth: "thin",
-        borderStyle: "solid",
-        width: "20pc",
-        backgroundColor: "#fff",
-        ...css,
-      }}
-      ref={ref}
-      {...css}
-      {...rest}
-    >
-      {children}
-    </Center>
-  )
-})
-export const ViewSidebar = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-  return (
-    <chakra.div
-      data-scope="view-sidebar"
-      data-auto-scrollable={true}
-      ref={ref}
-      css={{
-        ...css,
-        margin: "0px",
-        padding: "0px",
-        flex: "1 1 0px",
-        overflow: "auto",
-      }}
-      {...rest}
-    ></chakra.div>
-  )
-})
-export const ViewSidebarContent = forwardRef((props: any, ref: any) => {
-  const { children, css, ...rest } = props
-  return (
-    <chakra.div
-      data-scope="view-sidebar-content"
-      ref={ref}
-      css={{
-        ...css,
-        margin: "0px",
-        padding: "0px",
-        paddingBlockStart: "9pt",
-        paddingInlineEnd: "9pt",
-        paddingBlockEnd: "9pt",
-        paddingInlineStart: "9pt",
-      }}
-      {...rest}
-    ></chakra.div>
-  )
-})
+import { useEffect, useState } from "react";
 
 
-export default function Sidebar() {
+
+function Index() {
+
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    setReady(true); // runs after hydration + CSS applied
+  }, []);
+
+  if (!ready) return null; // or a loader
   return (
     <chakra.div
       style={{
@@ -74,6 +22,7 @@ export default function Sidebar() {
         textDecorationSkipInk: "auto",
         margin: "0px",
         padding: "12pt",
+        visibility: "visible",
       }}
     >
       <chakra.div
@@ -6613,3 +6562,4 @@ export default function Sidebar() {
   )
 }
 
+export default Index

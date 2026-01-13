@@ -111,7 +111,7 @@ export default function Sidebar() {
             }}
           >
             <chakra.div data-scope='menu-list' role="list" css={{ margin: "0px", padding: "0px" }}>
-              <chakra.div data-scope='group-drop-indicator'  data-drop-target-for-element="true" style={{ margin: "0px", padding: "0px" }}>
+              <chakra.div data-drop-target-for-element="true" style={{ margin: "0px", padding: "0px" }}>
                 <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
                   <chakra.div
                     css={{
