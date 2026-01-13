@@ -1,6 +1,6 @@
 import { defineSlotRecipe } from "@chakra-ui/react"
 
-export const treeSlotRecipe = defineSlotRecipe({
+export const menuSlotRecipe = defineSlotRecipe({
   slots: [
     "root",
     "list",
@@ -30,10 +30,10 @@ export const treeSlotRecipe = defineSlotRecipe({
     "dndDragHandle",
     "dndDragPreview",
     "dndDropIndicator",
-    "dndGroupIndicator",
+    "dndGroupDropIndicator",
     "dndHitbox",
   ],
-  className: "adaptiveMenu",
+  className: "adaptive-menu",
   base: {
     root: {
       "--expandableMenuItemIndentation": "12px",
@@ -151,7 +151,7 @@ export const treeSlotRecipe = defineSlotRecipe({
     dndDragHandle: {},
     dndDragPreview: {},
     dndDropIndicator: {},
-    dndGroupIndicator: {},
+    dndGroupDropIndicator: {},
     dndHitbox: {},
   },
   variants: {},

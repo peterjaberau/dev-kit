@@ -28,3 +28,4 @@ export { MenuSection } from "./menu-section"
 export { MenuSectionHeading } from "./menu-section-heading"
 export { MenuSectionDivider } from "./menu-section-divider"
 
+export { Root as RootPrimitive } from "./root"

@@ -1,2 +1,2 @@
-export { GroupDropIndicator } from "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group"
+export { GroupDropIndicator as DndGroupDropIndicator } from "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/group"
 

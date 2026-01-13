@@ -1,16 +1,16 @@
 import { assign, enqueueActions, setup } from "xstate"
-import { nodeManagerMachine } from "./node-manager"
+import { menuManagerMachine } from "./menu-manager-machine"
 
-export const nodeInstanceMachine = setup({
+export const menuMachine = setup({
   types: {
     context: {} as any,
     events: {} as any,
   } as any,
   actions: {
-    spawnNodeManager: assign(({ context, spawn, self }) => {
-      context.jsonTreeManagerRef = spawn("nodeManagerMachine", {
-        id: "node-mananger",
-        systemId: "node-mananger",
+    spawnMenuManager: assign(({ context, spawn, self }) => {
+      context.menuManagerRef = spawn("menuManagerMachine", {
+        id: "menu-mananger",
+        systemId: "menu-mananger",
         input: {
           data: context?.data,
         },
@@ -18,18 +18,18 @@ export const nodeInstanceMachine = setup({
     }),
   },
   actors: {
-    nodeManagerMachine,
+    menuManagerMachine,
   },
   guards: {},
 }).createMachine({
   context: ({ input }: any) => {
     return {
       data: input?.data,
-      managerRef: null,
+      menuManagerRef: null,
       nodeManagerRef: null,
     }
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
-    enqueue("spawnNodeManager")
+    enqueue("spawnMenuManager")
   }),
 })
