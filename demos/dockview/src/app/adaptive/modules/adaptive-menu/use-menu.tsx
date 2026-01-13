@@ -14,6 +14,9 @@ export function useMenu() {
 
   const menuId = menuRef?.id
 
+  const data = menuContext?.data
+  const menuManagerRef = menuContext?.menuManagerRef
+
   return {
     menuRef,
     sendToMenu,
@@ -21,6 +24,9 @@ export function useMenu() {
 
     menuState,
     menuContext,
+
+    data,
+    menuManagerRef,
   }
 }
 

@@ -26,7 +26,6 @@ export const menuMachine = setup({
     return {
       data: input?.data,
       menuManagerRef: null,
-      nodeManagerRef: null,
     }
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {

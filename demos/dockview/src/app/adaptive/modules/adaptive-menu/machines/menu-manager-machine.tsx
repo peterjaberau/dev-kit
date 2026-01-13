@@ -1,7 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { createMenuItem } from "./menu-item-machine"
 import { attachInstruction, extractInstruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
-import { DndDropIndicator as DropIndicator } from "../dnd-drop-indicator"
+import { DropIndicator } from '../drag-and-drop/drop-indicator'
 
 export const menuManagerMachine = setup({
   types: {
@@ -39,7 +39,7 @@ export const menuManagerMachine = setup({
     addMenuItemReference: assign(({ context, event }) => {
       // console.log("---event.treeMachine----", event)
 
-      context.dataTreeReferences.push({
+      context.dataReferences.push({
         ...event,
       })
     }),
@@ -58,7 +58,7 @@ export const menuManagerMachine = setup({
       uniqueContextId: Symbol("tree-context"),
       data: input?.data || null,
       dataRef: input?.dataRef || null,
-      dataTreeReferences: [],
+      dataReferences: [],
     }
   },
   on: {

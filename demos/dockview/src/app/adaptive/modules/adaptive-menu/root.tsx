@@ -5,11 +5,10 @@ import { useMenu } from "./use-menu"
 const MenuImpl = (props: any, ref: React.Ref<HTMLDivElement | any>) => {
   const { children, input, ...rest } = props
 
+
   return (
-    <MenuProvider>
-      <div ref={ref} {...rest}>
-        {children}
-      </div>
+    <MenuProvider {...rest}>
+      <div ref={ref}>{children}</div>
     </MenuProvider>
   )
 }

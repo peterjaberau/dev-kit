@@ -1,7 +1,7 @@
 export { DndDragHandle } from "../dnd-drag-handle"
 export { DndDragPreview } from "../dnd-drag-preview"
-export { DndDropIndicator } from "../dnd-drop-indicator"
-export { DndGroupDropIndicator } from "../dnd-group-indicator"
+export { DropIndicator } from "../drag-and-drop/drop-indicator"
+export { GroupDropIndicator } from "../drag-and-drop/group-drop-indicator"
 export { DndHitbox } from "../dnd-hitbox"
 
 export { ExpandableMenuItem } from "../expandable-menu-item"

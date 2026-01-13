@@ -11,7 +11,7 @@ export const createMenuItem = (input: any) => {
       }),
 
       emitTreeItemSpawned: emit(({ context }) => {
-        console.log("---createNode.event----", context)
+        // console.log("---createNode.event----", context)
 
         return {
           type: "TREE_ITEM_SPAWNED",
@@ -30,6 +30,8 @@ export const createMenuItem = (input: any) => {
       // fist call will be considered as root item, then parentRef and parentPath will be null
       const parentRef = input?.refs?.parent || null
 
+
+      console.log('----createMenuItem----', input)
 
       const dataRuntime = {
         info: {

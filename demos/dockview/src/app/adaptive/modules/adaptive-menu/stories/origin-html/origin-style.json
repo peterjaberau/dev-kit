@@ -1,0 +1,46 @@
+{
+  "p": {
+    "margin": "0"
+  },
+  "div": {
+    "margin": "0",
+    "padding": "0"
+  },
+  "pMarginTop": {
+    "margin": "var(--ds-space-150, 12px) 0 0 0"
+  },
+  "a": {
+    "color": "var(--ds-link, #0052CC)",
+    "textDecoration": "none"
+  },
+  "aHover": {
+    "color": "var(--ds-link, #0065FF)",
+    "textDecoration": "underline"
+  },
+  "aActive": {
+    "color": "var(--ds-link-pressed, #0747A6)"
+  },
+  "pFirstChildMarginTopZero": {
+    "marginTop": "0"
+  },
+  "buttonFontFamily": {
+    "fontFamily": "inherit"
+  },
+  "_2rko12b0BorderRadius": {
+    "borderRadius": "var(--ds-radius-small,4px)"
+  },
+  "_19itglywBorderNone": {
+    "border": "none"
+  },
+  "_nd5l19l3GridAreaInteractive": {
+    "gridArea": "interactive"
+  },
+  "_1r04ze3tInset": {
+    "inset": "var(--ds-space-0,0)"
+  },
+  "_zulpv77oGap": {
+    "gap": "var(--ds-space-025,2px)"
+  },
+  "_11c82smrFontBodyStyle": {
+  }
+}

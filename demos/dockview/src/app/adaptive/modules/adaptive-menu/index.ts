@@ -1,3 +1,3 @@
-export * as AdaptiveMenu from "./namespace"
+export * as AdaptiveMenu from "./namespaces/styled"
 
-export * from "./use-menu-item-dnd"
+

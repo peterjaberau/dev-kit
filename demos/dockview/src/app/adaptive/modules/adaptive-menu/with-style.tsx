@@ -106,11 +106,11 @@ export const DndDragPreview: any = withContext(Primitive.DndDragPreview, "dndDra
   forwardAsChild: true,
 })
 
-export const DndDropIndicator: any = withContext(Primitive.DndDropIndicator, "dndDropIndicator", {
+export const DropIndicator: any = withContext(Primitive.DropIndicator, "dropIndicator", {
   forwardAsChild: true,
 })
 
-export const DndGroupDropIndicator: any = withContext(Primitive.DndGroupDropIndicator, "dndGroupDropIndicator", {
+export const GroupDropIndicator: any = withContext(Primitive.GroupDropIndicator, "groupDropIndicator", {
   forwardAsChild: true,
 })
 
