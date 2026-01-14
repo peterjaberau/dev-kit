@@ -51,9 +51,15 @@ export const CustomMenuItem = ({ actorRef, data, index, amountOfMenuItems }: any
   }, [draggableButtonRef])
 
   return (
-    <chakra.div role="listitem" css={{ height: "2rem", minWidth: "72px", alignItems: "center", userSelect: "none" }}>
-      {menuItemId}
-    </chakra.div>
+    <>
+      <chakra.div
+        role="listitem"
+        css={{ height: "2rem", minWidth: "72px", alignItems: "center", userSelect: "none" }}
+        ref={draggableButtonRef}
+      >
+        {menuItemId}
+      </chakra.div>
+    </>
   )
 }
 
