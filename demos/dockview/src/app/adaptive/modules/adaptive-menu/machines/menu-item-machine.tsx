@@ -31,7 +31,7 @@ export const createMenuItem = (input: any) => {
       const parentRef = input?.refs?.parent || null
 
 
-      console.log('----createMenuItem----', input)
+      // console.log('----createMenuItem----', input)
 
       const dataRuntime = {
         info: {

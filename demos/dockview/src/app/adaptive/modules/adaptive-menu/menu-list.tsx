@@ -17,8 +17,13 @@ export const MenuList = forwardRef((props: any, ref: any) => {
       data-scope="menu-list"
       ref={ref}
       css={{
+        flexDirection: 'column',
+        display: 'flex',
+        flex: 1,
         ...css,
       }}
+      {...rest}
+
     />
   )
 })

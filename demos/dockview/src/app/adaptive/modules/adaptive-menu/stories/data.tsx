@@ -1,0 +1,198 @@
+
+export const dataTree = [
+  {
+    id: "for-you",
+    name: "For You",
+    href: "#",
+    icon: null,
+    children: [],
+  },
+  {
+    id: "recent",
+    name: "Recent",
+    href: "#",
+    icon: null,
+    children: [],
+  },
+  {
+    id: "starred",
+    name: "Starred",
+    href: "#",
+    icon: null,
+    children: [],
+  },
+  {
+    id: "projects",
+    name: "Projects",
+    href: "#",
+    icon: null,
+    isOpen: true,
+    children: [
+      {
+        id: "projects-starred",
+        name: "Starred",
+        href: "#",
+        icon: null,
+        isOpen: true,
+        children: [
+          {
+            id: "id:0",
+            href: "#",
+            name: "Modernize typography",
+            icon: null,
+          },
+          {
+            id: "id:1",
+            href: "#",
+            name: "F1 sponsorship",
+            icon: null,
+          },
+          {
+            id: "id:2",
+            href: "#",
+            name: "Mobile application",
+            icon: null,
+          },
+        ],
+      },
+      {
+        id: "projects-recent",
+        name: "Recent",
+        href: "#",
+        icon: null,
+        isOpen: true,
+        children: [
+          {
+            id: "id:3",
+            href: "#",
+            name: "Attachments",
+            icon: null,
+          },
+          {
+            id: "id:4",
+            href: "#",
+            name: "Audit",
+            icon: null,
+          },
+          {
+            id: "id:5",
+            href: "#",
+            name: "Dark mode",
+            icon: null,
+          },
+          {
+            id: "id:6",
+            href: "#",
+            name: "Visualization",
+            icon: null,
+          },
+          {
+            id: "id:7",
+            href: "#",
+            name: "Basketball tournament",
+            icon: null,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "filters",
+    name: "Filters",
+    href: "#",
+    icon: null,
+    children: [
+      {
+        id: "id:8",
+        name: "Filter 1",
+        href: "#",
+        icon: null,
+        isOpen: true,
+        children: [
+          {
+            id: "id:9",
+            name: "Filter 1.1",
+            href: "#",
+            icon: null,
+            children: [],
+          },
+          {
+            id: "id:10",
+            name: "Filter 1.2",
+            href: "#",
+            icon: null,
+            children: [],
+          },
+          {
+            id: "id:11",
+            name: "Filter 1.3",
+            href: "#",
+            icon: null,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: "id:12",
+        name: "Filter 2",
+        href: "#",
+        icon: null,
+        isOpen: true,
+        children: [
+          {
+            id: "id:13",
+            name: "Filter 2.1",
+            href: "#",
+            icon: null,
+            isOpen: true,
+            children: [
+              {
+                id: "id:14",
+                name: "Filter 2.1.1",
+                href: "#",
+                icon: null,
+                children: [],
+              },
+              {
+                id: "id:15",
+                name: "Filter 2.1.2",
+                href: "#",
+                icon: null,
+                children: [],
+              },
+              {
+                id: "id:16",
+                name: "Filter 2.1.3",
+                href: "#",
+                icon: null,
+                children: [],
+              },
+            ],
+          },
+          {
+            id: "id:17",
+            name: "Filter 2.2",
+            href: "#",
+            icon: null,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: "id:18",
+        name: "Filter 3",
+        href: "#",
+        icon: null,
+        children: [],
+      },
+      {
+        id: "id:19",
+        name: "Filter 4",
+        href: "#",
+        icon: null,
+        children: [],
+      },
+    ],
+  },
+]
+

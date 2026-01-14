@@ -36,6 +36,8 @@ export function useMenuManager() {
   const uniqueContextId = useMemo(() => menuManagerContext?.uniqueContextId, [])
   const dependencies = menuManagerContext?.dependencies
 
+
+
   return {
     menuManagerRef,
     sendToMenuManager,
@@ -44,6 +46,12 @@ export function useMenuManager() {
     menuManagerState,
     menuManagerContext,
 
+    menuManagerChildren,
+    menuManagerChildrenIds,
+    hasChildren,
+    hasChildrenEmpty,
+    getMenuItemById,
+
     //drag dependencies
     uniqueContextId,
     dependencies,
@@ -51,6 +59,5 @@ export function useMenuManager() {
     data,
     dataReferences,
     dataRef,
-
   }
 }
