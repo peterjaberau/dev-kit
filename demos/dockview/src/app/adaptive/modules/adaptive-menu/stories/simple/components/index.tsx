@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useMenuItemDragAndDrop } from "../../../drag-and-drop/use-menu-item-drag-and-drop"
 import { useMenuRoot } from "../../../use-menu-root"
+import { AdaptiveMenu } from "../../.."
 
 import { useMenuItem } from "../../../use-menu-item"
 import { chakra, HStack } from "@chakra-ui/react"
-import { dataHelpers } from '../../data'
+import { dataHelpers } from "../../data"
 import invariant from "tiny-invariant"
-
-
 
 export const CustomMenuItem = ({ actorRef, data, index, amountOfMenuItems }: any) => {
   const { menuItemId, dataName, dataConfig, dataValue, menuItemContext } = useMenuItem({ actorRef })
@@ -52,24 +51,25 @@ export const CustomMenuItem = ({ actorRef, data, index, amountOfMenuItems }: any
 
   return (
     <>
-      <chakra.div
-        role="listitem"
-        css={{ height: "2rem", minWidth: "72px", alignItems: "center", userSelect: "none" }}
-        ref={draggableButtonRef}
+      <AdaptiveMenu.MenuItem
+        ref={draggableButtonRef} // interactive ref
+        visualContentRef={dropTargetRef} // drag target
+        isDragging={state.type === "dragging"}
+        dropIndicator={dropIndicator}
       >
         {menuItemId}
-      </chakra.div>
+      </AdaptiveMenu.MenuItem>
+
+      {dragPreview}
     </>
   )
 }
-
 
 export const FiltersMenuItem = ({ actorRef, data, index, amountOfMenuItems }: any) => {
   const { dataName, menuItemId } = useMenuItem({ actorRef })
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true)
   const wasExpandedWhenDragStartedRef = useRef<boolean | null>(null)
-
 
   const { state, draggableButtonRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
@@ -88,8 +88,6 @@ export const FiltersMenuItem = ({ actorRef, data, index, amountOfMenuItems }: an
       canDrop: ({ source }) => isTopLevelItemData(source.data),
     },
   })
-
-
 
   return (
     <HStack>
@@ -191,7 +189,6 @@ export const RecentMenuItem = ({ actorRef, data, index, amountOfMenuItems }: any
   )
 }
 export const StarredMenuItem = ({ actorRef, index, amountOfMenuItems }: any) => {
-
   const { dataName, menuItemId } = useMenuItem({ actorRef })
 
   const { state, draggableButtonRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
@@ -238,4 +235,3 @@ export const StarredMenuItem = ({ actorRef, index, amountOfMenuItems }: any) => 
     </>
   )
 }
-
