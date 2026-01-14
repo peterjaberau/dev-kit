@@ -17,10 +17,10 @@ import { useMenuItem } from "../../use-menu-item"
 
 import { dataTree, logData } from "../data"
 import { ForYouMenuItem  } from "./components"
+import { CustomMenuItem } from "./components"
 
 logData();
 
-import { CustomMenuItem } from "./components"
 
 const Index = () => {
   return (
@@ -34,7 +34,7 @@ const Index = () => {
 
 const topLevelMap: any = {
   "for-you": ({ actorRef, data, index, amountOfMenuItems }: any) => (
-    <CustomMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
+    <ForYouMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
   ),
   starred: ({ actorRef, data, index, amountOfMenuItems }: any) => (
     <CustomMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
