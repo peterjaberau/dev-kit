@@ -8,6 +8,5 @@ import { chakra, HStack } from "@chakra-ui/react"
 
 export const List = forwardRef((props: any, ref: any) => {
   const { css, ...rest } = props
-
-  return <chakra.div data-scope="list" role="list" ref={ref} {...css} {...rest} />
+  return <chakra.div  ref={ref} {...css} {...rest} role="list"/>
 })

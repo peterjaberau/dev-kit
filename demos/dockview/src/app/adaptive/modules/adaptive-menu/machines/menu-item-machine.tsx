@@ -30,7 +30,6 @@ export const createMenuItem = (input: any) => {
       // fist call will be considered as root item, then parentRef and parentPath will be null
       const parentRef = input?.refs?.parent || null
 
-
       // console.log('----createMenuItem----', input)
 
       const dataRuntime = {
@@ -60,14 +59,14 @@ export const createMenuItem = (input: any) => {
         self,
       }
 
+
+
       const viewConfig = input?.viewConfig
       const viewRuntime = {
         control: {
           open: !!viewConfig?.control?.open || false,
-        }
+        },
       }
-
-
 
       return {
         refs: {
@@ -96,7 +95,7 @@ export const createMenuItem = (input: any) => {
 
         viewRuntime: {
           control: {
-            open: false
+            open: false,
           },
           dragItemId: null,
           /* manage the evaluated state of the view */
@@ -113,13 +112,11 @@ export const createMenuItem = (input: any) => {
 
           // has children, no change keep it as it
           if (!hasChildren) {
-
             return
           }
 
           // auto toggle
           if (self.id === itemId) {
-
             context.dataConfig?.value && (context.dataConfig.value.isOpen = !context.dataConfig.value.isOpen)
           }
 
@@ -187,7 +184,7 @@ export const createMenuItem = (input: any) => {
     // entry: ["emitTreeItemSpawned"],
 
     entry: enqueueActions(({ enqueue, context, event, system }) => {
-      const nodeManager = system.get('json-tree-manager')
+      const nodeManager = system.get("json-tree-manager")
 
       enqueue.sendTo(nodeManager, { type: "TREE_ITEM_SPAWNED", ...context })
     }),

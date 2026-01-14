@@ -1,16 +1,22 @@
 "use client"
-import { AdaptiveMenu } from "../.."
-import { GroupDropIndicator } from "../../drag-and-drop/group-drop-indicator"
+import { forwardRef, Fragment, useEffect, useRef, useState } from "react"
+import invariant from "tiny-invariant"
+import { chakra, Container, HStack } from "@chakra-ui/react"
+
 import { dropTargetForElements, monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element"
-import { chakra, Container, HStack } from "@chakra-ui/react"
-import { dataTree } from "../data"
-import { forwardRef, Fragment, useEffect, useRef, useState } from "react"
+
+import { GroupDropIndicator } from "../../drag-and-drop/group-drop-indicator"
+import { useMenuItemDragAndDrop } from "../../drag-and-drop/use-menu-item-drag-and-drop"
+
+import { AdaptiveMenu } from "../.."
 import { useMenu } from "../../use-menu"
 import { useMenuManager } from "../../use-menu-manager"
 import { useMenuRoot } from "../../use-menu-root"
 import { useMenuItem } from "../../use-menu-item"
-import invariant from "tiny-invariant"
+
+import { dataTree } from "../data"
+
 
 const Index = () => {
   return (
@@ -32,8 +38,10 @@ const RenderMenuItemRoot = (props: any) => {
   const menuManagerSelector = useMenuManager()
   const menuRoot = useMenuRoot()
 
-  const { menuItemChildrenIds } = useMenuRoot()
+  const { menuItemChildrenIds: rootItemsIds } = useMenuRoot()
   const { dependencies }: any = useMenuManager()
+
+  console.log("---rootItemsIds---", rootItemsIds)
 
   // monitor
   useEffect(() => {
@@ -86,15 +94,23 @@ const RenderMenuItemRoot = (props: any) => {
   return (
     <AdaptiveMenu.MenuList>
       <GroupDropIndicator ref={ref} isActive={state === "is-over"}>
-        {menuItemChildrenIds.map((item, index, array) => {
+        {rootItemsIds.map((item: any, index: any, array) => {
+
+          console.log('----item----', item)
           // topLevelMap[item]({ data, index, amountOfMenuItems: array.length })
-          return <HStack key={item}>{item}</HStack>
+          return (
+            <Fragment key={item}>
+              <HStack>{item}</HStack>
+            </Fragment>
+          )
         })}
       </GroupDropIndicator>
     </AdaptiveMenu.MenuList>
   )
-
-  // return <chakra.div ref={ref} data-scope="item-text" css={css} {...rest} />
 }
+
+
+
+
 
 export default Index

@@ -9,6 +9,7 @@ export const createMenuList = ({ context, spawn }: any) => {
   const refs = context?.refs || {}
   const parentSelf = context.refs.self
 
+
   // parent data, use children to spawn child items
   const dataInfo = context?.dataRuntime?.info
   const dataValue = context?.dataConfig?.value
@@ -23,7 +24,24 @@ export const createMenuList = ({ context, spawn }: any) => {
 
   // parent has children, spawn child tree items
   return dataValue.children.map((child: any, index: any) => {
+
+
+
     const itemName = child?.id ?? String(index)
+    //
+    // const ids: any = !context.refs.parent ? {
+    //   id: itemName,
+    //   systemId: itemName,
+    // }: {}
+
+    const ids =
+      !context.refs.parent
+        ? {
+          id: itemName,
+          systemId: itemName,
+        }
+        : undefined
+
 
     const childObject = {
       ...omit(child, ["children"]),
@@ -52,6 +70,9 @@ export const createMenuList = ({ context, spawn }: any) => {
           isOpen: !!child.isOpen,
         },
       }),
+      ids
+
+
     )
   })
 }
