@@ -7,30 +7,35 @@ const themeConfig: any = defineConfig({
 } as any)
 const theme = createSystem(themeConfig)
 
-function RenderDragPreview({ item }: any) {
+function RenderDragPreview({ elemBefore, content, input }: any) {
   return (
     <chakra.div
       css={{
+        display: "flex",
+        alignItems: "center",
+        boxShadow: "sm",
+        flexDirection: "row",
         borderWidth: "1px",
         borderColor: "#0B120E24",
         borderStyle: "solid",
         backgroundColor: "#FFFFFF",
         borderRadius: "md",
-        paddingInlineEnd: '4px',
+        paddingInlineEnd: "4px",
         maxWidth: 260,
         // paddingY: 2,
         // paddingX: 3,
       }}
     >
-      Item {item.id}
+      <chakra.div css={{ px: 2 }}>{elemBefore}</chakra.div>
+      <chakra.div css={{ flex: 1 }}>{content}</chakra.div>
     </chakra.div>
   )
 }
 
-export function DragPreview({ item }: any) {
+export function DragPreview({ elemBefore, content, input }: any) {
   return (
     <ChakraProvider value={theme}>
-      <RenderDragPreview item={item} />
+      <RenderDragPreview elemBefore={elemBefore} content={content} />
     </ChakraProvider>
   )
 }

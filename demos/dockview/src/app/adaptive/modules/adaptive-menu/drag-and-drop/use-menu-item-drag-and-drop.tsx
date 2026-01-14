@@ -13,9 +13,9 @@ import { createPortal } from "react-dom"
 export const idle: any = { type: "idle" }
 
 export function useMenuItemDragAndDrop({ draggable: draggableArgs, dropTarget: dropTargetArgs }: any) {
-  const draggableAnchorRef = useRef<HTMLAnchorElement | null>(null)
-  const draggableButtonRef = useRef<HTMLButtonElement | null>(null)
-  const dropTargetRef = useRef<HTMLDivElement | null>(null)
+  const draggableAnchorRef = useRef<HTMLDivElement | HTMLButtonElement | null | any>(null)
+  const draggableButtonRef = useRef<HTMLDivElement | HTMLButtonElement | null | any>(null)
+  const dropTargetRef = useRef<HTMLDivElement | HTMLButtonElement | null | any>(null)
   const [internalState, setInternalState] = useState(idle)
 
   const getDraggableElement = useCallback(() => {
@@ -137,7 +137,10 @@ export function useMenuItemDragAndDrop({ draggable: draggableArgs, dropTarget: d
       return null
     }
 
-    return createPortal(<DragPreview item={internalState.ui.content} />, internalState.container)
+    return createPortal(
+      <DragPreview elemBefore={internalState?.ui?.elemBefore} content={internalState?.ui?.content} />,
+      internalState.container,
+    )
   })()
 
   const dropIndicator = internalState.type === "is-over" && internalState.instruction && (

@@ -15,18 +15,42 @@ import { useMenuManager } from "../../use-menu-manager"
 import { useMenuRoot } from "../../use-menu-root"
 import { useMenuItem } from "../../use-menu-item"
 
-import { dataTree } from "../data"
+import { dataTree, logData } from "../data"
+import { ForYouMenuItem  } from "./components"
 
+logData();
+
+import { CustomMenuItem } from "./components"
 
 const Index = () => {
   return (
-    <Container maxW="container.sm" border="1px solid black" padding="4">
+    <Container maxW="container.sm" border="1px solid black" backgroundColor={'bg.panel'} padding="4">
       <AdaptiveMenu.Root data={dataTree}>
         <RenderMenuItemRoot />
       </AdaptiveMenu.Root>
     </Container>
   )
 }
+
+const topLevelMap: any = {
+  "for-you": ({ actorRef, data, index, amountOfMenuItems }: any) => (
+    <CustomMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
+  ),
+  starred: ({ actorRef, data, index, amountOfMenuItems }: any) => (
+    <CustomMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
+  ),
+  recent: ({ actorRef, data, index, amountOfMenuItems }: any) => (
+    <CustomMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
+  ),
+  projects: ({ actorRef, data, index, amountOfMenuItems }: any) => (
+    <CustomMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
+  ),
+
+  filters: ({ actorRef, data, index, amountOfMenuItems }: any) => (
+    <CustomMenuItem actorRef={actorRef} data={data} index={index} amountOfMenuItems={amountOfMenuItems} />
+  ),
+}
+
 
 const RenderMenuItemRoot = (props: any) => {
   const { css, ...rest } = props
@@ -38,7 +62,7 @@ const RenderMenuItemRoot = (props: any) => {
   const menuManagerSelector = useMenuManager()
   const menuRoot = useMenuRoot()
 
-  const { menuItemChildrenIds: rootItemsIds } = useMenuRoot()
+  const { menuItemChildrenIds: rootItemsIds, menuItemChildrenRef: rootItemsRefs } = useMenuRoot()
   const { dependencies }: any = useMenuManager()
 
   console.log("---rootItemsIds---", rootItemsIds)
@@ -95,12 +119,23 @@ const RenderMenuItemRoot = (props: any) => {
     <AdaptiveMenu.MenuList>
       <GroupDropIndicator ref={ref} isActive={state === "is-over"}>
         {rootItemsIds.map((item: any, index: any, array) => {
-
-          console.log('----item----', item)
-          // topLevelMap[item]({ data, index, amountOfMenuItems: array.length })
           return (
             <Fragment key={item}>
-              <HStack>{item}</HStack>
+              {topLevelMap[item]({
+                actorRef: rootItemsRefs[item],
+                data: rootItemsIds,
+                index,
+                amountOfMenuItems: array.length,
+              })}
+
+              {/*topLevelMap[item]({ actorRef, data, index, amountOfMenuItems: array.length })*/}
+
+              {/*<CustomMenuItem*/}
+              {/*  actorRef={rootItemsRefs[item]}*/}
+              {/*  index={index}*/}
+              {/*  data={item}*/}
+              {/*  amountOfMenuItems={array.length}*/}
+              {/*/>*/}
             </Fragment>
           )
         })}
