@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react"
 import invariant from "tiny-invariant"
 
 import { StarUnstarredIcon } from "../icons"
-import { AdaptiveMenu } from "#adaptive-menu"
+import { ItemButton } from "#adaptive-menu/namespaces/primitive"
 import { useMenuItemDragAndDrop } from "#adaptive-menu/drag-and-drop/use-menu-item-drag-and-drop"
 
 import { getTopLevelItemData, isTopLevelItemData } from "../data"
@@ -42,7 +42,7 @@ export function StarredMenuItem({ index, amountOfMenuItems }: { index: number; a
 
   return (
     <>
-      <AdaptiveMenu.ItemButton
+      <ItemButton
         ref={draggableButtonRef}
         isDragging={state.type === "dragging"}
         hasDragIndicator
@@ -54,7 +54,7 @@ export function StarredMenuItem({ index, amountOfMenuItems }: { index: number; a
         // }
       >
         Starred
-      </AdaptiveMenu.ItemButton>
+      </ItemButton>
       {dragPreview}
     </>
   )

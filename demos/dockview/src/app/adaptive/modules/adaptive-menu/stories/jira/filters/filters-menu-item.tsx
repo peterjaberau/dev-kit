@@ -7,10 +7,13 @@ import { AddIcon } from "../icons"
 import { FilterIcon } from "../icons"
 import { GrowVerticalIcon } from "../icons"
 import { ShowMoreHorizontalIcon } from "../icons"
-import { AdaptiveMenu } from "#adaptive-menu"
+import { ItemButton } from "#adaptive-menu/namespaces/primitive"
 import { GroupDropIndicator } from "#adaptive-menu/drag-and-drop/group-drop-indicator"
 import { useMenuItemDragAndDrop } from "#adaptive-menu/drag-and-drop/use-menu-item-drag-and-drop"
-//
+import { ExpandableMenuItem } from "#adaptive-menu/expandable-menu-item"
+import { ExpandableMenuItemTrigger } from "#adaptive-menu/expandable-menu-item-trigger"
+import { ExpandableMenuItemContent } from "#adaptive-menu/expandable-menu-item-content"
+
 // import {
 //   ExpandableMenuItem,
 //   ExpandableMenuItemContent,
@@ -88,19 +91,19 @@ export function FiltersMenuItem({
 
   return (
     <>
-      <AdaptiveMenu.ExpandableMenuItem
+      <ExpandableMenuItem
         isExpanded={isExpanded}
         onExpansionToggle={() => setIsExpanded((value) => !value)}
         dropIndicator={dropIndicator}
         ref={dropTargetRef}
       >
-        <AdaptiveMenu.ExpandableMenuItemTrigger
+        <ExpandableMenuItemTrigger
           ref={draggableButtonRef}
           isDragging={state.type === "dragging"}
           hasDragIndicator
           elemBefore={
             <Icon size={"xs"}>
-              <FilterIcon  />
+              <FilterIcon />
             </Icon>
           }
           actionsOnHover={
@@ -112,11 +115,11 @@ export function FiltersMenuItem({
           }
         >
           Filters
-        </AdaptiveMenu.ExpandableMenuItemTrigger>
-        <AdaptiveMenu.ExpandableMenuItemContent>
+        </ExpandableMenuItemTrigger>
+        <ExpandableMenuItemContent>
           <FilterList filters={filters} />
-        </AdaptiveMenu.ExpandableMenuItemContent>
-      </AdaptiveMenu.ExpandableMenuItem>
+        </ExpandableMenuItemContent>
+      </ExpandableMenuItem>
       {dragPreview}
     </>
   )
@@ -154,7 +157,7 @@ function FilterLeaf({ filter }: { filter: TFilter }) {
 
   return (
     <>
-      <AdaptiveMenu.ItemButton
+      <ItemButton
         href={filter.href}
         elemBefore={filter.icon}
         ref={draggableAnchorRef}
@@ -164,7 +167,7 @@ function FilterLeaf({ filter }: { filter: TFilter }) {
         visualContentRef={dropTargetRef}
       >
         {filter.name}
-      </AdaptiveMenu.ItemButton>
+      </ItemButton>
 
       {dragPreview}
     </>
@@ -298,11 +301,8 @@ function FilterParent({ filter }: { filter: TFilter }) {
 
   return (
     <>
-      <AdaptiveMenu.ExpandableMenuItem
-        isExpanded={isExpanded}
-        onExpansionToggle={() => setIsExpanded((value) => !value)}
-      >
-        <AdaptiveMenu.ExpandableMenuItemTrigger
+      <ExpandableMenuItem isExpanded={isExpanded} onExpansionToggle={() => setIsExpanded((value) => !value)}>
+        <ExpandableMenuItemTrigger
           ref={draggableAnchorRef}
           href={filter.href}
           isDragging={state.type === "dragging"}
@@ -312,11 +312,11 @@ function FilterParent({ filter }: { filter: TFilter }) {
           elemBefore={isDraggingAFilter ? null : filter.icon}
         >
           {filter.name}
-        </AdaptiveMenu.ExpandableMenuItemTrigger>
-        <AdaptiveMenu.ExpandableMenuItemContent>
+        </ExpandableMenuItemTrigger>
+        <ExpandableMenuItemContent>
           <FilterList filters={filter.children} />
-        </AdaptiveMenu.ExpandableMenuItemContent>
-      </AdaptiveMenu.ExpandableMenuItem>
+        </ExpandableMenuItemContent>
+      </ExpandableMenuItem>
       {dragPreview}
     </>
   )

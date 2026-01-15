@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react"
-
+import { Icon } from "@chakra-ui/react"
 import invariant from "tiny-invariant"
 
 import { ClockIcon } from "../icons"
-import { AdaptiveMenu } from "#adaptive-menu"
+import { ItemButton } from "#adaptive-menu/namespaces/primitive"
 import { useMenuItemDragAndDrop } from "#adaptive-menu/drag-and-drop/use-menu-item-drag-and-drop"
 
 import { getTopLevelItemData, isTopLevelItemData } from "../data"
@@ -14,7 +14,7 @@ export function RecentMenuItem({ index, amountOfMenuItems }: { index: number; am
     draggable: {
       getInitialData: () => getTopLevelItemData("recent"),
       getDragPreviewPieces: () => ({
-        elemBefore: <ClockIcon label="" />,
+        elemBefore: <Icon size={'xs'}><ClockIcon/></Icon>,
         content: "Recent",
       }),
     },
@@ -37,19 +37,19 @@ export function RecentMenuItem({ index, amountOfMenuItems }: { index: number; am
 
   return (
     <>
-      <AdaptiveMenu.ItemButton
+      <ItemButton
         ref={draggableButtonRef}
         isDragging={state.type === "dragging"}
         hasDragIndicator
         dropIndicator={dropIndicator}
         visualContentRef={dropTargetRef}
-        elemBefore={<ClockIcon label="" />}
+        elemBefore={<Icon size={'xs'}><ClockIcon /></Icon>}
         // actionsOnHover={
         //   <TopLevelSharedMoreMenu value={"for-you"} index={index} amountOfMenuItems={amountOfMenuItems} />
         // }
       >
         Recent
-      </AdaptiveMenu.ItemButton>
+      </ItemButton>
       {dragPreview}
     </>
   )

@@ -19,7 +19,7 @@ export function ProjectTile({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        color: 'fg.inverted',
+        color: "fg.inverted",
       }}
       style={{ backgroundColor }}
       role="presentation"

@@ -32,10 +32,12 @@ function RenderDragPreview({ elemBefore, content, input }: any) {
   )
 }
 
-export function DragPreview({ elemBefore, content, input }: any) {
+export function DragPreview({ elemBefore, children }: any) {
   return (
     <ChakraProvider value={theme}>
-      <RenderDragPreview elemBefore={elemBefore} content={content} />
+      <RenderDragPreview elemBefore={elemBefore}>
+        {children}
+      </RenderDragPreview>
     </ChakraProvider>
   )
 }

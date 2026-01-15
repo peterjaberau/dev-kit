@@ -1,8 +1,9 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
-
+import { ExpandableMenuItem } from "#adaptive-menu/expandable-menu-item"
+import { ExpandableMenuItemTrigger } from "#adaptive-menu/expandable-menu-item-trigger"
+import { ExpandableMenuItemContent } from "#adaptive-menu/expandable-menu-item-content"
 import invariant from 'tiny-invariant';
-import { AdaptiveMenu } from "#adaptive-menu"
 
 import { IconButton, Icon } from '@chakra-ui/react';
 import { AddIcon } from "../icons"
@@ -77,13 +78,13 @@ export function ProjectsMenuItem({
 
 	return (
     <>
-      <AdaptiveMenu.ExpandableMenuItem
+      <ExpandableMenuItem
         isExpanded={isExpanded}
         onExpansionToggle={() => setIsExpanded((value) => !value)}
         ref={dropTargetRef}
         dropIndicator={dropIndicator}
       >
-        <AdaptiveMenu.ExpandableMenuItemTrigger
+        <ExpandableMenuItemTrigger
           ref={draggableButtonRef}
           isDragging={state.type === "dragging"}
           hasDragIndicator
@@ -97,12 +98,12 @@ export function ProjectsMenuItem({
           }
         >
           Projects
-        </AdaptiveMenu.ExpandableMenuItemTrigger>
-        <AdaptiveMenu.ExpandableMenuItemContent>
+        </ExpandableMenuItemTrigger>
+        <ExpandableMenuItemContent>
           <ProjectGroup name="starred" projects={projects.starred} />
           <ProjectGroup name="recent" projects={projects.recent} />
-        </AdaptiveMenu.ExpandableMenuItemContent>
-      </AdaptiveMenu.ExpandableMenuItem>
+        </ExpandableMenuItemContent>
+      </ExpandableMenuItem>
       {dragPreview}
     </>
   )

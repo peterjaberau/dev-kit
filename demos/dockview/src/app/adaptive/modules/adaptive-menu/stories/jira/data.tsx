@@ -73,7 +73,8 @@ export function isProjectData(data: Record<string | symbol, unknown>): data is T
   return data[projectKey] === true
 }
 
-const topLevelItems = ["for-you", "recent", "starred", "projects", "filters"] as const
+// const topLevelItems = ["for-you", "recent", "starred", "projects", "filters"] as const
+const topLevelItems = ["for-you", "recent", "starred", "filters"] as const
 
 export type TTopLevelItem = (typeof topLevelItems)[number]
 

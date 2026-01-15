@@ -138,7 +138,7 @@ export function useMenuItemDragAndDrop({ draggable: draggableArgs, dropTarget: d
     }
 
     return createPortal(
-      <DragPreview elemBefore={internalState?.ui?.elemBefore} content={internalState?.ui?.content} />,
+      <DragPreview elemBefore={internalState?.ui?.elemBefore}>{internalState?.ui?.content}</DragPreview>,
       internalState.container,
     )
   })()

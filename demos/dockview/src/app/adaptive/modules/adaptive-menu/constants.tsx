@@ -1,1 +1,1 @@
-export const expandableMenuItemIndentation = '12px';
+export const expandableMenuItemIndentation = "12px"

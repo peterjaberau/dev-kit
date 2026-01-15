@@ -7,6 +7,9 @@ import { chakra, HStack } from "@chakra-ui/react"
  */
 
 export const List = forwardRef((props: any, ref: any) => {
-  const { css, ...rest } = props
-  return <chakra.div  ref={ref} {...css} {...rest} role="list"/>
+  const { css, children } = props
+  // {...css}
+  return <chakra.div role="list" ref={ref} css={css} >
+    {children}
+  </chakra.div>
 })
