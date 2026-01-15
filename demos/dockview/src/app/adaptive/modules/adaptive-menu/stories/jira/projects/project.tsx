@@ -1,7 +1,8 @@
 import React, { type Ref, useContext, useEffect, useRef, useState } from "react"
 
 import invariant from "tiny-invariant"
-import { AdaptiveMenu } from "#adaptive-menu"
+// import { AdaptiveMenu } from "#adaptive-menu"
+import { MenuSection, MenuSectionHeading, MenuList, ItemButton } from "#adaptive-menu/namespaces/primitive"
 
 import { IconButton, chakra } from "@chakra-ui/react"
 import { ShowMoreHorizontalIcon } from "../icons"
@@ -63,16 +64,16 @@ export function ProjectGroup({ name, projects }: { name: "starred" | "recent"; p
 
   return (
     <GroupDropIndicator isActive={state === "is-over"} ref={ref} testId={`project-group-${name}`}>
-      <AdaptiveMenu.MenuSection isMenuListItem>
-        <AdaptiveMenu.MenuSectionHeading>
+      <MenuSection isMenuListItem>
+        <MenuSectionHeading>
           <chakra.span css={{ textTransform: "capitalize" }}>{name}</chakra.span>
-        </AdaptiveMenu.MenuSectionHeading>
-        <AdaptiveMenu.MenuList>
+        </MenuSectionHeading>
+        <MenuList>
           {projects.map((project, index) => (
             <Project project={project} key={project.id} group={projects} groupName={name} indexInGroup={index} />
           ))}
-        </AdaptiveMenu.MenuList>
-      </AdaptiveMenu.MenuSection>
+        </MenuList>
+      </MenuSection>
     </GroupDropIndicator>
   )
 }
@@ -120,7 +121,7 @@ function Project({
 
   return (
     <>
-      <AdaptiveMenu.ItemButton
+      <ItemButton
         href={project.href}
         elemBefore={project.icon}
         ref={draggableAnchorRef}
@@ -130,7 +131,7 @@ function Project({
         visualContentRef={dropTargetRef}
       >
         {project.name}
-      </AdaptiveMenu.ItemButton>
+      </ItemButton>
       {dragPreview}
     </>
   )

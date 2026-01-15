@@ -47,9 +47,9 @@ const topLevelMap: {
   "for-you": ({ index, amountOfMenuItems }) => <ForYouMenuItem index={index} amountOfMenuItems={amountOfMenuItems} />,
   starred: ({ index, amountOfMenuItems }) => <StarredMenuItem index={index} amountOfMenuItems={amountOfMenuItems} />,
   recent: ({ index, amountOfMenuItems }) => <RecentMenuItem index={index} amountOfMenuItems={amountOfMenuItems} />,
-  // projects: ({ data, index, amountOfMenuItems }) => (
-  //   <ProjectsMenuItem projects={data.projects} index={index} amountOfMenuItems={amountOfMenuItems} />
-  // ),
+  projects: ({ data, index, amountOfMenuItems }) => (
+    <ProjectsMenuItem projects={data.projects} index={index} amountOfMenuItems={amountOfMenuItems} />
+  ),
   filters: ({ data, index, amountOfMenuItems }) => (
     <FiltersMenuItem filters={data.filters} index={index} amountOfMenuItems={amountOfMenuItems} />
   ),

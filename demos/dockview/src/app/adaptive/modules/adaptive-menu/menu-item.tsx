@@ -1,28 +1,29 @@
-import { forwardRef } from "react"
-import { chakra, HStack } from "@chakra-ui/react"
+import { forwardRef, Suspense, useCallback, useRef } from "react"
+import { chakra, HStack, Text, Button, defineKeyframes } from "@chakra-ui/react"
 import { keyframes } from "@emotion/react"
+import { useLevel } from "./expandable-menu-item-context"
+import { COLLAPSE_ELEM_BEFORE } from "./menu-item-signals"
+import { expandableMenuItemIndentation } from "./constants"
+import { LazyDragHandle } from "./drag-handle/lazy-drag-handle"
 
 function isTextClamped(element: HTMLElement): boolean {
   return element.scrollHeight > element.clientHeight
 }
 
-const elemAfterDisplayVar = '--elem-after-display';
-const actionsOnHoverOpacityVar = '--actions-on-hover-opacity';
-const actionsOnHoverWidthVar = '--actions-on-hover-width';
-const actionsOnHoverPaddingInlineEndVar = '--actions-on-hover-padding';
-const notchColorVar = '--notch-color';
+const elemAfterDisplayVar = "--elem-after-display"
+const actionsOnHoverOpacityVar = "--actions-on-hover-opacity"
+const actionsOnHoverWidthVar = "--actions-on-hover-width"
+const actionsOnHoverPaddingInlineEndVar = "--actions-on-hover-padding"
+const notchColorVar = "--notch-color"
 
 const dragHandleDisplayVar = "--drag-handle-display"
-const dragCursorAnimation = keyframes({
-  to: {
-    cursor: "grab",
-  },
-})
+
+
 const topLevelSiblingStyles = {
   root: {
-    position: 'relative',
+    position: "relative",
   },
-};
+}
 const onTopOfButtonOrAnchorStyles = {
   root: {
     "&:not(:has(button,a))": {
@@ -142,14 +143,15 @@ const buttonOrAnchorStyles = {
     },
   },
   hasDragIndicator: {
-    "-webkit-touch-callout": "none",
+    // "-webkit-touch-callout": "none",
     [dragHandleDisplayVar]: "none",
     "&:hover": {
       [dragHandleDisplayVar]: "flex",
-      animationName: dragCursorAnimation,
-      animationDuration: "0s",
-      animationDelay: "800ms",
-      animationFillMode: "forwards",
+      cursor: 'grab',
+      // animationName: dragCursorAnimation,
+      // animationDuration: "0s",
+      // animationDelay: "800ms",
+      // animationFillMode: "forwards",
     },
   },
 }
@@ -263,6 +265,17 @@ const interactiveContentStyles = {
   },
 }
 
+function getTextColor({ isDisabled, isSelected }: { isDisabled?: boolean; isSelected?: boolean }) {
+  if (isDisabled) {
+    return "#080F214A"
+  }
+
+  if (isSelected) {
+    return "#1868DB"
+  }
+
+  return "#505258"
+}
 
 export const MenuItemImpl = forwardRef((props: any, ref: any) => {
   const {
@@ -279,34 +292,153 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
     elemBefore,
     elemAfter,
     isDisabled,
+
+    actions,
+    actionsOnHover,
+    href,
+    target,
+    isSelected,
+    ariaControls,
+    ariaExpanded,
+    ariaHasPopup,
+    isContentTooltipDisabled,
+
     ...rest
   } = props
 
+  const level = useLevel()
+  const isLink = typeof href !== "undefined"
+  const labelRef = useRef(null)
+  const descriptionRef = useRef(null)
+
+  const handleClick = useCallback(
+    (event: any) => {
+      onClick?.(event)
+    },
+    [onClick],
+  )
+
+  const showElemBefore = elemBefore !== COLLAPSE_ELEM_BEFORE
+
+  const interactiveElemContent = (
+    <chakra.div css={interactiveContentStyles.root}>
+      <chakra.div
+        css={{
+          insetInlineStart: `calc(-1 * ${level} * ${expandableMenuItemIndentation})`,
+          ...extendButtonOrAnchorStyles.root,
+        }}
+        aria-hidden="true"
+      />
+      <chakra.div
+        css={{
+          ...textStyles.root,
+          ...(!showElemBefore && textStyles.noElemBeforeIndent),
+        }}
+      >
+        <Text fontWeight="medium" maxLines={1} color={getTextColor({ isDisabled, isSelected })} ref={labelRef}>
+          {children}
+        </Text>
+        {description && (
+          <Text color={isDisabled ? "#080F214A" : "#505258"} textStyle="sm" maxLines={1} ref={descriptionRef}>
+            {description}
+          </Text>
+        )}
+      </chakra.div>
+
+      {hasDragIndicator ? (
+        <Suspense fallback={null}>
+          <LazyDragHandle />
+        </Suspense>
+      ) : null}
+
+      {dropIndicator}
+    </chakra.div>
+  )
+
+  const showHoverActionsWhenNotHovered = Boolean(ariaExpanded && actionsOnHover)
+
   return (
     <chakra.div
-      ref={visualContentRef} // DRAG TARGET
-      data-scope="menu-item"
-      data-dragging={isDragging || undefined}
-      css={css}
+      ref={visualContentRef}
+      tabIndex={0}
+      onClick={onClick}
+      css={{
+        ...containerStyles.root,
+        ...(isSelected && containerStyles.selected),
+        ...(isDragging && containerStyles.dragging),
+        ...(description && containerStyles.hasDescription),
+        ...(showHoverActionsWhenNotHovered && containerStyles.showHoverActions),
+        ...(showHoverActionsWhenNotHovered && elemAfter && containerStyles.removeElemAfter),
+        ...(actionsOnHover && elemAfter && containerStyles.removeElemAfterOnHoverOrOpenNestedPopup),
+        ...(isDisabled && containerStyles.disabled),
+        ...css,
+      }}
+      data-selected={isSelected}
     >
-      <chakra.div
-        ref={ref} // INTERACTIVE TARGET
-        tabIndex={0}
-        onClick={onClick}
-        {...rest}
+      {/* interactiveElemContent */}
+      <Button
+        ref={ref}
+        onClick={handleClick}
+        css={{
+          ...buttonOrAnchorStyles.root,
+          ...topLevelSiblingStyles.root,
+          ...(isSelected && buttonOrAnchorStyles.selected),
+          ...(hasDragIndicator && buttonOrAnchorStyles.hasDragIndicator),
+          textDecoration: "none",
+        }}
+        draggable={isLink && hasDragIndicator ? undefined : false}
+        aria-current={isLink && isSelected && "page"}
+        aria-expanded={!isLink && ariaExpanded && ariaExpanded}
+        disabled={isDisabled}
+        asChild={isLink}
       >
-        {children}
-      </chakra.div>
-      {dropIndicator}
+        {isLink && <chakra.div css={notchStyles.root} aria-hidden="true" />}
+        {interactiveElemContent}
+      </Button>
+
+      {showElemBefore && (
+        <chakra.div
+          css={{
+            ...elemBeforeStyles.root,
+            ...topLevelSiblingStyles.root,
+            ...onTopOfButtonOrAnchorStyles.root,
+          }}
+        >
+          {elemBefore}
+        </chakra.div>
+      )}
+
+      {actionsOnHover && <chakra.div css={actionsOnHoverStyles.root}>{actionsOnHover}</chakra.div>}
+
+      {elemAfter && (
+        <chakra.div
+          css={{
+            ...elemAfterStyles.root,
+            ...topLevelSiblingStyles.root,
+            ...onTopOfButtonOrAnchorStyles.root,
+          }}
+        >
+          {elemAfter}
+        </chakra.div>
+      )}
+
+      {actions && (
+        <chakra.div
+          css={{
+            ...actionStyles.root,
+            ...topLevelSiblingStyles.root,
+            ...onTopOfButtonOrAnchorStyles.root,
+          }}
+        >
+          {actions}
+        </chakra.div>
+      )}
     </chakra.div>
   )
 })
 
-
 export const MenuItem = forwardRef((props: any, ref: any) => {
   const { css, ...rest } = props
 
-  return (
-      <MenuItemImpl {...props} ref={ref} />
-  )
+  return <MenuItemImpl {...props} ref={ref} />
 })

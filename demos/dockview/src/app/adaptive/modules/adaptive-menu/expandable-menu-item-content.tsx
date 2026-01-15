@@ -36,7 +36,8 @@ export const ExpandableMenuItemContent = forwardRef<HTMLDivElement, any>(({ chil
           css={{
             content: {
               // Padding is used to achieve alignment of content when nesting expandable menu items.
-              paddingInlineStart: '"12px"',
+              // paddingInlineStart: '"12px"',
+              paddingInlineStart: `'"${expandableMenuItemIndentation}"'`,
             },
             collapsedContent: {
               display: "none",
