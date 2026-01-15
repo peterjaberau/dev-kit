@@ -1,5 +1,5 @@
 import { forwardRef, Suspense, useCallback, useRef } from "react"
-import { chakra, HStack, Text, Button, defineKeyframes } from "@chakra-ui/react"
+import { chakra, HStack, Text, Button, defineKeyframes, Center } from "@chakra-ui/react"
 import { keyframes } from "@emotion/react"
 import { useLevel } from "./expandable-menu-item-context"
 import { COLLAPSE_ELEM_BEFORE } from "./menu-item-signals"
@@ -306,6 +306,7 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
     ...rest
   } = props
 
+
   const level = useLevel()
   const isLink = typeof href !== "undefined"
   const labelRef = useRef(null)
@@ -347,7 +348,7 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
 
       {hasDragIndicator ? (
         <Suspense fallback={null}>
-          <LazyDragHandle />
+            <LazyDragHandle />
         </Suspense>
       ) : null}
 
@@ -360,8 +361,6 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
   return (
     <chakra.div
       ref={visualContentRef}
-      tabIndex={0}
-      onClick={onClick}
       css={{
         ...containerStyles.root,
         ...(isSelected && containerStyles.selected),
@@ -375,9 +374,10 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
       }}
       data-selected={isSelected}
     >
-      {/* interactiveElemContent */}
       <Button
         ref={ref}
+        aria-controls={ariaControls}
+        aria-haspopup={ariaHasPopup}
         onClick={handleClick}
         css={{
           p: 0,
@@ -390,9 +390,9 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
         }}
         draggable={isLink && hasDragIndicator ? undefined : false}
         aria-current={isLink && isSelected && "page"}
-        aria-expanded={!isLink && ariaExpanded && ariaExpanded}
+        aria-expanded={!isLink && ariaExpanded}
         disabled={isDisabled}
-        asChild={isLink}
+        // asChild={isLink}
       >
         {isLink && <chakra.div css={notchStyles.root} aria-hidden="true" />}
         {interactiveElemContent}

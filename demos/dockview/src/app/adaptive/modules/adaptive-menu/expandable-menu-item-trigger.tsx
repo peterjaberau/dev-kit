@@ -37,7 +37,7 @@ const wrapperStyles = {
     },
   },
 }
-
+//var(--ds-surface-hovered,#f0f1f2)
 const iconStyles = {
   chevron: {
     display: `var(${chevronDisplayCssVar})`,
@@ -60,7 +60,7 @@ const ExpandableMenuItemIcon = ({
   providedElemBefore,
 }: Omit<ExpandableMenuItemIconProps, "isHovering">) => {
   const chevronElem = (
-    <Icon {...iconProps} color={isSelected ? "#1868DB" : undefined} size="sm">
+    <Icon {...iconProps} color={isSelected ? "colorPalette.subtle" : undefined} size="sm">
       {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
     </Icon>
   )
@@ -84,26 +84,21 @@ const ExpandableMenuItemIcon = ({
 
 export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
   const {
-    visualContentRef,
-    dropIndicator,
-    onClick,
-    isDragging,
-    children,
-    description,
-    interactionName,
-    hasDragIndicator,
-    elemAfter,
-    isDisabled,
-    elemBefore: providedElemBefore,
-    iconProps,
+    actions,
     isSelected,
     href,
-    css,
-
-    actions,
+    elemBefore: providedElemBefore,
+    elemAfter,
     actionsOnHover,
+    onClick,
+    children,
+    interactionName,
     isContentTooltipDisabled,
-    ...rest
+    visualContentRef,
+    isDragging,
+    hasDragIndicator,
+    dropIndicator,
+
   } = props
 
   const id = useId()
@@ -134,18 +129,19 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
     isSelected: Boolean(isSelectable && isSelected),
   })
 
+
   const elemBefore: any = isSelectable ? (
     <IconButton
-      color={isSelected ? "#1868DB" : undefined}
-      colorPalette={isSelectable ? "blue" : undefined}
-      variant={isSelectable ? "solid" : "subtle"}
+      css={{ p: 0, m: 0 }}
+      size={"xs"}
+      variant={isSelectable ? "subtle" : "ghost"}
       aria-expanded={isExpanded}
       aria-labelledby={id}
-      size={"xs"}
       onClick={handleIconClick}
+
     >
       <ExpandableMenuItemIcon
-        iconProps={iconProps}
+        // iconProps={iconProps}
         isExpanded={isExpanded}
         isSelected={isSelected}
         providedElemBefore={providedElemBefore}

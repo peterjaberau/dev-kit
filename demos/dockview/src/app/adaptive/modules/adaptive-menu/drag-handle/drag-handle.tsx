@@ -4,7 +4,7 @@ import { LuGripVertical as DragHandleVerticalIcon } from "react-icons/lu"
 const styles = {
   root: {
     color: "#505258",
-    display: `var(--drag-handle-display, none)`,
+    display: 'var(--drag-handle-display, none)',
     flexDirection: "column",
     justifyContent: "center",
     position: "absolute",
@@ -17,7 +17,7 @@ const styles = {
 
 export default function DragHandle() {
 	return (
-    <Icon size={'sm'} css={styles.root} aria-hidden="true">
+    <Icon size={'sm'} css={styles.root} aria-hidden="true" flex={1}>
         <DragHandleVerticalIcon />
     </Icon>
   )

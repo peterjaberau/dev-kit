@@ -202,8 +202,6 @@ function FilterParent({ filter }: { filter: TFilter }) {
   }, [lastAction, filter.id, getData])
 
   const [isExpanded, setIsExpanded] = useState<boolean>(() => shouldExpand())
-  const [isMoveModalOpen, setIsMoveModalOpen] = useState<boolean>(false)
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
       getInitialData: () => getFilterData(filter),
