@@ -154,7 +154,7 @@ export function getInitialData(): TData {
           icon: (
             <ProjectTile backgroundColor={"#1F845A"}>
               <Icon size={"xs"}>
-                <DeviceMobileIcon  />
+                <DeviceMobileIcon />
               </Icon>
             </ProjectTile>
           ),
@@ -167,7 +167,9 @@ export function getInitialData(): TData {
           name: "Attachments",
           icon: (
             <ProjectTile backgroundColor={"#5B7F24"}>
-              <ImageIcon label="" color="currentColor" />
+              <Icon size={"xs"}>
+                <ImageIcon />
+              </Icon>
             </ProjectTile>
           ),
         },
@@ -177,7 +179,9 @@ export function getInitialData(): TData {
           name: "Audit",
           icon: (
             <ProjectTile backgroundColor={"#AE4787"}>
-              <ScorecardIcon label="" color="currentColor" />
+              <Icon size={"xs"}>
+                <ScorecardIcon />
+              </Icon>
             </ProjectTile>
           ),
         },
@@ -187,7 +191,9 @@ export function getInitialData(): TData {
           name: "Dark mode",
           icon: (
             <ProjectTile backgroundColor={"#6B6E76"}>
-              <ThemeIcon label="" color="currentColor" />
+              <Icon size={"xs"}>
+                <ThemeIcon />
+              </Icon>
             </ProjectTile>
           ),
         },
@@ -197,7 +203,9 @@ export function getInitialData(): TData {
           name: "Visualization",
           icon: (
             <ProjectTile backgroundColor={"#1868DB"}>
-              <ChartBarIcon label="" />
+              <Icon size={"xs"}>
+                <ChartBarIcon />
+              </Icon>
             </ProjectTile>
           ),
         },
@@ -207,7 +215,9 @@ export function getInitialData(): TData {
           name: "Basketball tournament",
           icon: (
             <ProjectTile backgroundColor={"#BD5B00"}>
-              <BasketballIcon label="" />
+              <Icon size={"xs"}>
+                <BasketballIcon />
+              </Icon>
             </ProjectTile>
           ),
         },
@@ -218,27 +228,43 @@ export function getInitialData(): TData {
         id: getId(),
         name: "Filter 1",
         href: "#",
-        icon: <FilterIcon label="" />,
+        icon: (
+          <Icon size={"xs"}>
+            <FilterIcon />
+          </Icon>
+        ),
         children: [
           {
             id: getId(),
             name: "Filter 1.1",
             href: "#",
-            icon: <FilterIcon label="" />,
+            icon: (
+              <Icon size={"xs"}>
+                <FilterIcon />
+              </Icon>
+            ),
             children: [],
           },
           {
             id: getId(),
             name: "Filter 1.2",
             href: "#",
-            icon: <FilterIcon label="" />,
+            icon: (
+              <Icon size={"xs"}>
+                <FilterIcon />
+              </Icon>
+            ),
             children: [],
           },
           {
             id: getId(),
             name: "Filter 1.3",
             href: "#",
-            icon: <FilterIcon label="" />,
+            icon: (
+              <Icon size={"xs"}>
+                <FilterIcon />
+              </Icon>
+            ),
             children: [],
           },
         ],
@@ -247,33 +273,53 @@ export function getInitialData(): TData {
         id: getId(),
         name: "Filter 2",
         href: "#",
-        icon: <FilterIcon label="" />,
+        icon: (
+          <Icon size={"xs"}>
+            <FilterIcon />
+          </Icon>
+        ),
         children: [
           {
             id: getId(),
             name: "Filter 2.1",
             href: "#",
-            icon: <FilterIcon label="" />,
+            icon: (
+              <Icon size={"xs"}>
+                <FilterIcon />
+              </Icon>
+            ),
             children: [
               {
                 id: getId(),
                 name: "Filter 2.1.1",
                 href: "#",
-                icon: <FilterIcon label="" />,
+                icon: (
+                  <Icon size={"xs"}>
+                    <FilterIcon />
+                  </Icon>
+                ),
                 children: [],
               },
               {
                 id: getId(),
                 name: "Filter 2.1.2",
                 href: "#",
-                icon: <FilterIcon label="" />,
+                icon: (
+                  <Icon size={"xs"}>
+                    <FilterIcon />
+                  </Icon>
+                ),
                 children: [],
               },
               {
                 id: getId(),
                 name: "Filter 2.1.3",
                 href: "#",
-                icon: <FilterIcon label="" />,
+                icon: (
+                  <Icon size={"xs"}>
+                    <FilterIcon />
+                  </Icon>
+                ),
                 children: [],
               },
             ],
@@ -282,7 +328,11 @@ export function getInitialData(): TData {
             id: getId(),
             name: "Filter 2.2",
             href: "#",
-            icon: <FilterIcon label="" />,
+            icon: (
+              <Icon size={"xs"}>
+                <FilterIcon />
+              </Icon>
+            ),
             children: [],
           },
         ],
@@ -291,14 +341,22 @@ export function getInitialData(): TData {
         id: getId(),
         name: "Filter 3",
         href: "#",
-        icon: <FilterIcon label="" />,
+        icon: (
+          <Icon size={"xs"}>
+            <FilterIcon />
+          </Icon>
+        ),
         children: [],
       },
       {
         id: getId(),
         name: "Filter 4",
         href: "#",
-        icon: <FilterIcon label="" />,
+        icon: (
+          <Icon size={"xs"}>
+            <FilterIcon />
+          </Icon>
+        ),
         children: [],
       },
     ],
