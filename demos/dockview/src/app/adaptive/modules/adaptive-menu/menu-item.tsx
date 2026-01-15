@@ -380,6 +380,8 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
         ref={ref}
         onClick={handleClick}
         css={{
+          p: 0,
+          m: 0,
           ...buttonOrAnchorStyles.root,
           ...topLevelSiblingStyles.root,
           ...(isSelected && buttonOrAnchorStyles.selected),

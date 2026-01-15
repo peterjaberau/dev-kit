@@ -145,9 +145,6 @@ function FilterLeaf({ filter }: { filter: TFilter }) {
     },
   })
 
-  const [isMoveModalOpen, setIsMoveModalOpen] = useState<boolean>(false)
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
-
   const registry = useContext(RegistryContext)
   useEffect(() => {
     const element = draggableAnchorRef.current
@@ -158,6 +155,7 @@ function FilterLeaf({ filter }: { filter: TFilter }) {
   return (
     <>
       <ItemButton
+        asChild
         href={filter.href}
         elemBefore={filter.icon}
         ref={draggableAnchorRef}

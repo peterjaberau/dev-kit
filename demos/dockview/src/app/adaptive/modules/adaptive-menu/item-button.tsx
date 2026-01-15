@@ -19,7 +19,15 @@ export const ItemButton = forwardRef((props: any, ref: any) => {
     elemBefore,
     elemAfter,
     isDisabled,
-    ...rest
+
+
+    actions,
+    isSelected,
+    actionsOnHover,
+    'aria-controls': ariaControls,
+    'aria-expanded': ariaExpanded,
+    'aria-haspopup': ariaHasPopup,
+    isContentTooltipDisabled,
   } = props
 
   return (
@@ -35,10 +43,13 @@ export const ItemButton = forwardRef((props: any, ref: any) => {
           elemAfter={elemAfter}
           elemBefore={elemBefore}
           isDisabled={isDisabled}
+          actions={isDisabled ? undefined : actions}
+          actionsOnHover={isDisabled ? undefined : actionsOnHover}
           onClick={onClick}
           ref={ref}
           visualContentRef={visualContentRef}
           interactionName={interactionName}
+          isContentTooltipDisabled={isContentTooltipDisabled}
           isDragging={isDragging}
           hasDragIndicator={hasDragIndicator}
           dropIndicator={dropIndicator}

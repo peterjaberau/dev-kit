@@ -15,6 +15,15 @@ export type ExpandableMenuItemContentProps = {
   children: ReactNode
 }
 
+const styles = {
+  content: {
+    paddingInlineStart: expandableMenuItemIndentation,
+  },
+  collapsedContent: {
+    display: 'none',
+  },
+};
+
 
 export const ExpandableMenuItemContent = forwardRef<HTMLDivElement, any>(({ children }, ref) => {
   const isExpanded = useIsExpanded()
@@ -34,14 +43,8 @@ export const ExpandableMenuItemContent = forwardRef<HTMLDivElement, any>(({ chil
         <List
           ref={ref}
           css={{
-            content: {
-              // Padding is used to achieve alignment of content when nesting expandable menu items.
-              // paddingInlineStart: '"12px"',
-              paddingInlineStart: `'"${expandableMenuItemIndentation}"'`,
-            },
-            collapsedContent: {
-              display: "none",
-            },
+            ...styles.content,
+            ...(!isExpanded && styles.collapsedContent),
           }}
         >
           {children}

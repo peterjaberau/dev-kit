@@ -14,8 +14,73 @@ type ExpandableMenuItemIconProps = {
   iconProps?: any
 }
 
+export const nestedOpenPopupCSSSelector = '&:has([aria-expanded="true"][aria-haspopup="true"])'
+
 const chevronDisplayCssVar: string = "--expandable-chevron-display"
 const providedElemBeforeDisplayCssVar: string = "--expandable-provided-elembefore-display"
+
+const wrapperStyles = {
+  root: {
+    [chevronDisplayCssVar]: "flex",
+    [providedElemBeforeDisplayCssVar]: "none",
+  },
+  showProvidedElemBefore: {
+    [chevronDisplayCssVar]: "none",
+    [providedElemBeforeDisplayCssVar]: "contents",
+    "&:hover, &:has(:focus-visible)": {
+      [chevronDisplayCssVar]: "flex",
+      [providedElemBeforeDisplayCssVar]: "none",
+    },
+    [nestedOpenPopupCSSSelector]: {
+      [chevronDisplayCssVar]: "flex",
+      [providedElemBeforeDisplayCssVar]: "none",
+    },
+  },
+}
+
+const iconStyles = {
+  chevron: {
+    display: `var(${chevronDisplayCssVar})`,
+    '[dir="rtl"] &': {
+      transform: "scaleX(-1)",
+    },
+  },
+  providedElemBefore: {
+    display: `var(${providedElemBeforeDisplayCssVar})`,
+  },
+  providedElemBeforeSelected: {
+    color: "#1868DB",
+  },
+}
+
+const ExpandableMenuItemIcon = ({
+  iconProps,
+  isExpanded,
+  isSelected,
+  providedElemBefore,
+}: Omit<ExpandableMenuItemIconProps, "isHovering">) => {
+  const chevronElem = (
+    <Icon {...iconProps} color={isSelected ? "#1868DB" : undefined} size="sm">
+      {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
+    </Icon>
+  )
+
+  return (
+    <>
+      <chakra.div css={iconStyles.chevron}>{chevronElem}</chakra.div>
+      {providedElemBefore && (
+        <chakra.div
+          css={{
+            ...iconStyles.providedElemBefore,
+            ...(isSelected && iconStyles.providedElemBeforeSelected),
+          }}
+        >
+          {providedElemBefore}
+        </chakra.div>
+      )}
+    </>
+  )
+}
 
 export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
   const {
@@ -34,6 +99,10 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
     isSelected,
     href,
     css,
+
+    actions,
+    actionsOnHover,
+    isContentTooltipDisabled,
     ...rest
   } = props
 
@@ -75,18 +144,16 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
       size={"xs"}
       onClick={handleIconClick}
     >
-      {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
+      <ExpandableMenuItemIcon
+        iconProps={iconProps}
+        isExpanded={isExpanded}
+        isSelected={isSelected}
+        providedElemBefore={providedElemBefore}
+      />
     </IconButton>
   ) : (
     providedElemBefore && (
-      <chakra.div
-        css={{
-          display: `var(${providedElemBeforeDisplayCssVar})`,
-          color: isSelected ? "#1868DB" : undefined,
-        }}
-      >
-        {providedElemBefore}
-      </chakra.div>
+      <ExpandableMenuItemIcon isExpanded={isExpanded} isSelected={isSelected} providedElemBefore={providedElemBefore} />
     )
   )
 
@@ -95,28 +162,14 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
       data-scope="expandable-menu-item-trigger"
       ref={itemRef}
       css={{
-        ...css,
-        // By default, we display the chevron icon only
-        [chevronDisplayCssVar]: "flex",
-        [providedElemBeforeDisplayCssVar]: "none",
-        ...(providedElemBefore && {
-          [chevronDisplayCssVar]: "none",
-          [providedElemBeforeDisplayCssVar]: "contents",
-          "&:hover, &:has(:focus-visible)": {
-            [chevronDisplayCssVar]: "flex",
-            [providedElemBeforeDisplayCssVar]: "none",
-          },
-          // [nestedOpenPopupCSSSelector]: {
-          //   [chevronDisplayCssVar]: "flex",
-          //   [providedElemBeforeDisplayCssVar]: "none",
-          // },
-        }),
+        ...wrapperStyles.root,
+        ...(providedElemBefore && wrapperStyles.showProvidedElemBefore),
       }}
     >
       <MenuItem
         id={id}
-        // actions={actions}
-        // actionsOnHover={actionsOnHover}
+        actions={actions}
+        actionsOnHover={actionsOnHover}
         elemBefore={elemBefore}
         ariaExpanded={isExpanded}
         elemAfter={elemAfter}
@@ -125,8 +178,8 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
         onClick={handleMenuContentClick}
         ref={ref}
         visualContentRef={visualContentRef}
-        // interactionName={interactionName}
-        // isContentTooltipDisabled={isContentTooltipDisabled}
+        interactionName={interactionName}
+        isContentTooltipDisabled={isContentTooltipDisabled}
         isDragging={isDragging}
         hasDragIndicator={hasDragIndicator}
         dropIndicator={dropIndicator}
