@@ -435,6 +435,7 @@ const _renderTopLevel = () => {
 
 
 
+
 export const logData = () => {
   console.log("----logData-------", {
     getTopLevelItemData: {
@@ -444,6 +445,7 @@ export const logData = () => {
       projects: getTopLevelItemData('projects'),
       filters: getTopLevelItemData('filters'),
     },
+
     data: getInitialData(),
     renderTopLevel: _renderTopLevel(),
   })
@@ -451,6 +453,7 @@ export const logData = () => {
 
 
 const logDataResult = {
+  // getFilterData: getFilterData("filters"),
   getTopLevelItemData: {
     "for-your": {
       value: "for-you",

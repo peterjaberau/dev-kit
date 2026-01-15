@@ -1,7 +1,8 @@
 "use client"
 
 import { Center, Container, GridItem, Heading, SimpleGrid, Stack, Textarea } from "@chakra-ui/react"
-import RenderSimple from "../simple"
+// import RenderSimple from "../simple"
+import RenderJira from "../jira"
 import RenderOrigin from "../origin-html"
 import RenderInlined from "../inlined-html"
 import React, { useEffect, useState } from "react"
@@ -19,8 +20,8 @@ function Index() {
     <SimpleGrid columns={3} gap={10} h={"full"}>
       <GridItem colSpan={1} flex={1}>
         <Stack>
-          <Heading size={"md"}>Simple - inDev</Heading>
-          <RenderSimple />
+          <Heading size={"md"}>Jira - inDev</Heading>
+          <RenderJira />
         </Stack>
       </GridItem>
       <GridItem colSpan={1} flex={1}>

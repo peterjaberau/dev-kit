@@ -5,7 +5,8 @@ export const MenuSectionDivider = forwardRef((props: any, ref: any) => {
   const { css, ...rest } = props
 
   return (
-    <chakra.div
+    <chakra.hr
+      role="none"
       data-scope="menu-section-divider"
       ref={ref}
       css={{

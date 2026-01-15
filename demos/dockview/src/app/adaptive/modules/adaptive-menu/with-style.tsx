@@ -73,13 +73,13 @@ export const MenuItemElementInteractive: any = withContext(
 )
 
 export const MenuSection: any = withContext(Primitive.MenuItemElementInteractive, "menuSection", {
-  forwardAsChild: true,
+  forwardAsChild: false,
 })
 export const MenuSectionDivider: any = withContext(Primitive.MenuItemElementInteractive, "menuSectionDivider", {
-  forwardAsChild: true,
+  forwardAsChild: false,
 })
 export const MenuSectionHeading: any = withContext(Primitive.MenuItemElementInteractive, "menuSectionHeading", {
-  forwardAsChild: true,
+  forwardAsChild: false,
 })
 
 export const ItemButton: any = withContext(Primitive.ItemButton, "itemButton", {
