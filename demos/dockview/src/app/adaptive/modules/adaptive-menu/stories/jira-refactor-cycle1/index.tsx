@@ -6,7 +6,8 @@ import invariant from "tiny-invariant"
 import { useStableRef } from "#adaptive-shared/lib/hooks"
 import { Root, MenuList, GroupDropIndicator } from "#adaptive-menu/namespaces/primitive"
 import { SideNavContent } from "./components"
-import { LeafNodeItem } from "./node-items/leaf-node-item"
+import { NodeLeafItem, NodeListItem  } from "./node-items"
+
 import { extractInstruction, type Instruction } from "#adaptive-menu/drag-and-drop/hitbox"
 
 import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element"
@@ -108,7 +109,7 @@ export function Sidebar() {
           {rootItemsIds.map((item: any, index: any, array) => {
             return (
               <Fragment key={item}>
-                <LeafNodeItem
+                <NodeListItem
                   actorRef={rootItemsRefs[item]}
                   data={rootItemsIds}
                   index={index}

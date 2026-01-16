@@ -443,7 +443,8 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
             ...onTopOfButtonOrAnchorStyles.root,
           }}
         >
-          <Icon size="sm">{elemBefore}</Icon>
+          {/*<Icon size="sm">{elemBefore}</Icon>*/}
+          {elemBefore}
         </chakra.div>
       )}
 
