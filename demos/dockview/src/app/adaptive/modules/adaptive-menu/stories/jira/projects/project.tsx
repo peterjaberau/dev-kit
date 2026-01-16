@@ -4,7 +4,7 @@ import invariant from "tiny-invariant"
 // import { AdaptiveMenu } from "#adaptive-menu"
 import { MenuSection, MenuSectionHeading, MenuList, ItemButton } from "#adaptive-menu/namespaces/primitive"
 
-import { IconButton, chakra } from "@chakra-ui/react"
+import { IconButton, chakra, Heading } from "@chakra-ui/react"
 import { ShowMoreHorizontalIcon } from "../icons"
 import { TagIcon } from "../icons"
 import { GroupDropIndicator } from "#adaptive-menu/drag-and-drop/group-drop-indicator"
@@ -66,7 +66,7 @@ export function ProjectGroup({ name, projects }: { name: "starred" | "recent"; p
     <GroupDropIndicator isActive={state === "is-over"} ref={ref} testId={`project-group-${name}`}>
       <MenuSection isMenuListItem>
         <MenuSectionHeading>
-          <chakra.span css={{ textTransform: "capitalize" }}>{name}</chakra.span>
+          {name}
         </MenuSectionHeading>
         <MenuList>
           {projects.map((project, index) => (

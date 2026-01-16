@@ -2,6 +2,7 @@
 
 import { Center, Container, GridItem, Heading, SimpleGrid, Stack, Textarea } from "@chakra-ui/react"
 import RenderJira from "../jira"
+import RenderJiraRefactor1 from "../jira-refactor-cycle1"
 import React, { useEffect, useState } from "react"
 
 function Index() {
@@ -14,24 +15,17 @@ function Index() {
   if (!ready) return null // or a loader
 
   return (
-    <SimpleGrid
-      data-story-dynamic="/adaptive/stories/adaptive-menu-compare"
-      data-story-direct="/adaptive/modules/adaptive-menu/stories/compare"
-      columns={3}
-      gap={10}
-      h={"full"}
-      w={'full'}
-      px={6}
-    >
+    <SimpleGrid columns={3} gap={10} h={"full"} w={"full"} px={6}>
       <GridItem colSpan={1} flex={1}>
         <Stack>
-          <Heading size={"md"}>Jira - inDev</Heading>
+          <Heading size={"md"}>Jira</Heading>
           <RenderJira />
         </Stack>
       </GridItem>
       <GridItem colSpan={1} flex={1}>
         <Stack>
-          <Heading size={"md"}>Origin Html - Classes</Heading>
+          <Heading size={"md"}>Jira Refactor Cycle 1</Heading>
+          <RenderJiraRefactor1 />
         </Stack>
       </GridItem>
       <GridItem colSpan={1} flex={1}>
