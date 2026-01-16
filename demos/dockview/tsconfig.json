@@ -36,6 +36,9 @@
       "#adaptive-components/*": ["./src/app/adaptive/components/*"],
       "#adaptive-components": ["./src/app/adaptive/components"],
 
+      "#adaptive-mock/*": ["./src/app/adaptive/mock/*"],
+      "#adaptive-mock": ["./src/app/adaptive/mock"],
+
       "#adaptive-core/*": ["./src/app/adaptive/core/*"],
       "#adaptive-core": ["./src/app/adaptive/core"],
 
