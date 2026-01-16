@@ -3,65 +3,51 @@ import React, { Fragment, type Ref, useCallback, useContext, useEffect, useRef, 
 import invariant from "tiny-invariant"
 
 import { Icon, IconButton } from "@chakra-ui/react"
-import { AddIcon } from "../icons"
-import { FilterIcon } from "../icons"
-import { GrowVerticalIcon } from "../icons"
-import { ShowMoreHorizontalIcon } from "../icons"
+import { AddIcon, FilterIcon, GrowVerticalIcon, ShowMoreHorizontalIcon } from "../icons"
+
 import { ItemButton } from "#adaptive-menu/namespaces/primitive"
 import { GroupDropIndicator } from "#adaptive-menu/drag-and-drop/group-drop-indicator"
 import { useMenuItemDragAndDrop } from "#adaptive-menu/drag-and-drop/use-menu-item-drag-and-drop"
-import { ExpandableMenuItem } from "#adaptive-menu/expandable-menu-item"
-import { ExpandableMenuItemTrigger } from "#adaptive-menu/expandable-menu-item-trigger"
-import { ExpandableMenuItemContent } from "#adaptive-menu/expandable-menu-item-content"
+import {
+  ExpandableMenuItem,
+  ExpandableMenuItemTrigger,
+  ExpandableMenuItemContent,
+} from "#adaptive-menu/namespaces/primitive"
 
-// import {
-//   ExpandableMenuItem,
-//   ExpandableMenuItemContent,
-//   ExpandableMenuItemTrigger,
-// } from "@atlaskit/navigation-system/side-nav-items/expandable-menu-item"
-// import { LinkMenuItem } from "@atlaskit/navigation-system/side-nav-items/link-menu-item"
 import {
   dropTargetForElements,
   type ElementDropTargetEventBasePayload,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 
-import { getFilterData, getTopLevelItemData, isFilterData, isTopLevelItemData, type TFilter } from "../data"
-import { RegistryContext } from "../registry"
-import { useGetData, useLastAction } from "../state-context"
+import { useMenuItem } from "#adaptive-menu/use-menu-item"
 
-import { getPathToFilter } from "./filter-tree-utils"
+// import { getPathToFilter } from "./filter-tree-utils"
 
-export function ListMenuItem({
-  filters,
-  index,
-  amountOfMenuItems,
-}: {
-  filters: TFilter[]
-  index: number
-  amountOfMenuItems: number
-}) {
+export function ListMenuItem({ actorRef, filters, index, amountOfMenuItems }: any) {
+  const { dataName, menuItemId, dataValue } = useMenuItem({ actorRef })
+
   const [isExpanded, setIsExpanded] = useState<boolean>(true)
   const wasExpandedWhenDragStartedRef = useRef<boolean | null>(null)
   const { state, draggableButtonRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
-      getInitialData: () => getTopLevelItemData("filters"),
+      getInitialData: () => menuItemId,
       getDragPreviewPieces: () => ({
         elemBefore: (
           <Icon size={"xs"}>
             <FilterIcon />
           </Icon>
         ),
-        content: "Filters",
+        content: dataName,
       }),
     },
     dropTarget: {
-      getData: () => getTopLevelItemData("filters"),
+      getData: () => true,
       getOperations: () => ({
         "reorder-after": "available",
         "reorder-before": "available",
       }),
-      canDrop: ({ source }: any) => isTopLevelItemData(source.data),
+      canDrop: ({ source }: any) => true,
     },
   })
 
@@ -82,12 +68,10 @@ export function ListMenuItem({
   }, [state.type])
 
   // register element
-  const registry = useContext(RegistryContext)
   useEffect(() => {
     const element = draggableButtonRef.current
     invariant(element)
-    registry?.registerTopLevelItem({ item: "filters", element })
-  }, [registry, draggableButtonRef])
+  }, [draggableButtonRef])
 
   return (
     <>
