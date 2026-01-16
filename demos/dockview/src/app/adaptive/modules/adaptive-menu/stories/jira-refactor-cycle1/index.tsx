@@ -20,6 +20,8 @@ import { useMenuRoot } from "../../use-menu-root"
 import { useMenuItem } from "../../use-menu-item"
 
 import { data as getInitialData } from "./data"
+import { isFilterData, isProjectData, isTopLevelItemData, type TAction } from "#adaptive-menu/stories/jira/data"
+import { reduce } from "#adaptive-menu/stories/jira/reducer"
 
 function getReorderFinishIndex({ indexOfTarget, instruction }: any): number {
   if (instruction.operation === "reorder-before") {
@@ -43,10 +45,61 @@ export function Sidebar() {
   const { menuItemChildrenIds: rootItemsIds, menuItemChildrenRef: rootItemsRefs } = useMenuRoot()
   const { dependencies }: any = useMenuManager()
 
-
   const ref = useRef<HTMLDivElement | null>(null)
   const [state, setState] = useState<"idle" | "is-over">("idle")
   const scrollableRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    return monitorForElements({
+      canMonitor: ({ source }) => !!source.data,
+
+      onDrop({ source, location }) {
+        const dragging = source.data
+        const [innerMost] = location.current.dropTargets
+
+        if (!innerMost) {
+          return
+        }
+        const dropTargetData = innerMost.data
+
+        const instruction: Instruction | null = extractInstruction(dropTargetData)
+        if (!instruction) {
+          return
+        }
+      },
+    })
+  }, [])
+
+  // setup auto scrolling for sidenav scroll container
+  useEffect(() => {
+    const scrollable = scrollableRef.current
+    invariant(scrollable)
+    return autoScrollForElements({
+      element: scrollable,
+      canScroll: ({ source }) => !!source.data,
+    })
+  }, [])
+
+  useEffect(() => {
+    const element = ref.current
+    invariant(element)
+    return dropTargetForElements({
+      element,
+      canDrop: ({ source }) => true,
+      onDragStart() {
+        setState("is-over")
+      },
+      onDragEnter() {
+        setState("is-over")
+      },
+      onDragLeave() {
+        setState("idle")
+      },
+      onDrop() {
+        setState("idle")
+      },
+    })
+  }, [])
 
   return (
     <SideNavContent ref={scrollableRef}>
@@ -55,7 +108,12 @@ export function Sidebar() {
           {rootItemsIds.map((item: any, index: any, array) => {
             return (
               <Fragment key={item}>
-                <LeafNodeItem actorRef={rootItemsRefs[item]} data={rootItemsIds} index={index} amountOfMenuItems={array.length} />
+                <LeafNodeItem
+                  actorRef={rootItemsRefs[item]}
+                  data={rootItemsIds}
+                  index={index}
+                  amountOfMenuItems={array.length}
+                />
               </Fragment>
             )
           })}
