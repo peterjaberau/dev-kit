@@ -1,10 +1,7 @@
 "use client"
 
 import { Center, Container, GridItem, Heading, SimpleGrid, Stack, Textarea } from "@chakra-ui/react"
-// import RenderSimple from "../simple"
 import RenderJira from "../jira"
-import RenderOrigin from "../origin-html"
-import RenderInlined from "../inlined-html"
 import React, { useEffect, useState } from "react"
 
 function Index() {
@@ -17,7 +14,15 @@ function Index() {
   if (!ready) return null // or a loader
 
   return (
-    <SimpleGrid columns={3} gap={10} h={"full"}>
+    <SimpleGrid
+      data-story-dynamic="/adaptive/stories/adaptive-menu-compare"
+      data-story-direct="/adaptive/modules/adaptive-menu/stories/compare"
+      columns={3}
+      gap={10}
+      h={"full"}
+      w={'full'}
+      px={6}
+    >
       <GridItem colSpan={1} flex={1}>
         <Stack>
           <Heading size={"md"}>Jira - inDev</Heading>
@@ -27,12 +32,10 @@ function Index() {
       <GridItem colSpan={1} flex={1}>
         <Stack>
           <Heading size={"md"}>Origin Html - Classes</Heading>
-          <RenderOrigin />
         </Stack>
       </GridItem>
       <GridItem colSpan={1} flex={1}>
         <Heading size={"md"}>Inlined Html - Styles</Heading>
-        <RenderInlined />
       </GridItem>
     </SimpleGrid>
   )
