@@ -318,25 +318,37 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-              <div role="listitem" data-drop-target-for-element="true">
-                <div>
-                  <div className="_1mmiglyw _165n1bgi _v9u71txw _1hl9glyw _b31z1txw _1vnl1txw _12xsglyw _p8btglyw">
-                    <div className="_2rko12b0 _vchhusvi _1e0c11p5 _yv0e7dup _2z05hkll _1lmcu4vt _1ul9t9kd _4t3iviql _4cvr1h6o _uiztglyw _syazazsu _1yyu1j28 _91ju1txw _uomdkb7n _pmxp1wug _db801b66 _qxq9kb7n _1rbv1wug _kwq51b66 _1swv19i6 _irr319i6 _t7p8kb7n _g4kikb7n _91nl1wug _ynyi1wug _iy5o1b66 _v4o21b66">
+              <div data-tag="1- expandable-item" role="listitem" data-drop-target-for-element="true">
+                <div data-tag="1.1">
+                  <div
+                    data-tag="1.1.1 - expandable-trigger"
+                    className="_1mmiglyw _165n1bgi _v9u71txw _1hl9glyw _b31z1txw _1vnl1txw _12xsglyw _p8btglyw"
+                  >
+                    <div
+                      data-tag="1.1.1.1"
+                      className="_2rko12b0 _vchhusvi _1e0c11p5 _yv0e7dup _2z05hkll _1lmcu4vt _1ul9t9kd _4t3iviql _4cvr1h6o _uiztglyw _syazazsu _1yyu1j28 _91ju1txw _uomdkb7n _pmxp1wug _db801b66 _qxq9kb7n _1rbv1wug _kwq51b66 _1swv19i6 _irr319i6 _t7p8kb7n _g4kikb7n _91nl1wug _ynyi1wug _iy5o1b66 _v4o21b66"
+                    >
                       <button
+                        data-tag="1.1.1.1.1"
                         id=":r2:"
                         aria-expanded="true"
                         type="button"
                         className="_ymio1r31 _ypr0glyw _zcxs1o36 _mizu194a _1ah3dkaa _ra3xnqa1 _128mdkaa _1cvmnqa1 _4davt94y _19itglyw _vchhusvi _r06hglyw _80omtlke _2rko12b0 _yyhyjvu9 _1ii7kb7n _1e0c11p5 _yv0enbh3 _2z05nbh3 _y4ti1b66 _bozg1b66 _1q511b66 _85i51b66 _bfhk1j28 _syazazsu _4cvr1h6o _y3gnv2br _14iu13ro _kqswh2mm _1ifmglyw _1cykglyw _x0kw1txw _11om6b4r _7psyru3m _1uy01amc _bir2q7pw"
                         draggable="true"
                       >
-                        <div className="_nd5l19l3 _1e0c1txw _2lx21bp4 _ae4v1h6o">
+                        <div data-tag="1.1.1.1.1.1" className="_nd5l19l3 _1e0c1txw _2lx21bp4 _ae4v1h6o">
                           <div
+                            data-tag="1.1.1.1.1.1.1"
                             aria-hidden="true"
                             className="_1r04ze3t _kqswstnw"
                             style={{ insetInlineStart: "calc(0px)" }}
                           />
-                          <div className="_zulpv77o _1reo15vq _18m915vq _y4ti1b66 _bozg1b66 _1e0c1txw _2lx21bp4 _1ul91c9m _1guo18uv _12s918uv">
+                          <div
+                            data-tag="1.1.1.1.1.1.2"
+                            className="_zulpv77o _1reo15vq _18m915vq _y4ti1b66 _bozg1b66 _1e0c1txw _2lx21bp4 _1ul91c9m _1guo18uv _12s918uv"
+                          >
                             <span
+                              data-tag="1.1.1.1.1.1.2.1"
                               className="_19pkidpf _2hwxidpf _otyridpf _18u0idpf _1i4qfg65 _11c82smr _syazazsu _1reo15vq _18m915vq _1e0ccj1k _sudp1e54 _1nmz9jpi _k48p1wq8"
                               style={{ WebkitLineClamp: 1 }}
                             >
@@ -344,10 +356,12 @@ const Index = () => {
                             </span>
                           </div>
                           <div
+                            data-tag="1.1.1.1.1.3"
                             aria-hidden="true"
                             className="_syazazsu _1e0c1i3c _2lx21bp4 _1bah1h6o _kqswstnw _152tidpf _u7coidpf _1e02idpf _ahbqxmi2"
                           >
                             <span
+                              data-tag="1.1.1.1.1.1.3.1"
                               aria-hidden="true"
                               className="_1e0c1o8l _vchhusvi _1o9zidpf _vwz4utpp _y4ti1igz _bozg1mb9 _12va1onz _jcxd1r8n"
                               style={{ color: "currentcolor" }}
@@ -367,7 +381,10 @@ const Index = () => {
                           </div>
                         </div>
                       </button>
-                      <div className="_nd5l17zh _1reo15vq _18m915vq _1e0c1txw _1o9zidpf _1bsb1tcg _4t3i1tcg _4cvr1h6o _1bah1h6o _bozg1b66 _vchh1ntv _1guo18uv _12s918uv _kqswh2mm _18ukglyw">
+                      <div
+                        data-tag="1.1.1.1.2"
+                        className="_nd5l17zh _1reo15vq _18m915vq _1e0c1txw _1o9zidpf _1bsb1tcg _4t3i1tcg _4cvr1h6o _1bah1h6o _bozg1b66 _vchh1ntv _1guo18uv _12s918uv _kqswh2mm _18ukglyw"
+                      >
                         <div className="_1e0ciw0t _1tz3r0mg">
                           <span
                             aria-hidden="true"
@@ -413,7 +430,10 @@ const Index = () => {
                           </span>
                         </div>
                       </div>
-                      <div className="_nd5l16dh _zulp1b66 _1reo15vq _18m915vq _4cvr1h6o _1e0c1txw _tzy4pnc3 _1bsbty16 _y4tidria _1guo18uv _12s918uv">
+                      <div
+                        data-tag="1.1.1.1.3"
+                        className="_nd5l16dh _zulp1b66 _1reo15vq _18m915vq _4cvr1h6o _1e0c1txw _tzy4pnc3 _1bsbty16 _y4tidria _1guo18uv _12s918uv"
+                      >
                         <button
                           type="button"
                           className="_ymio1r31 _ypr0glyw _zcxs1o36 _mizu194a _1ah3dkaa _ra3xnqa1 _128mdkaa _1cvmnqa1 _4davt94y _19itglyw _vchhusvi _r06hglyw _80omtlke _2rkofajl _11c82smr _v5649dqc _189eidpf _1rjcv77o _1e0c116y _1bsb1k8s _p12f1osq _kqswh2mm _4cvr1q9y _1bah1h6o _gy1p1b66 _1o9zidpf _4t3i1k8s _k48p1wq8 _y4tize3t _bozgze3t _y3gn1h6o _s7n4nkob _14mj1kw7 _9v7aze3t _1tv3nqa1 _39yqe4h9 _11fnglyw _18postnw _bfhkqtfy _syazazsu _1053azsu _f8pjazsu _30l3azsu _9h8hazsu _irr34mfv _1di619qy _4bfu1r31 _1hmsglyw _ajmmnqa1 _1a3b1r31 _4fprglyw _5goinqa1 _9oik1r31 _1bnxglyw _jf4cnqa1 _1nrm1r31 _c2waglyw _1iohnqa1"
@@ -477,9 +497,9 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div role="list" className="_bozg1crf">
-                    <div data-testid="project-group-starred" data-drop-target-for-element="true">
-                      <div role="listitem">
+                  <div data-tag="1.1.2 - expandable-content" role="list" className="_bozg1crf">
+                    <div data-tag="1.1.2.1" data-testid="project-group-starred" data-drop-target-for-element="true">
+                      <div data-tag="1.1.2.1.1" role="listitem">
                         <div role="group" aria-labelledby="uid14-heading">
                           <p id="uid14-heading" className="_11c81vhk _1rjcu2gc _syaz1rpy _bozg12x7">
                             <span className="_1p1d1dk0">starred</span>
@@ -840,8 +860,8 @@ const Index = () => {
                         </div>
                       </div>
                     </div>
-                    <div data-testid="project-group-recent" data-drop-target-for-element="true">
-                      <div role="listitem">
+                    <div data-tag="1.1.2.2" data-testid="project-group-recent" data-drop-target-for-element="true">
+                      <div data-tag="1.1.2.2.1" role="listitem">
                         <div role="group" aria-labelledby="uid30-heading">
                           <p id="uid30-heading" className="_11c81vhk _1rjcu2gc _syaz1rpy _bozg12x7">
                             <span className="_1p1d1dk0">recent</span>
@@ -1445,11 +1465,18 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-              <div role="listitem" data-drop-target-for-element="true">
-                <div>
-                  <div className="_1mmiglyw _165n1bgi _v9u71txw _1hl9glyw _b31z1txw _1vnl1txw _12xsglyw _p8btglyw">
-                    <div className="_2rko12b0 _vchhusvi _1e0c11p5 _yv0e7dup _2z05hkll _1lmcu4vt _1ul9t9kd _4t3iviql _4cvr1h6o _uiztglyw _syazazsu _1yyu1j28 _91ju1txw _uomdkb7n _pmxp1wug _db801b66 _qxq9kb7n _1rbv1wug _kwq51b66 _1swv19i6 _irr319i6 _t7p8kb7n _g4kikb7n _91nl1wug _ynyi1wug _iy5o1b66 _v4o21b66">
+              <div data-tag="1- expandable-item" role="listitem" data-drop-target-for-element="true">
+                <div data-tag="1.1">
+                  <div
+                    data-tag="1.1.1 - expandable-trigger"
+                    className="_1mmiglyw _165n1bgi _v9u71txw _1hl9glyw _b31z1txw _1vnl1txw _12xsglyw _p8btglyw"
+                  >
+                    <div
+                      data-tag="1.1.1.1"
+                      className="_2rko12b0 _vchhusvi _1e0c11p5 _yv0e7dup _2z05hkll _1lmcu4vt _1ul9t9kd _4t3iviql _4cvr1h6o _uiztglyw _syazazsu _1yyu1j28 _91ju1txw _uomdkb7n _pmxp1wug _db801b66 _qxq9kb7n _1rbv1wug _kwq51b66 _1swv19i6 _irr319i6 _t7p8kb7n _g4kikb7n _91nl1wug _ynyi1wug _iy5o1b66 _v4o21b66"
+                    >
                       <button
+                        data-tag="1.1.1.2"
                         id=":r3:"
                         aria-expanded="true"
                         type="button"

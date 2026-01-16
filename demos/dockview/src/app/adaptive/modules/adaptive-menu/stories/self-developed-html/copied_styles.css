@@ -1,0 +1,240 @@
+/* NOTE: This is a strictly structural, nested CSS (SCSS-style) representation.
+   - Every HTML id is converted to a CSS class selector.
+   - Original id values are preserved verbatim; spaces are escaped to keep selectors valid.
+   - No properties are added. No optimization or normalization is performed.
+*/
+
+.1 {
+  font-family: system-ui, sans-serif; font-size: 100%; margin: 0; padding: 0; --expandable-chevron-display: none; --expandable-provided-elembefore-display: contents
+  .1_1 {
+  .1_1_1 {
+  .1_1_1_1 {
+  font: var(--ds-font-body, normal 400 14px/1.42857142857143 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif);
+  text-decoration-skip-ink: auto;
+  --expandable-chevron-display: flex;
+  --expandable-provided-elembefore-display: none;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--ds-radius-small, 4px);
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0px, auto) 1fr minmax(0px, auto) minmax(0px, auto);
+  grid-template-rows: 1fr;
+  grid-template-areas: 'elem-before interactive elem-after actions';
+  min-width: 72px;
+  height: 2rem;
+  align-items: center;
+  user-select: none;
+  color: var(--ds-text-subtle, #505258);
+  --notch-color: transparent;
+  --elem-after-display: flex;
+  --actions-on-hover-opacity: 1;
+  --actions-on-hover-width: auto;
+  --actions-on-hover-padding: var(--ds-space-050, 4px);
+  .1_1_1_1_1 {
+  text-decoration-skip-ink: auto;
+  --expandable-chevron-display: flex;
+  --expandable-provided-elembefore-display: none;
+  --notch-color: transparent;
+  --elem-after-display: flex;
+  --actions-on-hover-opacity: 1;
+  --actions-on-hover-width: auto;
+  --actions-on-hover-padding: var(--ds-space-050, 4px);
+  -webkit-user-drag: element;
+  user-select: none;
+  font-family: inherit;
+  border-radius: var(--ds-radius-small, 4px);
+  border: none;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  box-sizing: border-box;
+  display: grid;
+  align-items: center;
+  color: var(--ds-text-subtle, #505258);
+  position: relative;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+  padding-inline-end: var(--ds-space-050, 4px);
+  padding-inline-start: var(--ds-space-050, 4px);
+  padding-block-start: var(--ds-space-050, 4px);
+  padding-block-end: var(--ds-space-050, 4px);
+  background-color: transparent;
+  text-align: start;
+  --drag-handle-display: none;
+  appearance: none;
+  cursor: pointer;
+  .1_1_1_1_1_1 {
+  text-decoration-skip-ink: auto;
+  --expandable-chevron-display: flex;
+  --expandable-provided-elembefore-display: none;
+  user-select: none;
+  --notch-color: transparent;
+  --elem-after-display: flex;
+  --actions-on-hover-opacity: 1;
+  --actions-on-hover-width: auto;
+  --actions-on-hover-padding: var(--ds-space-050, 4px);
+  font-family: inherit;
+  color: var(--ds-text-subtle, #505258);
+  text-align: start;
+  --drag-handle-display: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  grid-area: interactive;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  .1_1_1_1_1_1_1 {
+  inset-inline-start: calc(0px);
+  text-decoration-skip-ink: auto;
+  --expandable-chevron-display: flex;
+  --expandable-provided-elembefore-display: none;
+  user-select: none;
+  --notch-color: transparent;
+  --elem-after-display: flex;
+  --actions-on-hover-opacity: 1;
+  --actions-on-hover-width: auto;
+  --actions-on-hover-padding: var(--ds-space-050, 4px);
+  font-family: inherit;
+  color: var(--ds-text-subtle, #505258);
+  text-align: start;
+  --drag-handle-display: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  inset: var(--ds-space-0, 0);
+  position: absolute;
+  inset-inline-start: calc(0px);
+}
+  .1_1_1_1_1_1_2 {
+  text-decoration-skip-ink: auto;
+  --expandable-chevron-display: none;
+  --expandable-provided-elembefore-display: contents;
+  user-select: none;
+  --notch-color: transparent;
+  --elem-after-display: flex;
+  --actions-on-hover-opacity: 1;
+  --actions-on-hover-width: auto;
+  --actions-on-hover-padding: var(--ds-space-050, 4px);
+  font-family: inherit;
+  color: var(--ds-text-subtle, #505258);
+  text-align: start;
+  --drag-handle-display: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  gap: var(--ds-space-025, 2px);
+  display: flex;
+  padding-inline-end: var(--ds-space-050, 4px);
+  padding-inline-start: var(--ds-space-050, 4px);
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  min-width: 1ch;
+  .1_1_1_1_1_1_2_1 {
+  text-decoration-skip-ink: auto;
+  --expandable-chevron-display: none;
+  --expandable-provided-elembefore-display: contents;
+  user-select: none;
+  --notch-color: transparent;
+  --elem-after-display: flex;
+  --actions-on-hover-opacity: 1;
+  --actions-on-hover-width: auto;
+  --actions-on-hover-padding: var(--ds-space-050, 4px);
+  text-align: start;
+  --drag-handle-display: none;
+  cursor: pointer;
+  color: var(--ds-text-subtle, #505258);
+  overflow-x: hidden;
+  overflow-y: hidden;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  font-weight: var(--ds-font-weight-medium, 500);
+  -webkit-line-clamp: 1;
+}
+}
+  .1_1_1_1_1_1_3 {
+  .1_1_1_1_1_1_3_1 {}
+}
+}
+}
+  .1_1_1_1_2 {
+  .1_1_1_1_2_1 {
+  .1_1_1_1_2_1_1 {}
+}
+  .1_1_1_1_2_2 {
+  .1_1_1_1_2_2_1 {}
+}
+}
+  .1_1_1_1_3 {
+  .1_1_1_1_3_1 {
+  .1_1_1_1_3_1_1 {
+  .1_1_1_1_3_1_1_1 {}
+  .1_1_1_1_3_1_2 {}
+}
+}
+  .1_1_1_1_3_2 {
+  .1_1_1_1_3_2_1 {
+  .1_1_1_1_3_2_1_1 {}
+  .1_1_1_1_3_2_2 {}
+}
+}
+}
+}
+}
+  .1_1_2 {
+  .1_1_2_1 {
+  .1_1_2_1_1 {
+  .1_1_2_1_1_1 {
+  .1_1_2_1_1_1_1 {
+  .1_1_2_1_1_1_1_1 {
+  .1_1_2_1_1_1_1_1_1 {
+  .1_1_2_1_1_1_1_1_1_1 {}
+  .1_1_2_1_1_1_1_1_1_2 {
+  .1_1_2_1_1_1_1_1_1_2_1 {}
+  .1_1_2_1_1_1_1_1_1_2_2 {
+  .1_1_2_1_1_1_1_1_1_2_2_1 {}
+}
+  .1_1_2_1_1_1_1_1_1_2_3 {
+  .1_1_2_1_1_1_1_1_1_2_3_1 {}
+}
+}
+}
+  .1_1_2_1_1_1_1_1_2 {
+  .1_1_2_1_1_1_1_1_2_1 {
+  .1_1_2_1_1_1_1_1_2_1_1 {
+  .1_1_2_1_1_1_1_1_2_1_1_1 {
+  .1_1_2_1_1_1_1_1_2_1_1_1_1 {}
+}
+  .1_1_2_1_1_1_1_1_2_1_1_2 {
+  .1_1_2_1_1_1_1_1_2_1_1_2_1 {}
+}
+  .1_1_2_1_1_1_1_1_2_1_1_3 {}
+}
+}
+}
+  .1_1_2_1_1_1_1_1_3 {
+  .1_1_2_1_1_1_1_1_3_1 {
+  .1_1_2_1_1_1_1_1_3_1_1 {
+  .1_1_2_1_1_1_1_1_3_1_1_1 {}
+  .1_1_2_1_1_1_1_1_3_1_1_2 {}
+}
+}
+}
+}
+}
+}
+}
+  .1_1_2_1_2 {}
+  .1_1_2_1_3 {}
+  .1_1_2_1_4 {}
+}
+}
+}
+}

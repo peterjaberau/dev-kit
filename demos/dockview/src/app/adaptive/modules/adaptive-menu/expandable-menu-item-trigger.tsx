@@ -1,7 +1,7 @@
 import { forwardRef } from "react"
 import { chakra, HStack, IconButton, Icon } from "@chakra-ui/react"
 import React, { type ReactNode, useCallback, useId, useRef } from "react"
-import { LuChevronRight as ChevronDownIcon, LuChevronDown as ChevronRightIcon } from "react-icons/lu"
+import { LuChevronRight as ChevronRightIcon, LuChevronDown as ChevronDownIcon } from "react-icons/lu"
 import { useScrollMenuItemIntoView } from "./use-scroll-menu-item-into-view"
 import { MenuItem } from "./menu-item"
 import { useIsExpanded, useOnExpansionToggle, useSetIsExpanded } from "./expandable-menu-item-context"
@@ -20,6 +20,10 @@ const chevronDisplayCssVar: string = "--expandable-chevron-display"
 const providedElemBeforeDisplayCssVar: string = "--expandable-provided-elembefore-display"
 
 const wrapperStyles = {
+  /*
+   "--expandable-chevron-display": "none",
+   "--expandable-provided-elembefore-display": "contents"
+  */
   root: {
     [chevronDisplayCssVar]: "flex",
     [providedElemBeforeDisplayCssVar]: "none",
@@ -49,7 +53,7 @@ const iconStyles = {
     display: `var(${providedElemBeforeDisplayCssVar})`,
   },
   providedElemBeforeSelected: {
-    color: "#1868DB",
+    // color: "#1868DB",
   },
 }
 
@@ -59,11 +63,21 @@ const ExpandableMenuItemIcon = ({
   isSelected,
   providedElemBefore,
 }: Omit<ExpandableMenuItemIconProps, "isHovering">) => {
+
+  const ChevronIcon = isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />
   const chevronElem = (
     <Icon {...iconProps} color={isSelected ? "colorPalette.subtle" : undefined} size="sm">
-      {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
+      {ChevronIcon}
     </Icon>
   )
+
+  //
+  // const chevronElem = (
+  //   //variant={isSelected ? "solid" : undefined}
+  //   // <Icon {...iconProps} size="sm" colorPalette={'yellow'}>
+  //     {ChevronIcon}
+  //   // </Icon>
+  // )
 
   return (
     <>
@@ -75,7 +89,7 @@ const ExpandableMenuItemIcon = ({
             ...(isSelected && iconStyles.providedElemBeforeSelected),
           }}
         >
-          {providedElemBefore}
+          <Icon size="sm">{providedElemBefore}</Icon>
         </chakra.div>
       )}
     </>
@@ -98,7 +112,6 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
     isDragging,
     hasDragIndicator,
     dropIndicator,
-
   } = props
 
   const id = useId()
@@ -129,24 +142,18 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
     isSelected: Boolean(isSelectable && isSelected),
   })
 
-
   const elemBefore: any = isSelectable ? (
-    <IconButton
+    <chakra.button
       css={{ p: 0, m: 0 }}
-      size={"xs"}
-      variant={isSelectable ? "subtle" : "ghost"}
+      // size={"xs"}
+      // variant={isSelectable ? "subtle" : "ghost"}
+      // variant={"plain"}
       aria-expanded={isExpanded}
       aria-labelledby={id}
       onClick={handleIconClick}
-
     >
-      <ExpandableMenuItemIcon
-        // iconProps={iconProps}
-        isExpanded={isExpanded}
-        isSelected={isSelected}
-        providedElemBefore={providedElemBefore}
-      />
-    </IconButton>
+      <ExpandableMenuItemIcon isExpanded={isExpanded} isSelected={isSelected} providedElemBefore={providedElemBefore} />
+    </chakra.button>
   ) : (
     providedElemBefore && (
       <ExpandableMenuItemIcon isExpanded={isExpanded} isSelected={isSelected} providedElemBefore={providedElemBefore} />
@@ -155,7 +162,6 @@ export const ExpandableMenuItemTrigger = forwardRef((props: any, ref: any) => {
 
   return (
     <chakra.div
-      data-scope="expandable-menu-item-trigger"
       ref={itemRef}
       css={{
         ...wrapperStyles.root,

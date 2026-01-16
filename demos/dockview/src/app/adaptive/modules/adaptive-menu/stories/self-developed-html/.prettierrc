@@ -1,0 +1,17 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 300,
+
+  "overrides": [
+    {
+      "files": "legacy/**",
+      "options": {
+        "semi": false,
+        "singleQuote": false,
+        "printWidth": 120,
+        "tabWidth": 4
+      }
+    }
+  ]
+}

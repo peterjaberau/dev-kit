@@ -5,7 +5,7 @@ import { ExpandableMenuItemTrigger } from "#adaptive-menu/expandable-menu-item-t
 import { ExpandableMenuItemContent } from "#adaptive-menu/expandable-menu-item-content"
 import invariant from 'tiny-invariant';
 
-import { IconButton, Icon } from '@chakra-ui/react';
+import { IconButton, Icon, Text } from '@chakra-ui/react';
 import { AddIcon } from "../icons"
 
 import { ProjectIcon } from "../icons"
@@ -88,7 +88,11 @@ export function ProjectsMenuItem({
           ref={draggableButtonRef}
           isDragging={state.type === "dragging"}
           hasDragIndicator
-          elemBefore={<Icon size={'xs'}><ProjectIcon  /></Icon>}
+          elemBefore={
+            <Icon size={"xs"}>
+              <ProjectIcon />
+            </Icon>
+          }
           actionsOnHover={
             <>
               <IconButton size="xs" variant="plain">

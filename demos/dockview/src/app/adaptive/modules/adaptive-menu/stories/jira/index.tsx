@@ -335,7 +335,7 @@ export function Sidebar() {
 
 const Index = () => {
   return (
-    <Container maxW="container.sm" border="1px solid black" backgroundColor={"bg.panel"} padding="4">
+    <Container margin={0} padding={0} border="1px solid black" backgroundColor={"bg.panel"} >
       <Root data={dataTree}>
         <Sidebar />
       </Root>

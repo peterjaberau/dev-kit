@@ -16,7 +16,10 @@ export const SideNavContent = forwardRef(({ children }: any, forwardedRef: Ref<H
     >
       <chakra.div
         css={{
-          //paddingContainer
+          margin: 0,
+          padding: 0,
+          color: '#172B4D',
+          textDecorationSkipInk: 'auto',
           paddingBlockStart: "9pt",
           paddingInlineEnd: "9pt",
           paddingBlockEnd: "9pt",

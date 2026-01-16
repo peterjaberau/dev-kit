@@ -1,6 +1,6 @@
 'use client'
 import React, { forwardRef } from "react"
-import "./style.css"
+// import "./style.css"
 import { Center, chakra, Heading, Text } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 
@@ -26,7 +26,7 @@ function Index() {
       }}
     >
       <chakra.div
-        data-scope='page-container'
+        data-scope="page-container"
         style={{
           margin: "0px",
           padding: "0px",
@@ -39,7 +39,7 @@ function Index() {
         }}
       >
         <chakra.div
-          data-scope='sidebar'
+          data-scope="sidebar"
           style={{
             margin: "0px",
             padding: "0px",
@@ -49,7 +49,7 @@ function Index() {
           data-auto-scrollable={true}
         >
           <chakra.div
-            data-scope='sidebar-content'
+            data-scope="sidebar-content"
             style={{
               margin: "0px",
               padding: "0px",
@@ -59,8 +59,12 @@ function Index() {
               paddingInlineStart: "9pt",
             }}
           >
-            <chakra.div data-scope='menu-list' role="list" css={{ margin: "0px", padding: "0px" }}>
-              <chakra.div data-scope='group-drop-indicator'  data-drop-target-for-element="true" style={{ margin: "0px", padding: "0px" }}>
+            <chakra.div data-scope="menu-list" role="list" css={{ margin: "0px", padding: "0px" }}>
+              <chakra.div
+                data-scope="group-drop-indicator"
+                data-drop-target-for-element="true"
+                style={{ margin: "0px", padding: "0px" }}
+              >
                 <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
                   <chakra.div
                     css={{
@@ -4914,17 +4918,23 @@ function Index() {
                     </chakra.div>
                     <chakra.div
                       role="list"
+                      data-tag={"1"}
                       style={{
                         margin: "0px",
                         padding: "0px",
                         paddingInlineStart: "9pt",
                       }}
                     >
-                      <chakra.div data-drop-target-for-element="true" style={{ margin: "0px", padding: "0px" }}>
-                        <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
-                          <chakra.div style={{ margin: "0px", padding: "0px" }}>
-                            <chakra.div style={{ margin: "0px", padding: "0px" }}>
+                      <chakra.div
+                        data-tag={"1.1"}
+                        data-drop-target-for-element="true"
+                        style={{ margin: "0px", padding: "0px" }}
+                      >
+                        <chakra.div data-tag={"1.1.1"} role="listitem" style={{ margin: "0px", padding: "0px" }}>
+                          <chakra.div data-tag={"1.1.1.1"} style={{ margin: "0px", padding: "0px" }}>
+                            <chakra.div data-tag={"1.1.1.1.1"} style={{ margin: "0px", padding: "0px" }}>
                               <chakra.div
+                                data-tag={"1.1.1.1.1.1"}
                                 css={{
                                   "--expandable-provided-elembefore-display": "content",
                                   "--expandable-chevron-display": "none",
@@ -4946,6 +4956,7 @@ function Index() {
                                 }}
                               >
                                 <a
+                                  data-tag={"1.1.1.1.1.1.1"}
                                   id=":r4:"
                                   draggable
                                   href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
@@ -4969,6 +4980,7 @@ function Index() {
                                   }}
                                 >
                                   <chakra.div
+                                    data-tag={"1.1.1.1.1.1.1.1"}
                                     aria-hidden="true"
                                     style={{
                                       margin: "0px",
@@ -4983,6 +4995,7 @@ function Index() {
                                     }}
                                   />
                                   <chakra.div
+                                    data-tag={"1.1.1.1.1.1.1.2"}
                                     style={{
                                       margin: "0px",
                                       padding: "0px",
@@ -4993,6 +5006,7 @@ function Index() {
                                     }}
                                   >
                                     <chakra.div
+                                      data-tag={"1.1.1.1.1.1.1.2.1"}
                                       aria-hidden="true"
                                       style={{
                                         margin: "0px",
@@ -5003,6 +5017,7 @@ function Index() {
                                       }}
                                     />
                                     <chakra.div
+                                      data-tag={"1.1.1.1.1.1.1.2.2"}
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
@@ -5016,6 +5031,7 @@ function Index() {
                                       }}
                                     >
                                       <chakra.span
+                                        data-tag={"1.1.1.1.1.1.1.2.2.1"}
                                         style={{
                                           overflow: "hidden",
                                           margin: "0px",
@@ -5045,6 +5061,7 @@ function Index() {
                                       </chakra.span>
                                     </chakra.div>
                                     <chakra.div
+                                      data-tag={"1.1.1.1.1.1.1.2.3"}
                                       aria-hidden="true"
                                       style={{
                                         margin: "0px",
@@ -5060,6 +5077,7 @@ function Index() {
                                       }}
                                     >
                                       <chakra.span
+                                        data-tag={"1.1.1.1.1.1.1.2.3.1"}
                                         aria-hidden="true"
                                         style={{
                                           color: "currentcolor",
@@ -5094,6 +5112,7 @@ function Index() {
                                   </chakra.div>
                                 </a>
                                 <chakra.div
+                                  data-tag={"1.1.1.1.1.1.2"}
                                   style={{
                                     margin: "0px",
                                     padding: "0px",
@@ -5112,6 +5131,7 @@ function Index() {
                                   }}
                                 >
                                   <chakra.button
+                                    data-tag={"1.1.1.1.1.1.2.1"}
                                     type="button"
                                     aria-expanded="false"
                                     aria-labelledby=":r4:"
@@ -5158,6 +5178,7 @@ function Index() {
                                     }}
                                   >
                                     <chakra.span
+                                      data-tag={"1.1.1.1.1.1.2.1.1"}
                                       style={{
                                         transition: "opacity 0.3s",
                                         display: "flex",
@@ -5170,6 +5191,7 @@ function Index() {
                                       }}
                                     >
                                       <chakra.div
+                                        data-tag={"1.1.1.1.1.1.2.1.1.1"}
                                         style={{
                                           margin: "0px",
                                           padding: "0px",
@@ -5177,6 +5199,7 @@ function Index() {
                                         }}
                                       >
                                         <chakra.span
+                                          data-tag={"1.1.1.1.1.1.2.1.1.1.1"}
                                           aria-hidden="true"
                                           style={{
                                             color: "currentcolor",
@@ -5209,6 +5232,7 @@ function Index() {
                                         </chakra.span>
                                       </chakra.div>
                                       <chakra.div
+                                        data-tag={"1.1.1.1.1.1.2.1.1.2"}
                                         style={{
                                           margin: "0px",
                                           padding: "0px",
@@ -5216,6 +5240,7 @@ function Index() {
                                         }}
                                       >
                                         <chakra.span
+                                          data-tag={"1.1.1.1.1.1.2.1.1.2.1"}
                                           aria-hidden="true"
                                           style={{
                                             color: "currentcolor",
@@ -5250,6 +5275,7 @@ function Index() {
                                         </chakra.span>
                                       </chakra.div>
                                       <chakra.span
+                                        data-tag={"1.1.1.1.1.1.2.1.1.3"}
                                         style={{
                                           border: "0px",
                                           overflow: "hidden",
@@ -5266,6 +5292,7 @@ function Index() {
                                   </chakra.button>
                                 </chakra.div>
                                 <chakra.div
+                                  data-tag={"1.1.1.1.1.1.3"}
                                   style={{
                                     margin: "0px",
                                     padding: "0px",
@@ -5392,10 +5419,11 @@ function Index() {
                             </chakra.div>
                           </chakra.div>
                         </chakra.div>
-                        <chakra.div role="listitem" style={{ margin: "0px", padding: "0px" }}>
-                          <chakra.div style={{ margin: "0px", padding: "0px" }}>
-                            <chakra.div style={{ margin: "0px", padding: "0px" }}>
+                        <chakra.div data-tag={"1.1.2"} role="listitem" style={{ margin: "0px", padding: "0px" }}>
+                          <chakra.div data-tag={"1.1.2.1"} style={{ margin: "0px", padding: "0px" }}>
+                            <chakra.div data-tag={"1.1.2.1.1"} style={{ margin: "0px", padding: "0px" }}>
                               <chakra.div
+                                data-tag={"1.1.2.1.1"}
                                 style={{
                                   margin: "0px",
                                   padding: "0px",
@@ -5411,6 +5439,7 @@ function Index() {
                                 }}
                               >
                                 <a
+                                  data-tag={"1.1.2.1.1"}
                                   id=":r5:"
                                   draggable
                                   href="http://localhost:63342/dev-kit-main/demos/dockview/src/app/tools/html-style-converter/files/atlaskit-sidebar/inlined-by-mailchimp.html?_ijt=9iovv6ivoepo3ci68899v8p0qa&_ij_reload=RELOAD_ON_SAVE#"
@@ -5434,6 +5463,7 @@ function Index() {
                                   }}
                                 >
                                   <chakra.div
+                                    data-tag={"1.1.2.1.1.1"}
                                     aria-hidden="true"
                                     style={{
                                       margin: "0px",
@@ -5448,6 +5478,7 @@ function Index() {
                                     }}
                                   />
                                   <chakra.div
+                                    data-tag={"1.1.2.1.1.1.1"}
                                     style={{
                                       margin: "0px",
                                       padding: "0px",
@@ -5458,6 +5489,7 @@ function Index() {
                                     }}
                                   >
                                     <chakra.div
+                                      data-tag={"1.1.2.1.1.1.1.1"}
                                       aria-hidden="true"
                                       style={{
                                         margin: "0px",
@@ -5468,6 +5500,7 @@ function Index() {
                                       }}
                                     />
                                     <chakra.div
+                                      data-tag={"1.1.2.1.1.1.1.2"}
                                       style={{
                                         margin: "0px",
                                         padding: "0px",
@@ -5481,6 +5514,7 @@ function Index() {
                                       }}
                                     >
                                       <chakra.span
+                                        data-tag={"1.1.2.1.1.1.1.1"}
                                         style={{
                                           overflow: "hidden",
                                           margin: "0px",
@@ -5510,6 +5544,7 @@ function Index() {
                                       </chakra.span>
                                     </chakra.div>
                                     <chakra.div
+                                      data-tag={"1.1.2.1.1.1.1.3"}
                                       aria-hidden="true"
                                       style={{
                                         margin: "0px",
@@ -5525,6 +5560,7 @@ function Index() {
                                       }}
                                     >
                                       <chakra.span
+                                        data-tag={"1.1.2.1.1.1.1.3.1"}
                                         aria-hidden="true"
                                         style={{
                                           color: "currentcolor",
@@ -5559,6 +5595,7 @@ function Index() {
                                   </chakra.div>
                                 </a>
                                 <chakra.div
+                                  data-tag={"1.1.2.1.2"}
                                   style={{
                                     margin: "0px",
                                     padding: "0px",
@@ -5577,6 +5614,7 @@ function Index() {
                                   }}
                                 >
                                   <chakra.button
+                                    data-tag={"1.1.2.1.2.1"}
                                     type="button"
                                     aria-expanded="false"
                                     aria-labelledby=":r5:"
@@ -5623,6 +5661,7 @@ function Index() {
                                     }}
                                   >
                                     <chakra.span
+                                      data-tag={"1.1.2.1.2.1.1"}
                                       style={{
                                         transition: "opacity 0.3s",
                                         display: "flex",
@@ -5635,6 +5674,7 @@ function Index() {
                                       }}
                                     >
                                       <chakra.div
+                                        data-tag={"1.1.2.1.2.1.1.1"}
                                         style={{
                                           margin: "0px",
                                           padding: "0px",
@@ -5642,6 +5682,7 @@ function Index() {
                                         }}
                                       >
                                         <chakra.span
+                                          data-tag={"1.1.2.1.2.1.1.1.1"}
                                           aria-hidden="true"
                                           style={{
                                             color: "currentcolor",
@@ -5674,6 +5715,7 @@ function Index() {
                                         </chakra.span>
                                       </chakra.div>
                                       <chakra.div
+                                        data-tag={"1.1.2.1.2.1.1.2"}
                                         style={{
                                           margin: "0px",
                                           padding: "0px",
@@ -5681,6 +5723,7 @@ function Index() {
                                         }}
                                       >
                                         <chakra.span
+                                          data-tag={"1.1.2.1.2.1.1.2.1"}
                                           aria-hidden="true"
                                           style={{
                                             color: "currentcolor",
@@ -5715,6 +5758,7 @@ function Index() {
                                         </chakra.span>
                                       </chakra.div>
                                       <chakra.span
+                                        data-tag={"1.1.2.1.2.1.1.3"}
                                         style={{
                                           border: "0px",
                                           overflow: "hidden",
@@ -5731,6 +5775,7 @@ function Index() {
                                   </chakra.button>
                                 </chakra.div>
                                 <chakra.div
+                                  data-tag={"1.1.2.1.3"}
                                   style={{
                                     margin: "0px",
                                     padding: "0px",
@@ -5745,6 +5790,7 @@ function Index() {
                                   }}
                                 >
                                   <chakra.button
+                                    data-tag={"1.1.2.1.3.1"}
                                     type="button"
                                     aria-expanded="false"
                                     aria-haspopup="true"
@@ -5791,6 +5837,7 @@ function Index() {
                                     }}
                                   >
                                     <chakra.span
+                                      data-tag={"1.1.2.1.3.1.1"}
                                       style={{
                                         transition: "opacity 0.3s",
                                         display: "flex",
@@ -5803,6 +5850,7 @@ function Index() {
                                       }}
                                     >
                                       <chakra.span
+                                        data-tag={"1.1.2.1.3.1.1.1"}
                                         aria-hidden="true"
                                         style={{
                                           color: "currentcolor",
@@ -5858,6 +5906,7 @@ function Index() {
                           </chakra.div>
                         </chakra.div>
                         <chakra.div
+                          data-tag={"1.1.3"}
                           role="listitem"
                           style={{
                             margin: "0px",
@@ -6203,6 +6252,7 @@ function Index() {
                           </chakra.div>
                         </chakra.div>
                         <chakra.div
+                          data-tag={"1.1.4"}
                           role="listitem"
                           style={{
                             margin: "0px",

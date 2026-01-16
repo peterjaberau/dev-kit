@@ -34,7 +34,7 @@ export const ExpandableMenuItem = forwardRef((props: any, ref: any) => {
       <SetIsExpandedContext.Provider value={setIsExpanded}>
         <OnExpansionToggleContext.Provider value={onExpansionToggle ?? null}>
           {/* Wrapping in a `li` to group all the composable elements together, as part of the disclosure pattern */}
-          <MenuListItem ref={ref}>
+          <MenuListItem data-tag="1" data-1="menu-list-item" data-file="expandable-menu-item" ref={ref}>
             {/* Adding `position:relative` only when it's needed by the drop indicator */}
             <chakra.div
               css={{

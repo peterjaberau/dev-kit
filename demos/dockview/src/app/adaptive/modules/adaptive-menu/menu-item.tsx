@@ -1,11 +1,11 @@
 import { forwardRef, Suspense, useCallback, useRef } from "react"
-import { chakra, HStack, Text, Button, defineKeyframes, Center } from "@chakra-ui/react"
+import { chakra, HStack, Text, Button, defineKeyframes, Center, Box } from "@chakra-ui/react"
 import { keyframes } from "@emotion/react"
 import { useLevel } from "./expandable-menu-item-context"
 import { COLLAPSE_ELEM_BEFORE } from "./menu-item-signals"
 import { expandableMenuItemIndentation } from "./constants"
 import { LazyDragHandle } from "./drag-handle/lazy-drag-handle"
-
+import { Icon } from "@chakra-ui/react"
 function isTextClamped(element: HTMLElement): boolean {
   return element.scrollHeight > element.clientHeight
 }
@@ -18,6 +18,35 @@ const notchColorVar = "--notch-color"
 
 const dragHandleDisplayVar = "--drag-handle-display"
 
+/*
+
+  1.1.1.1 ------------->
+  textDecorationSkipInk: "auto",
+  "--expandable-chevron-display": "none",
+  "--expandable-provided-elembefore-display": "contents",
+  border: "0 solid",
+  margin: "0px",
+  padding: "0px",
+  borderRadius: "1px", //TODO should be 4px
+  boxSizing: "border-box",
+  display: "grid",
+  gridTemplateColumns: "minmax(0, auto) 1fr minmax(0, auto) minmax(0, auto)",
+  gridTemplateRows: "1fr",
+  gridTemplateAreas: '"elem-before interactive elem-after actions"', //TODO "'elem-before interactive elem-after actions'",
+  minWidth: "72px",
+  height: "2rem",
+  alignItems: "center",
+  userSelect: "none",
+  "--notch-color": "transparent",
+  "--elem-after-display": "flex",
+  "--actions-on-hover-opacity": "1",
+  "--actions-on-hover-width": "auto",
+  "--actions-on-hover-padding": "1px" //TODO should be 4px
+
+  TOBE----
+
+
+ */
 
 const topLevelSiblingStyles = {
   root: {
@@ -44,10 +73,10 @@ const containerStyles = {
     alignItems: "center",
     userSelect: "none",
     borderRadius: 1,
-    color: "#505258",
+    color: "var(--chakra-colors-gray-800)",
     "&:hover": {
       //#F0F1F2
-      backgroundColor: "#F0F1F2",
+      backgroundColor: "var(--chakra-colors-gray-100)",
     },
     [notchColorVar]: "transparent",
     [elemAfterDisplayVar]: "flex",
@@ -63,7 +92,7 @@ const containerStyles = {
       [actionsOnHoverOpacityVar]: "1",
       [actionsOnHoverWidthVar]: "auto",
       [actionsOnHoverPaddingInlineEndVar]: "1px",
-      backgroundColor: "#F0F1F2",
+      backgroundColor: "var(--chakra-colors-gray-100)",
     },
   },
   rootT26Shape: {
@@ -87,8 +116,8 @@ const containerStyles = {
   },
   selected: {
     backgroundColor: "#E9F2FE",
-    color: "#1868DB",
-    [notchColorVar]: "#1868DB",
+    color: "var(--chakra-colors-gray-800)",
+    [notchColorVar]: "var(--chakra-colors-gray-800)",
     "&:hover": {
       color: "#1868DB",
       backgroundColor: "#1558BC",
@@ -98,11 +127,11 @@ const containerStyles = {
     },
   },
   disabled: {
-    color: "#080F214A",
+    color: "var(--chakra-colors-gray-400)",
     backgroundColor: "unset",
     "&:hover": {
       backgroundColor: "unset",
-      color: "#080F214A",
+      color: "var(--chakra-colors-gray-500)",
     },
   },
   hasDescription: {
@@ -126,20 +155,20 @@ const buttonOrAnchorStyles = {
     paddingBlockEnd: "1px",
     backgroundColor: "transparent",
     borderRadius: "4px",
-    color: "#505258",
+    color: "var(--chakra-colors-gray-800)",
     alignItems: "center",
     textAlign: "start",
     "&:active:not(:disabled)": {
-      backgroundColor: "#DDDEE1",
+      backgroundColor: "var(--chakra-colors-gray-200)",
     },
   },
   rootT26Shape: {
     borderRadius: "6px",
   },
   selected: {
-    color: "#1868DB",
+    color: "var(--chakra-colors-gray-900)",
     "&:active:not(:disabled)": {
-      backgroundColor: "#8FB8F6",
+      backgroundColor: "var(--chakra-colors-gray-200)",
     },
   },
   hasDragIndicator: {
@@ -147,7 +176,7 @@ const buttonOrAnchorStyles = {
     [dragHandleDisplayVar]: "none",
     "&:hover": {
       [dragHandleDisplayVar]: "flex",
-      cursor: 'grab',
+      cursor: "grab",
       // animationName: dragCursorAnimation,
       // animationDuration: "0s",
       // animationDelay: "800ms",
@@ -306,7 +335,6 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
     ...rest
   } = props
 
-
   const level = useLevel()
   const isLink = typeof href !== "undefined"
   const labelRef = useRef(null)
@@ -336,7 +364,13 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
           ...(!showElemBefore && textStyles.noElemBeforeIndent),
         }}
       >
-        <Text fontWeight="medium" maxLines={1} color={getTextColor({ isDisabled, isSelected })} ref={labelRef}>
+        <Text
+          fontWeight="medium"
+          maxLines={1}
+          textStyle="sm"
+          color={getTextColor({ isDisabled, isSelected })}
+          ref={labelRef}
+        >
           {children}
         </Text>
         {description && (
@@ -348,7 +382,7 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
 
       {hasDragIndicator ? (
         <Suspense fallback={null}>
-            <LazyDragHandle />
+          <LazyDragHandle />
         </Suspense>
       ) : null}
 
@@ -361,6 +395,7 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
   return (
     <chakra.div
       ref={visualContentRef}
+      {...rest}
       css={{
         ...containerStyles.root,
         ...(isSelected && containerStyles.selected),
@@ -374,7 +409,8 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
       }}
       data-selected={isSelected}
     >
-      <Button
+      <chakra.button
+        // role='button'
         ref={ref}
         aria-controls={ariaControls}
         aria-haspopup={ariaHasPopup}
@@ -391,12 +427,13 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
         draggable={isLink && hasDragIndicator ? undefined : false}
         aria-current={isLink && isSelected && "page"}
         aria-expanded={!isLink && ariaExpanded}
+        // disabled={isDisabled}
         disabled={isDisabled}
         // asChild={isLink}
       >
         {isLink && <chakra.div css={notchStyles.root} aria-hidden="true" />}
         {interactiveElemContent}
-      </Button>
+      </chakra.button>
 
       {showElemBefore && (
         <chakra.div
@@ -406,7 +443,7 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
             ...onTopOfButtonOrAnchorStyles.root,
           }}
         >
-          {elemBefore}
+          <Icon size="sm">{elemBefore}</Icon>
         </chakra.div>
       )}
 
@@ -442,5 +479,5 @@ export const MenuItemImpl = forwardRef((props: any, ref: any) => {
 export const MenuItem = forwardRef((props: any, ref: any) => {
   const { css, ...rest } = props
 
-  return <MenuItemImpl {...props} ref={ref} />
+  return <MenuItemImpl {...rest} {...css} ref={ref} />
 })
