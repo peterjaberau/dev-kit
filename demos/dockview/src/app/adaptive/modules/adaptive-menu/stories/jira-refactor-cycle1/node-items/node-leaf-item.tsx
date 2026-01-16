@@ -9,7 +9,7 @@ import { useMenuItem } from "#adaptive-menu/use-menu-item"
 
 import { Icon } from "../data"
 
-export function LeafNodeItem({ actorRef, data, index, amountOfMenuItems }: any) {
+export function NodeLeafItem({ actorRef, data, index, amountOfMenuItems }: any) {
   const { dataName, menuItemId, dataValue } = useMenuItem({ actorRef })
 
   const { state, draggableButtonRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({

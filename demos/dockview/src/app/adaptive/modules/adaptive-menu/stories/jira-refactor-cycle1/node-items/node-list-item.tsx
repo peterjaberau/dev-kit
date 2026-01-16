@@ -24,8 +24,24 @@ import { useMenuItem } from "#adaptive-menu/use-menu-item"
 
 // import { getPathToFilter } from "./filter-tree-utils"
 
-export function ListMenuItem({ actorRef, filters, index, amountOfMenuItems }: any) {
-  const { dataName, menuItemId, dataValue } = useMenuItem({ actorRef })
+export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: any) {
+  const {
+    dataName,
+    menuItemId,
+    dataValue: item,
+    menuItemChildrenRef,
+    menuItemChildrenIds,
+    isBranch,
+    isBranchEmpty,
+    isBranchNotEmpty,
+    isLeaf,
+    isBranchData,
+    isBranchNotEmptyData,
+    isBranchEmptyData,
+    isLeafData,
+    sendToMenuItem,
+    isOpen,
+  } = useMenuItem({ actorRef })
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true)
   const wasExpandedWhenDragStartedRef = useRef<boolean | null>(null)
@@ -98,10 +114,10 @@ export function ListMenuItem({ actorRef, filters, index, amountOfMenuItems }: an
             </>
           }
         >
-          Filters
+          {dataName}
         </ExpandableMenuItemTrigger>
         <ExpandableMenuItemContent>
-          <FilterList filters={filters} />
+          <NodeList actorRef={actorRef} />
         </ExpandableMenuItemContent>
       </ExpandableMenuItem>
       {dragPreview}
@@ -109,46 +125,69 @@ export function ListMenuItem({ actorRef, filters, index, amountOfMenuItems }: an
   )
 }
 
-function NodeMenuItem({ filter }: any) {
+function NodeGroupLeaf({ actorRef }: any) {
+  const {
+    dataName,
+    menuItemId,
+    dataValue: item,
+    menuItemChildrenRef,
+    menuItemChildrenIds,
+    isBranch,
+    isBranchEmpty,
+    isBranchNotEmpty,
+    isLeaf,
+    isBranchData,
+    isBranchNotEmptyData,
+    isBranchEmptyData,
+    isLeafData,
+    sendToMenuItem,
+    isOpen,
+  } = useMenuItem({ actorRef })
+
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
-      getInitialData: () => getFilterData(filter),
+      getInitialData: () => menuItemId,
       getDragPreviewPieces: () => ({
-        elemBefore: filter.icon,
-        content: filter.name,
+        // elemBefore: filter.icon,
+        elemBefore: <Icon size={'sm'}><FilterIcon /></Icon>,
+
+        content: dataName,
       }),
     },
     dropTarget: {
-      getData: () => getFilterData(filter),
+      //getFilterData(filter)
+      getData: () => menuItemId,
       getOperations: () => ({
         combine: "available",
         "reorder-after": "available",
         "reorder-before": "available",
       }),
-      canDrop: ({ source }: any) => isFilterData(source.data),
+      canDrop: ({ source }: any) => true,
     },
   })
 
-  const registry = useContext(RegistryContext)
   useEffect(() => {
     const element = draggableAnchorRef.current
     invariant(element)
-    registry?.registerFilter({ filterId: filter.id, element })
-  }, [registry, draggableAnchorRef, filter.id])
+  }, [draggableAnchorRef, menuItemId])
 
   return (
     <>
       <ItemButton
         asChild
-        href={filter.href}
-        elemBefore={filter.icon}
+        // href={filter.href}
+        elemBefore={
+          <Icon size={"sm"}>
+            <FilterIcon />
+          </Icon>
+        }
         ref={draggableAnchorRef}
         isDragging={state.type === "dragging"}
         hasDragIndicator
         dropIndicator={dropIndicator}
         visualContentRef={dropTargetRef}
       >
-        {filter.name}
+        {dataName}
       </ItemButton>
 
       {dragPreview}
@@ -158,49 +197,73 @@ function NodeMenuItem({ filter }: any) {
 
 const expandedAtDragStart = new Set<string>()
 
-function NodeParent({ filter }: any) {
-  const lastAction = useLastAction()
-  const getData = useGetData()
+function NodeGroup({ actorRef }: any) {
+  const {
+    dataName,
+    menuItemId,
+    dataValue: item,
+    menuItemChildrenRef,
+    menuItemChildrenIds,
+    isBranch,
+    isBranchEmpty,
+    isBranchNotEmpty,
+    isLeaf,
+    isBranchData,
+    isBranchNotEmptyData,
+    isBranchEmptyData,
+    isLeafData,
+    sendToMenuItem,
+    isOpen,
+  } = useMenuItem({ actorRef })
+
+  // const lastAction = useLastAction()
+  // const getData = useGetData()
 
   const shouldExpand = useCallback(() => {
-    if (expandedAtDragStart.has(filter.id)) {
+    if (expandedAtDragStart.has(menuItemId)) {
       return true
     }
 
-    if (lastAction?.type !== "filter-move") {
-      return false
-    }
+    // if (lastAction?.type !== "filter-move") {
+    //   return false
+    // }
 
     // A filter was moved - need to check if we should open
 
     // 1. Open if any child the target of an any operation
     // (ideally this call would be memoized)
-    const pathToDraggingItem = getPathToFilter(getData().filters, lastAction.draggingId)
-    if (pathToDraggingItem?.includes(filter.id)) {
-      return true
-    }
+    // const pathToDraggingItem = getPathToFilter(getData().filters, lastAction.draggingId)
+    // if (pathToDraggingItem?.includes(filter.id)) {
+    //   return true
+    // }
 
     // 2. Was this Filter the target of a combine?
-    return lastAction.operation === "combine" && lastAction.targetId === filter.id
-  }, [lastAction, filter.id, getData])
-
-  const [isExpanded, setIsExpanded] = useState<boolean>(() => shouldExpand())
+    // return lastAction.operation === "combine" && lastAction.targetId === filter.id
+  }, [menuItemId])
+  //lastAction, filter.id, getData
+  const [isExpanded, setIsExpanded]: any = useState<boolean>((): any => shouldExpand())
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
-      getInitialData: () => getFilterData(filter),
+      //getFilterData(filter),
+      getInitialData: () => menuItemId,
       getDragPreviewPieces: () => ({
-        elemBefore: filter.icon,
-        content: filter.name,
+        elemBefore: (
+          <Icon size={"sm"}>
+            <FilterIcon />
+          </Icon>
+        ),
+        content: dataName,
       }),
     },
     dropTarget: {
-      getData: () => getFilterData(filter),
+      //getFilterData(filter)
+      getData: () => menuItemId,
       getOperations: () => ({
         combine: "available",
         "reorder-before": "available",
         "reorder-after": isExpanded ? "not-available" : "available",
       }),
-      canDrop: ({ source }: any) => isFilterData(source.data),
+      canDrop: ({ source }: any) => true, //isFilterData(source.data)
     },
   })
 
@@ -209,7 +272,8 @@ function NodeParent({ filter }: any) {
   // If any filter is dragging, use a cheveron to add clarity
   useEffect(() => {
     return monitorForElements({
-      canMonitor: ({ source }) => isFilterData(source.data),
+      //isFilterData(source.data)
+      canMonitor: ({ source }) => true,
       onGenerateDragPreview() {
         // just being safe and clearing before any drag is starting
         expandedAtDragStart.clear()
@@ -229,18 +293,20 @@ function NodeParent({ filter }: any) {
     // will be called when mounting, as well as when the drag finishes
     if (state.type === "idle" && shouldExpand()) {
       setIsExpanded(true)
-      expandedAtDragStart.delete(filter.id)
+      // expandedAtDragStart.delete(filter.id)
+      expandedAtDragStart.delete(menuItemId)
     }
 
     if (state.type === "dragging") {
-      setIsExpanded((current) => {
+      setIsExpanded((current: any) => {
         if (current) {
-          expandedAtDragStart.add(filter.id)
+          // expandedAtDragStart.add(filter.id)
+          expandedAtDragStart.add(menuItemId)
         }
         return false
       })
     }
-  }, [state.type, filter.id, shouldExpand])
+  }, [state.type, menuItemId, shouldExpand])
 
   // Expand if dragged over
   useEffect(() => {
@@ -271,29 +337,37 @@ function NodeParent({ filter }: any) {
   }, [state, isExpanded])
 
   // register element
-  const registry = useContext(RegistryContext)
+  // const registry = useContext(RegistryContext)
   useEffect(() => {
     const element = draggableAnchorRef.current
     invariant(element)
-    registry?.registerFilter({ filterId: filter.id, element })
-  }, [registry, draggableAnchorRef, filter.id])
+    // registry?.registerFilter({ filterId: filter.id, element })
+  }, [draggableAnchorRef, menuItemId])
+  //registry,
 
   return (
     <>
-      <ExpandableMenuItem isExpanded={isExpanded} onExpansionToggle={() => setIsExpanded((value) => !value)}>
+      <ExpandableMenuItem isExpanded={isExpanded} onExpansionToggle={() => setIsExpanded((value: any) => !value)}>
         <ExpandableMenuItemTrigger
           ref={draggableAnchorRef}
-          href={filter.href}
+          // href={filter.href}
           isDragging={state.type === "dragging"}
           hasDragIndicator
           visualContentRef={dropTargetRef}
           dropIndicator={dropIndicator}
-          elemBefore={isDraggingAFilter ? null : filter.icon}
+          elemBefore={
+            isDraggingAFilter ? null : (
+              <Icon size={"sm"}>
+                <FilterIcon />
+              </Icon>
+            )
+          }
         >
-          {filter.name}
+          {dataName}
+          {/*{filter.name}*/}
         </ExpandableMenuItemTrigger>
         <ExpandableMenuItemContent>
-          <FilterList filters={filter.children} />
+          <NodeList actorRef={actorRef} />
         </ExpandableMenuItemContent>
       </ExpandableMenuItem>
       {dragPreview}
@@ -301,7 +375,26 @@ function NodeParent({ filter }: any) {
   )
 }
 
-function NodeList({ filters }: any[]) {
+function NodeList({ actorRef }: any) {
+
+  const {
+    dataName,
+    menuItemId,
+    dataValue: item,
+    menuItemChildrenRef,
+    menuItemChildrenIds,
+    isBranch,
+    isBranchEmpty,
+    isBranchNotEmpty,
+    isLeaf,
+    isBranchData,
+    isBranchNotEmptyData,
+    isBranchEmptyData,
+    isLeafData,
+    sendToMenuItem,
+    isOpen,
+  } = useMenuItem({ actorRef })
+
   const ref = useRef<HTMLDivElement | null>(null)
   const [state, setState] = useState<"idle" | "is-innermost-over">("idle")
 
@@ -310,15 +403,15 @@ function NodeList({ filters }: any[]) {
     invariant(element)
 
     function onChange({ location, self }: ElementDropTargetEventBasePayload) {
-      const [innerMost] = location.current.dropTargets.filter((dropTarget) => dropTarget.data.type === "filter-group")
+      const [innerMost] = location.current.dropTargets.filter((dropTarget) => dropTarget.data.type === "general-group")
 
       setState(innerMost?.element === self.element ? "is-innermost-over" : "idle")
     }
 
     return dropTargetForElements({
       element,
-      getData: () => ({ type: "filter-group" }),
-      canDrop: ({ source }) => isFilterData(source.data),
+      getData: () => ({ type: "general-group" }),
+      canDrop: ({ source }) => true,
       onDragStart: onChange,
       onDropTargetChange: onChange,
       onDrop() {
@@ -329,9 +422,13 @@ function NodeList({ filters }: any[]) {
 
   return (
     <GroupDropIndicator isActive={state === "is-innermost-over"} ref={ref}>
-      {filters.map((filter) => (
-        <Fragment key={filter.id}>
-          {filter.children.length ? <FilterParent filter={filter} /> : <FilterLeaf filter={filter} />}
+      {menuItemChildrenIds.map((child: any, i: number) => (
+        <Fragment key={child}>
+          {item.children.length ? (
+            <NodeGroup actorRef={menuItemChildrenRef[child]} />
+          ) : (
+            <NodeGroupLeaf actorRef={menuItemChildrenRef[child]} />
+          )}
         </Fragment>
       ))}
     </GroupDropIndicator>

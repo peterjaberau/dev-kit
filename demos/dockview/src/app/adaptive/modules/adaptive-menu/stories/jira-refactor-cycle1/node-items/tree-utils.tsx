@@ -1,9 +1,9 @@
 
-function hasChildren(item: TFilter): boolean {
+function hasChildren(item: any): boolean {
 	return item.children.length > 0;
 }
 
-function remove(data: TFilter[], filterId: string): TFilter[] {
+function remove(data: any[], filterId: string): any[] {
 	return data
 		.filter((item) => item.id !== filterId)
 		.map((item) => {
@@ -17,7 +17,7 @@ function remove(data: TFilter[], filterId: string): TFilter[] {
 		});
 }
 
-function insertBefore(data: TFilter[], targetId: string, newItem: TFilter): TFilter[] {
+function insertBefore(data: any[], targetId: string, newItem: any): any[] {
 	return data.flatMap((filter) => {
 		if (filter.id === targetId) {
 			return [newItem, filter];
@@ -32,7 +32,7 @@ function insertBefore(data: TFilter[], targetId: string, newItem: TFilter): TFil
 	});
 }
 
-function insertChild(data: TFilter[], targetId: string, newItem: TFilter): TFilter[] {
+function insertChild(data: any[], targetId: string, newItem: any): any[] {
 	return data.flatMap((item) => {
 		if (item.id === targetId) {
 			// already a parent: add as first child
@@ -55,7 +55,7 @@ function insertChild(data: TFilter[], targetId: string, newItem: TFilter): TFilt
 	});
 }
 
-function insertAfter(data: TFilter[], targetId: string, newItem: TFilter): TFilter[] {
+function insertAfter(data: any[], targetId: string, newItem: any): any[] {
 	return data.flatMap((item) => {
 		if (item.id === targetId) {
 			return [item, newItem];
@@ -72,7 +72,7 @@ function insertAfter(data: TFilter[], targetId: string, newItem: TFilter): TFilt
 	});
 }
 
-export function find(data: TFilter[], filterId: string): TFilter | undefined {
+export function find(data: any[], filterId: string): any | undefined {
 	for (const item of data) {
 		if (item.id === filterId) {
 			return item;
@@ -88,7 +88,7 @@ export function find(data: TFilter[], filterId: string): TFilter | undefined {
 }
 
 export function getPathToFilter(
-	data: TFilter[],
+	data: any[],
 	filterId: string,
 	path: string[] = [],
 ): string[] | null {
@@ -104,7 +104,7 @@ export function getPathToFilter(
 	return null;
 }
 
-export function tree(filters: TFilter[]) {
+export function tree(filters: any[]) {
 	let result = Array.from(filters);
 
 	const api = {
@@ -112,15 +112,15 @@ export function tree(filters: TFilter[]) {
 			result = remove(result, filterId);
 			return this;
 		},
-		insertBefore({ insert, targetId }: { insert: TFilter; targetId: string }) {
+		insertBefore({ insert, targetId }: { insert: any; targetId: string }) {
 			result = insertBefore(result, targetId, insert);
 			return this;
 		},
-		insertAfter({ insert, targetId }: { insert: TFilter; targetId: string }) {
+		insertAfter({ insert, targetId }: { insert: any; targetId: string }) {
 			result = insertAfter(result, targetId, insert);
 			return this;
 		},
-		insertChild({ insert, targetId }: { insert: TFilter; targetId: string }) {
+		insertChild({ insert, targetId }: { insert: any; targetId: string }) {
 			result = insertChild(result, targetId, insert);
 			return this;
 		},
