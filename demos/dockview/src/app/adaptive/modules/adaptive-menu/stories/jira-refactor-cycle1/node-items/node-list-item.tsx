@@ -29,7 +29,7 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
   const {
     dataName,
     menuItemId,
-    dataValue: item,
+    dataValue,
     menuItemChildrenRef,
     menuItemChildrenIds,
     isBranch,
@@ -52,7 +52,14 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
   const { state, draggableButtonRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
       getInitialData: () => {
-        return getDraggableData()
+        return {
+          value: menuItemId,
+          isTopLevel,
+          isRootNode,
+          id: menuItemId,
+          name: dataName,
+          item: dataValue,
+        }
       },
       getDragPreviewPieces: () => ({
         elemBefore: (
@@ -65,8 +72,18 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
     },
     dropTarget: {
       getData: (args: any) => {
-        console.log("----dropTarget.getData---", { ...args.source.data })
-        return true
+        const { element, input, source  } = args
+        // console.log("----dropTarget.getData---", { ...args.source.data })
+        // console.log('---dropTarget-----getData------',args, {element, input, source})
+
+        return {
+          value: menuItemId,
+          isTopLevel,
+          isRootNode,
+          id: menuItemId,
+          name: dataName,
+          item: dataValue,
+        }
       },
       getOperations: () => ({
         "reorder-after": "available",
@@ -139,7 +156,7 @@ function NodeGroupLeaf({ actorRef }: any) {
   const {
     dataName,
     menuItemId,
-    dataValue: item,
+    dataValue,
     menuItemChildrenRef,
     menuItemChildrenIds,
     isBranch,
@@ -153,13 +170,21 @@ function NodeGroupLeaf({ actorRef }: any) {
     sendToMenuItem,
     isOpen,
     isRootNode,
+    isTopLevel,
     getDraggableData,
   } = useMenuItem({ actorRef })
 
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
       getInitialData: () => {
-        return getDraggableData()
+        return {
+          value: menuItemId,
+          isTopLevel,
+          isRootNode,
+          id: menuItemId,
+          name: dataName,
+          item: dataValue,
+        }
       },
       getDragPreviewPieces: () => ({
         // elemBefore: filter.icon,
@@ -173,7 +198,6 @@ function NodeGroupLeaf({ actorRef }: any) {
       }),
     },
     dropTarget: {
-      //getFilterData(filter)
       getData: () => menuItemId,
       getOperations: () => ({
         combine: "available",
@@ -220,19 +244,21 @@ function NodeGroup({ actorRef }: any) {
   const {
     dataName,
     menuItemId,
-    dataValue: item,
+    dataValue,
     menuItemChildrenRef,
     menuItemChildrenIds,
     isBranch,
     isBranchEmpty,
     isBranchNotEmpty,
     isLeaf,
+    isRootNode,
     isBranchData,
     isBranchNotEmptyData,
     isBranchEmptyData,
     isLeafData,
     sendToMenuItem,
     isOpen,
+    isTopLevel,
     getDraggableData,
   } = useMenuItem({ actorRef })
 
@@ -265,7 +291,16 @@ function NodeGroup({ actorRef }: any) {
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
       //getFilterData(filter),
-      getInitialData: () => getDraggableData(),
+      getInitialData: () => {
+        return {
+          value: menuItemId,
+          isTopLevel,
+          isRootNode,
+          id: menuItemId,
+          name: dataName,
+          item: dataValue,
+        }
+      },
       getDragPreviewPieces: () => ({
         elemBefore: (
           <Icon size={"sm"}>

@@ -96,6 +96,7 @@ export function Sidebar() {
         }
         const dropTargetData = innerMost.data
 
+
         const instruction: Instruction | null = extractInstruction(dropTargetData)
         if (!instruction) {
           return

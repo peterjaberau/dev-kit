@@ -56,7 +56,10 @@ export function FiltersMenuItem({
       }),
     },
     dropTarget: {
-      getData: () => getTopLevelItemData("filters"),
+      getData: () => {
+        console.log('-----getTopLevelItemData("filters")-----', getTopLevelItemData("filters"))
+        return getTopLevelItemData("filters")
+      },
       getOperations: () => ({
         "reorder-after": "available",
         "reorder-before": "available",
@@ -135,7 +138,11 @@ function FilterLeaf({ filter }: { filter: TFilter }) {
       }),
     },
     dropTarget: {
-      getData: () => getFilterData(filter),
+      getData: () => {
+        console.log("----getFilterData(filter)----", getFilterData(filter))
+
+        return getFilterData(filter)
+      },
       getOperations: () => ({
         combine: "available",
         "reorder-after": "available",
@@ -211,7 +218,10 @@ function FilterParent({ filter }: { filter: TFilter }) {
       }),
     },
     dropTarget: {
-      getData: () => getFilterData(filter),
+      getData: () => {
+        console.log("----FilterParentgetFilterData(filter)----", getFilterData(filter))
+        return getFilterData(filter)
+      },
       getOperations: () => ({
         combine: "available",
         "reorder-before": "available",
@@ -328,6 +338,8 @@ function FilterList({ filters }: { filters: TFilter[] }) {
 
     function onChange({ location, self }: ElementDropTargetEventBasePayload) {
       const [innerMost] = location.current.dropTargets.filter((dropTarget) => dropTarget.data.type === "filter-group")
+
+      console.log("-----innerMost---- dropTage on change ", { innerMost, self, location })
 
       setState(innerMost?.element === self.element ? "is-innermost-over" : "idle")
     }
