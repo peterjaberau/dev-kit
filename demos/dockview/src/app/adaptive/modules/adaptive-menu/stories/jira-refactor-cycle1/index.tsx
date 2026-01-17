@@ -6,7 +6,7 @@ import invariant from "tiny-invariant"
 import { useStableRef } from "#adaptive-shared/lib/hooks"
 import { Root, MenuList, GroupDropIndicator } from "#adaptive-menu/namespaces/primitive"
 import { SideNavContent } from "./components"
-import { NodeLeafItem, NodeListItem  } from "./node-items"
+import { NodeLeafItem, NodeListItem } from "./node-items"
 
 import { extractInstruction, type Instruction } from "#adaptive-menu/drag-and-drop/hitbox"
 
@@ -43,10 +43,18 @@ export function Sidebar() {
   const menuManagerSelector = useMenuManager()
   const menuRoot = useMenuRoot()
 
-  const { getDraggableData, menuItemChildrenIds: rootItemsIds, menuItemChildrenRef: rootItemsRefs, isRootNode, menuItemId, dataName } = useMenuRoot()
+  const {
+    getDraggableData,
+    menuItemChildrenIds: rootItemsIds,
+    menuItemChildrenRef: rootItemsRefs,
+    isRootNode,
+    menuItemId,
+    dataName,
+    isTopLevel,
+  } = useMenuRoot()
   const { dependencies }: any = useMenuManager()
 
-  globalRegistry.register(createRegistryKey('ADAPTIVE_MENU_ROOT', useMenuManager()))
+  globalRegistry.register(createRegistryKey("ADAPTIVE_MENU_ROOT", useMenuManager()))
 
   const ref = useRef<HTMLDivElement | null>(null)
   const [state, setState] = useState<"idle" | "is-over">("idle")
@@ -54,15 +62,7 @@ export function Sidebar() {
 
   useEffect(() => {
     return monitorForElements({
-      canMonitor: ({ source }) => {
-        console.log("---canMonitor---", {
-          menuItemId,
-          dataName,
-          isRoot: isRootNode,
-          source,
-        })
-        return !!source.data
-      },
+      canMonitor: ({ source }: any) => source?.data?.isTopLevel,
 
       onDrop({ source, location }) {
         const dragging = source.data
@@ -77,6 +77,20 @@ export function Sidebar() {
         if (!instruction) {
           return
         }
+
+        // top level item dragging onto top level item
+        if (dragging.isTopLevel && dropTargetData.isTopLevel) {
+          // this will be reorder actions
+
+          const action = {
+            type: "top-level-menu-reorder",
+            value: dragging.value,
+            // startIndex: 0,
+            // finishIndex: 1,
+            trigger: "pointer",
+          }
+          return
+        }
       },
     })
   }, [])
@@ -87,7 +101,7 @@ export function Sidebar() {
     invariant(scrollable)
     return autoScrollForElements({
       element: scrollable,
-      canScroll: ({ source }) => !!source.data,
+      canScroll: ({ source }: any) => source?.data?.isTopLevel,
     })
   }, [])
 
