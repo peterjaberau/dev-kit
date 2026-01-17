@@ -57,7 +57,6 @@ export function FiltersMenuItem({
     },
     dropTarget: {
       getData: () => {
-        console.log('-----getTopLevelItemData("filters")-----', getTopLevelItemData("filters"))
         return getTopLevelItemData("filters")
       },
       getOperations: () => ({
@@ -139,7 +138,6 @@ function FilterLeaf({ filter }: { filter: TFilter }) {
     },
     dropTarget: {
       getData: () => {
-        console.log("----getFilterData(filter)----", getFilterData(filter))
 
         return getFilterData(filter)
       },
@@ -219,7 +217,6 @@ function FilterParent({ filter }: { filter: TFilter }) {
     },
     dropTarget: {
       getData: () => {
-        console.log("----FilterParentgetFilterData(filter)----", getFilterData(filter))
         return getFilterData(filter)
       },
       getOperations: () => ({
@@ -336,10 +333,10 @@ function FilterList({ filters }: { filters: TFilter[] }) {
     const element = ref.current
     invariant(element)
 
-    function onChange({ location, self }: ElementDropTargetEventBasePayload) {
+    function onChange({ location, self, source }: ElementDropTargetEventBasePayload) {
       const [innerMost] = location.current.dropTargets.filter((dropTarget) => dropTarget.data.type === "filter-group")
 
-      console.log("-----innerMost---- dropTage on change ", { innerMost, self, location })
+      console.log("-----JIRA innerMost---- dropTage on change ", { innerMost, self, location })
 
       setState(innerMost?.element === self.element ? "is-innermost-over" : "idle")
     }
