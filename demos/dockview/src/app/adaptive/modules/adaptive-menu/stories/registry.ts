@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic"
+import { createRegistryKey } from "#adaptive-registry"
 
 export const registerAdaptiveMenu = {
   prefix: "adaptive-menu-",
@@ -8,5 +9,4 @@ export const registerAdaptiveMenu = {
     jira: () => import("#adaptive-menu/stories/jira"),
   },
 }
-
 

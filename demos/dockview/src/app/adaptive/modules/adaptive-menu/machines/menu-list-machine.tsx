@@ -1,14 +1,12 @@
 import { assign, emit, enqueueActions, setup } from "xstate"
 import { isArray, isObject } from "#shared/utils"
 import { omit } from "lodash"
-import { createMenuItem } from './menu-item-machine'
-
+import { createMenuItem } from "./menu-item-machine"
 
 export const createMenuList = ({ context, spawn }: any) => {
   // refs
   const refs = context?.refs || {}
   const parentSelf = context.refs.self
-
 
   // parent data, use children to spawn child items
   const dataInfo = context?.dataRuntime?.info
@@ -22,11 +20,11 @@ export const createMenuList = ({ context, spawn }: any) => {
   const parentDataPath = dataInfo?.dataPath ?? "$"
   const currentPath = `${parentPath}/${parentSelf.id}`
 
+  // isTopLevel nodes? directly under the root.
+  const isTopLevel = !!dataInfo?.isRoot
+
   // parent has children, spawn child tree items
   return dataValue.children.map((child: any, index: any) => {
-
-
-
     const itemName = child?.id ?? String(index)
     //
     // const ids: any = !context.refs.parent ? {
@@ -34,14 +32,12 @@ export const createMenuList = ({ context, spawn }: any) => {
     //   systemId: itemName,
     // }: {}
 
-    const ids =
-      !context.refs.parent
-        ? {
+    const ids = !context.refs.parent
+      ? {
           id: itemName,
           systemId: itemName,
         }
-        : undefined
-
+      : undefined
 
     const childObject = {
       ...omit(child, ["children"]),
@@ -63,6 +59,7 @@ export const createMenuList = ({ context, spawn }: any) => {
           info: {
             path: currentPath,
             dataPath: currentDataPath,
+            isTopLevel: isTopLevel,
           },
         },
 
@@ -70,9 +67,7 @@ export const createMenuList = ({ context, spawn }: any) => {
           isOpen: !!child.isOpen,
         },
       }),
-      ids
-
-
+      ids,
     )
   })
 }

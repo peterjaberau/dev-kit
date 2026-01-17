@@ -15,6 +15,7 @@ export const menuManagerMachine = setup({
       context.dataRef = spawn(
         createMenuItem({
           refs: {
+
             // parent: self,
           },
           dataConfig: {
@@ -23,6 +24,8 @@ export const menuManagerMachine = setup({
           },
           dataRuntime: {
             info: {
+
+
               // path: "/",
               // dataPath: "$"
             },
