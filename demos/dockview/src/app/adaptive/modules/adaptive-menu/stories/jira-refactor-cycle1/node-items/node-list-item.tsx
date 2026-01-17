@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import React, { Fragment, type Ref, useCallback, useContext, useEffect, useRef, useState } from "react"
 
 import invariant from "tiny-invariant"
@@ -22,6 +22,7 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 
 import { useMenuItem } from "#adaptive-menu/use-menu-item"
+import { getTopLevelItemData } from "#adaptive-menu/stories/jira/data"
 
 // import { getPathToFilter } from "./filter-tree-utils"
 
@@ -72,10 +73,7 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
     },
     dropTarget: {
       getData: (args: any) => {
-        const { element, input, source  } = args
-        // console.log("----dropTarget.getData---", { ...args.source.data })
-        // console.log('---dropTarget-----getData------',args, {element, input, source})
-
+        // const { element, input, source } = args
         return {
           value: menuItemId,
           isTopLevel,
@@ -89,7 +87,10 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
         "reorder-after": "available",
         "reorder-before": "available",
       }),
-      canDrop: ({ source }: any) => true,
+      canDrop: ({ source }: any) => {
+        // return source.data.isTopLevel
+        return false
+      },
     },
   })
 
@@ -312,7 +313,16 @@ function NodeGroup({ actorRef }: any) {
     },
     dropTarget: {
       //getFilterData(filter)
-      getData: () => menuItemId,
+      getData: () => {
+        return {
+          value: menuItemId,
+          isTopLevel,
+          isRootNode,
+          id: menuItemId,
+          name: dataName,
+          item: dataValue,
+        }
+      },
       getOperations: () => ({
         combine: "available",
         "reorder-before": "available",
@@ -465,7 +475,14 @@ function NodeList({ actorRef }: any) {
     return dropTargetForElements({
       element,
       getData: () => ({ type: "general-group" }),
-      canDrop: ({ source }) => true,
+      canDrop: ({ source }: any) => {
+        return false
+        // return (
+        // source.element !== element.current &&
+        // source.data.type === "general-group"
+        // source.data.value !== menuItemId
+        // )
+      },
       onDragStart: onChange,
       onDropTargetChange: onChange,
       onDrop() {
@@ -476,15 +493,19 @@ function NodeList({ actorRef }: any) {
 
   return (
     <GroupDropIndicator isActive={state === "is-innermost-over"} ref={ref}>
-      {menuItemChildrenIds.map((child: any, i: number) => (
-        <Fragment key={child}>
-          {item.children.length ? (
-            <NodeGroup actorRef={menuItemChildrenRef[child]} />
-          ) : (
-            <NodeGroupLeaf actorRef={menuItemChildrenRef[child]} />
-          )}
-        </Fragment>
-      ))}
+      {menuItemChildrenIds.map((child: any, i: number) => {
+        const { menuItemChildrenIds: grandChildIds } = useMenuItem({ actorRef: menuItemChildrenRef[child] })
+
+        return (
+          <Fragment key={child}>
+            {grandChildIds.length ? (
+              <NodeGroup actorRef={menuItemChildrenRef[child]} />
+            ) : (
+              <NodeGroupLeaf actorRef={menuItemChildrenRef[child]} />
+            )}
+          </Fragment>
+        )
+      })}
     </GroupDropIndicator>
   )
 }

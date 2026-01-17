@@ -102,6 +102,8 @@ export function Sidebar() {
           return
         }
 
+
+
         // top level item dragging onto top level item
         if (isTopLevelItemData(dragging) && isTopLevelItemData(dropTargetData)) {
           setData((current) => {
