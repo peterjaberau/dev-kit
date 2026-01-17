@@ -33,17 +33,33 @@ export const useMenuItem = ({ actorRef = null }: any = {}) => {
   const viewControlState = viewRuntime?.control || {}
   const isControlOpen = viewControlState?.open || false
 
+
+
+
+
   //compute
   const isBranch = !!menuItemChildrenIds
   const isBranchNotEmpty = isBranch && menuItemChildrenIds.length > 0
   const isBranchEmpty = isBranch && menuItemChildrenIds.length === 0
   const isLeaf = !isBranch
+  const isRootNode = !parentRef
+
+
+  //Runtime data
+  const dataRuntime = menuItemContext?.dataRuntime
+  const dataRuntimeInfo = dataRuntime?.info
+  const dataPath = dataRuntimeInfo?.dataPath || null
+  const path = dataRuntimeInfo?.path || null
+  const isTopLevel = dataRuntimeInfo?.isTopLevel || false
+
+
 
   //addhoc
   const isBranchData = !!dataValue?.children
   const isBranchNotEmptyData = isBranchData && dataValue?.children.length > 0
   const isBranchEmptyData = isBranchData && dataValue?.children.length === 0
   const isLeafData = !isBranchData
+
 
   const getIndentStrategy = (level: number) => {
     if (isBranchNotEmpty) {
@@ -72,6 +88,18 @@ export const useMenuItem = ({ actorRef = null }: any = {}) => {
   // misc
   const isOpen = dataValue?.isOpen || false
 
+  //models for drag and drop data
+  const getDraggableData = () => {
+    return {
+      menuItemId,
+      isRootNode,
+      isTopLevel,
+      id: menuItemId,
+      name: dataName,
+      dataValue,
+    }
+  }
+
   return {
     menuItemRef,
     menuItemId,
@@ -89,6 +117,9 @@ export const useMenuItem = ({ actorRef = null }: any = {}) => {
     menuItemChildrenIds,
     menuItemChildrenLength,
 
+    dataInfo: dataRuntimeInfo,
+    getDraggableData,
+
     //view
     viewConfig,
     viewRuntime,
@@ -100,7 +131,9 @@ export const useMenuItem = ({ actorRef = null }: any = {}) => {
     isBranchNotEmpty,
     isBranchEmpty,
     isLeaf,
+    isRootNode,
     getIndentStrategy,
+    isTopLevel,
 
     isBranchData,
     isBranchNotEmptyData,

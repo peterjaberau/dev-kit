@@ -1,8 +1,9 @@
+'use client'
 import React, { Fragment, type Ref, useCallback, useContext, useEffect, useRef, useState } from "react"
 
 import invariant from "tiny-invariant"
 
-import { Icon, IconButton } from "@chakra-ui/react"
+import { Badge, HStack, Icon, IconButton } from "@chakra-ui/react"
 import { AddIcon, FilterIcon, GrowVerticalIcon, ShowMoreHorizontalIcon } from "../icons"
 
 import { ItemButton } from "#adaptive-menu/namespaces/primitive"
@@ -41,13 +42,18 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
     isLeafData,
     sendToMenuItem,
     isOpen,
+    isRootNode,
+    isTopLevel,
+    getDraggableData,
   } = useMenuItem({ actorRef })
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true)
   const wasExpandedWhenDragStartedRef = useRef<boolean | null>(null)
   const { state, draggableButtonRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
-      getInitialData: () => menuItemId,
+      getInitialData: () => {
+        return getDraggableData()
+      },
       getDragPreviewPieces: () => ({
         elemBefore: (
           <Icon size={"xs"}>
@@ -58,7 +64,10 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
       }),
     },
     dropTarget: {
-      getData: () => true,
+      getData: (args: any) => {
+        console.log("----dropTarget.getData---", { ...args.source.data })
+        return true
+      },
       getOperations: () => ({
         "reorder-after": "available",
         "reorder-before": "available",
@@ -106,15 +115,16 @@ export function NodeListItem({ actorRef, filters, index, amountOfMenuItems }: an
               <FilterIcon />
             </Icon>
           }
-          actionsOnHover={
-            <>
-              <IconButton size="xs" variant="plain">
-                <AddIcon />
-              </IconButton>
-            </>
-          }
+          // elemAfter={menuItemId}
+          // actionsOnHover={
+          //   <>
+          //     <IconButton size="xs" variant="plain">
+          //       <AddIcon />
+          //     </IconButton>
+          //   </>
+          // }
         >
-          {dataName}
+          {dataName} {isTopLevel ? "(TOP LEVEL)" : ""}
         </ExpandableMenuItemTrigger>
         <ExpandableMenuItemContent>
           <NodeList actorRef={actorRef} />
@@ -142,14 +152,22 @@ function NodeGroupLeaf({ actorRef }: any) {
     isLeafData,
     sendToMenuItem,
     isOpen,
+    isRootNode,
+    getDraggableData,
   } = useMenuItem({ actorRef })
 
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
-      getInitialData: () => menuItemId,
+      getInitialData: () => {
+        return getDraggableData()
+      },
       getDragPreviewPieces: () => ({
         // elemBefore: filter.icon,
-        elemBefore: <Icon size={'sm'}><FilterIcon /></Icon>,
+        elemBefore: (
+          <Icon size={"sm"}>
+            <FilterIcon />
+          </Icon>
+        ),
 
         content: dataName,
       }),
@@ -181,6 +199,7 @@ function NodeGroupLeaf({ actorRef }: any) {
             <FilterIcon />
           </Icon>
         }
+        // elemAfter={menuItemId}
         ref={draggableAnchorRef}
         isDragging={state.type === "dragging"}
         hasDragIndicator
@@ -214,6 +233,7 @@ function NodeGroup({ actorRef }: any) {
     isLeafData,
     sendToMenuItem,
     isOpen,
+    getDraggableData,
   } = useMenuItem({ actorRef })
 
   // const lastAction = useLastAction()
@@ -245,14 +265,14 @@ function NodeGroup({ actorRef }: any) {
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
       //getFilterData(filter),
-      getInitialData: () => menuItemId,
+      getInitialData: () => getDraggableData(),
       getDragPreviewPieces: () => ({
         elemBefore: (
           <Icon size={"sm"}>
             <FilterIcon />
           </Icon>
         ),
-        content: dataName,
+        content: `${dataName} - ${menuItemId}`,
       }),
     },
     dropTarget: {
@@ -355,6 +375,7 @@ function NodeGroup({ actorRef }: any) {
           hasDragIndicator
           visualContentRef={dropTargetRef}
           dropIndicator={dropIndicator}
+          // elemAfter={menuItemId}
           elemBefore={
             isDraggingAFilter ? null : (
               <Icon size={"sm"}>
@@ -364,7 +385,6 @@ function NodeGroup({ actorRef }: any) {
           }
         >
           {dataName}
-          {/*{filter.name}*/}
         </ExpandableMenuItemTrigger>
         <ExpandableMenuItemContent>
           <NodeList actorRef={actorRef} />
@@ -376,7 +396,6 @@ function NodeGroup({ actorRef }: any) {
 }
 
 function NodeList({ actorRef }: any) {
-
   const {
     dataName,
     menuItemId,

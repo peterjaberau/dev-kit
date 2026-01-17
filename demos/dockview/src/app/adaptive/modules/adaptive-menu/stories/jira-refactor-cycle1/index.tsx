@@ -1,6 +1,6 @@
 import { Box, Container } from "@chakra-ui/react"
 import { Fragment, type ReactNode, useCallback, useEffect, useRef, useState } from "react"
-
+import { createRegistryKey, globalRegistry } from "#adaptive-registry"
 import invariant from "tiny-invariant"
 
 import { useStableRef } from "#adaptive-shared/lib/hooks"
@@ -43,8 +43,10 @@ export function Sidebar() {
   const menuManagerSelector = useMenuManager()
   const menuRoot = useMenuRoot()
 
-  const { menuItemChildrenIds: rootItemsIds, menuItemChildrenRef: rootItemsRefs } = useMenuRoot()
+  const { getDraggableData, menuItemChildrenIds: rootItemsIds, menuItemChildrenRef: rootItemsRefs, isRootNode, menuItemId, dataName } = useMenuRoot()
   const { dependencies }: any = useMenuManager()
+
+  globalRegistry.register(createRegistryKey('ADAPTIVE_MENU_ROOT', useMenuManager()))
 
   const ref = useRef<HTMLDivElement | null>(null)
   const [state, setState] = useState<"idle" | "is-over">("idle")
@@ -52,7 +54,15 @@ export function Sidebar() {
 
   useEffect(() => {
     return monitorForElements({
-      canMonitor: ({ source }) => !!source.data,
+      canMonitor: ({ source }) => {
+        console.log("---canMonitor---", {
+          menuItemId,
+          dataName,
+          isRoot: isRootNode,
+          source,
+        })
+        return !!source.data
+      },
 
       onDrop({ source, location }) {
         const dragging = source.data

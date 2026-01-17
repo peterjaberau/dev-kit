@@ -16,7 +16,7 @@ export default function Page() {
   return (
     <SimpleGrid columns={1} gap={10} h={"full"}>
       <GridItem colSpan={1} flex={1} >
-        <DevPanel title={paramValue}>
+        {/*<DevPanel title={paramValue}>*/}
           <Center
             p={4}
             css={{
@@ -24,11 +24,12 @@ export default function Page() {
               p: 2,
               boxShadow: "sm",
               borderRadius: "sm",
+              height: 'full'
             }}
           >
             <ComponentRenderer id={paramValue} />
           </Center>
-        </DevPanel>
+        {/*</DevPanel>*/}
       </GridItem>
     </SimpleGrid>
   )

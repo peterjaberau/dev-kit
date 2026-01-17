@@ -5,7 +5,7 @@ import { ActionInspect } from "./action.inspect"
 import { ActionList } from "./action.list"
 import { ScrollArea } from "./scoll-area"
 
-export const Index = ({
+const Index = ({
   title,
   actions,
   inspect,
@@ -49,3 +49,4 @@ export const Index = ({
     </Card.Root>
   )
 }
+export default Index

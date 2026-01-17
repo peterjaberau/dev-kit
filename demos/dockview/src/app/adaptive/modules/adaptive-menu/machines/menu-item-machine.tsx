@@ -29,6 +29,8 @@ export const createMenuItem = (input: any) => {
     context: ({ spawn, self }: any) => {
       // fist call will be considered as root item, then parentRef and parentPath will be null
       const parentRef = input?.refs?.parent || null
+      const isTopLevelInput = input?.dataRuntime?.info?.isTopLevel || null
+
 
       // console.log('----createMenuItem----', input)
 
@@ -39,6 +41,10 @@ export const createMenuItem = (input: any) => {
           isRoot: !parentRef,
           isObject: isObject(input?.dataConfig?.value),
           isArray: isArray(input?.dataConfig?.value),
+          // if root (!parent) then it's not top level item
+          // if not root, and input?.dataRuntime?.info?.isTopLevel not passed as true then it's not top level
+          // else it's the top level
+          isTopLevel: !parentRef ? false : input?.dataRuntime?.info?.isTopLevel,
         },
       }
 
