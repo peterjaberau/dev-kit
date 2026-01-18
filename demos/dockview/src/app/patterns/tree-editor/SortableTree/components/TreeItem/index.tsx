@@ -7,7 +7,7 @@ import { memo, useRef } from 'react';
 import { shallow } from 'zustand/shallow';
 import { createStyles } from '../../../theme';
 
-import { CollapseAction, DeleteAction, HandleAction } from '../../ActionIcon';
+import { CollapseAction, DeleteAction, HandleAction } from '../../../ActionIcon';
 
 import { useStore } from '../../store';
 import { FlattenNode } from '../../types';
