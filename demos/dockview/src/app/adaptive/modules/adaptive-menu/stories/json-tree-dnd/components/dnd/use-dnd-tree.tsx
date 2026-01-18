@@ -10,19 +10,11 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 import { extractInstruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 
-// import { useTree, useTreeItem } from "../../selectors"
-
-//itemRef,
 export function useDndTree({ sender,  groupRef }: any) {
-  // const { uniqueContextId, dependencies } = useTree()
-  // const { extractInstruction } = dependencies
 
-  // const { sendToTreeItem } = useTreeItem({ actorRef: itemRef })
-
-  const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
+  const [groupState, setGroupState] = useState<"idle" | "is-innermost-over" | "is-over">("idle")
 
   useEffect(() => {
-    // invariant(rootRef.current)
     invariant(groupRef.current)
 
     function onGroupChange({ location, self }: ElementDropTargetEventBasePayload) {
@@ -33,10 +25,18 @@ export function useDndTree({ sender,  groupRef }: any) {
 
     return combine(
       monitorForElements({
-        //&& source.data.uniqueContextId === uniqueContextId
-        canMonitor: ({ source }) => source.data.type === "tree-item",
+        canMonitor: ({ source }: any) => source?.data?.isTopLevel === true,
 
         onDrop({ location, source }) {
+          const dragging = source.data
+          const [innerMost] = location.current.dropTargets
+
+          if (!innerMost) {
+            return
+          }
+
+
+
           if (!location.current.dropTargets.length) return
 
           const target: any = location.current.dropTargets[0]
@@ -44,27 +44,33 @@ export function useDndTree({ sender,  groupRef }: any) {
 
           if (!instruction) return
 
-          sender && sender({
-            type: "instruction",
-            instruction,
-            itemId: source.data.id,
-            targetId: target.data.id,
-          })
+          sender &&
+            sender({
+              type: "instruction",
+              instruction,
+              itemId: source.data.id,
+              targetId: target.data.id,
+            })
         },
       }),
 
       dropTargetForElements({
         element: groupRef.current!,
-        getData: () => ({ type: "group" }),
+        // getData: () => ({ type: "group" }),
         //&& source.data.uniqueContextId === uniqueContextId
-        canDrop: ({ source }) => source.data.type === "tree-item",
-        onDragStart: onGroupChange,
-        onDropTargetChange: onGroupChange,
+        // canDrop: ({ source }) => source.data.type === "tree-item",
+        canDrop: ({ source }) => source.data.isTopLevel === true,
+
+        // onDragStart: onGroupChange,
+        // onDragEnter: onGroupChange,
+        // onDropTargetChange: onGroupChange,
+
+        onDragStart: () => setGroupState("is-over"),
+        onDragEnter: () => setGroupState("is-over"),
         onDragLeave: () => setGroupState("idle"),
         onDrop: () => setGroupState("idle"),
       }),
     )
-    //uniqueContextId,
   }, [extractInstruction,  groupRef])
 
   return { groupState }

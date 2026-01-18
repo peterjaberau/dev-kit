@@ -18,6 +18,7 @@ export const useMenuItem = ({ actorRef = null }: any = {}) => {
   const dataConfig = menuItemContext?.dataConfig
   const dataName = dataConfig?.name || "_TREE_ITEM_"
   const dataValue = dataConfig?.value
+  const dataChildren = dataValue?.children || null
 
   const refs = menuItemContext?.refs
   const parentRef = refs?.parent
@@ -110,6 +111,7 @@ export const useMenuItem = ({ actorRef = null }: any = {}) => {
     dataConfig,
     dataName,
     dataValue,
+    dataChildren,
 
     parentRef,
     childItemsRef,

@@ -17,7 +17,6 @@ import {
   extractInstruction,
   attachInstruction,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
-import { useTree, useTreeItem } from "../../selectors"
 
 function delay({ waitMs, fn }: { waitMs: number; fn: () => void }) {
   let id: number | null = window.setTimeout(() => {
@@ -44,10 +43,6 @@ export function useDndNode({
   buttonRef,
   groupRef,
 }: any) {
-  // const { uniqueContextId, dependencies } = useTree()
-  // const { attachInstruction, extractInstruction } = dependencies
-  // const { dataValue: item, sendToTreeItem, isOpen } = useTreeItem({ actorRef: itemRef })
-
   const [dragState, setDragState] = useState<"idle" | "dragging">("idle")
   const [groupState, setGroupState] = useState<"idle" | "is-innermost-over">("idle")
   const [instruction, setInstruction] = useState<Instruction | null>(null)
@@ -76,6 +71,7 @@ export function useDndNode({
         getInitialData: () => {
           return {
             id: item.id,
+            ...item,
             type: "tree-item",
             isOpenOnDragStart: isOpen,
             // uniqueContextId,
@@ -170,11 +166,11 @@ export function useDndNode({
 
             return collected
           }
-
-          console.log("------dynamicTree", {
-            item,
-            operation: resolveOperations(item),
-          })
+          //
+          // console.log("------dynamicTree", {
+          //   item,
+          //   operation: resolveOperations(item),
+          // })
 
 
           return attachInstruction(
@@ -238,9 +234,7 @@ export function useDndNode({
       getIsSticky: () => false,
       canDrop: ({ source, input, element }) => {
         return (
-          source.data.type === "tree-item" && source.data.id !== item.id
-          // source.data.id !== item.id &&
-          // source.data.uniqueContextId === uniqueContextId
+          source.data.id !== item.id
         )
       },
 

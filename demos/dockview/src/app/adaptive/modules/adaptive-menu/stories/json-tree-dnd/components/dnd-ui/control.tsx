@@ -1,19 +1,41 @@
 import React, { forwardRef } from "react"
-import { Collapsible, Stack, useCollapsible, mergeRefs } from "@chakra-ui/react"
-import { useMenuItem } from "#adaptive-menu/use-menu-item"
+import { Collapsible, useCollapsible, chakra } from "@chakra-ui/react"
+import { useControlled } from "#adaptive/shared/lib/hooks"
 
 export const Control = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { itemRef, children, ...rest } = props
-  const { isOpen } = useMenuItem({ actorRef: itemRef })
+  const {
+    itemRef,
+    children,
+    isOpen: isOpenControlled,
+    isDefaultOpen = false,
+    onOpenChange,
+    dropIndicator,
+    ...rest
+  } = props
+
+  const [isOpen, setIsOpen] = useControlled(isOpenControlled, isDefaultOpen)
 
   const collapsible = useCollapsible({
     open: isOpen,
-    onOpenChange: (e) => {},
+
+    onOpenChange: ({ open }) => {
+      setIsOpen(open)
+      onOpenChange?.(open)
+    },
   })
 
   return (
-    <Stack data-scope="control" data-part="control" gap={0} ref={ref} {...rest}>
-      <Collapsible.RootProvider value={collapsible}>{children}</Collapsible.RootProvider>
-    </Stack>
+    <Collapsible.RootProvider value={collapsible}>
+      <chakra.div
+        css={{
+          /* Adding `position:relative` only when it's needed by the drop indicator */
+          ...(dropIndicator && { position: "relative" }),
+        }}
+        ref={ref}
+      >
+        {children}
+        {dropIndicator}
+      </chakra.div>
+    </Collapsible.RootProvider>
   )
 })

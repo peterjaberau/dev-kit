@@ -90,6 +90,7 @@ export function Sidebar() {
       onDrop({ source, location }) {
         const dragging = source.data
         const [innerMost] = location.current.dropTargets
+        console.log("------JIRA - innerMost------", {innerMost, source, location})
 
         if (!innerMost) {
           return

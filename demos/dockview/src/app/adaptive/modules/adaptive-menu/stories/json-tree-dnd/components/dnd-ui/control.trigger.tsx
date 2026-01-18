@@ -1,27 +1,53 @@
-import React, { forwardRef } from "react"
-import { Collapsible, HStack } from "@chakra-ui/react"
+import React, { forwardRef, useId, useRef } from "react"
+import { chakra, Collapsible, useCollapsibleContext, HStack } from "@chakra-ui/react"
 import { useMenuItem } from "#adaptive-menu/use-menu-item"
-
+import { ControlItem } from "./control.item"
 
 export const ControlTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  // export const BranchTrigger = forwardRef<HTMLDivElement, any>((props, ref) => {
-
-  const { itemRef, children, ...rest } = props
+  const { itemRef, onClick, children, visualContentRef, isDragging, hasDragIndicator, dropIndicator, ...rest }: any =
+    props
+  const id = useId()
 
   const { sendToMenuItem, isOpen } = useMenuItem({ actorRef: itemRef })
 
+  const collapsible = useCollapsibleContext()
+  const { open, setOpen, disabled } = collapsible
+  const rootDivRef = useRef<HTMLDivElement>(null)
+
+  // const handleClick = (e: any) => {
+  // onClick?.(e)
+  // if (disabled) return
+  //
+  // if (typeof openOverride === "boolean") {
+  //   setOpen(openOverride)
+  //   return
+  // }
+
+  // collapsible.setOpen( !isOpen )
+  // sendToMenuItem({ type: "toggle", open: !isOpen })
+
+  // }
 
   const handleClick = (e: any) => {
-    sendToMenuItem({ type: "toggle", open: !isOpen })
+    onClick?.(e)
+    if (disabled) return
+
+    // ✅ EXPLICIT VALUE WINS
+    if (isOpen !== undefined) {
+      setOpen(isOpen)
+      return
+    }
+
+    // ✅ DEFAULT: toggle
+    setOpen(!open)
   }
 
   return (
-    <HStack
+    <chakra.div
+      ref={rootDivRef}
       data-scope="control"
       data-part="trigger"
-      onClick={handleClick}
       gap={0}
-      {...props}
       css={{
         '&[data-draggable="dragging"]': {
           opacity: 0.4,
@@ -31,9 +57,22 @@ export const ControlTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: 
         cursor: "pointer",
         alignItems: "center",
         justifyContent: "flex-start",
+        display: "flex",
+        flexDirection: "row",
       }}
-      ref={ref}
-    />
+    >
+      <ControlItem
+        id={id}
+        onClick={handleClick}
+        ref={ref}
+        visualContentRef={visualContentRef}
+        isDragging={isDragging}
+        hasDragIndicator={hasDragIndicator}
+        dropIndicator={dropIndicator}
+        {...props}
+      >
+        {children}
+      </ControlItem>
+    </chakra.div>
   )
 })
-

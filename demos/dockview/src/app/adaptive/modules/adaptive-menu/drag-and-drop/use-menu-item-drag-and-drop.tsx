@@ -10,12 +10,27 @@ import { DropIndicator } from "./drop-indicator"
 import { attachInstruction, extractInstruction } from "./hitbox"
 import { createPortal } from "react-dom"
 
-export const idle: any = { type: "idle" }
+/**
+ *
+ * @internalState:
+ * type = "idle"
+ * type = "dragging"
+ * type = "preview", container, ui
+ * type = "is-over", instruction,
+ *
+ * - Don't include the `draggable` property if you don't want the menu item to be a draggable
+ * - Don't include the `dropTarget` property if you don't want the menu item to be a drop target
+ *
+ */
 
+
+export const idle: any = { type: "idle" }
 export function useMenuItemDragAndDrop({ draggable: draggableArgs, dropTarget: dropTargetArgs }: any) {
   const draggableAnchorRef = useRef<HTMLDivElement | HTMLButtonElement | null | any>(null)
   const draggableButtonRef = useRef<HTMLDivElement | HTMLButtonElement | null | any>(null)
   const dropTargetRef = useRef<HTMLDivElement | HTMLButtonElement | null | any>(null)
+
+  // type = "idle" | "dragging" | "preview" | "is-over"
   const [internalState, setInternalState] = useState(idle)
 
   const getDraggableElement = useCallback(() => {

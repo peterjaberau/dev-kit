@@ -10,7 +10,6 @@ import { NodeTag } from "./node.tag"
 import { Control } from "./control"
 import { ControlTrigger } from "./control.trigger"
 import { ControlTriggerIndicator } from "./control.trigger-indicator"
-import { expandableMenuItemIndentation } from "#adaptive-menu/constants"
 
 const indentPerLevel = 4
 
@@ -19,8 +18,10 @@ export const Node = memo(
     const { itemRef, level, index, ...rest } = props
 
     const {
+      dataChildren,
       dataValue: item,
       menuItemChildrenRef,
+      dataName,
       menuItemChildrenIds,
       isBranch,
       isBranchEmpty,
@@ -31,8 +32,17 @@ export const Node = memo(
       isBranchEmptyData,
       isLeafData,
       sendToMenuItem,
+      isTopLevel,
+      isRootNode,
       isOpen,
     } = useMenuItem({ actorRef: itemRef })
+
+
+    console.log({
+      dataName,
+      menuItemChildrenIds,
+      dataChildren,
+    })
 
     const hasChildren = !!item?.children
 
@@ -45,6 +55,10 @@ export const Node = memo(
     const { dragState, groupState, instruction } = useDndNode({
       item: {
         id: item.id,
+        isTopLevel,
+        value: item.id,
+        isRootNode,
+        name: dataName
       },
       isOpen: isOpen || false,
       sender: sendToMenuItem,
@@ -87,8 +101,9 @@ export const Node = memo(
             <ControlTrigger data-draggable={dragState} itemRef={itemRef}>
               <HStack alignItems="center" w="full" gap={0}>
                 <ControlTriggerIndicator itemRef={itemRef} />
-                <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
+                <NodeText css={{ flexGrow: 1 }}>{dataName}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
+                <NodeTag>{item.id}</NodeTag>
                 <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
               </HStack>
             </ControlTrigger>
