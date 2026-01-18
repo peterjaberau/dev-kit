@@ -1,0 +1,6 @@
+export * from './container';
+
+// hooks AND RELATED TYPE DEFINITIONS
+export { useSortableList } from './hooks/useSortableList';
+export type { SortableListInstance } from './hooks/useSortableList';
+export type { CreatorButtonProps, SortableListDispatchPayload, SortableListRef } from './type';

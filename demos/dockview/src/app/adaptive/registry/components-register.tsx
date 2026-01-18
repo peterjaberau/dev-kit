@@ -7,6 +7,8 @@ import { registerAdaptiveTree } from "#adaptive-tree/stories/registry"
 import { registerDynamicTree } from "#dynamic-tree/stories/registry"
 import { registerQueryBuilder } from "#query-builder/headless/stories/registry"
 import { registerAdaptiveMenu } from "#adaptive-menu/stories/registry"
+import { registerPatterns } from "#app/patterns/registry"
+// registerPatterns
 
 export const makeRegistry = (loaders: any, prefix: string) =>
   Object.fromEntries(
@@ -14,6 +16,7 @@ export const makeRegistry = (loaders: any, prefix: string) =>
   )
 
 const registry = {
+  ...makeRegistry(registerPatterns.loaders, registerPatterns.prefix),
   ...makeRegistry(registerAdaptiveMenu.loaders, registerAdaptiveMenu.prefix),
   ...makeRegistry(registerQueryBuilder.loaders, registerQueryBuilder.prefix),
   ...makeRegistry(registerAdaptiveJson.loaders, registerAdaptiveJson.prefix),

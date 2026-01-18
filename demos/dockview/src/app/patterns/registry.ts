@@ -1,0 +1,25 @@
+const namePrefix = "pattern-"
+
+export const registerPatterns = {
+  prefix: "patterns-",
+  loaders: {
+    "tree-primer": () => import("#app/patterns/tree-primer"),
+    "tree-primer-chrome-ai": () => import("#app/patterns/tree-primer-chrome-ai"),
+    "tree-primer-origin": () => import("#app/patterns/tree-primer-origin"),
+
+    "tree-dnd-kit": () => import("#app/patterns/tree-dnd-kit"),
+    "tree-virtualized": () => import("#app/patterns/tree-virtualized"),
+    "tree-atlaskit-cleaning": () => import("#app/patterns/tree-atlaskit-cleaning"),
+    "json-tree-dnd": () => import("#app/patterns/json-tree-tree"),
+    "json-tree-tree": () => import("#app/patterns/json-tree-dnd"),
+    // "tree-editor-columns": () => import("#app/patterns/tree-editor/demos/columns"),
+    // "tree-editor-controlled": () => import("#app/patterns/tree-editor/demos/sortable-tree-controlled"),
+    // "tree-editor-default": () => import("#app/patterns/tree-editor/demos/sortable-tree-default"),
+    // "tree-editor-disabledrag": () => import("#app/patterns/tree-editor/demos/sortable-tree-disabledrag"),
+    // "tree-editor-renderer": () => import("#app/patterns/tree-editor/demos/sortable-tree-renderer"),
+    // "tree-editor-rules": () => import("#app/patterns/tree-editor/demos/sortable-tree-rules"),
+    // "tree-editor-virtual": () => import("#app/patterns/tree-editor/demos/sortable-tree-virtual"),
+
+    //tree-atlaskit-cleaning
+  },
+}

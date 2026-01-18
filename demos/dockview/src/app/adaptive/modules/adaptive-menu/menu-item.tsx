@@ -75,7 +75,6 @@ const containerStyles = {
     borderRadius: 1,
     color: "var(--chakra-colors-gray-800)",
     "&:hover": {
-      //#F0F1F2
       backgroundColor: "var(--chakra-colors-gray-100)",
     },
     [notchColorVar]: "transparent",

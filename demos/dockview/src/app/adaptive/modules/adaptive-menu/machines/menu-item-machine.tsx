@@ -30,6 +30,7 @@ export const createMenuItem = (input: any) => {
       // fist call will be considered as root item, then parentRef and parentPath will be null
       const parentRef = input?.refs?.parent || null
       const isTopLevelInput = input?.dataRuntime?.info?.isTopLevel || null
+      const level = input?.refs?.parent || 0
 
 
       // console.log('----createMenuItem----', input)
