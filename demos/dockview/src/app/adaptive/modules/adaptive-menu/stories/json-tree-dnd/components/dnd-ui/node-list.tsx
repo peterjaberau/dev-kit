@@ -1,17 +1,18 @@
 import React, { Fragment, useEffect, useRef, useState } from "react"
 import { NodeItem } from "./node-item"
 import { NodeGroup } from "./node-group"
-import { NodeTopLevel } from "./node-top-level"
-import { Root, MenuList, GroupDropIndicator } from "#adaptive-menu/namespaces/primitive"
+import { GroupDropIndicator } from "#adaptive-menu/drag-and-drop/group-drop-indicator"
 import { useMenuItem } from "#adaptive-menu/use-menu-item"
 
-import invariant from "tiny-invariant"
 import {
   dropTargetForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/dist/types/entry-point/element/adapter"
+  type ElementDropTargetEventBasePayload,
+  monitorForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
+import invariant from "tiny-invariant"
 
 export function NodeList(props: any) {
-  const { parentActorRef: itemRef } = props
+  const { actorRef } = props
 
   const ref = useRef<HTMLDivElement | null>(null)
   const [state, setState] = useState("idle")
@@ -33,7 +34,7 @@ export function NodeList(props: any) {
     isTopLevel,
     isRootNode,
     isOpen,
-  } = useMenuItem({ actorRef: itemRef })
+  } = useMenuItem({ actorRef: actorRef })
 
   useEffect(() => {
     const element = ref.current
@@ -47,7 +48,7 @@ export function NodeList(props: any) {
     return dropTargetForElements({
       element,
       getData: () => ({ type: "group" }),
-      canDrop: ({ source }) => true, //isFilterData(source.data),
+      canDrop: ({ source }): any => source.data?.children, //isFilterData(source.data),
       onDragStart: onChange,
       onDropTargetChange: onChange,
       onDrop() {
@@ -66,7 +67,7 @@ export function NodeList(props: any) {
         return (
           <Fragment key={child}>
             {grandChildrenIds.length ? (
-              <NodeGroup parentActorRef={grandChildrenRef} />
+              <NodeGroup actorRef={grandChildrenRef} />
             ) : (
               <NodeItem actorRef={grandChildrenRef} />
             )}

@@ -28,7 +28,7 @@ export function Tree() {
         {menuItemChildrenIds.map((item: any, index: any, array: any) => {
           return (
             <Fragment key={item}>
-              <Node itemRef={menuItemChildrenRef[item]} level={0} index={index} />
+              <NodeTopLevel actorRef={menuItemChildrenRef[item]} level={0} index={index} />
             </Fragment>
           )
         })}

@@ -1,11 +1,13 @@
-import React, { forwardRef } from "react"
+import { forwardRef } from "react"
 import { chakra } from "@chakra-ui/react"
 
-export const ControlItem = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { css, children, ...rest } = props
-  return (
-    <chakra.div css={{ ...css }} ref={ref} {...rest}>
-      {children}
-    </chakra.div>
-  )
+export const ControlItemImpl = (props: any, ref: any) => {
+  const { css, ...rest } = props
+  return <chakra.div>item rendered</chakra.div>
+}
+
+
+export const ControlItem = forwardRef((props: any, ref: any) => {
+  const { css, ...rest } = props
+  return <chakra.div ref={ref} {...css} {...rest} />
 })

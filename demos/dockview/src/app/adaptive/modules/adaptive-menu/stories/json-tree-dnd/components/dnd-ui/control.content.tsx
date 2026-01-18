@@ -1,31 +1,62 @@
-import React, { forwardRef } from "react"
-import { Stack, Collapsible, Box } from "@chakra-ui/react"
+import { forwardRef, ReactNode, useRef } from "react"
+import { expandableItemIndentation } from "./constants"
 
-export const ControlContent = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { children, ...rest } = props
+import {
+  AreAllAncestorsExpandedContext,
+  LevelContext,
+  useAreAllAncestorsExpanded,
+  useIsExpanded,
+  useLevel,
+} from "./control.context"
+import { chakra } from "@chakra-ui/react"
+
+export type ExpandableContentProps = {
+  children: ReactNode
+}
+
+const styles = {
+  content: {
+    paddingInlineStart: expandableItemIndentation,
+  },
+  collapsedContent: {
+    display: "none",
+  },
+}
+export const ControlContentImpl = forwardRef((props: any, ref: any) => {
+  const { css, children } = props
+  // {...css}
   return (
-    <Collapsible.Content data-scope="branch"
-                         data-part="content" ref={ref} {...props}>
-      <Stack
-        css={{
-          borderRadius: "md",
-          '&:not([data-open="closed"])': {
-            borderTopRadius: "none",
-          },
-          pb: 2,
-          px: 2,
-        }}
-      >
-        <Stack
+    <chakra.div role="list" ref={ref} css={css}>
+      {children}
+    </chakra.div>
+  )
+})
+
+export const ControlContent = forwardRef<HTMLDivElement, any>(({ children }, ref) => {
+  const isExpanded = useIsExpanded()
+  const level = useLevel()
+  const hasExpanded = useRef(false)
+  const areAllAncestorsExpanded = useAreAllAncestorsExpanded()
+
+  if (!isExpanded && !hasExpanded.current) {
+    return null
+  }
+
+  hasExpanded.current = true
+
+  return (
+    <LevelContext.Provider value={level + 1}>
+      <AreAllAncestorsExpandedContext.Provider value={areAllAncestorsExpanded && isExpanded}>
+        <ControlContentImpl
+          ref={ref}
           css={{
-            p: 2,
-            bg: "bg.muted",
-            borderRadius: "md",
+            ...styles.content,
+            ...(!isExpanded && styles.collapsedContent),
           }}
         >
           {children}
-        </Stack>
-      </Stack>
-    </Collapsible.Content>
+        </ControlContentImpl>
+      </AreAllAncestorsExpandedContext.Provider>
+    </LevelContext.Provider>
   )
 })

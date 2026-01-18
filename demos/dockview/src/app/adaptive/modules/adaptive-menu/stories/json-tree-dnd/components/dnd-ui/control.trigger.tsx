@@ -1,78 +1,61 @@
-import React, { forwardRef, useId, useRef } from "react"
-import { chakra, Collapsible, useCollapsibleContext, HStack } from "@chakra-ui/react"
-import { useMenuItem } from "#adaptive-menu/use-menu-item"
+import { forwardRef } from "react"
+import { chakra } from "@chakra-ui/react"
+import React, { useCallback, useId, useRef } from "react"
 import { ControlItem } from "./control.item"
+import { useIsExpanded, useOnExpansionToggle, useSetIsExpanded } from "./control.context"
 
-export const ControlTrigger = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-  const { itemRef, onClick, children, visualContentRef, isDragging, hasDragIndicator, dropIndicator, ...rest }: any =
-    props
+export const ControlTrigger = forwardRef((props: any, ref: any) => {
+  const {
+    isSelected,
+    onClick,
+    children,
+    interactionName,
+    visualContentRef,
+    isDragging,
+    hasDragIndicator,
+    dropIndicator,
+  } = props
+
   const id = useId()
+  const onExpansionToggle = useOnExpansionToggle()
+  const isExpanded = useIsExpanded()
+  const setIsExpanded = useSetIsExpanded()
+  const itemRef = useRef<HTMLDivElement>(null)
 
-  const { sendToMenuItem, isOpen } = useMenuItem({ actorRef: itemRef })
 
-  const collapsible = useCollapsibleContext()
-  const { open, setOpen, disabled } = collapsible
-  const rootDivRef = useRef<HTMLDivElement>(null)
+  const handleClick = useCallback(
+    (event: any) => {
+      const newValue = !isExpanded
+      onClick?.(event, { isExpanded: newValue })
+      onExpansionToggle?.(newValue)
+      setIsExpanded(newValue)
+    },
+    [onClick, onExpansionToggle, isExpanded, setIsExpanded],
+  )
 
-  // const handleClick = (e: any) => {
-  // onClick?.(e)
-  // if (disabled) return
-  //
-  // if (typeof openOverride === "boolean") {
-  //   setOpen(openOverride)
-  //   return
-  // }
-
-  // collapsible.setOpen( !isOpen )
-  // sendToMenuItem({ type: "toggle", open: !isOpen })
-
-  // }
-
-  const handleClick = (e: any) => {
-    onClick?.(e)
-    if (disabled) return
-
-    // ✅ EXPLICIT VALUE WINS
-    if (isOpen !== undefined) {
-      setOpen(isOpen)
-      return
-    }
-
-    // ✅ DEFAULT: toggle
-    setOpen(!open)
-  }
 
   return (
     <chakra.div
-      ref={rootDivRef}
-      data-scope="control"
-      data-part="trigger"
-      gap={0}
+      ref={itemRef}
       css={{
-        '&[data-draggable="dragging"]': {
-          opacity: 0.4,
-        },
-        height: "2rem",
-        w: "full",
-        cursor: "pointer",
-        alignItems: "center",
-        justifyContent: "flex-start",
         display: "flex",
-        flexDirection: "row",
       }}
     >
+
       <ControlItem
         id={id}
         onClick={handleClick}
+        interactionName={interactionName}
         ref={ref}
         visualContentRef={visualContentRef}
         isDragging={isDragging}
         hasDragIndicator={hasDragIndicator}
         dropIndicator={dropIndicator}
-        {...props}
       >
         {children}
       </ControlItem>
     </chakra.div>
   )
 })
+
+

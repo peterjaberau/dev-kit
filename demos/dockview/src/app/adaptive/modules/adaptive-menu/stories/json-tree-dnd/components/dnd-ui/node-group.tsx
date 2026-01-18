@@ -1,28 +1,20 @@
-import { forwardRef, Fragment, memo, useCallback, useEffect, useRef } from "react"
+import { forwardRef, Fragment, memo, useCallback, useEffect, useRef, useState } from "react"
 import { useMenuItem } from "#adaptive-menu/use-menu-item"
-import { useMenuManager } from "#adaptive-menu/use-menu-manager"
-import { useDndNode } from "../dnd/use-dnd-node"
 import { useMenuItemDragAndDrop } from "#adaptive-menu/drag-and-drop/use-menu-item-drag-and-drop"
 import { chakra, HStack } from "@chakra-ui/react"
-import { GroupDropIndicator } from "../dnd/drop-indicator/group"
 import { NodeText } from "./node.text"
 import { NodeTag } from "./node.tag"
 import { NodeList } from "./node-list"
 
 import { Control } from "./control"
 import { ControlTrigger } from "./control.trigger"
-import { ControlTriggerIndicator } from "./control.trigger-indicator"
 import { ControlContent } from "./control.content"
-import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/dist/types/entry-point/element/adapter"
-import { isFilterData } from "#adaptive-menu/stories/jira/data"
-import { getPathToFilter } from "#adaptive-menu/stories/jira/filters/filter-tree-utils"
 
-const indentPerLevel = 4
-
+// TODO: clear in onGenerateDragPreview()?
 const expandedAtDragStart = new Set<string>()
 
 export const NodeGroup = (props: any) => {
-  const { parentActorRef: itemRef, level, index } = props
+  const { actorRef, level, index } = props
 
   const {
     dataValue: item,
@@ -42,12 +34,12 @@ export const NodeGroup = (props: any) => {
     isRootNode,
     isOpen,
     dataChildren,
-    menuItemRef
-  } = useMenuItem({ actorRef: itemRef })
+    menuItemRef,
+  } = useMenuItem({ actorRef: actorRef })
 
   const hasChildren = !!item?.children
 
-  const { state, draggableButtonRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
+  const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
       getInitialData: () => {
         return item?.children || []
@@ -64,40 +56,34 @@ export const NodeGroup = (props: any) => {
     },
   })
 
-
-
-
-
   return (
     <>
       <Control
-        // onExpandedChange={() => sendToMenuItem({ type: 'toggle' })}
-        itemRef={itemRef}
-        dropIndicator={dropIndicator}
-        data-index={index}
-        data-level={level}
-        ref={dropTargetRef}
+      // isExpanded={isExpanded}
+      // onExpansionToggle={() => setIsExpanded((value) => !value)}
+      // actorRef={actorRef}
+      // dropIndicator={dropIndicator}
+      // data-index={index}
+      // data-level={level}
+      // ref={dropTargetRef}
       >
         <ControlTrigger
-          ref={draggableButtonRef}
-          data-draggable={state}
-          itemRef={itemRef}
+          ref={draggableAnchorRef}
+          // href={filter.href}
           isDragging={state === "dragging"}
+          hasDragIndicator
           visualContentRef={dropTargetRef}
           dropIndicator={dropIndicator}
-          hasDragIndicator
         >
           <HStack alignItems="center" w="full" gap={0}>
-            <ControlTriggerIndicator itemRef={itemRef} />
             <NodeText css={{ flexGrow: 1 }}>{dataName}</NodeText>
             <NodeTag>{item.id}</NodeTag>
             <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
           </HStack>
         </ControlTrigger>
         <ControlContent>
-          <NodeList parentActorRef={menuItemRef} />
+          <NodeList actorRef={menuItemRef} />
         </ControlContent>
-        {/*{instruction ? <DropIndicator instruction={instruction} /> : null}*/}
       </Control>
       {dragPreview}
     </>

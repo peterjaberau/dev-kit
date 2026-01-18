@@ -1,21 +1,13 @@
 import React, { Fragment, useEffect, useRef, useState } from "react"
-import { NodeGroup } from "./node-group"
-import { NodeTopLevel } from "./node-top-level"
-import { Root, MenuList, GroupDropIndicator } from "#adaptive-menu/namespaces/primitive"
 import { useMenuItem } from "#adaptive-menu/use-menu-item"
 import { ControlItem } from "./control.item"
-import invariant from "tiny-invariant"
-import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/dist/types/entry-point/element/adapter"
 import { useMenuItemDragAndDrop } from "#adaptive-menu/drag-and-drop/use-menu-item-drag-and-drop"
-import { getFilterData, isFilterData } from "#adaptive-menu/stories/jira/data"
-import { ControlTriggerIndicator } from "#adaptive-menu/stories/json-tree-dnd/components/dnd-ui/control.trigger-indicator"
-import { NodeText } from "#adaptive-menu/stories/json-tree-dnd/components/dnd-ui/node.text"
-import { NodeTag } from "#adaptive-menu/stories/json-tree-dnd/components/dnd-ui/node.tag"
+import { NodeText } from "./node.text"
+import { NodeTag } from "./node.tag"
 import { HStack } from "@chakra-ui/react"
-import { ControlTrigger } from "#adaptive-menu/stories/json-tree-dnd/components/dnd-ui/control.trigger"
 
 export function NodeItem(props: any) {
-  const { actorRef: itemRef } = props
+  const { actorRef: actorRef } = props
   const {
     dataValue: item,
     menuItemChildrenRef,
@@ -33,7 +25,7 @@ export function NodeItem(props: any) {
     isTopLevel,
     isRootNode,
     isOpen,
-  } = useMenuItem({ actorRef: itemRef })
+  } = useMenuItem({ actorRef: actorRef })
 
   const { state, draggableAnchorRef, dragPreview, dropTargetRef, dropIndicator } = useMenuItemDragAndDrop({
     draggable: {
@@ -41,7 +33,7 @@ export function NodeItem(props: any) {
     },
     dropTarget: {
       getData: () => {
-        return item?.children
+        return item?.children || []
       },
       getOperations: () => ({
         combine: "available",
@@ -57,11 +49,14 @@ export function NodeItem(props: any) {
   return (
     <>
       <ControlItem
+        asChild
+        // href={filter.href}
         ref={draggableAnchorRef}
         data-draggable={state}
-        itemRef={itemRef}
+        itemRef={actorRef}
         isDragging={state === "dragging"}
         hasDragIndicator
+        dropIndicator={dropIndicator}
         visualContentRef={dropTargetRef}
       >
         <HStack alignItems="center" w="full" gap={0}>

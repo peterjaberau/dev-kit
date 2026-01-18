@@ -9,13 +9,12 @@ import { NodeTag } from "./node.tag"
 
 import { Control } from "./control"
 import { ControlTrigger } from "./control.trigger"
-import { ControlTriggerIndicator } from "./control.trigger-indicator"
 
 const indentPerLevel = 4
 
 export const Node = memo(
   forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
-    const { itemRef, level, index, ...rest } = props
+    const { actorRef, level, index, ...rest } = props
 
     const {
       dataChildren,
@@ -35,7 +34,7 @@ export const Node = memo(
       isTopLevel,
       isRootNode,
       isOpen,
-    } = useMenuItem({ actorRef: itemRef })
+    } = useMenuItem({ actorRef: actorRef })
 
 
     console.log({
@@ -62,7 +61,7 @@ export const Node = memo(
       },
       isOpen: isOpen || false,
       sender: sendToMenuItem,
-      itemRef,
+      actorRef,
       buttonRef: nodeRef,
       groupRef,
     })
@@ -97,10 +96,9 @@ export const Node = memo(
         >
           {/* BRANCH */}
 
-          <Control itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
-            <ControlTrigger data-draggable={dragState} itemRef={itemRef}>
+          <Control actorRef={actorRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
+            <ControlTrigger data-draggable={dragState} actorRef={actorRef}>
               <HStack alignItems="center" w="full" gap={0}>
-                <ControlTriggerIndicator itemRef={itemRef} />
                 <NodeText css={{ flexGrow: 1 }}>{dataName}</NodeText>
                 {item.isDraft && <NodeTag>Draft</NodeTag>}
                 <NodeTag>{item.id}</NodeTag>
@@ -120,7 +118,7 @@ export const Node = memo(
           >
             <GroupDropIndicator ref={groupRef} isActive={groupState === "is-innermost-over"}>
               {menuItemChildrenIds?.map((child: any, i: number) => {
-                return <Node key={child} itemRef={menuItemChildrenRef[child]} level={level + 1} index={i} />
+                return <Node key={child} actorRef={menuItemChildrenRef[child]} level={level + 1} index={i} />
               })}
             </GroupDropIndicator>
           </chakra.div>
