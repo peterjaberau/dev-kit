@@ -39,7 +39,7 @@ import {
   type TGetDataContextValue,
 } from "./state-context"
 
-import { dataTree } from "../data"
+import { dataTree } from "./data-tree"
 
 const topLevelMap: {
   [TName in TTopLevelItem]: (args: { data: TData; index: number; amountOfMenuItems: number }) => ReactNode

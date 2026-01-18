@@ -69,7 +69,6 @@ export const Node = memo(
           data-scope="drag-drop"
           data-part="node"
           css={{
-            paddingInlineStart: expandableMenuItemIndentation,
             position: "relative",
             borderRadius: "sm",
             paddingX: 1,
@@ -86,15 +85,12 @@ export const Node = memo(
 
           <Control itemRef={itemRef} data-index={index} data-level={level} id={`tree-item-${item.id}`} ref={nodeRef}>
             <ControlTrigger data-draggable={dragState} itemRef={itemRef}>
-              {/*<HStack alignItems="center" w="full" gap={0}>*/}
-
-              <ControlTriggerIndicator itemRef={itemRef} />
-              <NodeText level={level}>
-                Item {item.id} - level {level}
-              </NodeText>
-              {/*{item.isDraft && <NodeTag>Draft</NodeTag>}*/}
-              <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
-              {/*</HStack>*/}
+              <HStack alignItems="center" w="full" gap={0}>
+                <ControlTriggerIndicator itemRef={itemRef} />
+                <NodeText css={{ flexGrow: 1 }}>Item {item.id}</NodeText>
+                {item.isDraft && <NodeTag>Draft</NodeTag>}
+                <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
+              </HStack>
             </ControlTrigger>
             {instruction ? <DropIndicator instruction={instruction} /> : null}
           </Control>
@@ -103,7 +99,7 @@ export const Node = memo(
         {item.children?.length > 0 && item.isOpen && (
           <chakra.div
             id={aria?.["aria-controls"]}
-            // pl={indentPerLevel}
+            pl={indentPerLevel}
             data-scope="drag-drop"
             data-part="branch-content"
           >

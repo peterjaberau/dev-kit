@@ -3,6 +3,7 @@ const namePrefix = "pattern-"
 export const registerPatterns = {
   prefix: "patterns-",
   loaders: {
+    "adaptive-json-tree": () => import("#app/patterns/adaptive-json-tree-tree"),
     "tree-primer": () => import("#app/patterns/tree-primer"),
     "tree-primer-origin": () => import("#app/patterns/tree-primer-origin"),
 

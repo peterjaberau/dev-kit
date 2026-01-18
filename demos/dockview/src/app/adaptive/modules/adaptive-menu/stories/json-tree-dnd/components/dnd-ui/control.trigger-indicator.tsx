@@ -11,46 +11,31 @@ export const ControlTriggerIndicator = forwardRef<HTMLDivElement, any>((props: a
   })
 
   return (
-    <div>
-      <Collapsible.Indicator
-        data-scope="control"
-        data-part="indicator"
-        css={{
-          gridArea: "elem-before",
-          overflow: "hidden",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
-          paddingInlineStart: "4px",
-          flexShrink: 0,
-          width: "24px",
-          height: "24px",
-          boxSizing: "content-box",
-          pointerEvents: "none",
-
-          // display: "inline-block",
-          // width: "24px",
-          ...(isBranchNotEmptyData && {
-            transition: "transform 0.2s",
-            _open: {
-              transform: "rotate(90deg)",
-            },
-          }),
-        }}
-        {...props}
-        ref={ref}
-      >
-        {isLeafData || isBranchEmptyData ? (
-          <IconButton variant="plain" size="2xs">
-            <TiDocument />
-          </IconButton>
-        ) : (
-          <IconButton variant="ghost" size="2xs">
-            <LuChevronRight />
-          </IconButton>
-        )}
-      </Collapsible.Indicator>
-    </div>
+    <Collapsible.Indicator
+      data-scope="control"
+      data-part="indicator"
+      css={{
+        display: "inline-block",
+        width: "24px",
+        ...(isBranchNotEmptyData && {
+          transition: "transform 0.2s",
+          _open: {
+            transform: "rotate(90deg)",
+          },
+        }),
+      }}
+      {...props}
+      ref={ref}
+    >
+      {isLeafData || isBranchEmptyData ? (
+        <IconButton variant="plain" size="2xs">
+          <TiDocument />
+        </IconButton>
+      ) : (
+        <IconButton variant="ghost" size="2xs">
+          <LuChevronRight />
+        </IconButton>
+      )}
+    </Collapsible.Indicator>
   )
 })
