@@ -21,7 +21,7 @@ import { SmallSubtitle } from "./components/Primitives/SmallSubtitle"
 import { data as loaderData } from "./data"
 import { useEffect } from "react"
 
-export default function JsonPlay({ children }: any) {
+export function JsonPlay({ children }: any) {
   useEffect(() => {
     if (loaderData.path) {
       console.log("loaderData.path changed----", loaderData.path)
