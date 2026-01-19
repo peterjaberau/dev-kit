@@ -8,6 +8,9 @@ export const registerPatterns = {
     "kanban-tree-tree": () => import("#app/patterns/kanban-tree/components/Tree"),
     "kanban-tree-kanban": () => import("#app/patterns/kanban-tree/components/Kanban"),
     "tree-with-dexiedb": () => import("#app/patterns/tree-with-dexiedb"),
+    "tree-view-explorer": () => import("#app/patterns/tree-view-explorer"),
+
+    // tree-view-explorer
     "tree-primer": () => import("#app/patterns/tree-primer"),
     "tree-primer-origin": () => import("#app/patterns/tree-primer-origin"),
 

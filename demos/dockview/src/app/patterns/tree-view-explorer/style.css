@@ -1,0 +1,73 @@
+
+
+.side {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.side h1 {
+    margin: 0 0 0.5em 0;
+    line-height: 1;
+}
+
+.side fieldset {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    border: none;
+    grid-template-columns: 50% 50%;
+    grid-auto-rows: min-content;
+    row-gap: 0.5em;
+}
+
+.side label {
+    margin-inline-end: 0.5em;
+    display: flex;
+    align-items: center;
+}
+
+.side input[type='number'],
+.side button[type='button'] {
+    width: auto;
+    padding: 0.2em 0.3em;
+}
+
+.side button[type='button'] {
+    width: auto;
+    font-size: 1em;
+    line-height: 1.3;
+}
+
+.retv__node-label .wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.3em;
+    overflow: hidden;
+}
+
+.retv__node-label .wrapper .icon {
+    display: grid;
+    place-items: center;
+    width: 1.5em;
+    overflow: hidden;
+}
+
+.retv__node-label .wrapper .label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.retv__node.isDragging {
+    opacity: 0.5;
+}
+
+.retv__node.isDragOver {
+    background-color: #00000033;
+}
+
+@media (prefers-color-scheme: dark) {
+    .retv__node.isDragOver {
+        background-color: #ffffff33;
+    }
+}
