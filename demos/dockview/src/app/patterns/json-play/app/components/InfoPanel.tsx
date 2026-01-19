@@ -3,9 +3,9 @@ import { RelatedValues } from "./RelatedValues";
 import { PropertiesValue } from "./Properties/PropertiesValue";
 import { InfoHeader } from "./InfoHeader";
 import { ContainerInfo } from "./ContainerInfo";
-import { useSelectedInfo } from "~/hooks/useSelectedInfo";
-import { useRelatedPaths } from "~/hooks/useRelatedPaths";
-import { useJsonDoc } from "~/hooks/useJsonDoc";
+import { useSelectedInfo } from "../hooks/useSelectedInfo";
+import { useRelatedPaths } from "../hooks/useRelatedPaths";
+import { useJsonDoc } from "../hooks/useJsonDoc";
 
 export function InfoPanel() {
   const { minimal } = useJsonDoc();

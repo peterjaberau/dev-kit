@@ -11,6 +11,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "react-dropzone": "^14.3.8",
+    "react-hotkeys-hook": "^5.2.3",
+    "color": "^5.0.3",
     "@tanstack/react-virtual": "^3.13.18",
     "downshift": "^9.0.13",
     "@apihero/fetch": "^0.1.0",
@@ -77,7 +80,6 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "cheerio": "^1.1.2",
-    "@tanstack/react-virtual": "^3.13.18",
     "class-variance-authority": "^0.7.1",
     "jotai": "^2.4.10",
     "jotai-devtools": "^0.13.0",
