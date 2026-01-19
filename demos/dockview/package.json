@@ -11,6 +11,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@apihero/fetch": "^0.1.0",
     "@codemirror/highlight": "^0.19.8",
     "@uiw/react-codemirror": "^4.25.4",
     "@codemirror/lang-json": "^6.0.2",

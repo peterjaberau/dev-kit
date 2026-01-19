@@ -82,6 +82,9 @@
       "#patterns/*": ["./src/app/patterns/*"],
       "#patterns": ["./src/app/patterns"],
 
+      "#json-play/*": ["./src/app/patterns/json-play/*"],
+      "#json-play": ["./src/app/patterns/json-play"],
+
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
 

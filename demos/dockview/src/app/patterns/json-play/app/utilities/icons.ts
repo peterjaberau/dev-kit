@@ -36,14 +36,15 @@ import {
 } from "@heroicons/react/24/outline"
 
 import { inferType, JSONValueType } from "@jsonhero/json-infer-types"
-import { StringIcon } from "~/components/Icons/StringIcon"
-import { IconComponent } from "~/useColumnView"
+import { StringIcon } from "#json-play/app/components/Icons/StringIcon"
+// import { IconComponent } from "~/useColumnView"
 
-export function iconForValue(value: unknown): IconComponent {
+//IconComponent
+export function iconForValue(value: unknown): any {
   return iconForType(inferType(value))
 }
-
-export function iconForType(type: JSONValueType): IconComponent {
+//IconComponent
+export function iconForType(type: JSONValueType): any {
   switch (type.name) {
     case "object": {
       return CubeIcon
