@@ -5,6 +5,7 @@ import { registryNames } from "#adaptive-registry"
 import { createTreeCollection } from "@chakra-ui/react"
 import { SimpleGrid, GridItem, TreeView } from "@chakra-ui/react"
 import { LuChevronRight, LuFile } from "react-icons/lu"
+import { CardWithScrollArea } from "#adaptive/components/ui/card-with-scroll-area"
 import { useParams } from "next/navigation"
 
 interface RegistryNode {
@@ -60,30 +61,32 @@ const collection = createTreeCollection<RegistryNode>({
 export const NavRegistry = ({ selectedValue }: any) => {
 
   return (
-    <TreeView.Root collection={collection}>
-      <TreeView.Tree>
-        <TreeView.Node
-          render={({ node, nodeState }) =>
-            nodeState.isBranch ? (
-              <TreeView.BranchControl>
-                <TreeView.BranchText>{node.name}</TreeView.BranchText>
-                <TreeView.BranchIndicator>
-                  <LuChevronRight />
-                </TreeView.BranchIndicator>
-              </TreeView.BranchControl>
-            ) : (
-              <TreeView.Item asChild>
-                <NextLink href={node.href!}>
-                  <LuFile />
-                  <TreeView.ItemText fontWeight={node.name === selectedValue ? "bold" : "normal"}>
-                    {node.displayName ?? node.name}
-                  </TreeView.ItemText>
-                </NextLink>
-              </TreeView.Item>
-            )
-          }
-        />
-      </TreeView.Tree>
-    </TreeView.Root>
+    <CardWithScrollArea title={"Stories"}>
+      <TreeView.Root collection={collection}>
+        <TreeView.Tree>
+          <TreeView.Node
+            render={({ node, nodeState }) =>
+              nodeState.isBranch ? (
+                <TreeView.BranchControl>
+                  <TreeView.BranchText>{node.name}</TreeView.BranchText>
+                  <TreeView.BranchIndicator>
+                    <LuChevronRight />
+                  </TreeView.BranchIndicator>
+                </TreeView.BranchControl>
+              ) : (
+                <TreeView.Item asChild>
+                  <NextLink href={node.href!}>
+                    <LuFile />
+                    <TreeView.ItemText fontWeight={node.name === selectedValue ? "bold" : "normal"}>
+                      {node.displayName ?? node.name}
+                    </TreeView.ItemText>
+                  </NextLink>
+                </TreeView.Item>
+              )
+            }
+          />
+        </TreeView.Tree>
+      </TreeView.Root>
+    </CardWithScrollArea>
   )
 }

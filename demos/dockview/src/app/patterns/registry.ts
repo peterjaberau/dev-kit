@@ -3,7 +3,11 @@ const namePrefix = "pattern-"
 export const registerPatterns = {
   prefix: "patterns-",
   loaders: {
-    "adaptive-json-tree": () => import("#app/patterns/adaptive-json-tree-tree"),
+    // "adaptive-json-tree": () => import("#app/patterns/adaptive-json-tree-tree"),
+    // tree-with-dexiedb
+    "kanban-tree-tree": () => import("#app/patterns/kanban-tree/components/Tree"),
+    "kanban-tree-kanban": () => import("#app/patterns/kanban-tree/components/Kanban"),
+    "tree-with-dexiedb": () => import("#app/patterns/tree-with-dexiedb"),
     "tree-primer": () => import("#app/patterns/tree-primer"),
     "tree-primer-origin": () => import("#app/patterns/tree-primer-origin"),
 

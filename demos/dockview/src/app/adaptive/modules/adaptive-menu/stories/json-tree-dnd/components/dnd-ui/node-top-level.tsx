@@ -9,6 +9,7 @@ import { Control } from "./control"
 import { ControlTrigger } from "./control.trigger"
 import { ControlContent } from "./control.content"
 import { NodeList } from "./node-list"
+import invariant from "tiny-invariant"
 
 const indentPerLevel = 4
 
@@ -33,7 +34,6 @@ export const NodeTopLevel = (props: any) => {
     isRootNode,
     isOpen,
   } = useMenuItem({ actorRef: actorRef })
-
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true)
   const wasExpandedWhenDragStartedRef = useRef<boolean | null>(null)
@@ -72,6 +72,12 @@ export const NodeTopLevel = (props: any) => {
     }
   }, [state])
 
+  // register element
+  useEffect(() => {
+    const element = draggableButtonRef.current
+    invariant(element)
+  }, [draggableButtonRef])
+
   return (
     <>
       <Control
@@ -81,11 +87,7 @@ export const NodeTopLevel = (props: any) => {
         ref={dropTargetRef}
       >
         <ControlTrigger ref={draggableButtonRef} actorRef={actorRef} isDragging={state === "dragging"} hasDragIndicator>
-          <HStack alignItems="center" w="full" gap={0}>
-            <NodeText css={{ flexGrow: 1 }}>{dataName}</NodeText>
-            <NodeTag>{item.id}</NodeTag>
-            <NodeTag>{isBranchData ? "Branch" : "Leaf"}</NodeTag>
-          </HStack>
+          {dataName} {isTopLevel ? "(TOP LEVEL)" : ""}
         </ControlTrigger>
         <ControlContent>
           <NodeList actorRef={actorRef} />

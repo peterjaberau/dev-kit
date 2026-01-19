@@ -29,6 +29,8 @@
 
       "#app/*": ["./src/app/*"],
       "#app": ["./src/app"],
+      "#utils/*": ["./src/utils/*"],
+      "#utils": ["./src/utils"],
 
       "#adaptive/*": ["./src/app/adaptive/*"],
       "#adaptive": ["./src/app/adaptive"],
@@ -76,6 +78,9 @@
 
       "#query-builder/*": ["./src/app/adaptive/modules/query-builder/*"],
       "#query-builder": ["./src/app/adaptive/modules/query-builder"],
+
+      "#patterns/*": ["./src/app/patterns/*"],
+      "#patterns": ["./src/app/patterns"],
 
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],

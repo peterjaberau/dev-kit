@@ -19,15 +19,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const paramValue = params.name as string
 
   return (
-    <SimpleGrid w={"full"} columns={10} p={4} h={"vh"} overflow={"hidden"} gap={4} data-page="adaptive-stories-layout">
-      <GridItem colSpan={2} p={2} bg="bg.panel">
-        <DevPanel title="Stories">
-          <Stack gap="3" p={4} align="stretch" boxShadow="sm" borderRadius="md">
+    <SimpleGrid w={"full"} columns={10} p={6} h={"vh"} overflow={"hidden"} gap={6} data-page="adaptive-stories-layout">
+      <GridItem colSpan={2} bg="bg.panel">
             <NavRegistry selectedValue={paramValue} />
-          </Stack>
-        </DevPanel>
       </GridItem>
-
       <GridItem colSpan={8}>{children}</GridItem>
     </SimpleGrid>
   )

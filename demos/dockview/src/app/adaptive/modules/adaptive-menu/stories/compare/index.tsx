@@ -10,7 +10,7 @@ import { globalRegistry } from "#adaptive-registry"
 import { useMenuItem } from "../../use-menu-item"
 import { useMenuManager } from "#adaptive-menu/use-menu-manager"
 import { AdaptiveTool } from "#adaptive-tool"
-import RenderJsonTreeDnd from "../json-tree-dnd/components"
+// import RenderJsonTreeDnd from "../json-tree-dnd/components"
 // import { TreeSimpleExample } from "#modules/drag-and-drop/examples/tree-simple.example"
 
 function Index() {
@@ -75,7 +75,7 @@ function Index() {
           //   },
           // ]}
         >
-          <RenderJsonTreeDnd />
+          {/*<RenderJsonTreeDnd />*/}
           {/*<RenderJiraRefactor1 />*/}
         </AdaptiveTool.Root>
       </GridItem>

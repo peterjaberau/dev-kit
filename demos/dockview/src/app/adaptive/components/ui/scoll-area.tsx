@@ -6,12 +6,12 @@ export interface ScrollAreaWrapperProps {
   [key: string]: any
 }
 
-export const ScrollArea = ({ children, ...rest }: ScrollAreaWrapperProps) => {
+export const ScrollArea = ({ children, css, ...rest }: ScrollAreaWrapperProps) => {
   return (
-    <Container p={0} {...rest} asChild>
+    <Container minW={"full"} p={0} w={"full"} {...rest} asChild>
       <ChakraScrollArea.Root variant={"hover"} size={"xs"}>
         <ChakraScrollArea.Viewport>
-          <ChakraScrollArea.Content h={"full"} px={4} py={3}>
+          <ChakraScrollArea.Content css={{ justifyContent: "center" }}  px={0} py={0}>
             {children}
           </ChakraScrollArea.Content>
         </ChakraScrollArea.Viewport>

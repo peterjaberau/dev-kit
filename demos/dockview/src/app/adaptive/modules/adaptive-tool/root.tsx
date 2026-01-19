@@ -4,7 +4,7 @@ import { Title } from "./title"
 import { ActionInspect } from "./action.inspect"
 import { ActionList } from "./action.list"
 import { ActionItem } from "./action.item"
-import { ScrollArea } from "./scoll-area"
+import { ScrollArea } from "#adaptive/components/ui/scoll-area"
 
 interface ActionProps {
   label?: string

@@ -13,6 +13,7 @@ import { Root } from '#adaptive-menu/namespaces/primitive'
 
 const themeConfig: any = defineConfig({
   ...defaultConfig,
+  preflight: false,
   // cssVarsPrefix: 'chakra',
 } as any);
 const theme = createSystem(themeConfig);
