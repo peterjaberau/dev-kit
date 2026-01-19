@@ -30,3 +30,6 @@ export const registerPatterns = {
     //tree-atlaskit-cleaning
   },
 }
+
+
+

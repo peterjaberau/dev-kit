@@ -8,7 +8,8 @@ import { registerDynamicTree } from "#dynamic-tree/stories/registry"
 import { registerQueryBuilder } from "#query-builder/headless/stories/registry"
 import { registerAdaptiveMenu } from "#adaptive-menu/stories/registry"
 import { registerPatterns } from "#app/patterns/registry"
-// registerPatterns
+import { registerDom } from "#app/patterns/dom/registry"
+// registerDom
 
 export const makeRegistry = (loaders: any, prefix: string) =>
   Object.fromEntries(
@@ -22,6 +23,7 @@ const registry = {
   ...makeRegistry(registerAdaptiveJson.loaders, registerAdaptiveJson.prefix),
   ...makeRegistry(registerAdaptiveTree.loaders, registerAdaptiveTree.prefix),
   ...makeRegistry(registerDynamicTree.loaders, registerDynamicTree.prefix),
+  ...makeRegistry(registerDom.loaders, registerDom.prefix),
 }
 
 export const registryComponentsObj = (id: any) => {

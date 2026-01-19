@@ -12,7 +12,7 @@ export const CardWithScrollArea = ({
   variant?: "subtle" | "panel" | "transparent"
 }) => {
   return (
-    <Card.Root size={"sm"} h={"full"} w={"full"}>
+    <Card.Root size={"sm"} h="100%" w="full" display="flex" flexDirection="column">
       <Card.Header borderBottom={"1px solid"} borderBottomColor={"border"} pb={3}>
         <HStack>
           <HStack flex={1}>
@@ -23,6 +23,10 @@ export const CardWithScrollArea = ({
       </Card.Header>
       <Card.Body
         p={0}
+        flex="1"
+        display="flex"
+        overflow="hidden"
+
         css={{
           ...(variant === "subtle"
             ? { backgroundColor: "bg.subtle" }
@@ -40,7 +44,7 @@ export const CardWithScrollArea = ({
           }}
         >
           <ScrollArea>
-            <Stack justifyContent={"start"} alignItems={"center"} w={"full"} p={4}>
+            <Stack  minH={'100%'} justifyContent={"start"} alignItems={"center"} w={"full"} p={4}>
               {children}
             </Stack>
           </ScrollArea>
