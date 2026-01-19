@@ -33,8 +33,8 @@ export function PropertiesString({ type }: { type: JSONStringType }) {
   }
 }
 
-import jwtDecode from "jwt-decode";
-import { inferTemporal } from "../utilities/inferredTemporal";
+import { jwtDecode } from "jwt-decode"
+import { inferTemporal } from "../../utilities/inferredTemporal"
 
 function PropertiesJwt({
   value,
@@ -124,7 +124,7 @@ function PropertiesDateTime({
     return <></>;
   }
 
-  const temporal = inferTemporal(value, format);
+  const temporal: any = inferTemporal(value, format);
 
   if (!temporal) {
     return <></>;

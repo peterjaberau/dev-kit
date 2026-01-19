@@ -1,5 +1,5 @@
 import { useMemo, useRef } from "react";
-import { getRelatedPathsAtPath } from "~/utilities/relatedValues";
+import { getRelatedPathsAtPath } from "../utilities/relatedValues";
 import { useJson } from "./useJson";
 import { useJsonColumnViewState } from "./useJsonColumnView";
 
@@ -22,7 +22,7 @@ export function useRelatedPaths(): string[] {
 
     //cache
     for (let index = 0; index < paths.length; index++) {
-      const path = paths[index];
+      const path: any = paths[index];
       cache.current.set(path, paths);
     }
 

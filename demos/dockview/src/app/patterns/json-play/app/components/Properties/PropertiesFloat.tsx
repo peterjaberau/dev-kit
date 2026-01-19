@@ -1,5 +1,5 @@
 import { JSONFloatType } from "@jsonhero/json-infer-types";
-import { formatValue } from "../utilities/formatter";
+import { formatValue } from "../../utilities/formatter";
 import { DataTable } from "../DataTable";
 import { ValueIcon } from "../ValueIcon";
 

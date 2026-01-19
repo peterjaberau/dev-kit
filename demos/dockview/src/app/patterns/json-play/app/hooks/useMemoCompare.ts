@@ -8,7 +8,7 @@ export function useMemoCompare<T>(
   ) => boolean
 ) {
   // Ref for storing previous value
-  const previousRef = useRef<T | null | undefined>();
+  const previousRef = useRef<T | null | undefined>(null);
   const previous = previousRef.current;
   // Pass previous and next value to compare function
   // to determine whether to consider them equal.

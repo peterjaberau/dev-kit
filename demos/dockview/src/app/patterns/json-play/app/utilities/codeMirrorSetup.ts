@@ -1,12 +1,11 @@
 import { highlightSpecialChars, drawSelection, highlightActiveLine, dropCursor } from "@codemirror/view"
-import { Extension } from "@codemirror/state"
 import { highlightActiveLineGutter } from "@codemirror/gutter"
 import { bracketMatching } from "@codemirror/matchbrackets"
 import { highlightSelectionMatches } from "@codemirror/search"
 import { json as jsonLang } from "@codemirror/lang-json"
 import { lineNumbers } from "@codemirror/gutter"
 
-export function getPreviewSetup(): Array<Extension> {
+export function getPreviewSetup() {
   return [
     jsonLang(),
     highlightSpecialChars(),
@@ -18,11 +17,11 @@ export function getPreviewSetup(): Array<Extension> {
   ]
 }
 
-export function getViewerSetup(): Array<Extension> {
+export function getViewerSetup() {
   return [drawSelection(), dropCursor(), bracketMatching(), lineNumbers()]
 }
 
-export function getEditorSetup(): Array<Extension> {
+export function getEditorSetup(){
   return [
     highlightActiveLineGutter(),
     highlightSpecialChars(),

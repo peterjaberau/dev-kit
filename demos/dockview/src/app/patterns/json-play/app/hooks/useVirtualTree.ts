@@ -1,4 +1,4 @@
-import pick from "lodash-es/pick";
+import { pick } from "lodash"
 import React, {
   useReducer,
   Reducer,
@@ -7,40 +7,21 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { useVirtual, VirtualItem } from "react-virtual";
+// import { useVirtual, VirtualItem } from "react-virtual";
+// import { useVirtualizer } from "@tanstack/react-virtual"
+import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual"
 
-type UseVirtualOptions<R> = Parameters<typeof useVirtual>[0];
+// type UseVirtualOptions<R> = Parameters<typeof useVirtual>[0];
+//
+// export type UseVirtualTreeOptions<
+//   T extends { id: string; children?: T[] },
+//   R
+// > = {
+//   id: string;
+//   persistState?: boolean;
+//   nodes: T[];
+// } & Omit<UseVirtualOptions<R>, "size">;
 
-export type UseVirtualTreeOptions<
-  T extends { id: string; children?: T[] },
-  R
-> = {
-  id: string;
-  persistState?: boolean;
-  nodes: T[];
-} & Omit<UseVirtualOptions<R>, "size">;
-
-export type VirtualNode<T> = {
-  node: T;
-  size: number; // This is the same as virtualItem.size
-  start: number; // This is the same as virtualItem.start
-  virtualItem: VirtualItem;
-  depth: number;
-  getItemProps: () => React.HTMLAttributes<HTMLElement>;
-  isCollapsed?: boolean;
-};
-
-export type UseVirtualTreeInstance<T> = {
-  nodes: VirtualNode<T>[];
-  focusedNodeId: string | null;
-  totalSize: number;
-  toggleNode: (id: string, source?: KeyboardEvent | MouseEvent) => void;
-  focusNode: (id: string) => void;
-  focusFirst: () => void;
-  blur: () => void;
-  scrollToNode: (id: string) => void;
-  getTreeProps: () => React.HTMLAttributes<HTMLElement>;
-};
 
 type TreeNodeItem<T extends { id: string; children?: T[] }> = {
   id: string;
@@ -202,345 +183,322 @@ function toggleAllChildren<T extends { id: string; children?: T[] }>(
   };
 }
 
-export function useVirtualTree<T extends { id: string; children?: T[] }, R>(
-  options: UseVirtualTreeOptions<T, R>
-): UseVirtualTreeInstance<T> {
-  const reducer = useCallback<Reducer<TreeState<T>, TreeAction>>(
-    (state, action) => {
-      switch (action.type) {
-        case "BLUR": {
-          return {
-            ...state,
-            focusedNodeId: null,
-          };
+export function useVirtualTree<T extends { id: string; children?: T[] }, R>(options: any): any {
+  const reducer = useCallback<Reducer<TreeState<T>, TreeAction>>((state, action) => {
+    switch (action.type) {
+      case "BLUR": {
+        return {
+          ...state,
+          focusedNodeId: null,
         }
-        case "TOGGLE_NODE": {
-          const isCollapsed = state.collapsedState[action.id];
-
-          if (isCollapsed) {
-            return expandNode<T>(state, action.id);
-          } else {
-            if (
-              action.source &&
-              (action.source.shiftKey || action.source.altKey)
-            ) {
-              return toggleAllChildren<T>(state, action.id);
-            } else {
-              return collapseNode<T>(state, action.id);
-            }
-          }
-        }
-        case "COLLAPSE_ALL_NODES": {
-          // Reduce from the right, so that the
-          // focusedNodeId is set to the top-level node.
-          return state.items.reduceRight(
-            (nextState, item) => collapseNode<T>(nextState, item.id),
-            state
-          );
-        }
-        case "FOCUS_NODE": {
-          const itemIndex = state.items.findIndex(({ id }) => id === action.id);
-
-          if (itemIndex === -1) {
-            const node = findNodeInTreeById(state.nodes, action.id);
-
-            if (!node) {
-              return state;
-            }
-
-            const path = calculatePathToNode(state.nodes, node) ?? [];
-
-            const collapsedState = path.reduce(
-              (acc, id) => ({
-                ...acc,
-                [id]: false,
-              }),
-              state.collapsedState
-            );
-
-            return {
-              ...state,
-              collapsedState,
-              items: createNodeItems(state.nodes, 0, collapsedState),
-              focusedNodeId: action.id,
-            };
-          }
-
-          return {
-            ...state,
-            focusedNodeId: action.id,
-          };
-        }
-        case "FOCUS_FIRST":
-        case "MOVE_TO_TOP": {
-          const nextItem = state.items[0];
-
-          if (!nextItem) {
-            return state;
-          }
-
-          return {
-            ...state,
-            focusedNodeId: nextItem.id,
-          };
-        }
-        case "MOVE_TO_BOTTOM": {
-          const nextItem = state.items[state.items.length - 1];
-
-          if (!nextItem) {
-            return state;
-          }
-
-          return {
-            ...state,
-            focusedNodeId: nextItem.id,
-          };
-        }
-        case "MOVE_DOWN": {
-          if (!state.focusedNodeId) {
-            const nextItem = state.items[0];
-
-            if (!nextItem) {
-              return state;
-            }
-
-            return {
-              ...state,
-              focusedNodeId: nextItem.id,
-            };
-          }
-
-          const focusedNodeIdIndex = state.items.findIndex(
-            (item) => item.id === state.focusedNodeId
-          );
-
-          if (focusedNodeIdIndex === -1) {
-            return state;
-          }
-
-          if (state.items.length <= focusedNodeIdIndex + 1) {
-            return state;
-          }
-
-          const nextItem = state.items[focusedNodeIdIndex + 1];
-
-          return {
-            ...state,
-            focusedNodeId: nextItem.id,
-          };
-        }
-        case "MOVE_UP": {
-          const focusedNodeIdIndex = state.items.findIndex(
-            (item) => item.id === state.focusedNodeId
-          );
-
-          if (focusedNodeIdIndex === -1) {
-            return state;
-          }
-
-          if (focusedNodeIdIndex === 0) {
-            return state;
-          }
-
-          const nextItem = state.items[focusedNodeIdIndex - 1];
-
-          return {
-            ...state,
-            focusedNodeId: nextItem.id,
-          };
-        }
-        case "MOVE_RIGHT": {
-          if (!state.focusedNodeId) {
-            return state;
-          }
-
-          const isCollapsed = state.collapsedState[state.focusedNodeId];
-
-          if (isCollapsed) {
-            return expandNode<T>(state, state.focusedNodeId);
-          }
-
-          if (
-            action.source &&
-            (action.source.shiftKey || action.source.altKey)
-          ) {
-            return toggleAllChildren<T>(state, state.focusedNodeId);
-          }
-
-          const nodeIndex = state.items.findIndex(
-            (item) => item.id === state.focusedNodeId
-          );
-
-          if (nodeIndex === -1) {
-            return state;
-          }
-
-          if (state.items.length <= nodeIndex + 1) {
-            return state;
-          }
-
-          const nextItem = state.items[nodeIndex + 1];
-
-          return {
-            ...state,
-            focusedNodeId: nextItem.id,
-          };
-        }
-        case "MOVE_LEFT": {
-          if (!state.focusedNodeId) {
-            return state;
-          }
-
-          const item = state.items.find(
-            (item) => item.id === state.focusedNodeId
-          );
-
-          if (!item) {
-            return state;
-          }
-
-          const hasChildren =
-            item.node.children && item.node.children.length > 0;
-          const isCollapsed = state.collapsedState[state.focusedNodeId];
-
-          if (hasChildren && !isCollapsed) {
-            if (
-              action.source &&
-              (action.source.shiftKey || action.source.altKey)
-            ) {
-              return toggleAllChildren<T>(state, state.focusedNodeId);
-            } else {
-              return collapseNode<T>(state, state.focusedNodeId);
-            }
-          }
-
-          if (!hasChildren || isCollapsed) {
-            // Try to go to the parent node
-            const parentNodeIndex = state.items.findIndex(
-              (item) =>
-                item.node.children &&
-                item.node.children
-                  .map((child) => child.id)
-                  .includes(state.focusedNodeId!)
-            );
-
-            if (parentNodeIndex === -1) {
-              return state;
-            }
-
-            const nextItem = state.items[parentNodeIndex];
-
-            return {
-              ...state,
-              focusedNodeId: nextItem.id,
-            };
-          }
-
-          return state;
-        }
-        case "RESTORE_STATE": {
-          const nextState = {
-            ...state,
-            ...action.restoredState,
-          };
-
-          return {
-            ...nextState,
-            items: createNodeItems(
-              nextState.nodes,
-              0,
-              nextState.collapsedState
-            ),
-          };
-        }
-        default:
-          return state;
       }
-    },
-    []
-  );
+      case "TOGGLE_NODE": {
+        const isCollapsed = state.collapsedState[action.id]
 
-  const initializer = useCallback(
-    ({ nodes }: { nodes: T[] }) => {
+        if (isCollapsed) {
+          return expandNode<T>(state, action.id)
+        } else {
+          if (action.source && (action.source.shiftKey || action.source.altKey)) {
+            return toggleAllChildren<T>(state, action.id)
+          } else {
+            return collapseNode<T>(state, action.id)
+          }
+        }
+      }
+      case "COLLAPSE_ALL_NODES": {
+        // Reduce from the right, so that the
+        // focusedNodeId is set to the top-level node.
+        return state.items.reduceRight((nextState, item) => collapseNode<T>(nextState, item.id), state)
+      }
+      case "FOCUS_NODE": {
+        const itemIndex = state.items.findIndex(({ id }) => id === action.id)
+
+        if (itemIndex === -1) {
+          const node = findNodeInTreeById(state.nodes, action.id)
+
+          if (!node) {
+            return state
+          }
+
+          const path = calculatePathToNode(state.nodes, node) ?? []
+
+          const collapsedState = path.reduce(
+            (acc, id) => ({
+              ...acc,
+              [id]: false,
+            }),
+            state.collapsedState,
+          )
+
+          return {
+            ...state,
+            collapsedState,
+            items: createNodeItems(state.nodes, 0, collapsedState),
+            focusedNodeId: action.id,
+          }
+        }
+
+        return {
+          ...state,
+          focusedNodeId: action.id,
+        }
+      }
+      case "FOCUS_FIRST":
+      case "MOVE_TO_TOP": {
+        const nextItem = state.items[0]
+
+        if (!nextItem) {
+          return state
+        }
+
+        return {
+          ...state,
+          focusedNodeId: nextItem.id,
+        }
+      }
+      case "MOVE_TO_BOTTOM": {
+        const nextItem = state.items[state.items.length - 1]
+
+        if (!nextItem) {
+          return state
+        }
+
+        return {
+          ...state,
+          focusedNodeId: nextItem.id,
+        }
+      }
+      case "MOVE_DOWN": {
+        if (!state.focusedNodeId) {
+          const nextItem = state.items[0]
+
+          if (!nextItem) {
+            return state
+          }
+
+          return {
+            ...state,
+            focusedNodeId: nextItem.id,
+          }
+        }
+
+        const focusedNodeIdIndex = state.items.findIndex((item) => item.id === state.focusedNodeId)
+
+        if (focusedNodeIdIndex === -1) {
+          return state
+        }
+
+        if (state.items.length <= focusedNodeIdIndex + 1) {
+          return state
+        }
+
+        const nextItem: any = state.items[focusedNodeIdIndex + 1]
+
+        return {
+          ...state,
+          focusedNodeId: nextItem.id,
+        }
+      }
+      case "MOVE_UP": {
+        const focusedNodeIdIndex = state.items.findIndex((item) => item.id === state.focusedNodeId)
+
+        if (focusedNodeIdIndex === -1) {
+          return state
+        }
+
+        if (focusedNodeIdIndex === 0) {
+          return state
+        }
+
+        const nextItem: any = state.items[focusedNodeIdIndex - 1]
+
+        return {
+          ...state,
+          focusedNodeId: nextItem.id,
+        }
+      }
+      case "MOVE_RIGHT": {
+        if (!state.focusedNodeId) {
+          return state
+        }
+
+        const isCollapsed = state.collapsedState[state.focusedNodeId]
+
+        if (isCollapsed) {
+          return expandNode<T>(state, state.focusedNodeId)
+        }
+
+        if (action.source && (action.source.shiftKey || action.source.altKey)) {
+          return toggleAllChildren<T>(state, state.focusedNodeId)
+        }
+
+        const nodeIndex = state.items.findIndex((item) => item.id === state.focusedNodeId)
+
+        if (nodeIndex === -1) {
+          return state
+        }
+
+        if (state.items.length <= nodeIndex + 1) {
+          return state
+        }
+
+        const nextItem: any = state.items[nodeIndex + 1]
+
+        return {
+          ...state,
+          focusedNodeId: nextItem.id,
+        }
+      }
+      case "MOVE_LEFT": {
+        if (!state.focusedNodeId) {
+          return state
+        }
+
+        const item = state.items.find((item) => item.id === state.focusedNodeId)
+
+        if (!item) {
+          return state
+        }
+
+        const hasChildren = item.node.children && item.node.children.length > 0
+        const isCollapsed = state.collapsedState[state.focusedNodeId]
+
+        if (hasChildren && !isCollapsed) {
+          if (action.source && (action.source.shiftKey || action.source.altKey)) {
+            return toggleAllChildren<T>(state, state.focusedNodeId)
+          } else {
+            return collapseNode<T>(state, state.focusedNodeId)
+          }
+        }
+
+        if (!hasChildren || isCollapsed) {
+          // Try to go to the parent node
+          const parentNodeIndex = state.items.findIndex(
+            (item) => item.node.children && item.node.children.map((child) => child.id).includes(state.focusedNodeId!),
+          )
+
+          if (parentNodeIndex === -1) {
+            return state
+          }
+
+          const nextItem: any = state.items[parentNodeIndex]
+
+          return {
+            ...state,
+            focusedNodeId: nextItem.id,
+          }
+        }
+
+        return state
+      }
+      case "RESTORE_STATE": {
+        const nextState = {
+          ...state,
+          ...action.restoredState,
+        }
+
+        return {
+          ...nextState,
+          items: createNodeItems(nextState.nodes, 0, nextState.collapsedState),
+        }
+      }
+      default:
+        return state
+    }
+  }, [])
+
+  const initializer: any = useCallback(
+    ({ nodes }: { nodes: any[] }) => {
       return {
         nodes,
         items: createNodeItems(nodes),
         collapsedState: {},
         focusedNodeId: null,
-      };
+      }
     },
-    [options.persistState, options.id]
-  );
+    [options.persistState, options.id],
+  )
 
-  const [state, dispatch] = useReducer<
-    Reducer<TreeState<T>, TreeAction>,
-    { nodes: T[] }
-  >(
+  const [state, dispatch]: any = useReducer(
     reducer,
     {
       nodes: options.nodes,
     },
-    initializer
-  );
+    initializer,
+  )
 
-  const isStateRestored = useRef<boolean>(false);
+  const isStateRestored = useRef<boolean>(false)
 
   // This is setting the state
   useEffect(() => {
     if (!isStateRestored.current) {
-      return;
+      return
     }
 
     if (options.persistState) {
-      localStorage.setItem(
-        `${options.id}-virtual-tree-state`,
-        JSON.stringify(pick(state, "collapsedState"))
-      );
+      localStorage.setItem(`${options.id}-virtual-tree-state`, JSON.stringify(pick(state, "collapsedState")))
     }
-  }, [
-    state.collapsedState,
-    options.id,
-    options.persistState,
-    isStateRestored.current,
-  ]);
+  }, [state.collapsedState, options.id, options.persistState, isStateRestored.current])
 
   // This is restoring the state
   useEffect(() => {
     if (!options.persistState) {
-      return;
+      return
     }
 
     if (isStateRestored.current) {
-      return;
+      return
     }
 
-    isStateRestored.current = true;
+    isStateRestored.current = true
 
-    const savedState = localStorage.getItem(`${options.id}-virtual-tree-state`);
+    const savedState = localStorage.getItem(`${options.id}-virtual-tree-state`)
 
     if (savedState) {
       const restoredState = JSON.parse(savedState) as {
-        collapsedState: Record<string, boolean>;
-      };
+        collapsedState: Record<string, boolean>
+      }
 
       dispatch({
         type: "RESTORE_STATE",
         restoredState,
-      });
+      })
     }
-  }, [options.persistState, options.id, dispatch, isStateRestored.current]);
+  }, [options.persistState, options.id, dispatch, isStateRestored.current])
 
-  const rowVirtualizer = useVirtual({
-    size: state.items.length,
-    parentRef: options.parentRef,
+  // const rowVirtualizer = useVirtual({
+  //   size: state.items.length,
+  //   parentRef: options.parentRef,
+  //   estimateSize: options.estimateSize,
+  //   overscan: options.overscan,
+  //   initialRect: options.initialRect,
+  //   useObserver: options.useObserver,
+  // });
+
+  const rowVirtualizer = useVirtualizer({
+    count: state.items.length, // size -> count
+    getScrollElement: () => options.parentRef?.current, // parentRef -> getScrollElement
     estimateSize: options.estimateSize,
     overscan: options.overscan,
-    initialRect: options.initialRect,
-    useObserver: options.useObserver,
-  });
+    // initialRect / useObserver removed (handled internally by TanStack)
+  })
 
-  const allVirtualNodes = rowVirtualizer.virtualItems.map((virtualItem) => {
-    const treeItem = state.items[virtualItem.index];
+  // const allVirtualNodes = rowVirtualizer.virtualItems.map((virtualItem) => {
+  //   const treeItem = state.items[virtualItem.index];
+  //
+  //   return {
+  //     node: treeItem.node,
+  //     depth: treeItem.depth,
+  //     size: virtualItem.size,
+  //     start: virtualItem.start,
+  //     virtualItem,
+  //     getItemProps: createItemProps(treeItem, virtualItem, state, dispatch),
+  //     isCollapsed: treeItem.isCollapsed,
+  //   };
+  // });
+
+  const allVirtualNodes = rowVirtualizer.getVirtualItems().map((virtualItem) => {
+    const treeItem = state.items[virtualItem.index]
 
     return {
       node: treeItem.node,
@@ -550,51 +508,48 @@ export function useVirtualTree<T extends { id: string; children?: T[] }, R>(
       virtualItem,
       getItemProps: createItemProps(treeItem, virtualItem, state, dispatch),
       isCollapsed: treeItem.isCollapsed,
-    };
-  });
+    }
+  })
 
   const toggleNode = useCallback(
     (id: string, source?: KeyboardEvent | MouseEvent) => {
-      dispatch({ type: "TOGGLE_NODE", id, source });
+      dispatch({ type: "TOGGLE_NODE", id, source })
     },
-    [dispatch]
-  );
+    [dispatch],
+  )
 
   const focusNode = useCallback(
     (id: string) => {
-      dispatch({ type: "FOCUS_NODE", id });
+      dispatch({ type: "FOCUS_NODE", id })
     },
-    [dispatch]
-  );
+    [dispatch],
+  )
 
-  const focusFirst = useCallback(
-    () => dispatch({ type: "FOCUS_FIRST" }),
-    [dispatch]
-  );
+  const focusFirst = useCallback(() => dispatch({ type: "FOCUS_FIRST" }), [dispatch])
 
-  const blur = useCallback(() => dispatch({ type: "BLUR" }), [dispatch]);
+  const blur = useCallback(() => dispatch({ type: "BLUR" }), [dispatch])
 
   // TODO: have this work with collapsed nodes
   const scrollToNode = useCallback(
     (id: string) => {
-      const itemIndex = state.items.findIndex((item) => item.id === id);
+      const itemIndex = state.items.findIndex((item: any) => item.id === id)
 
       if (itemIndex !== -1) {
-        rowVirtualizer.scrollToIndex(itemIndex, { align: "auto" });
+        rowVirtualizer.scrollToIndex(itemIndex, { align: "auto" })
       }
     },
-    [state.items, rowVirtualizer.scrollToIndex, dispatch]
-  );
+    [state.items, rowVirtualizer.scrollToIndex, dispatch],
+  )
 
   useEffect(() => {
     if (state.focusedNodeId) {
-      scrollToNode(state.focusedNodeId);
+      scrollToNode(state.focusedNodeId)
     }
-  }, [state.focusedNodeId, scrollToNode]);
+  }, [state.focusedNodeId, scrollToNode])
 
   return {
     nodes: allVirtualNodes,
-    totalSize: rowVirtualizer.totalSize,
+    totalSize: rowVirtualizer.getTotalSize(),
     toggleNode,
     focusNode,
     focusFirst,
@@ -602,7 +557,7 @@ export function useVirtualTree<T extends { id: string; children?: T[] }, R>(
     focusedNodeId: state.focusedNodeId,
     getTreeProps: useCallback(createTreeProps(dispatch), [dispatch]),
     scrollToNode,
-  };
+  }
 }
 
 function createNodeItems<T extends { id: string; children?: T[] }>(

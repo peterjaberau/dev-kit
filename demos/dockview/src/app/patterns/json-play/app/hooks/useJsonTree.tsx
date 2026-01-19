@@ -12,7 +12,7 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { useVirtualTree, UseVirtualTreeInstance } from "./useVirtualTree";
+import { useVirtualTree } from "./useVirtualTree";
 import invariant from "tiny-invariant";
 import { useJsonDoc } from "./useJsonDoc";
 
@@ -23,7 +23,7 @@ export type JsonTreeOptions = {
 };
 
 export type UseJsonTreeInstance = {
-  tree: UseVirtualTreeInstance<JsonTreeViewNode>;
+  tree: any;
   parentRef: React.RefObject<HTMLDivElement>;
 };
 

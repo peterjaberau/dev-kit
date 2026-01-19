@@ -1,8 +1,7 @@
 import { EditorView } from "@codemirror/view";
-import { Extension } from "@codemirror/state";
 import { HighlightStyle, tags as t } from "@codemirror/highlight";
 
-export function darkTheme(): Extension {
+export function darkTheme(): any {
   const chalky = "#e5c07b",
     coral = "#e06c75",
     cyan = "#56b6c2",
@@ -18,7 +17,7 @@ export function darkTheme(): Extension {
     background = "rgb(15,23,42)",
     tooltipBackground = "#353a42",
     selection = "#3E4451",
-    cursor = "#528bff";
+    cursor = "#528bff"
 
   const jsonHeroEditorTheme = EditorView.theme(
     {
@@ -34,8 +33,9 @@ export function darkTheme(): Extension {
       },
 
       ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
-      "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-        { backgroundColor: selection },
+      "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": {
+        backgroundColor: selection,
+      },
 
       ".cm-panels": { backgroundColor: darkBackground, color: ivory },
       ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
@@ -92,8 +92,8 @@ export function darkTheme(): Extension {
         },
       },
     },
-    { dark: true }
-  );
+    { dark: true },
+  )
 
   /// The highlighting style for code in the JSON Hero theme.
   const jsonHeroHighlightStyle = HighlightStyle.define([
@@ -106,28 +106,11 @@ export function darkTheme(): Extension {
     { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: whiskey },
     { tag: [t.definition(t.name), t.separator], color: ivory },
     {
-      tag: [
-        t.typeName,
-        t.className,
-        t.number,
-        t.changed,
-        t.annotation,
-        t.modifier,
-        t.self,
-        t.namespace,
-      ],
+      tag: [t.typeName, t.className, t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace],
       color: chalky,
     },
     {
-      tag: [
-        t.operator,
-        t.operatorKeyword,
-        t.url,
-        t.escape,
-        t.regexp,
-        t.link,
-        t.special(t.string),
-      ],
+      tag: [t.operator, t.operatorKeyword, t.url, t.escape, t.regexp, t.link, t.special(t.string)],
       color: cyan,
     },
     { tag: [t.meta, t.comment], color: stone },
@@ -139,12 +122,12 @@ export function darkTheme(): Extension {
     { tag: [t.atom, t.bool, t.special(t.variableName)], color: whiskey },
     { tag: [t.processingInstruction, t.string, t.inserted], color: sage },
     { tag: t.invalid, color: invalid },
-  ]);
+  ])
 
-  return [jsonHeroEditorTheme, jsonHeroHighlightStyle];
+  return [jsonHeroEditorTheme, jsonHeroHighlightStyle]
 }
 
-export function lightTheme(): Extension {
+export function lightTheme(): any {
   const chalky = "#e5c07b",
     coral = "#e06c75",
     cyan = "#56b6c2",
@@ -160,7 +143,7 @@ export function lightTheme(): Extension {
     background = "rgb(248,250,252)",
     tooltipBackground = "#353a42",
     selection = "#D0D0D0",
-    cursor = "#528bff";
+    cursor = "#528bff"
 
   const jsonHeroEditorTheme = EditorView.theme(
     {
@@ -176,8 +159,9 @@ export function lightTheme(): Extension {
       },
 
       ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
-      "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-        { backgroundColor: selection },
+      "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": {
+        backgroundColor: selection,
+      },
 
       ".cm-panels": { backgroundColor: darkBackground, color: ivory },
       ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
@@ -234,8 +218,8 @@ export function lightTheme(): Extension {
         },
       },
     },
-    { dark: false }
-  );
+    { dark: false },
+  )
 
   /// The highlighting style for code in the JSON Hero theme.
   const jsonHeroHighlightStyle = HighlightStyle.define([
@@ -248,28 +232,11 @@ export function lightTheme(): Extension {
     { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: whiskey },
     { tag: [t.definition(t.name), t.separator], color: ivory },
     {
-      tag: [
-        t.typeName,
-        t.className,
-        t.number,
-        t.changed,
-        t.annotation,
-        t.modifier,
-        t.self,
-        t.namespace,
-      ],
+      tag: [t.typeName, t.className, t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace],
       color: chalky,
     },
     {
-      tag: [
-        t.operator,
-        t.operatorKeyword,
-        t.url,
-        t.escape,
-        t.regexp,
-        t.link,
-        t.special(t.string),
-      ],
+      tag: [t.operator, t.operatorKeyword, t.url, t.escape, t.regexp, t.link, t.special(t.string)],
       color: cyan,
     },
     { tag: [t.meta, t.comment], color: stone },
@@ -281,7 +248,7 @@ export function lightTheme(): Extension {
     { tag: [t.atom, t.bool, t.special(t.variableName)], color: whiskey },
     { tag: [t.processingInstruction, t.string, t.inserted], color: sage },
     { tag: t.invalid, color: invalid },
-  ]);
+  ])
 
-  return [jsonHeroEditorTheme, jsonHeroHighlightStyle];
+  return [jsonHeroEditorTheme, jsonHeroHighlightStyle]
 }

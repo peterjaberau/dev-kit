@@ -9,7 +9,8 @@ import { registerQueryBuilder } from "#query-builder/headless/stories/registry"
 import { registerAdaptiveMenu } from "#adaptive-menu/stories/registry"
 import { registerPatterns } from "#app/patterns/registry"
 import { registerDom } from "#app/patterns/dom/registry"
-// registerDom
+import { registerJsonPlay } from "#app/patterns/json-play/registry"
+// registerJsonPlay
 
 export const makeRegistry = (loaders: any, prefix: string) =>
   Object.fromEntries(
@@ -24,6 +25,7 @@ const registry = {
   ...makeRegistry(registerAdaptiveTree.loaders, registerAdaptiveTree.prefix),
   ...makeRegistry(registerDynamicTree.loaders, registerDynamicTree.prefix),
   ...makeRegistry(registerDom.loaders, registerDom.prefix),
+  ...makeRegistry(registerJsonPlay.loaders, registerJsonPlay.prefix),
 }
 
 export const registryComponentsObj = (id: any) => {

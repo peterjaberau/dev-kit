@@ -1,3 +1,4 @@
+'use client'
 import { CodeEditor } from "./CodeEditor";
 import { useJson } from "../hooks/useJson";
 import { useCallback, useMemo, useRef } from "react";
@@ -78,6 +79,7 @@ export function JsonEditor() {
     },
     [goToNodeId]
   );
+
 
   return (
     <CodeEditor

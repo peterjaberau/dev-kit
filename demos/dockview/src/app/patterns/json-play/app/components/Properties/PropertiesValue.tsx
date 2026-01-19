@@ -1,4 +1,4 @@
-import { useSelectedInfo } from "../hooks/useSelectedInfo";
+import { useSelectedInfo } from "../../hooks/useSelectedInfo"
 import { PropertiesInt } from "./PropertiesInt";
 import { PropertiesFloat } from "./PropertiesFloat";
 import { PropertiesString } from "./PropertiesString";

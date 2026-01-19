@@ -2,7 +2,7 @@ import { JSONIntType } from "@jsonhero/json-infer-types";
 import {
   JSONTimestampFormat,
 } from "@jsonhero/json-infer-types/lib/formats";
-import { formatValue } from "../utilities/formatter";
+import { formatValue } from "../../utilities/formatter";
 import { DataTable } from "../DataTable";
 import { ValueIcon } from "../ValueIcon";
 

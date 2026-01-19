@@ -14,7 +14,6 @@ import { useRef, useEffect, useMemo, useState } from "react";
 import { getPreviewSetup } from "../utilities/codeMirrorSetup";
 import { lightTheme, darkTheme } from "../utilities/codeMirrorTheme";
 import { CopyTextButton } from "./CopyTextButton";
-import { useTheme } from "./ThemeProvider";
 import {usePreferences} from './PreferencesProvider';
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -55,7 +54,6 @@ export function JsonPreview({ json, highlightPath }: JsonPreviewProps) {
     extensions.push(highlighting.of(highlightLineRange(lines)));
   }
 
-  const [theme] = useTheme();
 
   const { setContainer, view, state } = useCodeMirror({
     container: editor.current,
@@ -65,8 +63,8 @@ export function JsonPreview({ json, highlightPath }: JsonPreviewProps) {
     contentEditable: false,
     autoFocus: false,
     basicSetup: false,
-    theme: theme === "light" ? lightTheme() : darkTheme(),
-  });
+    theme: lightTheme(),
+  })
 
   useEffect(() => {
     if (editor.current) {

@@ -4,7 +4,6 @@ import { useRef, useEffect } from "react"
 import { useJsonDoc } from "../hooks/useJsonDoc"
 import { getEditorSetup } from "../utilities/codeMirrorSetup"
 import { darkTheme, lightTheme } from "../utilities/codeMirrorTheme"
-import { useTheme } from "./ThemeProvider"
 import { useHotkeys } from "react-hotkeys-hook"
 
 export type CodeEditorProps = {
@@ -34,7 +33,6 @@ export function CodeEditor(opts: CodeEditorProps) {
     ...opts,
   }
 
-  const [theme] = useTheme()
 
   const extensions = getEditorSetup()
 
@@ -50,7 +48,7 @@ export function CodeEditor(opts: CodeEditorProps) {
     contentEditable: !readOnly,
     value: content,
     autoFocus: false,
-    theme: theme === "light" ? lightTheme() : darkTheme(),
+    theme: lightTheme(),
     indentWithTab: false,
     basicSetup: false,
     onChange,
@@ -78,8 +76,16 @@ export function CodeEditor(opts: CodeEditorProps) {
 
       const lineNumber = state?.doc.lineAt(selectionStart).number
 
+      // const transactionSpec: TransactionSpec = {
+      //   selection: { anchor: selectionStart, head: selectionEnd },
+      //   effects: EditorView.scrollIntoView(selectionStart, {
+      //     y: "start",
+      //     yMargin: 100,
+      //   }),
+      // }
+
       const transactionSpec: TransactionSpec = {
-        selection: { anchor: selectionStart, head: selectionEnd },
+        selection: EditorSelection.single(selectionStart, selectionEnd),
         effects: EditorView.scrollIntoView(selectionStart, {
           y: "start",
           yMargin: 100,
@@ -96,7 +102,10 @@ export function CodeEditor(opts: CodeEditorProps) {
     "ctrl+a,meta+a,command+a",
     (e: any) => {
       e.preventDefault()
-      view?.dispatch({ selection: { anchor: 0, head: state?.doc.length } })
+      // view?.dispatch({ selection: { anchor: 0, head: state?.doc.length } })
+      view?.dispatch({
+        selection: EditorSelection.single(0, state?.doc.length ?? 0),
+      })
     },
     [view, state],
   )
@@ -104,7 +113,7 @@ export function CodeEditor(opts: CodeEditorProps) {
   return (
     <div>
       <div
-        className={`${minimal ? "h-jsonViewerHeightMinimal" : "h-jsonViewerHeight"} no-scrollbar overflow-y-auto`}
+        className={'h-jsonViewerHeight no-scrollbar overflow-y-auto'}
         ref={editor}
       />
     </div>
