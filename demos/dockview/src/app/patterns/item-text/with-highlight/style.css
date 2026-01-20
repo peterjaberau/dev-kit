@@ -1,0 +1,11 @@
+/*! CSS Used from: Embedded */
+.t5.t5{overflow:hidden;}
+.t12.t12{color:var(--dark-color);--current-color:var(--dark-color);--current-color-rgb:var(--dark-color-rgb);background-color:rgb(var(--dark-color-rgb) / .15);}
+.t13.t13:not([data-nowrap]):not([data-ellipsis]){white-space:inherit;}
+.t14.t14{margin:0px;padding:0px;}
+.t14.t14:not([data-ellipsis]){width:auto;min-width:initial;max-width:initial;}
+.t15.t15:not([data-ellipsis]):not([data-block]){display:inline;}
+.t8.t8{text-overflow:ellipsis;white-space:nowrap;}
+.t9.t9{margin:0px;padding:0px;width:auto;min-width:initial;max-width:100%;}
+.t10.t10{display:inline-block;}
+.t11.t11{vertical-align:bottom;}

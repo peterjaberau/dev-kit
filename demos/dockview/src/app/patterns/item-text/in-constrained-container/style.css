@@ -1,0 +1,13 @@
+/*! CSS Used from: Embedded */
+.t5.t5{overflow:hidden;}
+.t12.t12{text-overflow:ellipsis;white-space:nowrap;}
+.t13.t13{margin:0px;padding:0px;width:auto;min-width:initial;max-width:100%;}
+.t14.t14{display:inline-block;}
+.t15.t15{vertical-align:bottom;}
+.t9.t9{background-color:rgb(var(--gray-color-rgb) / .05);}
+.t10.t10{padding:8px;width:150px;min-width:initial;max-width:initial;}
+.t11.t11{display:block;}
+.t16.t16{padding:8px;width:250px;min-width:initial;max-width:initial;}
+.t17.t17{padding:8px;width:400px;min-width:initial;max-width:initial;}
+.t8.t8{display:flex;gap:16px;flex-flow:column;}
+.t8.t8[data-vertical]{place-items:stretch;}

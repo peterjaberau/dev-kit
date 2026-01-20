@@ -3,6 +3,13 @@ const namePrefix = "pattern-"
 export const registerPatterns = {
   prefix: "patterns-",
   loaders: {
+    //
+    "item-simple": () => import("#app/patterns/item-simple"),
+    "item-story": () => import("#app/patterns/item"),
+    "item-slot-story": () => import("#app/patterns/item/index-with-slot-recipe"),
+    "item-slot-story-2": () => import("#app/patterns/item/index-with-slot-recipe-2"),
+    "item-slot-develop": () => import("#app/patterns/item/index-develop"),
+    // index-develop
     // "adaptive-json-tree": () => import("#app/patterns/adaptive-json-tree-tree"),
     // tree-with-dexiedb
     "kanban-tree-tree": () => import("#app/patterns/kanban-tree/components/Tree"),

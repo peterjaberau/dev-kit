@@ -1,0 +1,15 @@
+/*! CSS Used from: Embedded */
+.grid{display:inline-grid;border:0.1em solid;border-radius:0.2em;font-size:2em;}
+.grid > div{margin:0.05em;border-width:0.1em;border-style:solid;border-radius:0.2em;padding:0.5em;font-family:monospace;}
+.item-1{background-color:rgba(242, 46, 138, 0.8);border-color:rgb(242, 46, 138);}
+.item-2{background-color:rgba(98, 205, 217, 0.8);border-color:rgb(98, 205, 217);}
+.item-3{background-color:rgba(117, 191, 6 , 0.8);border-color:rgb(117, 191, 6);}
+.item-4{background-color:rgba(242, 226, 5, 0.8);border-color:rgb(242, 226, 5);}
+.item-5{background-color:rgba(242, 54, 12, 0.8);border-color:rgb(242, 54, 12);}
+.item-6{background-color:rgba(166, 0, 62, 0.8);border-color:rgb(166, 0, 62);}
+.small{font-size:50%;}
+.medium{font-size:75%;}
+.big{font-size:150%;}
+iframe{width:800px;height:600px;animation:resize 8s infinite alternate;}
+/*! CSS Used keyframes */
+@keyframes resize{to{width:400px;}}

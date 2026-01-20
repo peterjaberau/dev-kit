@@ -1,0 +1,37 @@
+/*! CSS Used from: Embedded */
+.t9.t9:not([data-focused]):not([data-invalid]):not([data-valid]){border:var(--border-width) solid var(--clear-color);}
+.t9.t9[data-disabled]{color:var(--dark-04-color);--current-color:var(--dark-04-color);--current-color-rgb:var(--dark-04-color-rgb);background-color:var(--clear-color);}
+.t9.t9:not([data-disabled]):not([data-hovered]):not([data-pressed]){color:var(--dark-02-color);--current-color:var(--dark-02-color);--current-color-rgb:var(--dark-02-color-rgb);}
+.t9.t9:not([data-disabled]):not([data-pressed])[data-selected]:not([data-hovered]){background-color:rgb(var(--dark-color-rgb) / .09);}
+.t9.t9:not([data-disabled]):not([data-hovered]):not([data-pressed]):not([data-selected]){background-color:rgb(var(--dark-color-rgb) / 0);}
+.t9.t9{outline:0 solid var(--outline-color);outline-offset:1px;border-radius:calc(5px);}
+.t10.t10{text-decoration:none;white-space:nowrap;}
+.t11.t11{flex-shrink:0;height:var(--action-size);min-height:initial;max-height:initial;}
+.t11.t11:not([data-context]):not(:last-child):first-child{margin:0 0 0 var(--side-padding);}
+.t11.t11:not([data-context]):not(:first-child):last-child{margin:0 var(--side-padding) 0 0;}
+.t11.t11:not([data-context]):not(:first-child):not(:last-child){margin:0px 1px;}
+.t11.t11[data-has-icon]:not([data-has-label]){padding:0px;}
+.t11.t11:not([data-has-label]){width:var(--action-size);min-width:initial;max-width:initial;}
+.t12.t12{display:inline-grid;gap:0px;grid-auto-flow:column;place-content:center;place-items:center;}
+.t13.t13{place-self:center;position:relative;transition:color var(--theme-transition, var(--transition)), background-color var(--theme-transition, var(--transition)), box-shadow var(--theme-transition, var(--transition)), border var(--theme-transition, var(--transition)), border-radius var(--theme-transition, var(--transition)), outline var(--theme-transition, var(--transition)), opacity var(--theme-transition, var(--transition));}
+.t14.t14{--action-size:min(max(calc(16px + 2px), calc(var(--size, var(--size-md)) - 8px - 2px)), calc(32px - 2px));--inline-compensation:4px;--local-icon-size:var(--icon-size);--min-inline-padding:calc(4px - 1px);--side-padding:calc(calc(var(--size) - var(--action-size) - 2px) / 2);box-sizing:border-box;appearance:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;text-decoration:none;}
+.t14.t14:not([data-size="inline"]){--inline-padding:max(var(--min-inline-padding), calc(calc(var(--action-size) - var(--line-height) - 2px) / 2 + var(--inline-compensation)));}
+.t14.t14[data-disabled]{cursor:default;}
+.t14.t14:not([data-disabled]){cursor:var(--pointer);}
+.t15.t15 > [data-element="Icon"]{display:grid;place-items:center;height:auto;min-height:calc(var(--action-size) - 2px);max-height:calc(var(--action-size) - 2px);width:auto;min-width:calc(var(--action-size) - 2px);max-width:calc(var(--action-size) - 2px);--icon-size:min(var(--local-icon-size), calc(var(--action-size) - 2px));}
+.t15.t15:not([data-selected])[data-checkbox]:not([data-hovered]) > [data-element="Icon"]{opacity:0;}
+.t15.t15:not([data-checkbox]) > [data-element="Icon"],.t15.t15[data-checkbox][data-selected] > [data-element="Icon"]{opacity:1;}
+.t8.t8{display:flex;gap:8px;}
+.t8.t8:not([data-vertical]){flex-flow:row;place-items:center stretch;}
+.t16.t16{font-size:var(--icon-size);text-align:center;text-transform:none;}
+.t17.t17{height:auto;min-height:1em;max-height:initial;width:auto;min-width:1em;max-width:1em;}
+.t18.t18{display:inline-grid;place-content:center;}
+.t19.t19{transition:color var(--theme-transition, var(--transition)), background-color var(--theme-transition, var(--transition)), box-shadow var(--theme-transition, var(--transition)), border var(--theme-transition, var(--transition)), border-radius var(--theme-transition, var(--transition)), outline var(--theme-transition, var(--transition)), opacity var(--theme-transition, var(--transition)), max-width var(--width-transition, var(--transition)), min-width var(--width-transition, var(--transition)), width var(--width-transition, var(--transition)), max-height var(--height-transition, var(--transition)), min-height var(--height-transition, var(--transition)), height var(--height-transition, var(--transition));}
+.t20.t20{-webkit-font-smoothing:antialiased;text-rendering:optimizelegibility;vertical-align:sub;}
+.t21.t21 svg{transition:all var(--all-transition, var(--transition));width:auto;min-width:1em;max-width:initial;height:auto;min-height:1em;max-height:1em;stroke-width:var(--stroke-width);font-size:inherit;}
+/*! CSS Used from: Embedded */
+:not([data-qa$="Icon"]) > .tabler-icon{font-size:var(--icon-size);width:1em;height:1em;min-width:1em;min-height:1em;max-height:1em;stroke-width:var(--stroke-width);}
+.cube-animation-spin{animation:cube-animation-spin 1s linear infinite;}
+button,html [type=button]{-webkit-appearance:none;}
+/*! CSS Used keyframes */
+@keyframes cube-animation-spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}

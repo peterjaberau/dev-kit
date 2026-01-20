@@ -1,0 +1,15 @@
+/*! CSS Used from: Embedded */
+.t5.t5{overflow:hidden;}
+.t13.t13{color:var(--dark-color);--current-color:var(--dark-color);--current-color-rgb:var(--dark-color-rgb);background-color:rgb(var(--dark-color-rgb) / .15);}
+.t14.t14:not([data-nowrap]):not([data-ellipsis]){white-space:inherit;}
+.t15.t15{margin:0px;padding:0px;}
+.t15.t15:not([data-ellipsis]){width:auto;min-width:initial;max-width:initial;}
+.t16.t16:not([data-ellipsis]):not([data-block]){display:inline;}
+.t9.t9{text-overflow:ellipsis;white-space:nowrap;}
+.t10.t10{margin:0px;padding:0px;width:auto;min-width:initial;max-width:100%;}
+.t11.t11{display:inline-block;}
+.t12.t12{vertical-align:bottom;}
+.t8.t8{display:flex;gap:16px;flex-flow:column;}
+.t8.t8[data-vertical]{place-items:stretch;}
+/*! CSS Used from: Embedded */
+strong{font-weight:var(--bold-font-weight, 700);}
