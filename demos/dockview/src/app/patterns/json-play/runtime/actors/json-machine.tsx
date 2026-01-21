@@ -1,6 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { jsonAgentMachine } from "./json-agent-machine"
 import { jsonViewMachine } from "./json-view-machine"
+import { localStorageMachine } from "./machines/local-storage-machine"
 import { createActorContext, useSelector } from "@xstate/react"
 import React from "react"
 
@@ -32,10 +33,20 @@ export const jsonMachine = setup({
         },
       })
     }),
+    spawnLocalStorage: assign(({ context, spawn }) => {
+      context.refs.localStorage = spawn("localStorageMachine", {
+        id: "local-storage",
+        systemId: "local-storage",
+        input: {
+          key: context?.plugins?.localStorage?.appKey,
+        },
+      })
+    }),
   },
   actors: {
     jsonAgentMachine,
     jsonViewMachine,
+    localStorageMachine,
   },
   guards: {},
 }).createMachine({
@@ -43,10 +54,16 @@ export const jsonMachine = setup({
     return {
       refs: {
         agent: null,
+        view: null,
+        localStorage: null,
       },
       data: input?.data,
+      plugins: {
+        localStorage: { appKey: "__json_play__" },
+      },
       config: {
         view: input?.view,
+
         preferences: {
           indent: 2,
         },
@@ -57,8 +74,9 @@ export const jsonMachine = setup({
     }
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
-    enqueue("spawnAgent"),
+    enqueue("spawnAgent")
     enqueue("spawnView")
+    enqueue("spawnLocalStorage")
   }),
 })
 

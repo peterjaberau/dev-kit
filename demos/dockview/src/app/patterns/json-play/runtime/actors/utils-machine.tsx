@@ -1,21 +1,19 @@
-"use client"
+'use client'
 import { assign, enqueueActions, fromCallback, fromPromise, setup } from "xstate"
 import { useJson } from "./json-machine"
 import { useSelector } from "@xstate/react"
 
-export const jsonAgentMachine = setup({
+export const utilsMachine = setup({
   types: {
     context: {} as any,
     events: {} as any,
   } as any,
   actions: {
     saveLoadedData: assign(({ context, event }: any, params: any) => {
-      console.log("dataLoader---input---", params)
-
       context.data = params
     }),
     logError: assign(({ context, event }: any, params: any) => {
-      console.log("agent error ---", { params, event })
+      console.log("agent error ---", { params, event})
     }),
   },
   actors: {
@@ -74,12 +72,12 @@ export const jsonAgentMachine = setup({
   },
 })
 
-export const useJsonAgent = () => {
+export const useUtilsAgent = () => {
   const { jsonContext } = useJson()
   const agentRef = jsonContext?.refs?.agent
 
   const sendToAgent = agentRef?.send
-  const sendLoadDataEvent = (e: any) => sendToAgent({ type: "LOAD_DATA", params: e })
+  const sendLoadDataEvent = (e: any) => sendToAgent({ type: "LOAD_DATA", params: e  })
 
   const agentState: any = useSelector(agentRef, (state) => state)
   const agentContext = agentState?.context
@@ -91,6 +89,7 @@ export const useJsonAgent = () => {
 
   const data = agentContext?.data
   const engine = agentContext?.engine
+
 
   return {
     agentRef,

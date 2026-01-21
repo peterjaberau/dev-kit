@@ -1,12 +1,13 @@
 "use client"
 import { chakra, Button, Heading, Stack, Card, Wrap } from "@chakra-ui/react"
 import React from "react"
-import { useJsonAgent, useJsonView } from "../actors"
+import { useJsonAgent, useJsonView, useLocalstorage } from "../actors"
 import { data as dataToLoad } from "../data"
 
 
 export function JsonRequest() {
   const { sendLoadDataEvent } = useJsonAgent()
+  const { sendToLocalStorage } = useLocalstorage()
   const { sendIndentSetter, current: currentView  } = useJsonView()
 
   return (
@@ -18,7 +19,7 @@ export function JsonRequest() {
         <Card.Body>
           <Wrap>
             <Button onClick={() => sendLoadDataEvent(dataToLoad)} size="sm" variant={"outline"}>
-              LOAD DATA
+              Load data
             </Button>
           </Wrap>
         </Card.Body>
@@ -27,6 +28,19 @@ export function JsonRequest() {
       <Card.Root size={"sm"}>
         <Card.Header>
           <Card.Title>View</Card.Title>
+        </Card.Header>
+        <Card.Body>
+          <Wrap>
+            <Button onClick={() => sendIndentSetter(currentView.preferences?.indent !==2 ? 2 : 4)} size="sm" variant={"outline"}>
+              Set Indent
+            </Button>
+          </Wrap>
+        </Card.Body>
+      </Card.Root>
+
+      <Card.Root size={"sm"}>
+        <Card.Header>
+          <Card.Title>Local Storage</Card.Title>
         </Card.Header>
         <Card.Body>
           <Wrap>
