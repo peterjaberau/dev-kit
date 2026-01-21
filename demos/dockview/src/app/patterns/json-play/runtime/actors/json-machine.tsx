@@ -1,8 +1,8 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { jsonAgentMachine } from "./json-agent-machine"
+import { jsonViewMachine } from "./json-view-machine"
 import { createActorContext, useSelector } from "@xstate/react"
 import React from "react"
-import { MenuContext } from "#adaptive-menu/menu-provider"
 
 export const jsonMachine = setup({
   types: {
@@ -11,7 +11,7 @@ export const jsonMachine = setup({
   } as any,
   actions: {
     spawnAgent: assign(({ context, spawn }) => {
-      context.refs.jsonAgent = spawn("jsonAgentMachine", {
+      context.refs.agent = spawn("jsonAgentMachine", {
         id: "json-agent",
         systemId: "json-agent",
         input: {
@@ -20,9 +20,22 @@ export const jsonMachine = setup({
         },
       })
     }),
+    spawnView: assign(({ context, spawn }) => {
+      context.refs.view = spawn("jsonViewMachine", {
+        id: "json-view",
+        systemId: "json-view",
+        input: {
+          config: {
+            view: context.config?.view,
+            preferences: context.config?.preferences,
+          },
+        },
+      })
+    }),
   },
   actors: {
     jsonAgentMachine,
+    jsonViewMachine,
   },
   guards: {},
 }).createMachine({
@@ -34,6 +47,9 @@ export const jsonMachine = setup({
       data: input?.data,
       config: {
         view: input?.view,
+        preferences: {
+          indent: 2,
+        },
       },
       current: {
         view: null,
@@ -41,7 +57,8 @@ export const jsonMachine = setup({
     }
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
-    enqueue("spawnAgent")
+    enqueue("spawnAgent"),
+    enqueue("spawnView")
   }),
 })
 
