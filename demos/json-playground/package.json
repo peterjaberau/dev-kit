@@ -11,6 +11,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "react-rnd": "^10.5.2",
+    "react-use": "^17.6.0",
     "@cloudflare/workers-types": "^4.20251106.1",
     "@opennextjs/cloudflare": "^1.11.1",
     "@dev-kit/components": "workspace:*",
@@ -18,7 +20,8 @@
     "next": "^15.5.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "next-themes": "^0.4.6"
+    "next-themes": "^0.4.6",
+    "react-use-measure": "^2.1.7"
   },
   "devDependencies": {
     "wrangler": "^4.46.0",

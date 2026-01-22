@@ -1,4 +1,6 @@
 import { Provider as ChakraProvider } from "./provider"
+import "react18-json-view/src/style.css"
+import GlobalInspector from "#components/instances/inspector.global"
 import { Suspense } from "react"
 
 export default function RootLayout({
@@ -10,7 +12,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Suspense>
-            <ChakraProvider>{children}</ChakraProvider>
+            <ChakraProvider>{children}
+
+            <GlobalInspector />
+            </ChakraProvider>
         </Suspense>
       </body>
     </html>
