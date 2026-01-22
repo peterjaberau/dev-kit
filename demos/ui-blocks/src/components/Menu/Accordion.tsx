@@ -1,0 +1,112 @@
+import React, { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
+import { LuChevronRight as ChevronRight, LuChevronDown as ChevronDown } from "react-icons/lu"
+
+import { cn } from "#utils";
+import { createContext } from "@radix-ui/react-context";
+import { useControllableState } from "@radix-ui/react-use-controllable-state";
+
+import { Icon } from "@chakra-ui/react";
+import { ScopedProps } from "./Menu";
+import { menuIconStyles, menuItemStyles } from "./styles";
+
+/* -------------------------------------------------------------------------------------------------
+ * Accordion
+ * -----------------------------------------------------------------------------------------------*/
+
+const ACCORDION_NAME = "ActionMenuAccordion";
+
+type AccordionContextValue = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+const [AccordionProvider, useAccordionContext] = createContext<AccordionContextValue>(ACCORDION_NAME);
+
+interface AccordionProps {
+  children?: React.ReactNode;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+const Accordion: React.FC<AccordionProps> = (props: AccordionProps) => {
+  const { children, defaultOpen = false, onOpenChange } = props;
+  const [open, setOpen] = useControllableState({
+    prop: undefined,
+    defaultProp: defaultOpen,
+    onChange: onOpenChange,
+  });
+
+  return (
+    <AccordionProvider open={open} onOpenChange={setOpen}>
+      {children}
+    </AccordionProvider>
+  );
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * AccordionTrigger
+ * -----------------------------------------------------------------------------------------------*/
+
+type AccordionTriggerElement = ComponentRef<"div">;
+type AccordionTriggerProps = ComponentPropsWithoutRef<"div"> & {
+  total?: number;
+};
+
+const AccordionTrigger = forwardRef<AccordionTriggerElement, AccordionTriggerProps>(
+  (props: ScopedProps<AccordionTriggerProps>, forwardedRef) => {
+    const { __scopeActionMenu, className, children, ...triggerProps } = props;
+    const context = useAccordionContext(ACCORDION_NAME);
+
+    return (
+      <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={context.open}
+        {...triggerProps}
+        ref={forwardedRef}
+        className={cn(menuItemStyles(), className)}
+        onClick={(e) => {
+          e.stopPropagation()
+          context.onOpenChange(!context.open)
+          triggerProps.onClick?.(e)
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            context.onOpenChange(!context.open)
+          }
+        }}
+      >
+        {context.open ? <ChevronDown className={menuIconStyles()} /> : <ChevronRight className={menuIconStyles()} />}
+        {children}
+        {props.total !== undefined && <span className="text-(--moss-secondary-foreground)">{props.total}</span>}
+      </div>
+    )
+  }
+);
+
+/* -------------------------------------------------------------------------------------------------
+ * AccordionContent
+ * -----------------------------------------------------------------------------------------------*/
+
+type AccordionContentElement = ComponentRef<"div">;
+type AccordionContentProps = ComponentPropsWithoutRef<"div">;
+
+const AccordionContent = forwardRef<AccordionContentElement, AccordionContentProps>(
+  (props: ScopedProps<AccordionContentProps>, forwardedRef) => {
+    const { __scopeActionMenu, className, children, ...contentProps } = props;
+    const context = useAccordionContext(ACCORDION_NAME);
+
+    if (!context.open) return null;
+
+    return (
+      <div {...contentProps} ref={forwardedRef} className={className}>
+        {children}
+      </div>
+    );
+  }
+);
+
+export { Accordion, AccordionContent, AccordionTrigger };
+
+export type { AccordionContentProps, AccordionProps, AccordionTriggerProps };

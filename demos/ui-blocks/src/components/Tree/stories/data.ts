@@ -1,4 +1,47 @@
-const basicTreeData = {
+export const basic: any = [
+  {
+    id: "nWaVbDeTgN",
+    name: "folder2",
+    path: { raw: "folder2", segments: ["folder2"] },
+    class: "endpoint",
+    kind: "Dir",
+    protocol: null,
+    order: 2,
+    expanded: true,
+  },
+  {
+    id: "rSNBPqNP85",
+    name: "projecr2",
+    path: { raw: "projecr2", segments: ["projecr2"] },
+    class: "endpoint",
+    kind: "Item",
+    protocol: "Get",
+    order: 1,
+    expanded: false,
+  },
+  {
+    id: "c4SmicCvJ1",
+    name: "folder1",
+    path: { raw: "folder2/folder1", segments: ["folder2", "folder1"] },
+    class: "endpoint",
+    kind: "Dir",
+    protocol: null,
+    order: 1,
+    expanded: true,
+  },
+  {
+    id: "9yuHeSkl9N",
+    name: "file1",
+    path: { raw: "folder2/folder1/file1", segments: ["folder2", "folder1", "file1"] },
+    class: "endpoint",
+    kind: "Item",
+    protocol: "Get",
+    order: 1,
+    expanded: false,
+  },
+]
+
+export const basicTreeData = {
   0: {
     json: [
       {

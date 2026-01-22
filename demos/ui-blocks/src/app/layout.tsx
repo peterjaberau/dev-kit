@@ -1,4 +1,5 @@
 import "./globals.css"
+import "./theme.css"
 import { ReactScan } from "#components/react-scan"
 import { Provider as ChakraProvider } from "./provider"
 import { Suspense } from "react"
