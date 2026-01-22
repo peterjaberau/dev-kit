@@ -1,6 +1,18 @@
 import { setup, assign } from "xstate"
-import { useJson } from "#json-play/runtime/actors"
+import { useJson } from "../json-machine"
 import { useSelector } from "@xstate/react"
+export const mapFromEvent =
+  () =>
+  ({ event }) =>
+    event
+export const mapFromInput =
+  (selector) =>
+  ({ context }) =>
+    selector(context)
+export const mapFromContext =
+  (selector) =>
+  ({ context }) =>
+    selector(context)
 
 export const localStorageMachine = setup({
   actions: {
@@ -39,7 +51,6 @@ export const localStorageMachine = setup({
   },
 }).createMachine({
   context: ({ input }: any) => {
-
     return {
       appKey: input.appKey || "__json_play__",
       config: {},
@@ -62,19 +73,14 @@ export const localStorageMachine = setup({
     setItem: {
       actions: {
         type: "setItem",
-        params: ({ event }) => ({
-          key: event.key,
-          value: event.value,
-        }),
+        params: mapFromEvent(),
       },
     },
 
     getItem: {
       actions: {
         type: "getItem",
-        params: ({ event }) => ({
-          key: event.key,
-        }),
+        params: mapFromEvent(),
       },
     },
 
@@ -82,9 +88,7 @@ export const localStorageMachine = setup({
       actions: [
         {
           type: "removeItem",
-          params: ({ event }) => ({
-            key: event.key,
-          }),
+          params: ({ event }) => mapFromEvent(),
         },
         "persist",
       ],
@@ -107,8 +111,6 @@ export const useLocalstorage = () => {
 
   const sendTolocalStorage = localStorageRef?.send
 
-
-
   const config = localStorageContext?.config
   const current = localStorageContext?.current
 
@@ -129,4 +131,3 @@ export const useLocalstorage = () => {
     result,
   }
 }
-

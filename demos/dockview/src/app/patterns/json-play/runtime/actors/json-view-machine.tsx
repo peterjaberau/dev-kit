@@ -13,6 +13,16 @@ export const jsonViewMachine = setup({
       console.log(params, event)
       context.current.preferences.indent = params
     }),
+
+    loadPreferences: assign(({ context, event }: any, params: any) => {
+      const preferencesDefaults = context.config.preferences.indent
+      const savedPreferences = localStorage.getItem("preferences")
+      const parsedPreferences = JSON.parse(savedPreferences || "{}")
+      for (const [key, value] of Object.entries(preferencesDefaults)) {
+        if (!parsedPreferences[key]) parsedPreferences[key] = value
+      }
+      constext.stable.preferences = parsedPreferences
+    }),
   },
   actors: {},
   guards: {},
@@ -21,12 +31,32 @@ export const jsonViewMachine = setup({
   context: ({ input }: any) => {
     return {
       refs: {},
-      config: {
-        ...input?.config,
+      store: {
+        localStorage: {
+          indent: 2,
+        },
       },
+
+
+      config: {
+        preferences: {
+          indent: 2,
+        },
+      },
+
       current: {
         view: input?.config?.view,
         preferences: input?.config?.preferences,
+      },
+
+      stable: {
+        preferences: {
+          ident: 2,
+        },
+      },
+      unstable: {
+        preferences: {
+        },
       },
     }
   },
@@ -37,6 +67,9 @@ export const jsonViewMachine = setup({
           actions: [{ type: "indentPreferenceSetter", params: ({ event }) => event.params }],
         },
       },
+    },
+    localStorageSync: {
+      initial: "idle",
     },
   },
 })

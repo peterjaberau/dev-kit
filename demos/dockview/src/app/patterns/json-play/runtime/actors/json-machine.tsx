@@ -1,7 +1,7 @@
 import { assign, enqueueActions, setup } from "xstate"
 import { jsonAgentMachine } from "./json-agent-machine"
 import { jsonViewMachine } from "./json-view-machine"
-import { localStorageMachine } from "./machines/local-storage-machine"
+import { localStorageMachine } from "./machines"
 import { createActorContext, useSelector } from "@xstate/react"
 import React from "react"
 
