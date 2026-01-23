@@ -7,27 +7,26 @@ import {
   RequestView,
   ProcessView,
   ResponseView,
-  usePlayground,
-  useJsonManager,
-  useJsonViews,
-  useJsonOperations,
+  // usePlayground,
+  // useJsonManager,
+  // useJsonViews,
+  // useJsonOperations,
 } from "./app"
 
 export default function Page() {
-  const params = useParams()
-  const paramValue = params.name as string
+
   return (
     <Playground.Root>
       <SimpleGrid columns={10} px={6} gap={10} h={"full"}>
-        <GridItem colSpan={2}>
-          <ResponseView />
+        <GridItem colSpan={3}>
+          <RequestView />
         </GridItem>
 
         <GridItem colSpan={5}>
           <ProcessView />
         </GridItem>
 
-        <GridItem colSpan={3}>
+        <GridItem colSpan={2}>
           <ResponseView />
         </GridItem>
       </SimpleGrid>

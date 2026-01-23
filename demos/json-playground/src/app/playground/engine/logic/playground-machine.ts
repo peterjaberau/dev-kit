@@ -1,5 +1,10 @@
-import { setup, assign, enqueueActions } from "xstate"
-import { jsonManagerMachine, jsonViewsMachine, jsonOperationsMachine} from './agents'
+import { setup, assign, enqueueActions, fromPromise } from "xstate"
+import {
+  jsonManagerMachine,
+  jsonViewsMachine,
+  jsonOperationsMachine ,
+} from "./agents"
+import { getConfigDefaultsOperation } from '../operations'
 
 export const playgroundMachine = setup({
   types: {
@@ -8,38 +13,55 @@ export const playgroundMachine = setup({
   } as any,
   actions: {
     jsonManager: assign(({ context, spawn }: any) => {
-      context.refs.agent = spawn("jsonManagerMachine", {
+      context.refs.jsonManager = spawn("jsonManagerMachine", {
         id: "json-manager",
         systemId: "json-manager",
-        input: {
-          data: context?.data,
-          config: {},
-        },
+        input: {},
       })
     }),
     jsonViews: assign(({ context, spawn }) => {
-      context.refs.view = spawn("jsonViewsMachine", {
+      context.refs.jsonViews = spawn("jsonViewsMachine", {
         id: "json-views",
         systemId: "json-views",
         input: {},
       })
     }),
     jsonOperations: assign(({ context, spawn }) => {
-      context.refs.localStorage = spawn("jsonOperationsMachine", {
+      context.refs.jsonOperations = spawn("jsonOperationsMachine", {
         id: "json-operations",
         systemId: "json-operations",
-        input: {
-        },
+        input: {},
       })
+    }),
+
+    initiatePlayground: assign(({ context, event }: any, params: any) => {
+      const { config } = params?.config
+      return {
+        ...context,
+        current: {
+          ...context.current,
+          view: event.view || null,
+        },
+      }
+    }),
+
+    persistConfigDefaults: assign(({ context, event }: any, params: any) => {
+      console.log("persistConfigDefaults---", {
+        event,
+        params,
+      })
+      // context.data = params
     }),
   },
   actors: {
     jsonManagerMachine,
     jsonViewsMachine,
     jsonOperationsMachine,
+    getConfigDefaultsOperation,
   },
   guards: {},
 }).createMachine({
+  initial: "waitingForInitiation",
   context: ({ input }: any) => {
     return {
       refs: {
@@ -47,16 +69,14 @@ export const playgroundMachine = setup({
         jsonViews: null,
         jsonOperations: null,
       },
-      data: input?.data,
-      plugins: {
-        localStorage: { appKey: "__json_play__" },
-      },
       config: {
-        view: input?.view,
-
-        preferences: {
-          indent: 2,
-        },
+        global: input?.config?.global,
+        store: input?.config?.store,
+        jsonViews: input?.config?.jsonViews,
+        jsonDoc: input?.config?.jsonDoc,
+        jsonSearch: input?.config?.jsonSearch,
+        jsonColumnView: input?.config?.jsonColumnView,
+        jsonTree: input?.config?.jsonTree,
       },
       current: {
         view: null,
@@ -68,4 +88,38 @@ export const playgroundMachine = setup({
     enqueue("jsonViews")
     enqueue("jsonOperations")
   }),
+  states: {
+    waitingForInitiation: {
+      on: {
+        "playground.initiate": {
+          target: "initiating",
+        },
+      },
+    },
+    initiating: {
+      invoke: {
+        src: "getConfigDefaultsOperation",
+        // input: ({ context, event }: any) => {
+        //   return event.params
+        // },
+        onDone: {
+          target: "idle",
+          actions: [
+            {
+              type: "persistConfigDefaults",
+              params: ({ event }: any) => {
+                return event.output
+              },
+            },
+          ],
+        },
+        onError: {
+          target: "idle",
+        },
+      },
+    },
+    idle: {
+      on: {},
+    },
+  },
 })

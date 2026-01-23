@@ -30,7 +30,7 @@ export const Root = ({
   const inspectHandler = (e: any) => console.log(`[INSPECT ${title}]----->`, inspect)
 
   return (
-    <Card.Root data-layer='adaptive-card' size={"sm"} h={"full"} w={"full"} css={{...css}} {...rest}>
+    <Card.Root data-layer="adaptive-card" size={"sm"} h={"full"} w={"full"} css={{ ...css }} {...rest}>
       <Card.Header borderBottom={"1px solid"} borderBottomColor={"border"} pb={3}>
         <HStack>
           <HStack flex={1}>
@@ -49,7 +49,7 @@ export const Root = ({
           )}
         </HStack>
       </Card.Header>
-      <Card.Body p={0} pt={6} backgroundColor={"bg.subtle"}>
+      <Card.Body p={0}   backgroundColor={"bg.subtle"}>
         <Flex
           css={{
             height: 0,
@@ -57,7 +57,7 @@ export const Root = ({
             flexGrow: 1,
           }}
         >
-          <ScrollArea>{children}</ScrollArea>
+          <ScrollArea p={4}>{children}</ScrollArea>
         </Flex>
       </Card.Body>
       <Card.Footer>
