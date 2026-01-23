@@ -1,5 +1,30 @@
 import { createActorContext, useSelector } from "@xstate/react"
-import { playgroundMachine, jsonManagerMachine, jsonOperationsMachine, jsonViewsMachine } from "../engine"
+import { createBrowserInspector } from "@statelyai/inspect"
+
+import { playgroundMachine } from "../engine"
+import { useEffect } from "react"
+
+const inspector = createBrowserInspector({
+  autoStart: false,
+})
+
+const InspectorBridge = () => {
+  const playgroundRef = PlaygroundContext.useActorRef()
+
+  const inspectionEnabled = useSelector(
+    playgroundRef,
+    (state: any) => state.context.config.inspector.enable
+  )
+
+  useEffect(() => {
+    if (inspectionEnabled) inspector.start()
+    else inspector.stop()
+
+    return () => inspector.stop()
+  }, [inspectionEnabled])
+
+  return null
+}
 
 export const PlaygroundContext = createActorContext(playgroundMachine)
 
@@ -9,98 +34,19 @@ export const PlaygroundProvider = (props: any) => {
     <PlaygroundContext.Provider
       options={{
         input: {
-          data: data,
-          views: views,
+          // data: data,
+          // views: views,
           ...rest,
         },
+        inspect: inspector.inspect
       }}
     >
+      <InspectorBridge />
       {children}
     </PlaygroundContext.Provider>
   )
 }
 
-export const usePlayground = () => {
-  const playgroundRef: any = PlaygroundContext.useActorRef()
-  const playgroundId = playgroundRef?.id
 
-  const sendToPlayground = playgroundRef.send
-  const playgroundState: any = useSelector(playgroundRef, (state: any) => state)
-  const playgroundContext = playgroundState.context
 
-  const jsonManagerRef = playgroundRef?.refs?.manager
-  const jsonViewsRef = playgroundRef?.refs?.views
-  const jsonOperationsRef = playgroundRef?.refs?.manager
 
-  return {
-    playgroundRef,
-    playgroundId,
-
-    sendToPlayground,
-    playgroundState,
-    playgroundContext,
-
-    jsonManagerRef,
-    jsonViewsRef,
-    jsonOperationsRef,
-  }
-}
-
-export const useJsonManager = () => {
-  const { playgroundContext } = usePlayground()
-  const jsonManagerRef = playgroundContext?.refs?.jsonManager
-  const jsonManagerId = jsonManagerRef?.id
-
-  const sendToJsonManager = jsonManagerRef?.send
-
-  const jsonManagerState: any = useSelector(jsonManagerRef, (state) => state)
-  const jsonManagerContext = jsonManagerState?.context
-
-  return {
-    jsonManagerRef,
-    jsonManagerId,
-    sendToJsonManager,
-    jsonManagerState,
-    jsonManagerContext,
-  }
-}
-
-export const useJsonViews = () => {
-  const { playgroundContext } = usePlayground()
-  const jsonViewsRef = playgroundContext?.refs?.jsonViews
-  const jsonViewsId = jsonViewsRef?.id
-
-  const sendToJsonViews = jsonViewsRef?.send
-
-  const jsonViewsState: any = useSelector(jsonViewsRef, (state) => state)
-  const jsonViewsContext = jsonViewsState?.context
-
-  return {
-    jsonViewsRef,
-    jsonViewsId,
-
-    sendToJsonViews,
-    jsonViewsState,
-    jsonViewsContext,
-  }
-}
-
-export const useJsonOperations = () => {
-  const { playgroundContext } = usePlayground()
-  const jsonOperationsRef = playgroundContext?.refs?.jsonOperations
-  const jsonOperationsId = jsonOperationsRef?.id
-
-  const sendToJsonOperations = jsonOperationsRef?.send
-
-  const jsonOperationsState: any = useSelector(jsonOperationsRef, (state) => state)
-  const jsonOperationsContext = jsonOperationsState?.context
-
-  return {
-    jsonOperationsRef,
-    jsonOperationsId,
-
-    sendToJsonOperations,
-    jsonOperationsState,
-    jsonOperationsContext,
-  }
-}

@@ -1,5 +1,5 @@
 export * as Playground from "./namespace"
 
-export { PlaygroundProvider, usePlayground, useJsonManager, useJsonViews, useJsonOperations } from "./providers"
-
+export { PlaygroundProvider } from "./providers"
+export { usePlayground, useJsonManager, useJsonViews, useJsonOperations } from "./hooks"
 export * from './views'

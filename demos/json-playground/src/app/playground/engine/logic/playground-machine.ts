@@ -34,23 +34,19 @@ export const playgroundMachine = setup({
       })
     }),
 
-    initiatePlayground: assign(({ context, event }: any, params: any) => {
-      const { config } = params?.config
-      return {
-        ...context,
-        current: {
-          ...context.current,
-          view: event.view || null,
-        },
-      }
-    }),
-
     persistConfigDefaults: assign(({ context, event }: any, params: any) => {
-      console.log("persistConfigDefaults---", {
-        event,
-        params,
-      })
-      // context.data = params
+      const { global, store, jsonViews, jsonDoc, jsonSearch, jsonColumnView, jsonTree } = params
+
+      context.config = {
+        ...context.config,
+        global: global?.defaults,
+        store: store?.defaults,
+        jsonViews: jsonViews?.defaults,
+        jsonDoc: jsonDoc?.defaults,
+        jsonSearch: jsonSearch?.defaults,
+        jsonColumnView: jsonColumnView?.defaults,
+        jsonTree: jsonTree?.defaults,
+      }
     }),
   },
   actors: {
@@ -71,6 +67,9 @@ export const playgroundMachine = setup({
       },
       config: {
         global: input?.config?.global,
+        inspector: {
+          enable: input?.config?.inspector?.defaults?.enable || false,
+        },
         store: input?.config?.store,
         jsonViews: input?.config?.jsonViews,
         jsonDoc: input?.config?.jsonDoc,
@@ -78,10 +77,12 @@ export const playgroundMachine = setup({
         jsonColumnView: input?.config?.jsonColumnView,
         jsonTree: input?.config?.jsonTree,
       },
-      current: {
-        view: null,
-      },
+
     }
+  },
+  on: {
+    "inspection.on": { actions: assign(({ context }) => (context.config.inspector.enable = true)) },
+    "inspection.off": { actions: assign(({ context }) => (context.config.inspector.enable = false)) },
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
     enqueue("jsonManager")
@@ -119,7 +120,9 @@ export const playgroundMachine = setup({
       },
     },
     idle: {
-      on: {},
+      on: {
+        "playground.reset": {}
+      },
     },
   },
 })

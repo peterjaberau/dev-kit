@@ -22,6 +22,12 @@ export const config = {
       },
     },
   },
+  inspector: {
+    key: "inspector",
+    defaults: {
+      enable: false,
+    },
+  },
   store: {
     key: "store",
     defaults: {
