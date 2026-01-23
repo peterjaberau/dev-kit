@@ -13,7 +13,6 @@
   "dependencies": {
     "@react-aria/utils": "^3.32.0",
     "@react-aria/collections": "^3.0.1",
-    "@react-aria/utils": "^3.32.0",
     "react-aria": "^3.45.0",
     "react-aria-components": "^1.14.0",
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",

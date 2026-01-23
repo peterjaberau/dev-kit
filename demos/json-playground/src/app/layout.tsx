@@ -12,10 +12,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Suspense>
-            <ChakraProvider>{children}
+          <ChakraProvider>
+            {children}
 
-            <GlobalInspector />
-            </ChakraProvider>
+            {/*<GlobalInspector />*/}
+          </ChakraProvider>
         </Suspense>
       </body>
     </html>

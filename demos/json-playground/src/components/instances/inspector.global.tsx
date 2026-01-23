@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Inspector } from "#components/dev-tools/inspector"
+import { Inspector } from "#components/inspector"
 import JsonView from "react18-json-view"
 
 const GlobalInspectorImplt = () => {

@@ -1,0 +1,1 @@
+export * as AdaptiveCard from './namespace'

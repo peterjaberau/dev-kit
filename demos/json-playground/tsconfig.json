@@ -36,8 +36,14 @@
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
 
+      "#utils/*": ["./src/utils/*"],
+      "#utils": ["./src/utils/"],
+
       "#app/*": ["./src/app/*"],
-      "#app": ["./src/app"]
+      "#app": ["./src/app"],
+
+      "#playground/*": ["./src/app/playground/*"],
+      "#playground": ["./src/app/playground"]
     }
   },
   "include": [
