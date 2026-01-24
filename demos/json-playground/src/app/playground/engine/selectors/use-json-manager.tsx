@@ -11,11 +11,20 @@ export const useJsonManager = () => {
   const jsonManagerState: any = useSelector(jsonManagerRef, (state) => state)
   const jsonManagerContext = jsonManagerState?.context
 
+  /** Fire events */
+  //  const fireInitiate = () => sendToPlayground({ type: "playground.initiate" })
+
+  const createDocFromJson = (params : any = { content: null, options: { readOnly: false }}) =>
+    sendToJsonManager({ type: "doc.create-from-json", params: params })
+
   return {
     jsonManagerRef,
     jsonManagerId,
-    sendToJsonManager,
+
     jsonManagerState,
     jsonManagerContext,
+
+    sendToJsonManager,
+    createDocFromJson,
   }
 }

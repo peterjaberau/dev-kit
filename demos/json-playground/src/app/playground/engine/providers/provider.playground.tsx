@@ -1,7 +1,7 @@
 import { createActorContext, useSelector } from "@xstate/react"
 import { createBrowserInspector } from "@statelyai/inspect"
 
-import { playgroundMachine } from "../engine"
+import { playgroundMachine } from "../machines"
 import { useEffect } from "react"
 
 const inspector = createBrowserInspector({

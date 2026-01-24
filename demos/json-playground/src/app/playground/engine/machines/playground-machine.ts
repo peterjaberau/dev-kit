@@ -1,10 +1,8 @@
 import { setup, assign, enqueueActions, fromPromise } from "xstate"
-import {
-  jsonManagerMachine,
-  jsonViewsMachine,
-  jsonOperationsMachine ,
-} from "./agents"
-import { getConfigDefaultsOperation } from '../operations'
+import { jsonManagerMachine } from "./json-manager-machine"
+import { jsonViewsMachine } from "./json-views-machine"
+import { jsonOperationsMachine } from "./json-operations-machine"
+import { getConfigDefaultsOperation } from "../helpers"
 
 export const playgroundMachine = setup({
   types: {
@@ -77,7 +75,6 @@ export const playgroundMachine = setup({
         jsonColumnView: input?.config?.jsonColumnView,
         jsonTree: input?.config?.jsonTree,
       },
-
     }
   },
   on: {
@@ -121,7 +118,7 @@ export const playgroundMachine = setup({
     },
     idle: {
       on: {
-        "playground.reset": {}
+        "playground.reset": {},
       },
     },
   },

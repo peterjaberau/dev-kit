@@ -1,5 +1,5 @@
 import { forwardRef } from "react"
-import { PlaygroundProvider } from "./providers"
+import { PlaygroundProvider } from "../engine"
 
 const RootImpl = (props: any, ref: React.Ref<HTMLDivElement | any>) => {
   const { children, input, ...rest } = props

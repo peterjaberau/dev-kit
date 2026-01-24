@@ -1,7 +1,7 @@
 'use client'
 import { AdaptiveCard } from "#components/adaptive/adaptive-card"
 import JsonView from "react18-json-view"
-import { usePlayground, useJsonManager, useJsonViews, useJsonOperations } from ".."
+import { usePlayground, useJsonManager, useJsonViews, useJsonOperations } from "../../engine"
 
 export const ResponseView = ({ children }: any) => {
   const { playgroundContext } = usePlayground()
