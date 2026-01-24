@@ -25,21 +25,52 @@ export const createRandomId = () => {
  * - Parsed     → computation / runtime
  */
 
-/** return true if value is parsed JSON object otherwise return false */
-export const isParsedJson = (value: any) =>
-  value !== null && typeof value === "object" && (Array.isArray(value) || value.constructor === Object)
+export const isJsonPrimitive = (value: any) =>
+  value === null ||
+  typeof value === "string" ||
+  typeof value === "number" ||
+  typeof value === "boolean"
 
-/** return true if value is JSON string object otherwise return false */
+/**
+ * Check if value is already a parsed JSON object or array
+ *
+ * FROM: { "a": 1 }        → true
+ * FROM: [1, 2]            → true
+ * FROM: '{"a":1}'         → false
+ * FROM: "text"            → false
+ */
+export const isParsedJson = (value: any) =>
+  value !== null &&
+  typeof value === "object" &&
+  (Array.isArray(value) || value.constructor === Object)
+
+/**
+ * Check if value is a string (not necessarily valid JSON)
+ *
+ * FROM: '{"a":1}' → true
+ * FROM: "hello"   → true
+ * FROM: { a: 1 }  → false
+ */
 export const isJsonString = (value: any) => typeof value === "string"
 
-/** return parsed json either if the input is a string or not, otherwise returns null */
+/**
+ * Parse input into a JSON object/array if possible
+ *
+ * FROM: '{"a":1}'     → { a: 1 }
+ * FROM: { a: 1 }      → { a: 1 }
+ * FROM: "hello"       → null
+ * FROM: 123           → null
+ */
 export const makeParsedJson = (input: any) => {
+
+  if (isJsonPrimitive(input)) return input
+
   if (isParsedJson(input)) return input
 
   if (isJsonString(input)) {
     try {
       const parsed = JSON.parse(input)
-      return isParsedJson(parsed) ? parsed : null
+      return isParsedJson(parsed) || isJsonPrimitive(parsed) ? parsed : null
     } catch {
       return null
     }
@@ -48,15 +79,38 @@ export const makeParsedJson = (input: any) => {
   return null
 }
 
-/** return string json but not beautified. the input could be parsed then stringify, if string then return the input as it */
+/**
+ * Return a fully minified JSON string (no whitespace)
+ *
+ * FROM: { a: 1 }              → '{"a":1}'
+ * FROM: '{ "a": 1 }'          → '{"a":1}'
+ */
 export const makeMinifiedJson = (input: any) => {
   const parsed = makeParsedJson(input)
   if (!parsed) return null
   return JSON.stringify(parsed)
 }
 
-/** return string beautified json. the input could be js object or string. either ways it should return responses beautified default ident = 2.
- * friendly: frme makeFriendlyJson, default indent=2
+/**
+ * Return a canonical JSON STRING representation
+ * (same output as minified, different semantic intent)
+ *
+ * FROM: { a: 1 }              → '{"a":1}'
+ * FROM: '{ "a": 1 }'          → '{"a":1}'
+ */
+export const makeStringJson = (input: any) => {
+  const parsed = makeParsedJson(input)
+  if (!parsed) return null
+  return JSON.stringify(parsed)
+}
+
+/**
+ * Return human-friendly (pretty-printed) JSON
+ *
+ * FROM: { a: 1 } →
+ * {
+ *   "a": 1
+ * }
  */
 export const makeFriendlyJson = (input: any, options = { indent: 2 }) => {
   const parsed = makeParsedJson(input)
@@ -64,156 +118,45 @@ export const makeFriendlyJson = (input: any, options = { indent: 2 }) => {
   return JSON.stringify(parsed, null, options.indent)
 }
 
-/** return string beautified json. the input could be js object or string. either ways it should return responses.
- * parsed: from makeParsedJson
- * minified: from makeMinifiedJson
- * friendly: frme makeFriendlyJson, default indent=2
+/**
+ * Return compacted JSON (single line, readable spacing)
+ *
+ * FROM: { a: 1, b: 2 } →
+ * '{ "a": 1, "b": 2 }'
  */
-export const makePresentationJson = (input: any, options = { indent: 2 }) => {
+export const makeCompactedJson = (input: any) => {
+  const parsed = makeParsedJson(input)
+  if (!parsed) return null
+
+  return JSON.stringify(parsed)
+    .replace(/:/g, ": ")
+    .replace(/,/g, ", ")
+}
+
+/**
+ * Return all common JSON representations at once
+ *
+ * FROM: { a: 1 } →
+ * {
+ *   parsed:   { a: 1 },
+ *   string:   '{"a":1}',
+ *   minified: '{"a":1}',
+ *   compacted:'{ "a": 1 }',
+ *   friendly: '{\n  "a": 1\n}'
+ * }
+ */
+export const makeJsonPresentation = (input: any, options = { indent: 2 }) => {
   const parsed = makeParsedJson(input)
   if (!parsed) return null
 
   return {
     parsed,
-    serialized: JSON.stringify(parsed),
+    string: makeStringJson(parsed),
+    minified: makeMinifiedJson(parsed),
+    compacted: makeCompactedJson(parsed),
     friendly: makeFriendlyJson(parsed, options),
   }
 }
 
 export const canParseJson = (value: any): boolean => makeParsedJson(value) !== null
 
-export function stabilizeJsonStructure(json: unknown, keyOrder: string[] = []): unknown {
-  /**
-   * CASE 1 — Array of objects with a shared shape
-   * This block applies ONLY when:
-   * - json is an array
-   * - array is not empty
-   * - every item is a non-null object
-   *
-   * Use case:
-   * API responses, database rows, table-like JSON
-   *
-   * FROM:
-   * [
-   *   { id: 1, name: "A" },
-   *   { name: "B", id: 2 }
-   * ]
-   *
-   * (Second object matches the first object’s shape but key order differs)
-   *
-   * TO:
-   * [
-   *   { id: 1, name: "A" },
-   *   { id: 2, name: "B" }
-   * ]
-   *
-   * (Key order is derived from the FIRST element and applied to all)
-   */
-  if (Array.isArray(json) && json.length > 0 && json.every((c) => typeof c === "object" && c !== null)) {
-    const keyOrder = Object.keys(json[0])
-    return json.map((c) => stabilizeJsonStructure(c, keyOrder))
-  }
-
-  /**
-   * CASE 2 — Array without a uniform object schema
-   * This block applies when:
-   * - json is an array
-   * - BUT elements are primitives or mixed types
-   *
-   * Use case:
-   * lists, mixed payloads, partial JSON data
-   *
-   * FROM:
-   * [1, { b: 2, a: 1 }]
-   *
-   * (No consistent object schema to infer ordering from)
-   *
-   * TO:
-   * [1, { b: 2, a: 1 }]
-   *
-   * (Array order preserved; objects are NOT reordered)
-   */
-  if (Array.isArray(json)) {
-    return json.map((c) => stabilizeJsonStructure(c))
-  }
-
-  /**
-   * CASE 3 — Object with an inherited key order
-   * This block applies when:
-   * - json is an object
-   * - keyOrder was passed down from CASE 1
-   *
-   * Use case:
-   * individual items inside an array of objects
-   *
-   * keyOrder: ["id", "name"]
-   *
-   * FROM:
-   * { name: "B", id: 2 }
-   *
-   * (Same object shape as others, but unordered keys)
-   *
-   * TO:
-   * { id: 2, name: "B" }
-   *
-   * (Keys reordered to match the array’s canonical schema)
-   */
-  if (typeof json === "object" && json !== null && keyOrder.length > 0) {
-    const keys = Object.keys(json)
-    const sortedKeys = keys.sort((a, b) => {
-      const aIndex = keyOrder.indexOf(a)
-      const bIndex = keyOrder.indexOf(b)
-
-      if (aIndex === -1 || bIndex === -1) {
-        return 0
-      }
-
-      return aIndex - bIndex
-    })
-    const result = {} as Record<string, unknown>
-    for (const key of sortedKeys) {
-      result[key] = stabilizeJsonStructure((json as Record<string, unknown>)[key])
-    }
-    return result
-  }
-
-  /**
-   * CASE 4 — Standalone or nested object without schema context
-   * This block applies when:
-   * - json is an object
-   * - BUT no keyOrder is available
-   *
-   * Use case:
-   * configuration objects, nested maps, arbitrary JSON
-   *
-   * FROM:
-   * { b: 2, a: { y: 2, x: 1 } }
-   *
-   * (No external reference to determine preferred key order)
-   *
-   * TO:
-   * { b: 2, a: { y: 2, x: 1 } }
-   *
-   * (Key order preserved; recursion only stabilizes children)
-   */
-  if (typeof json === "object" && json !== null) {
-    const result = {} as Record<string, unknown>
-    for (const key of Object.keys(json)) {
-      result[key] = stabilizeJsonStructure((json as Record<string, unknown>)[key])
-    }
-    return result
-  }
-
-  /**
-   * CASE 5 — Primitive JSON values
-   * This block applies when:
-   * - json is a primitive (string, number, boolean, null)
-   *
-   * Use case:
-   * leaf values in any JSON structure
-   *
-   * FROM: "text", 123, true, null
-   * TO:   "text", 123, true, null
-   */
-  return json
-}

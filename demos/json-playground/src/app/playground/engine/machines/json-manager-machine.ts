@@ -1,5 +1,5 @@
 import { fromPromise, setup, assign, enqueueActions, fromCallback } from "xstate"
-import { createDocFromJson } from "../helpers"
+import { makeDocFromJson, makeJsonPresentation, makeStabeJson } from "../helpers"
 
 export const jsonManagerMachine = setup({
   actions: {
@@ -9,18 +9,30 @@ export const jsonManagerMachine = setup({
         preferences: context.config.preferences,
       }
     }),
-
     rawJsonPersist: assign(({ context, event }: any) => {
       context.source.jsonRaw = event?.params?.content
     }),
-
     persistDoc: assign(({ context, event }: any, params: any) => {
-      console.log('---persistDoc---', params)
+      console.log("---persistDoc---", params)
       context.execution.jsonDoc = params
+    }),
+
+    persistStableJsonHander: assign(({ context, event }: any, params: any) => {
+      context.execution.jsonStablized = params
+    }),
+
+    jsonPresentationHandler: assign(({ context, event }: any, params: any) => {
+      context.execution.jsonPresentation = makeJsonPresentation(
+        context?.execution?.jsonDoc?.content,
+        context?.execution?.preferences?.indent,
+      )
     }),
   },
   actors: {
-    createDocFromJson: fromPromise(async ({ input }) => await createDocFromJson(input)),
+    makeDocFromJson: fromPromise(async ({ input }) => await makeDocFromJson(input)),
+    makeStabeJson: fromPromise(({ input }) => {
+      return makeStabeJson(input)
+    }),
   },
   guards: {},
 }).createMachine({
@@ -47,11 +59,14 @@ export const jsonManagerMachine = setup({
       execution: {
         jsonDoc: null,
         preferences: null,
-        json: {
-          serialized: null,
-
-          stable: null,
+        jsonPresentation: {
+          parsed: null,
+          string: null,
+          minified: null,
+          compacted: null,
+          friendly: null,
         },
+        jsonStablized: null,
       },
     }
   },
@@ -59,16 +74,21 @@ export const jsonManagerMachine = setup({
   states: {
     idle: {
       on: {
-        "doc.create-from-json": {
-          target: "creatingDocFromJson",
+        "doc.make-from-json": {
+          target: "makingDocFromJson",
         },
-        // "json.stablize": {},
+        "json.make-presentation": {
+          actions: ["jsonPresentationHandler"],
+        },
+        "json.make-stable": {
+          target: "makingJsonStable",
+        },
       },
     },
-    creatingDocFromJson: {
+    makingDocFromJson: {
       entry: ["rawJsonPersist"],
       invoke: {
-        src: "createDocFromJson",
+        src: "makeDocFromJson",
         input: ({ context, event }: any) => {
           return {
             ...context?.config?.jsonDoc,
@@ -96,20 +116,20 @@ export const jsonManagerMachine = setup({
         },
       },
     },
-    stablizingJson: {
+    makingJsonStable: {
       invoke: {
-        src: "createDocFromJson",
+        src: "makeStabeJson",
         input: ({ context, event }: any) => {
           return {
-            ...context?.config?.jsonDoc,
-            content: context?.source?.jsonRaw,
+            json: context?.execution?.jsonPresentation?.parsed,
+            keyOrder: [],
           }
         },
         onDone: {
           target: "idle",
           actions: [
             {
-              type: "persistDoc",
+              type: "persistStableJsonHander",
               params: ({ event }: any) => {
                 return event.output
               },
@@ -120,7 +140,7 @@ export const jsonManagerMachine = setup({
           target: "idle",
           actions: [
             ({ context, event }) => {
-              console.error("Error creating doc from JSON:", event)
+              console.error("Error", event)
             },
           ],
         },
