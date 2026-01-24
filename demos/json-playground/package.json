@@ -11,6 +11,15 @@
     "start": "next start"
   },
   "dependencies": {
+    "@js-temporal/polyfill": "^0.5.1",
+    "json-source-map": "^0.6.1",
+    "@xmldom/xmldom": "^0.8.11",
+    "@jsonhero/fuzzy-json-search": "^0.2.2",
+    "@jsonhero/json-infer-types": "^1.2.11",
+    "@jsonhero/json-schema-fns": "^0.0.1",
+    "@jsonhero/path": "^1.0.21",
+    "@jsonhero/schema-infer": "^0.1.5",
+    "@swan-io/boxed": "^3.2.1",
     "nanoid": "^5.1.6",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
