@@ -1,13 +1,13 @@
-const STORAGE_KEY = "__documents__"
+const DOCUMENT_STORAGE_KEY = "__documents__"
 
 export const documentStore = {
   load() {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(DOCUMENT_STORAGE_KEY)
     return raw ? JSON.parse(raw) : {}
   },
 
   save(store: any) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(store))
+    localStorage.setItem(DOCUMENT_STORAGE_KEY, JSON.stringify(store))
   },
 
   get(id: any) {
@@ -38,3 +38,4 @@ export const documentStore = {
     this.save(store)
   },
 }
+

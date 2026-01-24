@@ -19,11 +19,9 @@ const theme = createSystem(themeConfig);
 export const Provider = (props: { children: React.ReactNode }) => {
   return (
       <ChakraProvider value={theme}>
-        <ThemeProvider attribute='class' disableTransitionOnChange>
-          <ActorsApp>
-          {props.children}
-          </ActorsApp>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ActorsApp>{props.children}</ActorsApp>
         </ThemeProvider>
       </ChakraProvider>
-  );
+  )
 };

@@ -9,8 +9,7 @@ export function createId() {
   return nanoid()
 }
 
-
-export function isUrl(value: string) {
+export function isUrl(value: any) {
   try {
     new URL(value)
     return true
@@ -19,7 +18,7 @@ export function isUrl(value: string) {
   }
 }
 
-export function isJSON(value: string) {
+export function isJSON(value: any) {
   try {
     JSON.parse(value)
     return true

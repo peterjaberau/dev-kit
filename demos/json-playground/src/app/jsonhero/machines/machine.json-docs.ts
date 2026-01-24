@@ -1,12 +1,11 @@
 import { setup, assign, fromPromise } from "xstate"
-import { customRandom } from "nanoid"
 import safeFetch from "../utilities/safeFetch"
-import createFromRawXml from "../utilities/xml/createFromRawXml"
-import isXML from "../utilities/xml/isXML"
-import { documentStore } from "./json-doc-store"
+// import createFromRawXml from "../utilities/xml/createFromRawXml"
+// import isXML from "../utilities/xml/isXML"
+import { documentStore } from "./store"
 import { createId, isJSON, isUrl } from "./utils"
 
-export const jsonDocMachine = setup({
+export const jsonDocsMachine = setup({
   actions: {
     clearError: assign({ error: null }),
 
@@ -73,9 +72,9 @@ export const jsonDocMachine = setup({
         })
       }
 
-      if (isXML(urlOrJson)) {
-        return createFromRawXml("Untitled", urlOrJson)
-      }
+      // if (isXML(urlOrJson)) {
+      //   return createFromRawXml("Untitled", urlOrJson)
+      // }
     }),
 
     getDocumentActor: fromPromise(async ({ input }: any) => {
@@ -98,7 +97,6 @@ export const jsonDocMachine = setup({
     }),
   },
 }).createMachine({
-  id: "documents",
   initial: "idle",
 
   context: {
