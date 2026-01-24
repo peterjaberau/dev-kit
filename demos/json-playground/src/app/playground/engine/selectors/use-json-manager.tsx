@@ -15,7 +15,12 @@ export const useJsonManager = () => {
   //  const fireInitiate = () => sendToPlayground({ type: "playground.initiate" })
 
   const createDocFromJson = (params : any = { content: null, options: { readOnly: false }}) =>
-    sendToJsonManager({ type: "doc.create-from-json", params: params })
+    sendToJsonManager({ type: "doc.make-from-json", params: params })
+
+  const makeJsonPresentation = () =>
+    sendToJsonManager({ type: "json.make-presentation" })
+
+  const makeJsonStable = () => sendToJsonManager({ type: "json.make-stable" })
 
   return {
     jsonManagerRef,
@@ -26,5 +31,7 @@ export const useJsonManager = () => {
 
     sendToJsonManager,
     createDocFromJson,
+    makeJsonPresentation,
+    makeJsonStable,
   }
 }

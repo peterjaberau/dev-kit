@@ -20,7 +20,7 @@ const CardSection = ({ title, children }: any) => {
 
 export const RequestView = ({ children }: any) => {
   const { isInspectorEnabled, enableInspection, disableInspection, fireInitiate } = usePlayground()
-  const { createDocFromJson  } = useJsonManager()
+  const { createDocFromJson, makeJsonPresentation, makeJsonStable  } = useJsonManager()
   return (
     <AdaptiveCard.Root
       actions={[
@@ -39,11 +39,33 @@ export const RequestView = ({ children }: any) => {
           </Button>
         </CardSection>
         <CardSection title={"Json Manager"}>
-          <Button size={"xs"} variant={"solid"} onClick={() => {
-            // console.log("----rawJsonData.xstateOpenapi---, ", rawJsonData.xstateOpenapi)
-            createDocFromJson({ content: rawJsonData.xstateOpenapi })
-          }}>
+          <Button
+            size={"xs"}
+            variant={"solid"}
+            onClick={() => {
+              createDocFromJson({ content: rawJsonData.xstateOpenapi })
+            }}
+          >
             Create Doc from Raw JSON
+          </Button>
+          <Button
+            size={"xs"}
+            variant={"solid"}
+            onClick={() => {
+              makeJsonPresentation()
+            }}
+          >
+            Make JSON Presentation
+          </Button>
+
+          <Button
+            size={"xs"}
+            variant={"solid"}
+            onClick={() => {
+              makeJsonStable()
+            }}
+          >
+            Make JSON Stable
           </Button>
         </CardSection>
       </Stack>
