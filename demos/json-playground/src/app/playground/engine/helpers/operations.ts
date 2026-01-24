@@ -1,4 +1,7 @@
 import { fromPromise } from "xstate"
+import { Schema } from "@jsonhero/json-schema-fns";
+import { inferSchema } from "@jsonhero/schema-infer";
+import { makeParsedJson } from './functions'
 import { config as configDefaults } from "../../store"
 import { createRandomId } from "./functions"
 import { stableJson } from "../utilities"
@@ -173,4 +176,19 @@ export const makeStabeJson: any = (input: any = {}) => {
    * TO:   "text", 123, true, null
    */
   return json
+}
+
+/** input: parsed JSON, basically the stable one and infer a JSON Schema from it */
+export const makeSchemaFromJson: any = (input: any) => {
+  const { json, includeSchema } = input
+
+
+  const result = inferSchema(json).toJSONSchema({ includeSchema })
+
+  console.log("--- makeSchemaFromJson ----", {
+    json,
+    result,
+  })
+
+  return inferSchema(json).toJSONSchema({ includeSchema })
 }

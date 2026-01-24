@@ -150,11 +150,21 @@ export const makeJsonPresentation = (input: any, options = { indent: 2 }) => {
   if (!parsed) return null
 
   return {
-    parsed,
-    string: makeStringJson(parsed),
-    minified: makeMinifiedJson(parsed),
-    compacted: makeCompactedJson(parsed),
-    friendly: makeFriendlyJson(parsed, options),
+    parsed: {
+      data: parsed,
+    },
+    string: {
+      data: makeStringJson(parsed),
+    },
+    minified: {
+      data: makeMinifiedJson(parsed),
+    },
+    compacted: {
+      data: makeCompactedJson(parsed),
+    },
+    friendly: {
+      data: makeFriendlyJson(parsed, options),
+    }
   }
 }
 

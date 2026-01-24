@@ -1,414 +1,412 @@
 export const dataTokens: any = [
   {
     "@layer reset": {
-      html: {
-        lineHeight: 1.5,
-        "--font-fallback":
-          "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
-        WebkitTextSizeAdjust: "100%",
-        WebkitFontSmoothing: "antialiased",
-        MozOsxFontSmoothing: "grayscale",
-        textRendering: "optimizeLegibility",
-        touchAction: "manipulation",
-        MozTabSize: "4",
-        tabSize: "4",
-        fontFamily: "var(--global-font-body, var(--font-fallback))",
+      "html": {
+        "lineHeight": 1.5,
+        "--font-fallback": "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+        "WebkitTextSizeAdjust": "100%",
+        "WebkitFontSmoothing": "antialiased",
+        "MozOsxFontSmoothing": "grayscale",
+        "textRendering": "optimizeLegibility",
+        "touchAction": "manipulation",
+        "MozTabSize": "4",
+        "tabSize": "4",
+        "fontFamily": "var(--global-font-body, var(--font-fallback))"
       },
       "*": {
-        margin: "0px",
-        padding: "0px",
-        font: "inherit",
-        wordWrap: "break-word",
-        WebkitTapHighlightColor: "transparent",
+        "margin": "0px",
+        "padding": "0px",
+        "font": "inherit",
+        "wordWrap": "break-word",
+        "WebkitTapHighlightColor": "transparent"
       },
       "*, *::before, *::after, *::backdrop": {
-        boxSizing: "border-box",
-        borderWidth: "0px",
-        borderStyle: "solid",
-        borderColor: "var(--global-color-border, currentColor)",
+        "boxSizing": "border-box",
+        "borderWidth": "0px",
+        "borderStyle": "solid",
+        "borderColor": "var(--global-color-border, currentColor)"
       },
-      hr: {
-        height: "0px",
-        color: "inherit",
-        borderTopWidth: "1px",
+      "hr": {
+        "height": "0px",
+        "color": "inherit",
+        "borderTopWidth": "1px"
       },
-      body: {
-        minHeight: "100dvh",
-        position: "relative",
+      "body": {
+        "minHeight": "100dvh",
+        "position": "relative"
       },
-      img: {
-        borderStyle: "none",
+      "img": {
+        "borderStyle": "none"
       },
       "img, svg, video, canvas, audio, iframe, embed, object": {
-        display: "block",
-        verticalAlign: "middle",
+        "display": "block",
+        "verticalAlign": "middle"
       },
-      iframe: {
-        border: "none",
+      "iframe": {
+        "border": "none"
       },
       "img, video": {
-        maxWidth: "100%",
-        height: "auto",
+        "maxWidth": "100%",
+        "height": "auto"
       },
       "p, h1, h2, h3, h4, h5, h6": {
-        overflowWrap: "break-word",
+        "overflowWrap": "break-word"
       },
       "ol, ul": {
-        listStyle: "none",
+        "listStyle": "none"
       },
       "code, kbd, pre, samp": {
-        fontSize: "1em",
+        "fontSize": "1em"
       },
       "button, [type='button'], [type='reset'], [type='submit']": {
-        WebkitAppearance: "button",
-        backgroundColor: "transparent",
-        backgroundImage: "none",
+        "WebkitAppearance": "button",
+        "backgroundColor": "transparent",
+        "backgroundImage": "none"
       },
       "button, input, optgroup, select, textarea": {
-        color: "inherit",
+        "color": "inherit"
       },
       "button, select": {
-        textTransform: "none",
+        "textTransform": "none"
       },
-      table: {
-        textIndent: "0px",
-        borderColor: "inherit",
-        borderCollapse: "collapse",
+      "table": {
+        "textIndent": "0px",
+        "borderColor": "inherit",
+        "borderCollapse": "collapse"
       },
       "*::placeholder": {
-        opacity: "unset",
-        color: "#9ca3af",
-        userSelect: "none",
+        "opacity": "unset",
+        "color": "#9ca3af",
+        "userSelect": "none"
       },
-      textarea: {
-        resize: "vertical",
+      "textarea": {
+        "resize": "vertical"
       },
-      summary: {
-        display: "list-item",
+      "summary": {
+        "display": "list-item"
       },
-      small: {
-        fontSize: "80%",
+      "small": {
+        "fontSize": "80%"
       },
       "sub, sup": {
-        fontSize: "75%",
-        lineHeight: 0,
-        position: "relative",
-        verticalAlign: "baseline",
+        "fontSize": "75%",
+        "lineHeight": 0,
+        "position": "relative",
+        "verticalAlign": "baseline"
       },
-      sub: {
-        bottom: "-0.25em",
+      "sub": {
+        "bottom": "-0.25em"
       },
-      sup: {
-        top: "-0.5em",
+      "sup": {
+        "top": "-0.5em"
       },
-      dialog: {
-        padding: "0px",
+      "dialog": {
+        "padding": "0px"
       },
-      a: {
-        color: "inherit",
-        textDecoration: "inherit",
+      "a": {
+        "color": "inherit",
+        "textDecoration": "inherit"
       },
       "abbr:where([title])": {
-        textDecoration: "underline dotted",
+        "textDecoration": "underline dotted"
       },
       "b, strong": {
-        fontWeight: "bolder",
+        "fontWeight": "bolder"
       },
       "code, kbd, samp, pre": {
-        fontSize: "1em",
-        "--font-mono-fallback":
-          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New'",
-        fontFamily: "var(--global-font-mono, var(--font-mono-fallback))",
+        "fontSize": "1em",
+        "--font-mono-fallback": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New'",
+        "fontFamily": "var(--global-font-mono, var(--font-mono-fallback))"
       },
-      'input[type="text"], input[type="email"], input[type="search"], input[type="password"]': {
-        WebkitAppearance: "none",
-        MozAppearance: "none",
+      "input[type=\"text\"], input[type=\"email\"], input[type=\"search\"], input[type=\"password\"]": {
+        "WebkitAppearance": "none",
+        "MozAppearance": "none"
       },
       "input[type='search']": {
-        WebkitAppearance: "textfield",
-        outlineOffset: "-2px",
+        "WebkitAppearance": "textfield",
+        "outlineOffset": "-2px"
       },
       "::-webkit-search-decoration, ::-webkit-search-cancel-button": {
-        WebkitAppearance: "none",
+        "WebkitAppearance": "none"
       },
       "::-webkit-file-upload-button": {
-        WebkitAppearance: "button",
-        font: "inherit",
+        "WebkitAppearance": "button",
+        "font": "inherit"
       },
-      'input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button': {
-        height: "auto",
+      "input[type=\"number\"]::-webkit-inner-spin-button, input[type=\"number\"]::-webkit-outer-spin-button": {
+        "height": "auto"
       },
       "input[type='number']": {
-        MozAppearance: "textfield",
+        "MozAppearance": "textfield"
       },
       ":-moz-ui-invalid": {
-        boxShadow: "none",
+        "boxShadow": "none"
       },
       ":-moz-focusring": {
-        outline: "auto",
+        "outline": "auto"
       },
       "[hidden]:where(:not([hidden='until-found']))": {
-        display: "none !important",
-      },
-    },
+        "display": "none !important"
+      }
+    }
   },
   {
     "@layer base": {
       "@keyframes spin": {
         "0%": {
-          transform: "rotate(0deg)",
+          "transform": "rotate(0deg)"
         },
         "100%": {
-          transform: "rotate(360deg)",
-        },
+          "transform": "rotate(360deg)"
+        }
       },
       "@keyframes pulse": {
         "50%": {
-          opacity: "0.5",
-        },
+          "opacity": "0.5"
+        }
       },
       "@keyframes ping": {
         "75%, 100%": {
-          transform: "scale(2)",
-          opacity: "0",
-        },
+          "transform": "scale(2)",
+          "opacity": "0"
+        }
       },
       "@keyframes bounce": {
         "0%, 100%": {
-          transform: "translateY(-25%)",
-          animationTimingFunction: "cubic-bezier(0.8,0,1,1)",
+          "transform": "translateY(-25%)",
+          "animationTimingFunction": "cubic-bezier(0.8,0,1,1)"
         },
         "50%": {
-          transform: "none",
-          animationTimingFunction: "cubic-bezier(0,0,0.2,1)",
-        },
+          "transform": "none",
+          "animationTimingFunction": "cubic-bezier(0,0,0.2,1)"
+        }
       },
       "@keyframes bg-position": {
-        from: {
-          backgroundPosition: "var(--animate-from, 1rem) 0",
+        "from": {
+          "backgroundPosition": "var(--animate-from, 1rem) 0"
         },
-        to: {
-          backgroundPosition: "var(--animate-to, 0) 0",
-        },
+        "to": {
+          "backgroundPosition": "var(--animate-to, 0) 0"
+        }
       },
       "@keyframes position": {
-        from: {
-          insetInlineStart: "var(--animate-from-x)",
-          insetBlockStart: "var(--animate-from-y)",
+        "from": {
+          "insetInlineStart": "var(--animate-from-x)",
+          "insetBlockStart": "var(--animate-from-y)"
         },
-        to: {
-          insetInlineStart: "var(--animate-to-x)",
-          insetBlockStart: "var(--animate-to-y)",
-        },
+        "to": {
+          "insetInlineStart": "var(--animate-to-x)",
+          "insetBlockStart": "var(--animate-to-y)"
+        }
       },
       "@keyframes circular-progress": {
         "0%": {
-          strokeDasharray: "1, 400",
-          strokeDashoffset: "0",
+          "strokeDasharray": "1, 400",
+          "strokeDashoffset": "0"
         },
         "50%": {
-          strokeDasharray: "400, 400",
-          strokeDashoffset: "-100%",
+          "strokeDasharray": "400, 400",
+          "strokeDashoffset": "-100%"
         },
         "100%": {
-          strokeDasharray: "400, 400",
-          strokeDashoffset: "-260%",
-        },
+          "strokeDasharray": "400, 400",
+          "strokeDashoffset": "-260%"
+        }
       },
       "@keyframes expand-height": {
-        from: {
-          height: "0",
+        "from": {
+          "height": "0"
         },
-        to: {
-          height: "var(--height)",
-        },
+        "to": {
+          "height": "var(--height)"
+        }
       },
       "@keyframes collapse-height": {
-        from: {
-          height: "var(--height)",
+        "from": {
+          "height": "var(--height)"
         },
-        to: {
-          height: "0",
-        },
+        "to": {
+          "height": "0"
+        }
       },
       "@keyframes expand-width": {
-        from: {
-          width: "0",
+        "from": {
+          "width": "0"
         },
-        to: {
-          width: "var(--width)",
-        },
+        "to": {
+          "width": "var(--width)"
+        }
       },
       "@keyframes collapse-width": {
-        from: {
-          height: "var(--width)",
+        "from": {
+          "height": "var(--width)"
         },
-        to: {
-          height: "0",
-        },
+        "to": {
+          "height": "0"
+        }
       },
       "@keyframes fade-in": {
-        from: {
-          opacity: 0,
+        "from": {
+          "opacity": 0
         },
-        to: {
-          opacity: 1,
-        },
+        "to": {
+          "opacity": 1
+        }
       },
       "@keyframes fade-out": {
-        from: {
-          opacity: 1,
+        "from": {
+          "opacity": 1
         },
-        to: {
-          opacity: 0,
-        },
+        "to": {
+          "opacity": 0
+        }
       },
       "@keyframes slide-from-left-full": {
-        from: {
-          translate: "-100% 0",
+        "from": {
+          "translate": "-100% 0"
         },
-        to: {
-          translate: "0 0",
-        },
+        "to": {
+          "translate": "0 0"
+        }
       },
       "@keyframes slide-from-right-full": {
-        from: {
-          translate: "100% 0",
+        "from": {
+          "translate": "100% 0"
         },
-        to: {
-          translate: "0 0",
-        },
+        "to": {
+          "translate": "0 0"
+        }
       },
       "@keyframes slide-from-top-full": {
-        from: {
-          translate: "0 -100%",
+        "from": {
+          "translate": "0 -100%"
         },
-        to: {
-          translate: "0 0",
-        },
+        "to": {
+          "translate": "0 0"
+        }
       },
       "@keyframes slide-from-bottom-full": {
-        from: {
-          translate: "0 100%",
+        "from": {
+          "translate": "0 100%"
         },
-        to: {
-          translate: "0 0",
-        },
+        "to": {
+          "translate": "0 0"
+        }
       },
       "@keyframes slide-to-left-full": {
-        from: {
-          translate: "0 0",
+        "from": {
+          "translate": "0 0"
         },
-        to: {
-          translate: "-100% 0",
-        },
+        "to": {
+          "translate": "-100% 0"
+        }
       },
       "@keyframes slide-to-right-full": {
-        from: {
-          translate: "0 0",
+        "from": {
+          "translate": "0 0"
         },
-        to: {
-          translate: "100% 0",
-        },
+        "to": {
+          "translate": "100% 0"
+        }
       },
       "@keyframes slide-to-top-full": {
-        from: {
-          translate: "0 0",
+        "from": {
+          "translate": "0 0"
         },
-        to: {
-          translate: "0 -100%",
-        },
+        "to": {
+          "translate": "0 -100%"
+        }
       },
       "@keyframes slide-to-bottom-full": {
-        from: {
-          translate: "0 0",
+        "from": {
+          "translate": "0 0"
         },
-        to: {
-          translate: "0 100%",
-        },
+        "to": {
+          "translate": "0 100%"
+        }
       },
       "@keyframes slide-from-top": {
         "0%": {
-          translate: "0 -0.5rem",
+          "translate": "0 -0.5rem"
         },
-        to: {
-          translate: "0",
-        },
+        "to": {
+          "translate": "0"
+        }
       },
       "@keyframes slide-from-bottom": {
         "0%": {
-          translate: "0 0.5rem",
+          "translate": "0 0.5rem"
         },
-        to: {
-          translate: "0",
-        },
+        "to": {
+          "translate": "0"
+        }
       },
       "@keyframes slide-from-left": {
         "0%": {
-          translate: "-0.5rem 0",
+          "translate": "-0.5rem 0"
         },
-        to: {
-          translate: "0",
-        },
+        "to": {
+          "translate": "0"
+        }
       },
       "@keyframes slide-from-right": {
         "0%": {
-          translate: "0.5rem 0",
+          "translate": "0.5rem 0"
         },
-        to: {
-          translate: "0",
-        },
+        "to": {
+          "translate": "0"
+        }
       },
       "@keyframes slide-to-top": {
         "0%": {
-          translate: "0",
+          "translate": "0"
         },
-        to: {
-          translate: "0 -0.5rem",
-        },
+        "to": {
+          "translate": "0 -0.5rem"
+        }
       },
       "@keyframes slide-to-bottom": {
         "0%": {
-          translate: "0",
+          "translate": "0"
         },
-        to: {
-          translate: "0 0.5rem",
-        },
+        "to": {
+          "translate": "0 0.5rem"
+        }
       },
       "@keyframes slide-to-left": {
         "0%": {
-          translate: "0",
+          "translate": "0"
         },
-        to: {
-          translate: "-0.5rem 0",
-        },
+        "to": {
+          "translate": "-0.5rem 0"
+        }
       },
       "@keyframes slide-to-right": {
         "0%": {
-          translate: "0",
+          "translate": "0"
         },
-        to: {
-          translate: "0.5rem 0",
-        },
+        "to": {
+          "translate": "0.5rem 0"
+        }
       },
       "@keyframes scale-in": {
-        from: {
-          scale: "0.95",
+        "from": {
+          "scale": "0.95"
         },
-        to: {
-          scale: "1",
-        },
+        "to": {
+          "scale": "1"
+        }
       },
       "@keyframes scale-out": {
-        from: {
-          scale: "1",
+        "from": {
+          "scale": "1"
         },
-        to: {
-          scale: "0.95",
-        },
+        "to": {
+          "scale": "0.95"
+        }
       },
       "&*": {
-        fontFeatureSettings: '"cv11"',
+        "fontFeatureSettings": "\"cv11\"",
         "--ring-inset": "var(--chakra-empty,/**/ /*!*/) !important",
         "--ring-offset-width": "0px",
         "--ring-offset-color": "#fff",
@@ -434,13 +432,13 @@ export const dataTokens: any = [
         "--backdrop-sepia": "var(--chakra-empty,/**/ /*!*/) !important",
         "--global-font-mono": "var(--ck-fonts-mono)",
         "--global-font-body": "var(--ck-fonts-body)",
-        "--global-color-border": "var(--ck-colors-border)",
+        "--global-color-border": "var(--ck-colors-border)"
       },
       "&html": {
-        color: "var(--ck-colors-fg)",
-        background: "var(--ck-colors-bg)",
+        "color": "var(--ck-colors-fg)",
+        "background": "var(--ck-colors-bg)",
         "--bg-currentcolor": "var(--ck-colors-bg)",
-        lineHeight: "1.5",
+        "lineHeight": "1.5",
         "--ck-colors-color-palette-50": "var(--ck-colors-gray-50)",
         "--ck-colors-color-palette-100": "var(--ck-colors-gray-100)",
         "--ck-colors-color-palette-200": "var(--ck-colors-gray-200)",
@@ -458,18 +456,18 @@ export const dataTokens: any = [
         "--ck-colors-color-palette-muted": "var(--ck-colors-gray-muted)",
         "--ck-colors-color-palette-emphasized": "var(--ck-colors-gray-emphasized)",
         "--ck-colors-color-palette-solid": "var(--ck-colors-gray-solid)",
-        "--ck-colors-color-palette-focus-ring": "var(--ck-colors-gray-focus-ring)",
+        "--ck-colors-color-palette-focus-ring": "var(--ck-colors-gray-focus-ring)"
       },
       "&*::placeholder, &*[data-placeholder]": {
         "--mix-color": "color-mix(in srgb, var(--ck-colors-fg-muted) 80%, transparent)",
-        color: "var(--mix-color, var(--ck-colors-fg-muted))",
+        "color": "var(--mix-color, var(--ck-colors-fg-muted))"
       },
       "&*::selection": {
         "--mix-background": "color-mix(in srgb, var(--ck-colors-color-palette-emphasized) 80%, transparent)",
-        background: "var(--mix-background, var(--ck-colors-color-palette-emphasized))",
-        "--bg-currentcolor": "var(--mix-background, var(--ck-colors-color-palette-emphasized))",
-      },
-    },
+        "background": "var(--mix-background, var(--ck-colors-color-palette-emphasized))",
+        "--bg-currentcolor": "var(--mix-background, var(--ck-colors-color-palette-emphasized))"
+      }
+    }
   },
   {
     "@layer tokens": {
@@ -644,11 +642,9 @@ export const dataTokens: any = [
         "--ck-easings-ease-out": "cubic-bezier(0, 0, 0.58, 1)",
         "--ck-easings-ease-in-out": "cubic-bezier(0.42, 0, 0.58, 1)",
         "--ck-easings-ease-in-smooth": "cubic-bezier(0.32, 0.72, 0, 1)",
-        "--ck-fonts-heading":
-          'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        "--ck-fonts-body":
-          'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        "--ck-fonts-mono": 'SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace',
+        "--ck-fonts-heading": "Inter, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+        "--ck-fonts-body": "Inter, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+        "--ck-fonts-mono": "SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace",
         "--ck-font-sizes-2xs": "0.625rem",
         "--ck-font-sizes-xs": "0.75rem",
         "--ck-font-sizes-sm": "0.875rem",
@@ -951,7 +947,7 @@ export const dataTokens: any = [
         "--ck-shadows-inset": "",
         "--ck-radii-l1": "var(--ck-radii-xs)",
         "--ck-radii-l2": "var(--ck-radii-sm)",
-        "--ck-radii-l3": "var(--ck-radii-md)",
+        "--ck-radii-l3": "var(--ck-radii-md)"
       },
       ":root &, .light &": {
         "--ck-colors-bg": "var(--ck-colors-white)",
@@ -1051,20 +1047,14 @@ export const dataTokens: any = [
         "--ck-colors-cyan-emphasized": "var(--ck-colors-cyan-300)",
         "--ck-colors-cyan-solid": "var(--ck-colors-cyan-600)",
         "--ck-colors-cyan-focus-ring": "var(--ck-colors-cyan-400)",
-        "--ck-shadows-xs":
-          "0px 1px 2px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 20%, transparent)",
-        "--ck-shadows-sm":
-          "0px 2px 4px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-md":
-          "0px 4px 8px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-lg":
-          "0px 8px 16px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-xl":
-          "0px 16px 24px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-2xl":
-          "0px 24px 40px color-mix(in srgb, var(--ck-colors-gray-900) 16%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
+        "--ck-shadows-xs": "0px 1px 2px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 20%, transparent)",
+        "--ck-shadows-sm": "0px 2px 4px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
+        "--ck-shadows-md": "0px 4px 8px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
+        "--ck-shadows-lg": "0px 8px 16px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
+        "--ck-shadows-xl": "0px 16px 24px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
+        "--ck-shadows-2xl": "0px 24px 40px color-mix(in srgb, var(--ck-colors-gray-900) 16%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
         "--ck-shadows-inner": "inset 0 2px 4px 0 color-mix(in srgb, black 5%, transparent)",
-        "--ck-shadows-inset": "inset 0 0 0 1px color-mix(in srgb, black 5%, transparent)",
+        "--ck-shadows-inset": "inset 0 0 0 1px color-mix(in srgb, black 5%, transparent)"
       },
       ".dark &, .dark .chakra-theme:not(.light) &": {
         "--ck-colors-bg": "var(--ck-colors-black)",
@@ -1164,21 +1154,16 @@ export const dataTokens: any = [
         "--ck-colors-cyan-emphasized": "var(--ck-colors-cyan-700)",
         "--ck-colors-cyan-solid": "var(--ck-colors-cyan-600)",
         "--ck-colors-cyan-focus-ring": "var(--ck-colors-cyan-400)",
-        "--ck-shadows-xs":
-          "0px 1px 1px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 20%, transparent)",
-        "--ck-shadows-sm":
-          "0px 2px 4px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-md":
-          "0px 4px 8px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-lg":
-          "0px 8px 16px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-xl":
-          "0px 16px 24px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-2xl":
-          "0px 24px 40px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
+        "--ck-shadows-xs": "0px 1px 1px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 20%, transparent)",
+        "--ck-shadows-sm": "0px 2px 4px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
+        "--ck-shadows-md": "0px 4px 8px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
+        "--ck-shadows-lg": "0px 8px 16px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
+        "--ck-shadows-xl": "0px 16px 24px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
+        "--ck-shadows-2xl": "0px 24px 40px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
         "--ck-shadows-inner": "inset 0 2px 4px 0 black",
-        "--ck-shadows-inset": "inset 0 0 0 1px color-mix(in srgb, var(--ck-colors-gray-300) 5%, transparent)",
-      },
-    },
-  },
+        "--ck-shadows-inset": "inset 0 0 0 1px color-mix(in srgb, var(--ck-colors-gray-300) 5%, transparent)"
+      }
+    }
+  }
 ]
+

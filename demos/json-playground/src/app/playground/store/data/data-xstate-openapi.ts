@@ -1,1184 +1,1214 @@
-export const dataXstateOpenapi = [
-  {
-    "@layer reset": {
-      html: {
-        lineHeight: 1.5,
-        "--font-fallback":
-          "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
-        WebkitTextSizeAdjust: "100%",
-        WebkitFontSmoothing: "antialiased",
-        MozOsxFontSmoothing: "grayscale",
-        textRendering: "optimizeLegibility",
-        touchAction: "manipulation",
-        MozTabSize: "4",
-        tabSize: "4",
-        fontFamily: "var(--global-font-body, var(--font-fallback))",
-      },
-      "*": {
-        margin: "0px",
-        padding: "0px",
-        font: "inherit",
-        wordWrap: "break-word",
-        WebkitTapHighlightColor: "transparent",
-      },
-      "*, *::before, *::after, *::backdrop": {
-        boxSizing: "border-box",
-        borderWidth: "0px",
-        borderStyle: "solid",
-        borderColor: "var(--global-color-border, currentColor)",
-      },
-      hr: {
-        height: "0px",
-        color: "inherit",
-        borderTopWidth: "1px",
-      },
-      body: {
-        minHeight: "100dvh",
-        position: "relative",
-      },
-      img: {
-        borderStyle: "none",
-      },
-      "img, svg, video, canvas, audio, iframe, embed, object": {
-        display: "block",
-        verticalAlign: "middle",
-      },
-      iframe: {
-        border: "none",
-      },
-      "img, video": {
-        maxWidth: "100%",
-        height: "auto",
-      },
-      "p, h1, h2, h3, h4, h5, h6": {
-        overflowWrap: "break-word",
-      },
-      "ol, ul": {
-        listStyle: "none",
-      },
-      "code, kbd, pre, samp": {
-        fontSize: "1em",
-      },
-      "button, [type='button'], [type='reset'], [type='submit']": {
-        WebkitAppearance: "button",
-        backgroundColor: "transparent",
-        backgroundImage: "none",
-      },
-      "button, input, optgroup, select, textarea": {
-        color: "inherit",
-      },
-      "button, select": {
-        textTransform: "none",
-      },
-      table: {
-        textIndent: "0px",
-        borderColor: "inherit",
-        borderCollapse: "collapse",
-      },
-      "*::placeholder": {
-        opacity: "unset",
-        color: "#9ca3af",
-        userSelect: "none",
-      },
-      textarea: {
-        resize: "vertical",
-      },
-      summary: {
-        display: "list-item",
-      },
-      small: {
-        fontSize: "80%",
-      },
-      "sub, sup": {
-        fontSize: "75%",
-        lineHeight: 0,
-        position: "relative",
-        verticalAlign: "baseline",
-      },
-      sub: {
-        bottom: "-0.25em",
-      },
-      sup: {
-        top: "-0.5em",
-      },
-      dialog: {
-        padding: "0px",
-      },
-      a: {
-        color: "inherit",
-        textDecoration: "inherit",
-      },
-      "abbr:where([title])": {
-        textDecoration: "underline dotted",
-      },
-      "b, strong": {
-        fontWeight: "bolder",
-      },
-      "code, kbd, samp, pre": {
-        fontSize: "1em",
-        "--font-mono-fallback":
-          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New'",
-        fontFamily: "var(--global-font-mono, var(--font-mono-fallback))",
-      },
-      'input[type="text"], input[type="email"], input[type="search"], input[type="password"]': {
-        WebkitAppearance: "none",
-        MozAppearance: "none",
-      },
-      "input[type='search']": {
-        WebkitAppearance: "textfield",
-        outlineOffset: "-2px",
-      },
-      "::-webkit-search-decoration, ::-webkit-search-cancel-button": {
-        WebkitAppearance: "none",
-      },
-      "::-webkit-file-upload-button": {
-        WebkitAppearance: "button",
-        font: "inherit",
-      },
-      'input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button': {
-        height: "auto",
-      },
-      "input[type='number']": {
-        MozAppearance: "textfield",
-      },
-      ":-moz-ui-invalid": {
-        boxShadow: "none",
-      },
-      ":-moz-focusring": {
-        outline: "auto",
-      },
-      "[hidden]:where(:not([hidden='until-found']))": {
-        display: "none !important",
-      },
+export const dataXstateOpenapi = {
+  "components": {
+    "responses": {
+      "Error": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Error"
+      }
     },
+    "schemas": {
+      "Error": {
+        "description": "Error information from a response.",
+        "properties": {
+          "error_code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "request_id"
+        ],
+        "type": "object"
+      },
+      "ExtraMachineInfoResponse": {
+        "description": "Extra machine-specific information regarding a connected machine.",
+        "oneOf": [
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "moonraker"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "usb"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "current_stage": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Stage"
+                  }
+                ],
+                "description": "The current stage of the machine as defined by Bambu which can include errors, etc.",
+                "nullable": true
+              },
+              "nozzle_diameter": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NozzleDiameter"
+                  }
+                ],
+                "description": "The nozzle diameter of the machine."
+              },
+              "type": {
+                "enum": [
+                  "bambu"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "nozzle_diameter",
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "FdmHardwareConfiguration": {
+        "description": "Configuration for a FDM-based printer.",
+        "properties": {
+          "filaments": {
+            "description": "The filaments the printer has access to.",
+            "items": {
+              "$ref": "#/components/schemas/Filament"
+            },
+            "type": "array"
+          },
+          "loaded_filament_idx": {
+            "description": "The currently loaded filament index.",
+            "format": "uint",
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "nozzle_diameter": {
+            "description": "Diameter of the extrusion nozzle, in mm.",
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "filaments",
+          "nozzle_diameter"
+        ],
+        "type": "object"
+      },
+      "Filament": {
+        "description": "Information about the filament being used in a FDM printer.",
+        "properties": {
+          "color": {
+            "description": "The color (as hex without the `#`) of the filament, this is likely specific to the manufacturer.",
+            "maxLength": 6,
+            "minLength": 6,
+            "nullable": true,
+            "type": "string"
+          },
+          "material": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FilamentMaterial"
+              }
+            ],
+            "description": "The material that the filament is made of."
+          },
+          "name": {
+            "description": "The name of the filament, this is likely specfic to the manufacturer.",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "material"
+        ],
+        "type": "object"
+      },
+      "FilamentMaterial": {
+        "description": "The material that the filament is made of.",
+        "oneOf": [
+          {
+            "description": "Polylactic acid based plastics",
+            "properties": {
+              "type": {
+                "enum": [
+                  "pla"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Pla support",
+            "properties": {
+              "type": {
+                "enum": [
+                  "pla_support"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "acrylonitrile butadiene styrene based plastics",
+            "properties": {
+              "type": {
+                "enum": [
+                  "abs"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "polyethylene terephthalate glycol based plastics",
+            "properties": {
+              "type": {
+                "enum": [
+                  "petg"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "unsuprisingly, nylon based",
+            "properties": {
+              "type": {
+                "enum": [
+                  "nylon"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "thermoplastic polyurethane based urethane material",
+            "properties": {
+              "type": {
+                "enum": [
+                  "tpu"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "polyvinyl alcohol based material",
+            "properties": {
+              "type": {
+                "enum": [
+                  "pva"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "high impact polystyrene based material",
+            "properties": {
+              "type": {
+                "enum": [
+                  "hips"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "composite material with stuff in other stuff, something like PLA mixed with carbon fiber, kevlar, or fiberglass",
+            "properties": {
+              "type": {
+                "enum": [
+                  "composite"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Unknown material",
+            "properties": {
+              "type": {
+                "enum": [
+                  "unknown"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "HardwareConfiguration": {
+        "description": "The hardware configuration of a machine.",
+        "oneOf": [
+          {
+            "description": "No configuration is possible. This isn't the same conceptually as an `Option<HardwareConfiguration>`, because this indicates we positively know there is no possible configuration changes that are possible with this method of manufcture.",
+            "properties": {
+              "type": {
+                "enum": [
+                  "none"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Hardware configuration specific to FDM based printers",
+            "properties": {
+              "config": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/FdmHardwareConfiguration"
+                  }
+                ],
+                "description": "The configuration for the FDM printer."
+              },
+              "type": {
+                "enum": [
+                  "fdm"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "config",
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "MachineInfoResponse": {
+        "description": "Information regarding a connected machine.",
+        "properties": {
+          "extra": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExtraMachineInfoResponse"
+              }
+            ],
+            "description": "Additional, per-machine information which is specific to the underlying machine type.",
+            "nullable": true
+          },
+          "hardware_configuration": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HardwareConfiguration"
+              }
+            ],
+            "description": "Information about how the Machine is currently configured."
+          },
+          "id": {
+            "description": "Machine Identifier (ID) for the specific Machine.",
+            "type": "string"
+          },
+          "machine_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MachineType"
+              }
+            ],
+            "description": "Information regarding the method of manufacture."
+          },
+          "make_model": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MachineMakeModel"
+              }
+            ],
+            "description": "Information regarding the make and model of the attached Machine."
+          },
+          "max_part_volume": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Volume"
+              }
+            ],
+            "description": "Maximum part size that can be manufactured by this device. This may be some sort of theoretical upper bound, getting close to this limit seems like maybe a bad idea.\n\nThis may be `None` if the maximum size is not knowable by the Machine API.\n\nWhat \"close\" means is up to you!",
+            "nullable": true
+          },
+          "progress": {
+            "description": "Progress of the current print, if printing.",
+            "format": "double",
+            "nullable": true,
+            "type": "number"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MachineState"
+              }
+            ],
+            "description": "Status of the printer -- be it printing, idle, or unreachable. This may dictate if a machine is capable of taking a new job."
+          }
+        },
+        "required": [
+          "hardware_configuration",
+          "id",
+          "machine_type",
+          "make_model",
+          "state"
+        ],
+        "type": "object"
+      },
+      "MachineMakeModel": {
+        "description": "Information regarding the make/model of a discovered endpoint.",
+        "properties": {
+          "manufacturer": {
+            "description": "The manufacturer that built the connected Machine.",
+            "nullable": true,
+            "type": "string"
+          },
+          "model": {
+            "description": "The model of the connected Machine.",
+            "nullable": true,
+            "type": "string"
+          },
+          "serial": {
+            "description": "The unique serial number of the connected Machine.",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "MachineState": {
+        "description": "Current state of the machine -- be it printing, idle or offline. This can be used to determine if a printer is in the correct state to take a new job.",
+        "oneOf": [
+          {
+            "description": "If a print state can not be resolved at this time, an Unknown may be returned.",
+            "properties": {
+              "state": {
+                "enum": [
+                  "unknown"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Idle, and ready for another job.",
+            "properties": {
+              "state": {
+                "enum": [
+                  "idle"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Running a job -- 3D printing or CNC-ing a part.",
+            "properties": {
+              "state": {
+                "enum": [
+                  "running"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Machine is currently offline or unreachable.",
+            "properties": {
+              "state": {
+                "enum": [
+                  "offline"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Job is underway but halted, waiting for some action to take place.",
+            "properties": {
+              "state": {
+                "enum": [
+                  "paused"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "Job is finished, but waiting manual action to move back to Idle.",
+            "properties": {
+              "state": {
+                "enum": [
+                  "complete"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          {
+            "description": "The printer has failed and is in an unknown state that may require manual attention to resolve. The inner value is a human readable description of what specifically has failed.",
+            "properties": {
+              "message": {
+                "description": "A human-readable message describing the failure.",
+                "nullable": true,
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "failed"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "MachineType": {
+        "description": "Specific technique by which this Machine takes a design, and produces a real-world 3D object.",
+        "oneOf": [
+          {
+            "description": "Use light to cure a resin to build up layers.",
+            "enum": [
+              "stereolithography"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Fused Deposition Modeling, layers of melted plastic.",
+            "enum": [
+              "fused_deposition"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "\"Computer numerical control\" - machine that grinds away material from a hunk of material to construct a part.",
+            "enum": [
+              "cnc"
+            ],
+            "type": "string"
+          }
+        ]
+      },
+      "NozzleDiameter": {
+        "description": "A nozzle diameter.",
+        "oneOf": [
+          {
+            "description": "0.2mm.",
+            "enum": [
+              "0.2"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "0.4mm.",
+            "enum": [
+              "0.4"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "0.6mm.",
+            "enum": [
+              "0.6"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "0.8mm.",
+            "enum": [
+              "0.8"
+            ],
+            "type": "string"
+          }
+        ]
+      },
+      "Pong": {
+        "description": "The response from the `/ping` endpoint.",
+        "properties": {
+          "message": {
+            "description": "The pong response.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "PrintJobResponse": {
+        "description": "The response from the `/print` endpoint.",
+        "properties": {
+          "job_id": {
+            "description": "The job id used for this print.",
+            "type": "string"
+          },
+          "parameters": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PrintParameters"
+              }
+            ],
+            "description": "The parameters used for this print."
+          }
+        },
+        "required": [
+          "job_id",
+          "parameters"
+        ],
+        "type": "object"
+      },
+      "PrintParameters": {
+        "description": "Parameters for printing.",
+        "properties": {
+          "job_name": {
+            "description": "The name for the job.",
+            "type": "string"
+          },
+          "machine_id": {
+            "description": "The machine id to print to.",
+            "type": "string"
+          },
+          "slicer_configuration": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SlicerConfiguration"
+              }
+            ],
+            "description": "Requested design-specific slicer configurations.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "job_name",
+          "machine_id"
+        ],
+        "type": "object"
+      },
+      "SlicerConfiguration": {
+        "description": "The slicer configuration is a set of parameters that are passed to the slicer to control how the gcode is generated.",
+        "properties": {
+          "filament_idx": {
+            "description": "The filament to use for the print.",
+            "format": "uint",
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "Stage": {
+        "description": "The print stage. These come from: https://github.com/SoftFever/OrcaSlicer/blob/431978baf17961df90f0d01871b0ad1d839d7f5d/src/slic3r/GUI/DeviceManager.cpp#L78",
+        "oneOf": [
+          {
+            "description": "Nothing.",
+            "enum": [
+              "nothing"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Empty.",
+            "enum": [
+              "empty"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Auto bed leveling.",
+            "enum": [
+              "auto_bed_leveling"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Heatbed preheating.",
+            "enum": [
+              "heatbed_preheating"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Sweeping XY mech mode.",
+            "enum": [
+              "sweeping_xy_mech_mode"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Changing filament.",
+            "enum": [
+              "changing_filament"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "M400 pause.",
+            "enum": [
+              "m400_pause"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Paused due to filament runout.",
+            "enum": [
+              "paused_due_to_filament_runout"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Heating hotend.",
+            "enum": [
+              "heating_hotend"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Calibrating extrusion.",
+            "enum": [
+              "calibrating_extrusion"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Scanning bed surface.",
+            "enum": [
+              "scanning_bed_surface"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Inspecting first layer.",
+            "enum": [
+              "inspecting_first_layer"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Identifying build plate type.",
+            "enum": [
+              "identifying_build_plate_type"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Calibrating micro lidar.",
+            "enum": [
+              "calibrating_micro_lidar"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Homing toolhead.",
+            "enum": [
+              "homing_toolhead"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Cleaning nozzle tip.",
+            "enum": [
+              "cleaning_nozzle_tip"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Checking extruder temperature.",
+            "enum": [
+              "checking_extruder_temperature"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Printing was paused by the user.",
+            "enum": [
+              "printing_was_paused_by_the_user"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Pause of front cover falling.",
+            "enum": [
+              "pause_of_front_cover_falling"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Calibrating micro lidar.",
+            "enum": [
+              "calibrating_micro_lidar2"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Calibrating extrusion flow.",
+            "enum": [
+              "calibrating_extrusion_flow"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Paused due to nozzle temperature malfunction.",
+            "enum": [
+              "paused_due_to_nozzle_temperature_malfunction"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Paused due to heat bed temperature malfunction.",
+            "enum": [
+              "paused_due_to_heat_bed_temperature_malfunction"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Filament unloading.",
+            "enum": [
+              "filament_unloading"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Skip step pause.",
+            "enum": [
+              "skip_step_pause"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Filament loading.",
+            "enum": [
+              "filament_loading"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Motor noise calibration.",
+            "enum": [
+              "motor_noise_calibration"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Paused due to AMS lost.",
+            "enum": [
+              "paused_due_to_ams_lost"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Paused due to low speed of the heat break fan.",
+            "enum": [
+              "paused_due_to_low_speed_of_the_heat_break_fan"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Paused due to chamber temperature control error.",
+            "enum": [
+              "paused_due_to_chamber_temperature_control_error"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Cooling chamber.",
+            "enum": [
+              "cooling_chamber"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Paused by the Gcode inserted by the user.",
+            "enum": [
+              "paused_by_the_gcode_inserted_by_the_user"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Motor noise showoff.",
+            "enum": [
+              "motor_noise_showoff"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Nozzle filament covered detected pause.",
+            "enum": [
+              "nozzle_filament_covered_detected_pause"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Cutter error pause.",
+            "enum": [
+              "cutter_error_pause"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "First layer error pause.",
+            "enum": [
+              "first_layer_error_pause"
+            ],
+            "type": "string"
+          },
+          {
+            "description": "Nozzle clog pause.",
+            "enum": [
+              "nozzle_clog_pause"
+            ],
+            "type": "string"
+          }
+        ]
+      },
+      "Volume": {
+        "description": "Set of three values to represent the extent of a 3-D Volume. This contains the width, depth, and height values, generally used to represent some maximum or minimum.\n\nAll measurements are in millimeters.",
+        "properties": {
+          "depth": {
+            "description": "Depth of the volume (\"front to back\"), in millimeters.",
+            "format": "double",
+            "type": "number"
+          },
+          "height": {
+            "description": "Height of the volume (\"up and down\"), in millimeters.",
+            "format": "double",
+            "type": "number"
+          },
+          "width": {
+            "description": "Width of the volume (\"left and right\"), in millimeters.",
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "depth",
+          "height",
+          "width"
+        ],
+        "type": "object"
+      }
+    }
   },
-  {
-    "@layer base": {
-      "@keyframes spin": {
-        "0%": {
-          transform: "rotate(0deg)",
-        },
-        "100%": {
-          transform: "rotate(360deg)",
-        },
-      },
-      "@keyframes pulse": {
-        "50%": {
-          opacity: "0.5",
-        },
-      },
-      "@keyframes ping": {
-        "75%, 100%": {
-          transform: "scale(2)",
-          opacity: "0",
-        },
-      },
-      "@keyframes bounce": {
-        "0%, 100%": {
-          transform: "translateY(-25%)",
-          animationTimingFunction: "cubic-bezier(0.8,0,1,1)",
-        },
-        "50%": {
-          transform: "none",
-          animationTimingFunction: "cubic-bezier(0,0,0.2,1)",
-        },
-      },
-      "@keyframes bg-position": {
-        from: {
-          backgroundPosition: "var(--animate-from, 1rem) 0",
-        },
-        to: {
-          backgroundPosition: "var(--animate-to, 0) 0",
-        },
-      },
-      "@keyframes position": {
-        from: {
-          insetInlineStart: "var(--animate-from-x)",
-          insetBlockStart: "var(--animate-from-y)",
-        },
-        to: {
-          insetInlineStart: "var(--animate-to-x)",
-          insetBlockStart: "var(--animate-to-y)",
-        },
-      },
-      "@keyframes circular-progress": {
-        "0%": {
-          strokeDasharray: "1, 400",
-          strokeDashoffset: "0",
-        },
-        "50%": {
-          strokeDasharray: "400, 400",
-          strokeDashoffset: "-100%",
-        },
-        "100%": {
-          strokeDasharray: "400, 400",
-          strokeDashoffset: "-260%",
-        },
-      },
-      "@keyframes expand-height": {
-        from: {
-          height: "0",
-        },
-        to: {
-          height: "var(--height)",
-        },
-      },
-      "@keyframes collapse-height": {
-        from: {
-          height: "var(--height)",
-        },
-        to: {
-          height: "0",
-        },
-      },
-      "@keyframes expand-width": {
-        from: {
-          width: "0",
-        },
-        to: {
-          width: "var(--width)",
-        },
-      },
-      "@keyframes collapse-width": {
-        from: {
-          height: "var(--width)",
-        },
-        to: {
-          height: "0",
-        },
-      },
-      "@keyframes fade-in": {
-        from: {
-          opacity: 0,
-        },
-        to: {
-          opacity: 1,
-        },
-      },
-      "@keyframes fade-out": {
-        from: {
-          opacity: 1,
-        },
-        to: {
-          opacity: 0,
-        },
-      },
-      "@keyframes slide-from-left-full": {
-        from: {
-          translate: "-100% 0",
-        },
-        to: {
-          translate: "0 0",
-        },
-      },
-      "@keyframes slide-from-right-full": {
-        from: {
-          translate: "100% 0",
-        },
-        to: {
-          translate: "0 0",
-        },
-      },
-      "@keyframes slide-from-top-full": {
-        from: {
-          translate: "0 -100%",
-        },
-        to: {
-          translate: "0 0",
-        },
-      },
-      "@keyframes slide-from-bottom-full": {
-        from: {
-          translate: "0 100%",
-        },
-        to: {
-          translate: "0 0",
-        },
-      },
-      "@keyframes slide-to-left-full": {
-        from: {
-          translate: "0 0",
-        },
-        to: {
-          translate: "-100% 0",
-        },
-      },
-      "@keyframes slide-to-right-full": {
-        from: {
-          translate: "0 0",
-        },
-        to: {
-          translate: "100% 0",
-        },
-      },
-      "@keyframes slide-to-top-full": {
-        from: {
-          translate: "0 0",
-        },
-        to: {
-          translate: "0 -100%",
-        },
-      },
-      "@keyframes slide-to-bottom-full": {
-        from: {
-          translate: "0 0",
-        },
-        to: {
-          translate: "0 100%",
-        },
-      },
-      "@keyframes slide-from-top": {
-        "0%": {
-          translate: "0 -0.5rem",
-        },
-        to: {
-          translate: "0",
-        },
-      },
-      "@keyframes slide-from-bottom": {
-        "0%": {
-          translate: "0 0.5rem",
-        },
-        to: {
-          translate: "0",
-        },
-      },
-      "@keyframes slide-from-left": {
-        "0%": {
-          translate: "-0.5rem 0",
-        },
-        to: {
-          translate: "0",
-        },
-      },
-      "@keyframes slide-from-right": {
-        "0%": {
-          translate: "0.5rem 0",
-        },
-        to: {
-          translate: "0",
-        },
-      },
-      "@keyframes slide-to-top": {
-        "0%": {
-          translate: "0",
-        },
-        to: {
-          translate: "0 -0.5rem",
-        },
-      },
-      "@keyframes slide-to-bottom": {
-        "0%": {
-          translate: "0",
-        },
-        to: {
-          translate: "0 0.5rem",
-        },
-      },
-      "@keyframes slide-to-left": {
-        "0%": {
-          translate: "0",
-        },
-        to: {
-          translate: "-0.5rem 0",
-        },
-      },
-      "@keyframes slide-to-right": {
-        "0%": {
-          translate: "0",
-        },
-        to: {
-          translate: "0.5rem 0",
-        },
-      },
-      "@keyframes scale-in": {
-        from: {
-          scale: "0.95",
-        },
-        to: {
-          scale: "1",
-        },
-      },
-      "@keyframes scale-out": {
-        from: {
-          scale: "1",
-        },
-        to: {
-          scale: "0.95",
-        },
-      },
-      "&*": {
-        fontFeatureSettings: '"cv11"',
-        "--ring-inset": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--ring-offset-width": "0px",
-        "--ring-offset-color": "#fff",
-        "--ring-color": "rgba(66, 153, 225, 0.6)",
-        "--ring-offset-shadow": "0 0 #0000",
-        "--ring-shadow": "0 0 #0000",
-        "--brightness": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--contrast": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--grayscale": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--hue-rotate": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--invert": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--saturate": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--sepia": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--drop-shadow": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-blur": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-brightness": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-contrast": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-grayscale": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-hue-rotate": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-invert": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-opacity": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-saturate": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--backdrop-sepia": "var(--chakra-empty,/**/ /*!*/) !important",
-        "--global-font-mono": "var(--ck-fonts-mono)",
-        "--global-font-body": "var(--ck-fonts-body)",
-        "--global-color-border": "var(--ck-colors-border)",
-      },
-      "&html": {
-        color: "var(--ck-colors-fg)",
-        background: "var(--ck-colors-bg)",
-        "--bg-currentcolor": "var(--ck-colors-bg)",
-        lineHeight: "1.5",
-        "--ck-colors-color-palette-50": "var(--ck-colors-gray-50)",
-        "--ck-colors-color-palette-100": "var(--ck-colors-gray-100)",
-        "--ck-colors-color-palette-200": "var(--ck-colors-gray-200)",
-        "--ck-colors-color-palette-300": "var(--ck-colors-gray-300)",
-        "--ck-colors-color-palette-400": "var(--ck-colors-gray-400)",
-        "--ck-colors-color-palette-500": "var(--ck-colors-gray-500)",
-        "--ck-colors-color-palette-600": "var(--ck-colors-gray-600)",
-        "--ck-colors-color-palette-700": "var(--ck-colors-gray-700)",
-        "--ck-colors-color-palette-800": "var(--ck-colors-gray-800)",
-        "--ck-colors-color-palette-900": "var(--ck-colors-gray-900)",
-        "--ck-colors-color-palette-950": "var(--ck-colors-gray-950)",
-        "--ck-colors-color-palette-contrast": "var(--ck-colors-gray-contrast)",
-        "--ck-colors-color-palette-fg": "var(--ck-colors-gray-fg)",
-        "--ck-colors-color-palette-subtle": "var(--ck-colors-gray-subtle)",
-        "--ck-colors-color-palette-muted": "var(--ck-colors-gray-muted)",
-        "--ck-colors-color-palette-emphasized": "var(--ck-colors-gray-emphasized)",
-        "--ck-colors-color-palette-solid": "var(--ck-colors-gray-solid)",
-        "--ck-colors-color-palette-focus-ring": "var(--ck-colors-gray-focus-ring)",
-      },
-      "&*::placeholder, &*[data-placeholder]": {
-        "--mix-color": "color-mix(in srgb, var(--ck-colors-fg-muted) 80%, transparent)",
-        color: "var(--mix-color, var(--ck-colors-fg-muted))",
-      },
-      "&*::selection": {
-        "--mix-background": "color-mix(in srgb, var(--ck-colors-color-palette-emphasized) 80%, transparent)",
-        background: "var(--mix-background, var(--ck-colors-color-palette-emphasized))",
-        "--bg-currentcolor": "var(--mix-background, var(--ck-colors-color-palette-emphasized))",
-      },
+  "info": {
+    "contact": {
+      "email": "machine-api@zoo.dev",
+      "url": "https://zoo.dev"
     },
+    "description": "",
+    "title": "machine-api",
+    "version": "0.1.1"
   },
-  {
-    "@layer tokens": {
-      "&:where(html, .chakra-theme)": {
-        "--ck-aspect-ratios-square": "1 / 1",
-        "--ck-aspect-ratios-landscape": "4 / 3",
-        "--ck-aspect-ratios-portrait": "3 / 4",
-        "--ck-aspect-ratios-wide": "16 / 9",
-        "--ck-aspect-ratios-ultrawide": "18 / 5",
-        "--ck-aspect-ratios-golden": "1.618 / 1",
-        "--ck-animations-spin": "spin 1s linear infinite",
-        "--ck-animations-ping": "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
-        "--ck-animations-pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "--ck-animations-bounce": "bounce 1s infinite",
-        "--ck-blurs-none": " ",
-        "--ck-blurs-sm": "4px",
-        "--ck-blurs-md": "8px",
-        "--ck-blurs-lg": "12px",
-        "--ck-blurs-xl": "16px",
-        "--ck-blurs-2xl": "24px",
-        "--ck-blurs-3xl": "40px",
-        "--ck-blurs-4xl": "64px",
-        "--ck-borders-xs": "0.5px solid",
-        "--ck-borders-sm": "1px solid",
-        "--ck-borders-md": "2px solid",
-        "--ck-borders-lg": "4px solid",
-        "--ck-borders-xl": "8px solid",
-        "--ck-colors-transparent": "transparent",
-        "--ck-colors-current": "currentColor",
-        "--ck-colors-black": "#09090B",
-        "--ck-colors-white": "#FFFFFF",
-        "--ck-colors-white-alpha-50": "rgba(255, 255, 255, 0.04)",
-        "--ck-colors-white-alpha-100": "rgba(255, 255, 255, 0.06)",
-        "--ck-colors-white-alpha-200": "rgba(255, 255, 255, 0.08)",
-        "--ck-colors-white-alpha-300": "rgba(255, 255, 255, 0.16)",
-        "--ck-colors-white-alpha-400": "rgba(255, 255, 255, 0.24)",
-        "--ck-colors-white-alpha-500": "rgba(255, 255, 255, 0.36)",
-        "--ck-colors-white-alpha-600": "rgba(255, 255, 255, 0.48)",
-        "--ck-colors-white-alpha-700": "rgba(255, 255, 255, 0.64)",
-        "--ck-colors-white-alpha-800": "rgba(255, 255, 255, 0.80)",
-        "--ck-colors-white-alpha-900": "rgba(255, 255, 255, 0.92)",
-        "--ck-colors-white-alpha-950": "rgba(255, 255, 255, 0.95)",
-        "--ck-colors-black-alpha-50": "rgba(0, 0, 0, 0.04)",
-        "--ck-colors-black-alpha-100": "rgba(0, 0, 0, 0.06)",
-        "--ck-colors-black-alpha-200": "rgba(0, 0, 0, 0.08)",
-        "--ck-colors-black-alpha-300": "rgba(0, 0, 0, 0.16)",
-        "--ck-colors-black-alpha-400": "rgba(0, 0, 0, 0.24)",
-        "--ck-colors-black-alpha-500": "rgba(0, 0, 0, 0.36)",
-        "--ck-colors-black-alpha-600": "rgba(0, 0, 0, 0.48)",
-        "--ck-colors-black-alpha-700": "rgba(0, 0, 0, 0.64)",
-        "--ck-colors-black-alpha-800": "rgba(0, 0, 0, 0.80)",
-        "--ck-colors-black-alpha-900": "rgba(0, 0, 0, 0.92)",
-        "--ck-colors-black-alpha-950": "rgba(0, 0, 0, 0.95)",
-        "--ck-colors-gray-50": "#fafafa",
-        "--ck-colors-gray-100": "#f4f4f5",
-        "--ck-colors-gray-200": "#e4e4e7",
-        "--ck-colors-gray-300": "#d4d4d8",
-        "--ck-colors-gray-400": "#a1a1aa",
-        "--ck-colors-gray-500": "#71717a",
-        "--ck-colors-gray-600": "#52525b",
-        "--ck-colors-gray-700": "#3f3f46",
-        "--ck-colors-gray-800": "#27272a",
-        "--ck-colors-gray-900": "#18181b",
-        "--ck-colors-gray-950": "#111111",
-        "--ck-colors-red-50": "#fef2f2",
-        "--ck-colors-red-100": "#fee2e2",
-        "--ck-colors-red-200": "#fecaca",
-        "--ck-colors-red-300": "#fca5a5",
-        "--ck-colors-red-400": "#f87171",
-        "--ck-colors-red-500": "#ef4444",
-        "--ck-colors-red-600": "#dc2626",
-        "--ck-colors-red-700": "#991919",
-        "--ck-colors-red-800": "#511111",
-        "--ck-colors-red-900": "#300c0c",
-        "--ck-colors-red-950": "#1f0808",
-        "--ck-colors-orange-50": "#fff7ed",
-        "--ck-colors-orange-100": "#ffedd5",
-        "--ck-colors-orange-200": "#fed7aa",
-        "--ck-colors-orange-300": "#fdba74",
-        "--ck-colors-orange-400": "#fb923c",
-        "--ck-colors-orange-500": "#f97316",
-        "--ck-colors-orange-600": "#ea580c",
-        "--ck-colors-orange-700": "#92310a",
-        "--ck-colors-orange-800": "#6c2710",
-        "--ck-colors-orange-900": "#3b1106",
-        "--ck-colors-orange-950": "#220a04",
-        "--ck-colors-yellow-50": "#fefce8",
-        "--ck-colors-yellow-100": "#fef9c3",
-        "--ck-colors-yellow-200": "#fef08a",
-        "--ck-colors-yellow-300": "#fde047",
-        "--ck-colors-yellow-400": "#facc15",
-        "--ck-colors-yellow-500": "#eab308",
-        "--ck-colors-yellow-600": "#ca8a04",
-        "--ck-colors-yellow-700": "#845209",
-        "--ck-colors-yellow-800": "#713f12",
-        "--ck-colors-yellow-900": "#422006",
-        "--ck-colors-yellow-950": "#281304",
-        "--ck-colors-green-50": "#f0fdf4",
-        "--ck-colors-green-100": "#dcfce7",
-        "--ck-colors-green-200": "#bbf7d0",
-        "--ck-colors-green-300": "#86efac",
-        "--ck-colors-green-400": "#4ade80",
-        "--ck-colors-green-500": "#22c55e",
-        "--ck-colors-green-600": "#16a34a",
-        "--ck-colors-green-700": "#116932",
-        "--ck-colors-green-800": "#124a28",
-        "--ck-colors-green-900": "#042713",
-        "--ck-colors-green-950": "#03190c",
-        "--ck-colors-teal-50": "#f0fdfa",
-        "--ck-colors-teal-100": "#ccfbf1",
-        "--ck-colors-teal-200": "#99f6e4",
-        "--ck-colors-teal-300": "#5eead4",
-        "--ck-colors-teal-400": "#2dd4bf",
-        "--ck-colors-teal-500": "#14b8a6",
-        "--ck-colors-teal-600": "#0d9488",
-        "--ck-colors-teal-700": "#0c5d56",
-        "--ck-colors-teal-800": "#114240",
-        "--ck-colors-teal-900": "#032726",
-        "--ck-colors-teal-950": "#021716",
-        "--ck-colors-blue-50": "#eff6ff",
-        "--ck-colors-blue-100": "#dbeafe",
-        "--ck-colors-blue-200": "#bfdbfe",
-        "--ck-colors-blue-300": "#a3cfff",
-        "--ck-colors-blue-400": "#60a5fa",
-        "--ck-colors-blue-500": "#3b82f6",
-        "--ck-colors-blue-600": "#2563eb",
-        "--ck-colors-blue-700": "#173da6",
-        "--ck-colors-blue-800": "#1a3478",
-        "--ck-colors-blue-900": "#14204a",
-        "--ck-colors-blue-950": "#0c142e",
-        "--ck-colors-cyan-50": "#ecfeff",
-        "--ck-colors-cyan-100": "#cffafe",
-        "--ck-colors-cyan-200": "#a5f3fc",
-        "--ck-colors-cyan-300": "#67e8f9",
-        "--ck-colors-cyan-400": "#22d3ee",
-        "--ck-colors-cyan-500": "#06b6d4",
-        "--ck-colors-cyan-600": "#0891b2",
-        "--ck-colors-cyan-700": "#0c5c72",
-        "--ck-colors-cyan-800": "#134152",
-        "--ck-colors-cyan-900": "#072a38",
-        "--ck-colors-cyan-950": "#051b24",
-        "--ck-colors-purple-50": "#faf5ff",
-        "--ck-colors-purple-100": "#f3e8ff",
-        "--ck-colors-purple-200": "#e9d5ff",
-        "--ck-colors-purple-300": "#d8b4fe",
-        "--ck-colors-purple-400": "#c084fc",
-        "--ck-colors-purple-500": "#a855f7",
-        "--ck-colors-purple-600": "#9333ea",
-        "--ck-colors-purple-700": "#641ba3",
-        "--ck-colors-purple-800": "#4a1772",
-        "--ck-colors-purple-900": "#2f0553",
-        "--ck-colors-purple-950": "#1a032e",
-        "--ck-colors-pink-50": "#fdf2f8",
-        "--ck-colors-pink-100": "#fce7f3",
-        "--ck-colors-pink-200": "#fbcfe8",
-        "--ck-colors-pink-300": "#f9a8d4",
-        "--ck-colors-pink-400": "#f472b6",
-        "--ck-colors-pink-500": "#ec4899",
-        "--ck-colors-pink-600": "#db2777",
-        "--ck-colors-pink-700": "#a41752",
-        "--ck-colors-pink-800": "#6d0e34",
-        "--ck-colors-pink-900": "#45061f",
-        "--ck-colors-pink-950": "#2c0514",
-        "--ck-durations-fastest": "50ms",
-        "--ck-durations-faster": "100ms",
-        "--ck-durations-fast": "150ms",
-        "--ck-durations-moderate": "200ms",
-        "--ck-durations-slow": "300ms",
-        "--ck-durations-slower": "400ms",
-        "--ck-durations-slowest": "500ms",
-        "--ck-easings-ease-in": "cubic-bezier(0.42, 0, 1, 1)",
-        "--ck-easings-ease-out": "cubic-bezier(0, 0, 0.58, 1)",
-        "--ck-easings-ease-in-out": "cubic-bezier(0.42, 0, 0.58, 1)",
-        "--ck-easings-ease-in-smooth": "cubic-bezier(0.32, 0.72, 0, 1)",
-        "--ck-fonts-heading":
-          'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        "--ck-fonts-body":
-          'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        "--ck-fonts-mono": 'SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace',
-        "--ck-font-sizes-2xs": "0.625rem",
-        "--ck-font-sizes-xs": "0.75rem",
-        "--ck-font-sizes-sm": "0.875rem",
-        "--ck-font-sizes-md": "1rem",
-        "--ck-font-sizes-lg": "1.125rem",
-        "--ck-font-sizes-xl": "1.25rem",
-        "--ck-font-sizes-2xl": "1.5rem",
-        "--ck-font-sizes-3xl": "1.875rem",
-        "--ck-font-sizes-4xl": "2.25rem",
-        "--ck-font-sizes-5xl": "3rem",
-        "--ck-font-sizes-6xl": "3.75rem",
-        "--ck-font-sizes-7xl": "4.5rem",
-        "--ck-font-sizes-8xl": "6rem",
-        "--ck-font-sizes-9xl": "8rem",
-        "--ck-font-weights-thin": "100",
-        "--ck-font-weights-extralight": "200",
-        "--ck-font-weights-light": "300",
-        "--ck-font-weights-normal": "400",
-        "--ck-font-weights-medium": "500",
-        "--ck-font-weights-semibold": "600",
-        "--ck-font-weights-bold": "700",
-        "--ck-font-weights-extrabold": "800",
-        "--ck-font-weights-black": "900",
-        "--ck-letter-spacings-tighter": "-0.05em",
-        "--ck-letter-spacings-tight": "-0.025em",
-        "--ck-letter-spacings-wide": "0.025em",
-        "--ck-letter-spacings-wider": "0.05em",
-        "--ck-letter-spacings-widest": "0.1em",
-        "--ck-line-heights-shorter": 1.25,
-        "--ck-line-heights-short": 1.375,
-        "--ck-line-heights-moderate": 1.5,
-        "--ck-line-heights-tall": 1.625,
-        "--ck-line-heights-taller": 2,
-        "--ck-radii-none": "0",
-        "--ck-radii-2xs": "0.0625rem",
-        "--ck-radii-xs": "0.125rem",
-        "--ck-radii-sm": "0.25rem",
-        "--ck-radii-md": "0.375rem",
-        "--ck-radii-lg": "0.5rem",
-        "--ck-radii-xl": "0.75rem",
-        "--ck-radii-2xl": "1rem",
-        "--ck-radii-3xl": "1.5rem",
-        "--ck-radii-4xl": "2rem",
-        "--ck-radii-full": "9999px",
-        "--ck-spacing-1": "0.25rem",
-        "--ck-spacing-2": "0.5rem",
-        "--ck-spacing-3": "0.75rem",
-        "--ck-spacing-4": "1rem",
-        "--ck-spacing-5": "1.25rem",
-        "--ck-spacing-6": "1.5rem",
-        "--ck-spacing-7": "1.75rem",
-        "--ck-spacing-8": "2rem",
-        "--ck-spacing-9": "2.25rem",
-        "--ck-spacing-10": "2.5rem",
-        "--ck-spacing-11": "2.75rem",
-        "--ck-spacing-12": "3rem",
-        "--ck-spacing-14": "3.5rem",
-        "--ck-spacing-16": "4rem",
-        "--ck-spacing-20": "5rem",
-        "--ck-spacing-24": "6rem",
-        "--ck-spacing-28": "7rem",
-        "--ck-spacing-32": "8rem",
-        "--ck-spacing-36": "9rem",
-        "--ck-spacing-40": "10rem",
-        "--ck-spacing-44": "11rem",
-        "--ck-spacing-48": "12rem",
-        "--ck-spacing-52": "13rem",
-        "--ck-spacing-56": "14rem",
-        "--ck-spacing-60": "15rem",
-        "--ck-spacing-64": "16rem",
-        "--ck-spacing-72": "18rem",
-        "--ck-spacing-80": "20rem",
-        "--ck-spacing-96": "24rem",
-        "--ck-spacing-0\\.5": "0.125rem",
-        "--ck-spacing-1\\.5": "0.375rem",
-        "--ck-spacing-2\\.5": "0.625rem",
-        "--ck-spacing-3\\.5": "0.875rem",
-        "--ck-spacing-4\\.5": "1.125rem",
-        "--ck-sizes-1": "0.25rem",
-        "--ck-sizes-2": "0.5rem",
-        "--ck-sizes-3": "0.75rem",
-        "--ck-sizes-4": "1rem",
-        "--ck-sizes-5": "1.25rem",
-        "--ck-sizes-6": "1.5rem",
-        "--ck-sizes-7": "1.75rem",
-        "--ck-sizes-8": "2rem",
-        "--ck-sizes-9": "2.25rem",
-        "--ck-sizes-10": "2.5rem",
-        "--ck-sizes-11": "2.75rem",
-        "--ck-sizes-12": "3rem",
-        "--ck-sizes-14": "3.5rem",
-        "--ck-sizes-16": "4rem",
-        "--ck-sizes-20": "5rem",
-        "--ck-sizes-24": "6rem",
-        "--ck-sizes-28": "7rem",
-        "--ck-sizes-32": "8rem",
-        "--ck-sizes-36": "9rem",
-        "--ck-sizes-40": "10rem",
-        "--ck-sizes-44": "11rem",
-        "--ck-sizes-48": "12rem",
-        "--ck-sizes-52": "13rem",
-        "--ck-sizes-56": "14rem",
-        "--ck-sizes-60": "15rem",
-        "--ck-sizes-64": "16rem",
-        "--ck-sizes-72": "18rem",
-        "--ck-sizes-80": "20rem",
-        "--ck-sizes-96": "24rem",
-        "--ck-sizes-3xs": "14rem",
-        "--ck-sizes-2xs": "16rem",
-        "--ck-sizes-xs": "20rem",
-        "--ck-sizes-sm": "24rem",
-        "--ck-sizes-md": "28rem",
-        "--ck-sizes-lg": "32rem",
-        "--ck-sizes-xl": "36rem",
-        "--ck-sizes-2xl": "42rem",
-        "--ck-sizes-3xl": "48rem",
-        "--ck-sizes-4xl": "56rem",
-        "--ck-sizes-5xl": "64rem",
-        "--ck-sizes-6xl": "72rem",
-        "--ck-sizes-7xl": "80rem",
-        "--ck-sizes-8xl": "90rem",
-        "--ck-sizes-0\\.5": "0.125rem",
-        "--ck-sizes-1\\.5": "0.375rem",
-        "--ck-sizes-2\\.5": "0.625rem",
-        "--ck-sizes-3\\.5": "0.875rem",
-        "--ck-sizes-4\\.5": "1.125rem",
-        "--ck-sizes-1\\/2": "50%",
-        "--ck-sizes-1\\/3": "33.333333%",
-        "--ck-sizes-2\\/3": "66.666667%",
-        "--ck-sizes-1\\/4": "25%",
-        "--ck-sizes-3\\/4": "75%",
-        "--ck-sizes-1\\/5": "20%",
-        "--ck-sizes-2\\/5": "40%",
-        "--ck-sizes-3\\/5": "60%",
-        "--ck-sizes-4\\/5": "80%",
-        "--ck-sizes-1\\/6": "16.666667%",
-        "--ck-sizes-2\\/6": "33.333333%",
-        "--ck-sizes-3\\/6": "50%",
-        "--ck-sizes-4\\/6": "66.666667%",
-        "--ck-sizes-5\\/6": "83.333333%",
-        "--ck-sizes-1\\/12": "8.333333%",
-        "--ck-sizes-2\\/12": "16.666667%",
-        "--ck-sizes-3\\/12": "25%",
-        "--ck-sizes-4\\/12": "33.333333%",
-        "--ck-sizes-5\\/12": "41.666667%",
-        "--ck-sizes-6\\/12": "50%",
-        "--ck-sizes-7\\/12": "58.333333%",
-        "--ck-sizes-8\\/12": "66.666667%",
-        "--ck-sizes-9\\/12": "75%",
-        "--ck-sizes-10\\/12": "83.333333%",
-        "--ck-sizes-11\\/12": "91.666667%",
-        "--ck-sizes-max": "max-content",
-        "--ck-sizes-min": "min-content",
-        "--ck-sizes-fit": "fit-content",
-        "--ck-sizes-prose": "60ch",
-        "--ck-sizes-full": "100%",
-        "--ck-sizes-dvh": "100dvh",
-        "--ck-sizes-svh": "100svh",
-        "--ck-sizes-lvh": "100lvh",
-        "--ck-sizes-dvw": "100dvw",
-        "--ck-sizes-svw": "100svw",
-        "--ck-sizes-lvw": "100lvw",
-        "--ck-sizes-vw": "100vw",
-        "--ck-sizes-vh": "100vh",
-        "--ck-sizes-breakpoint-sm": "480px",
-        "--ck-sizes-breakpoint-md": "768px",
-        "--ck-sizes-breakpoint-lg": "1024px",
-        "--ck-sizes-breakpoint-xl": "1280px",
-        "--ck-sizes-breakpoint-2xl": "1536px",
-        "--ck-z-index-hide": -1,
-        "--ck-z-index-base": 0,
-        "--ck-z-index-docked": 10,
-        "--ck-z-index-dropdown": 1000,
-        "--ck-z-index-sticky": 1100,
-        "--ck-z-index-banner": 1200,
-        "--ck-z-index-overlay": 1300,
-        "--ck-z-index-modal": 1400,
-        "--ck-z-index-popover": 1500,
-        "--ck-z-index-skip-nav": 1600,
-        "--ck-z-index-toast": 1700,
-        "--ck-z-index-tooltip": 1800,
-        "--ck-z-index-max": 2147483647,
-        "--ck-cursor-button": "pointer",
-        "--ck-cursor-checkbox": "default",
-        "--ck-cursor-disabled": "not-allowed",
-        "--ck-cursor-menuitem": "default",
-        "--ck-cursor-option": "default",
-        "--ck-cursor-radio": "default",
-        "--ck-cursor-slider": "default",
-        "--ck-cursor-switch": "pointer",
-        "--ck-breakpoints-sm": "480px",
-        "--ck-breakpoints-md": "768px",
-        "--ck-breakpoints-lg": "1024px",
-        "--ck-breakpoints-xl": "1280px",
-        "--ck-breakpoints-2xl": "1536px",
-        "--ck-colors-bg": "",
-        "--ck-colors-bg-subtle": "",
-        "--ck-colors-bg-muted": "",
-        "--ck-colors-bg-emphasized": "",
-        "--ck-colors-bg-inverted": "",
-        "--ck-colors-bg-panel": "",
-        "--ck-colors-bg-error": "",
-        "--ck-colors-bg-warning": "",
-        "--ck-colors-bg-success": "",
-        "--ck-colors-bg-info": "",
-        "--ck-colors-fg": "",
-        "--ck-colors-fg-muted": "",
-        "--ck-colors-fg-subtle": "",
-        "--ck-colors-fg-inverted": "",
-        "--ck-colors-fg-error": "",
-        "--ck-colors-fg-warning": "",
-        "--ck-colors-fg-success": "",
-        "--ck-colors-fg-info": "",
-        "--ck-colors-border": "",
-        "--ck-colors-border-muted": "",
-        "--ck-colors-border-subtle": "",
-        "--ck-colors-border-emphasized": "",
-        "--ck-colors-border-inverted": "",
-        "--ck-colors-border-error": "",
-        "--ck-colors-border-warning": "",
-        "--ck-colors-border-success": "",
-        "--ck-colors-border-info": "",
-        "--ck-colors-gray-contrast": "",
-        "--ck-colors-gray-fg": "",
-        "--ck-colors-gray-subtle": "",
-        "--ck-colors-gray-muted": "",
-        "--ck-colors-gray-emphasized": "",
-        "--ck-colors-gray-solid": "",
-        "--ck-colors-gray-focus-ring": "",
-        "--ck-colors-red-contrast": "",
-        "--ck-colors-red-fg": "",
-        "--ck-colors-red-subtle": "",
-        "--ck-colors-red-muted": "",
-        "--ck-colors-red-emphasized": "",
-        "--ck-colors-red-solid": "",
-        "--ck-colors-red-focus-ring": "",
-        "--ck-colors-orange-contrast": "",
-        "--ck-colors-orange-fg": "",
-        "--ck-colors-orange-subtle": "",
-        "--ck-colors-orange-muted": "",
-        "--ck-colors-orange-emphasized": "",
-        "--ck-colors-orange-solid": "",
-        "--ck-colors-orange-focus-ring": "",
-        "--ck-colors-green-contrast": "",
-        "--ck-colors-green-fg": "",
-        "--ck-colors-green-subtle": "",
-        "--ck-colors-green-muted": "",
-        "--ck-colors-green-emphasized": "",
-        "--ck-colors-green-solid": "",
-        "--ck-colors-green-focus-ring": "",
-        "--ck-colors-blue-contrast": "",
-        "--ck-colors-blue-fg": "",
-        "--ck-colors-blue-subtle": "",
-        "--ck-colors-blue-muted": "",
-        "--ck-colors-blue-emphasized": "",
-        "--ck-colors-blue-solid": "",
-        "--ck-colors-blue-focus-ring": "",
-        "--ck-colors-yellow-contrast": "",
-        "--ck-colors-yellow-fg": "",
-        "--ck-colors-yellow-subtle": "",
-        "--ck-colors-yellow-muted": "",
-        "--ck-colors-yellow-emphasized": "",
-        "--ck-colors-yellow-solid": "",
-        "--ck-colors-yellow-focus-ring": "",
-        "--ck-colors-teal-contrast": "",
-        "--ck-colors-teal-fg": "",
-        "--ck-colors-teal-subtle": "",
-        "--ck-colors-teal-muted": "",
-        "--ck-colors-teal-emphasized": "",
-        "--ck-colors-teal-solid": "",
-        "--ck-colors-teal-focus-ring": "",
-        "--ck-colors-purple-contrast": "",
-        "--ck-colors-purple-fg": "",
-        "--ck-colors-purple-subtle": "",
-        "--ck-colors-purple-muted": "",
-        "--ck-colors-purple-emphasized": "",
-        "--ck-colors-purple-solid": "",
-        "--ck-colors-purple-focus-ring": "",
-        "--ck-colors-pink-contrast": "",
-        "--ck-colors-pink-fg": "",
-        "--ck-colors-pink-subtle": "",
-        "--ck-colors-pink-muted": "",
-        "--ck-colors-pink-emphasized": "",
-        "--ck-colors-pink-solid": "",
-        "--ck-colors-pink-focus-ring": "",
-        "--ck-colors-cyan-contrast": "",
-        "--ck-colors-cyan-fg": "",
-        "--ck-colors-cyan-subtle": "",
-        "--ck-colors-cyan-muted": "",
-        "--ck-colors-cyan-emphasized": "",
-        "--ck-colors-cyan-solid": "",
-        "--ck-colors-cyan-focus-ring": "",
-        "--ck-shadows-xs": "",
-        "--ck-shadows-sm": "",
-        "--ck-shadows-md": "",
-        "--ck-shadows-lg": "",
-        "--ck-shadows-xl": "",
-        "--ck-shadows-2xl": "",
-        "--ck-shadows-inner": "",
-        "--ck-shadows-inset": "",
-        "--ck-radii-l1": "var(--ck-radii-xs)",
-        "--ck-radii-l2": "var(--ck-radii-sm)",
-        "--ck-radii-l3": "var(--ck-radii-md)",
-      },
-      ":root &, .light &": {
-        "--ck-colors-bg": "var(--ck-colors-white)",
-        "--ck-colors-bg-subtle": "var(--ck-colors-gray-50)",
-        "--ck-colors-bg-muted": "var(--ck-colors-gray-100)",
-        "--ck-colors-bg-emphasized": "var(--ck-colors-gray-200)",
-        "--ck-colors-bg-inverted": "var(--ck-colors-black)",
-        "--ck-colors-bg-panel": "var(--ck-colors-white)",
-        "--ck-colors-bg-error": "var(--ck-colors-red-50)",
-        "--ck-colors-bg-warning": "var(--ck-colors-orange-50)",
-        "--ck-colors-bg-success": "var(--ck-colors-green-50)",
-        "--ck-colors-bg-info": "var(--ck-colors-blue-50)",
-        "--ck-colors-fg": "var(--ck-colors-black)",
-        "--ck-colors-fg-muted": "var(--ck-colors-gray-600)",
-        "--ck-colors-fg-subtle": "var(--ck-colors-gray-400)",
-        "--ck-colors-fg-inverted": "var(--ck-colors-gray-50)",
-        "--ck-colors-fg-error": "var(--ck-colors-red-500)",
-        "--ck-colors-fg-warning": "var(--ck-colors-orange-600)",
-        "--ck-colors-fg-success": "var(--ck-colors-green-600)",
-        "--ck-colors-fg-info": "var(--ck-colors-blue-600)",
-        "--ck-colors-border": "var(--ck-colors-gray-200)",
-        "--ck-colors-border-muted": "var(--ck-colors-gray-100)",
-        "--ck-colors-border-subtle": "var(--ck-colors-gray-50)",
-        "--ck-colors-border-emphasized": "var(--ck-colors-gray-300)",
-        "--ck-colors-border-inverted": "var(--ck-colors-gray-800)",
-        "--ck-colors-border-error": "var(--ck-colors-red-500)",
-        "--ck-colors-border-warning": "var(--ck-colors-orange-500)",
-        "--ck-colors-border-success": "var(--ck-colors-green-500)",
-        "--ck-colors-border-info": "var(--ck-colors-blue-500)",
-        "--ck-colors-gray-contrast": "var(--ck-colors-white)",
-        "--ck-colors-gray-fg": "var(--ck-colors-gray-800)",
-        "--ck-colors-gray-subtle": "var(--ck-colors-gray-100)",
-        "--ck-colors-gray-muted": "var(--ck-colors-gray-200)",
-        "--ck-colors-gray-emphasized": "var(--ck-colors-gray-300)",
-        "--ck-colors-gray-solid": "var(--ck-colors-gray-900)",
-        "--ck-colors-gray-focus-ring": "var(--ck-colors-gray-400)",
-        "--ck-colors-red-contrast": "white",
-        "--ck-colors-red-fg": "var(--ck-colors-red-700)",
-        "--ck-colors-red-subtle": "var(--ck-colors-red-100)",
-        "--ck-colors-red-muted": "var(--ck-colors-red-200)",
-        "--ck-colors-red-emphasized": "var(--ck-colors-red-300)",
-        "--ck-colors-red-solid": "var(--ck-colors-red-600)",
-        "--ck-colors-red-focus-ring": "var(--ck-colors-red-400)",
-        "--ck-colors-orange-contrast": "white",
-        "--ck-colors-orange-fg": "var(--ck-colors-orange-700)",
-        "--ck-colors-orange-subtle": "var(--ck-colors-orange-100)",
-        "--ck-colors-orange-muted": "var(--ck-colors-orange-200)",
-        "--ck-colors-orange-emphasized": "var(--ck-colors-orange-300)",
-        "--ck-colors-orange-solid": "var(--ck-colors-orange-600)",
-        "--ck-colors-orange-focus-ring": "var(--ck-colors-orange-400)",
-        "--ck-colors-green-contrast": "white",
-        "--ck-colors-green-fg": "var(--ck-colors-green-700)",
-        "--ck-colors-green-subtle": "var(--ck-colors-green-100)",
-        "--ck-colors-green-muted": "var(--ck-colors-green-200)",
-        "--ck-colors-green-emphasized": "var(--ck-colors-green-300)",
-        "--ck-colors-green-solid": "var(--ck-colors-green-600)",
-        "--ck-colors-green-focus-ring": "var(--ck-colors-green-400)",
-        "--ck-colors-blue-contrast": "white",
-        "--ck-colors-blue-fg": "var(--ck-colors-blue-700)",
-        "--ck-colors-blue-subtle": "var(--ck-colors-blue-100)",
-        "--ck-colors-blue-muted": "var(--ck-colors-blue-200)",
-        "--ck-colors-blue-emphasized": "var(--ck-colors-blue-300)",
-        "--ck-colors-blue-solid": "var(--ck-colors-blue-600)",
-        "--ck-colors-blue-focus-ring": "var(--ck-colors-blue-400)",
-        "--ck-colors-yellow-contrast": "black",
-        "--ck-colors-yellow-fg": "var(--ck-colors-yellow-800)",
-        "--ck-colors-yellow-subtle": "var(--ck-colors-yellow-100)",
-        "--ck-colors-yellow-muted": "var(--ck-colors-yellow-200)",
-        "--ck-colors-yellow-emphasized": "var(--ck-colors-yellow-300)",
-        "--ck-colors-yellow-solid": "var(--ck-colors-yellow-300)",
-        "--ck-colors-yellow-focus-ring": "var(--ck-colors-yellow-400)",
-        "--ck-colors-teal-contrast": "white",
-        "--ck-colors-teal-fg": "var(--ck-colors-teal-700)",
-        "--ck-colors-teal-subtle": "var(--ck-colors-teal-100)",
-        "--ck-colors-teal-muted": "var(--ck-colors-teal-200)",
-        "--ck-colors-teal-emphasized": "var(--ck-colors-teal-300)",
-        "--ck-colors-teal-solid": "var(--ck-colors-teal-600)",
-        "--ck-colors-teal-focus-ring": "var(--ck-colors-teal-400)",
-        "--ck-colors-purple-contrast": "white",
-        "--ck-colors-purple-fg": "var(--ck-colors-purple-700)",
-        "--ck-colors-purple-subtle": "var(--ck-colors-purple-100)",
-        "--ck-colors-purple-muted": "var(--ck-colors-purple-200)",
-        "--ck-colors-purple-emphasized": "var(--ck-colors-purple-300)",
-        "--ck-colors-purple-solid": "var(--ck-colors-purple-600)",
-        "--ck-colors-purple-focus-ring": "var(--ck-colors-purple-400)",
-        "--ck-colors-pink-contrast": "white",
-        "--ck-colors-pink-fg": "var(--ck-colors-pink-700)",
-        "--ck-colors-pink-subtle": "var(--ck-colors-pink-100)",
-        "--ck-colors-pink-muted": "var(--ck-colors-pink-200)",
-        "--ck-colors-pink-emphasized": "var(--ck-colors-pink-300)",
-        "--ck-colors-pink-solid": "var(--ck-colors-pink-600)",
-        "--ck-colors-pink-focus-ring": "var(--ck-colors-pink-400)",
-        "--ck-colors-cyan-contrast": "white",
-        "--ck-colors-cyan-fg": "var(--ck-colors-cyan-700)",
-        "--ck-colors-cyan-subtle": "var(--ck-colors-cyan-100)",
-        "--ck-colors-cyan-muted": "var(--ck-colors-cyan-200)",
-        "--ck-colors-cyan-emphasized": "var(--ck-colors-cyan-300)",
-        "--ck-colors-cyan-solid": "var(--ck-colors-cyan-600)",
-        "--ck-colors-cyan-focus-ring": "var(--ck-colors-cyan-400)",
-        "--ck-shadows-xs":
-          "0px 1px 2px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 20%, transparent)",
-        "--ck-shadows-sm":
-          "0px 2px 4px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-md":
-          "0px 4px 8px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-lg":
-          "0px 8px 16px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-xl":
-          "0px 16px 24px color-mix(in srgb, var(--ck-colors-gray-900) 10%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-2xl":
-          "0px 24px 40px color-mix(in srgb, var(--ck-colors-gray-900) 16%, transparent), 0px 0px 1px color-mix(in srgb, var(--ck-colors-gray-900) 30%, transparent)",
-        "--ck-shadows-inner": "inset 0 2px 4px 0 color-mix(in srgb, black 5%, transparent)",
-        "--ck-shadows-inset": "inset 0 0 0 1px color-mix(in srgb, black 5%, transparent)",
-      },
-      ".dark &, .dark .chakra-theme:not(.light) &": {
-        "--ck-colors-bg": "var(--ck-colors-black)",
-        "--ck-colors-bg-subtle": "var(--ck-colors-gray-950)",
-        "--ck-colors-bg-muted": "var(--ck-colors-gray-900)",
-        "--ck-colors-bg-emphasized": "var(--ck-colors-gray-800)",
-        "--ck-colors-bg-inverted": "var(--ck-colors-white)",
-        "--ck-colors-bg-panel": "var(--ck-colors-gray-950)",
-        "--ck-colors-bg-error": "var(--ck-colors-red-950)",
-        "--ck-colors-bg-warning": "var(--ck-colors-orange-950)",
-        "--ck-colors-bg-success": "var(--ck-colors-green-950)",
-        "--ck-colors-bg-info": "var(--ck-colors-blue-950)",
-        "--ck-colors-fg": "var(--ck-colors-gray-50)",
-        "--ck-colors-fg-muted": "var(--ck-colors-gray-400)",
-        "--ck-colors-fg-subtle": "var(--ck-colors-gray-500)",
-        "--ck-colors-fg-inverted": "var(--ck-colors-black)",
-        "--ck-colors-fg-error": "var(--ck-colors-red-400)",
-        "--ck-colors-fg-warning": "var(--ck-colors-orange-300)",
-        "--ck-colors-fg-success": "var(--ck-colors-green-300)",
-        "--ck-colors-fg-info": "var(--ck-colors-blue-300)",
-        "--ck-colors-border": "var(--ck-colors-gray-800)",
-        "--ck-colors-border-muted": "var(--ck-colors-gray-900)",
-        "--ck-colors-border-subtle": "var(--ck-colors-gray-950)",
-        "--ck-colors-border-emphasized": "var(--ck-colors-gray-700)",
-        "--ck-colors-border-inverted": "var(--ck-colors-gray-200)",
-        "--ck-colors-border-error": "var(--ck-colors-red-400)",
-        "--ck-colors-border-warning": "var(--ck-colors-orange-400)",
-        "--ck-colors-border-success": "var(--ck-colors-green-400)",
-        "--ck-colors-border-info": "var(--ck-colors-blue-400)",
-        "--ck-colors-gray-contrast": "var(--ck-colors-black)",
-        "--ck-colors-gray-fg": "var(--ck-colors-gray-200)",
-        "--ck-colors-gray-subtle": "var(--ck-colors-gray-900)",
-        "--ck-colors-gray-muted": "var(--ck-colors-gray-800)",
-        "--ck-colors-gray-emphasized": "var(--ck-colors-gray-700)",
-        "--ck-colors-gray-solid": "var(--ck-colors-white)",
-        "--ck-colors-gray-focus-ring": "var(--ck-colors-gray-400)",
-        "--ck-colors-red-contrast": "white",
-        "--ck-colors-red-fg": "var(--ck-colors-red-300)",
-        "--ck-colors-red-subtle": "var(--ck-colors-red-900)",
-        "--ck-colors-red-muted": "var(--ck-colors-red-800)",
-        "--ck-colors-red-emphasized": "var(--ck-colors-red-700)",
-        "--ck-colors-red-solid": "var(--ck-colors-red-600)",
-        "--ck-colors-red-focus-ring": "var(--ck-colors-red-400)",
-        "--ck-colors-orange-contrast": "black",
-        "--ck-colors-orange-fg": "var(--ck-colors-orange-300)",
-        "--ck-colors-orange-subtle": "var(--ck-colors-orange-900)",
-        "--ck-colors-orange-muted": "var(--ck-colors-orange-800)",
-        "--ck-colors-orange-emphasized": "var(--ck-colors-orange-700)",
-        "--ck-colors-orange-solid": "var(--ck-colors-orange-500)",
-        "--ck-colors-orange-focus-ring": "var(--ck-colors-orange-400)",
-        "--ck-colors-green-contrast": "white",
-        "--ck-colors-green-fg": "var(--ck-colors-green-300)",
-        "--ck-colors-green-subtle": "var(--ck-colors-green-900)",
-        "--ck-colors-green-muted": "var(--ck-colors-green-800)",
-        "--ck-colors-green-emphasized": "var(--ck-colors-green-700)",
-        "--ck-colors-green-solid": "var(--ck-colors-green-600)",
-        "--ck-colors-green-focus-ring": "var(--ck-colors-green-400)",
-        "--ck-colors-blue-contrast": "white",
-        "--ck-colors-blue-fg": "var(--ck-colors-blue-300)",
-        "--ck-colors-blue-subtle": "var(--ck-colors-blue-900)",
-        "--ck-colors-blue-muted": "var(--ck-colors-blue-800)",
-        "--ck-colors-blue-emphasized": "var(--ck-colors-blue-700)",
-        "--ck-colors-blue-solid": "var(--ck-colors-blue-600)",
-        "--ck-colors-blue-focus-ring": "var(--ck-colors-blue-400)",
-        "--ck-colors-yellow-contrast": "black",
-        "--ck-colors-yellow-fg": "var(--ck-colors-yellow-300)",
-        "--ck-colors-yellow-subtle": "var(--ck-colors-yellow-900)",
-        "--ck-colors-yellow-muted": "var(--ck-colors-yellow-800)",
-        "--ck-colors-yellow-emphasized": "var(--ck-colors-yellow-700)",
-        "--ck-colors-yellow-solid": "var(--ck-colors-yellow-300)",
-        "--ck-colors-yellow-focus-ring": "var(--ck-colors-yellow-400)",
-        "--ck-colors-teal-contrast": "white",
-        "--ck-colors-teal-fg": "var(--ck-colors-teal-300)",
-        "--ck-colors-teal-subtle": "var(--ck-colors-teal-900)",
-        "--ck-colors-teal-muted": "var(--ck-colors-teal-800)",
-        "--ck-colors-teal-emphasized": "var(--ck-colors-teal-700)",
-        "--ck-colors-teal-solid": "var(--ck-colors-teal-600)",
-        "--ck-colors-teal-focus-ring": "var(--ck-colors-teal-400)",
-        "--ck-colors-purple-contrast": "white",
-        "--ck-colors-purple-fg": "var(--ck-colors-purple-300)",
-        "--ck-colors-purple-subtle": "var(--ck-colors-purple-900)",
-        "--ck-colors-purple-muted": "var(--ck-colors-purple-800)",
-        "--ck-colors-purple-emphasized": "var(--ck-colors-purple-700)",
-        "--ck-colors-purple-solid": "var(--ck-colors-purple-600)",
-        "--ck-colors-purple-focus-ring": "var(--ck-colors-purple-400)",
-        "--ck-colors-pink-contrast": "white",
-        "--ck-colors-pink-fg": "var(--ck-colors-pink-300)",
-        "--ck-colors-pink-subtle": "var(--ck-colors-pink-900)",
-        "--ck-colors-pink-muted": "var(--ck-colors-pink-800)",
-        "--ck-colors-pink-emphasized": "var(--ck-colors-pink-700)",
-        "--ck-colors-pink-solid": "var(--ck-colors-pink-600)",
-        "--ck-colors-pink-focus-ring": "var(--ck-colors-pink-400)",
-        "--ck-colors-cyan-contrast": "white",
-        "--ck-colors-cyan-fg": "var(--ck-colors-cyan-300)",
-        "--ck-colors-cyan-subtle": "var(--ck-colors-cyan-900)",
-        "--ck-colors-cyan-muted": "var(--ck-colors-cyan-800)",
-        "--ck-colors-cyan-emphasized": "var(--ck-colors-cyan-700)",
-        "--ck-colors-cyan-solid": "var(--ck-colors-cyan-600)",
-        "--ck-colors-cyan-focus-ring": "var(--ck-colors-cyan-400)",
-        "--ck-shadows-xs":
-          "0px 1px 1px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 20%, transparent)",
-        "--ck-shadows-sm":
-          "0px 2px 4px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-md":
-          "0px 4px 8px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-lg":
-          "0px 8px 16px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-xl":
-          "0px 16px 24px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-2xl":
-          "0px 24px 40px color-mix(in srgb, black 64%, transparent), 0px 0px 1px inset color-mix(in srgb, var(--ck-colors-gray-300) 30%, transparent)",
-        "--ck-shadows-inner": "inset 0 2px 4px 0 black",
-        "--ck-shadows-inset": "inset 0 0 0 1px color-mix(in srgb, var(--ck-colors-gray-300) 5%, transparent)",
-      },
+  "openapi": "3.0.3",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "api_get_schema",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "successful operation"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Return the OpenAPI schema in JSON format.",
+        "tags": [
+          "meta"
+        ]
+      }
     },
+    "/machines": {
+      "get": {
+        "operationId": "get_machines",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MachineInfoResponse"
+                  },
+                  "title": "Array_of_MachineInfoResponse",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "successful operation"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "List available machines and their statuses",
+        "tags": [
+          "machines"
+        ]
+      }
+    },
+    "/machines/{id}": {
+      "get": {
+        "operationId": "get_machine",
+        "parameters": [
+          {
+            "description": "The machine ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineInfoResponse"
+                }
+              }
+            },
+            "description": "successful operation"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Get the status of a specific machine",
+        "tags": [
+          "machines"
+        ]
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "get_metrics",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "String",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "successful operation"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "List available machines and their statuses",
+        "tags": [
+          "hidden"
+        ]
+      }
+    },
+    "/ping": {
+      "get": {
+        "operationId": "ping",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pong"
+                }
+              }
+            },
+            "description": "successful operation"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Return pong.",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/print": {
+      "post": {
+        "operationId": "print_file",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "format": "binary",
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintJobResponse"
+                }
+              }
+            },
+            "description": "successful operation"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Print a given file. File must be a sliceable 3D model.",
+        "tags": [
+          "machines"
+        ]
+      }
+    }
   },
-]
+  "tags": [
+    {
+      "description": "Hidden API endpoints that should not show up in the docs.",
+      "externalDocs": {
+        "url": "https://docs.zoo.dev/api/machines"
+      },
+      "name": "hidden"
+    },
+    {
+      "description": "Utilities for making parts and discovering machines.",
+      "externalDocs": {
+        "url": "https://docs.zoo.dev/api/machines"
+      },
+      "name": "machines"
+    },
+    {
+      "description": "Meta information about the API.",
+      "externalDocs": {
+        "url": "https://docs.zoo.dev/api/meta"
+      },
+      "name": "meta"
+    }
+  ]
+}

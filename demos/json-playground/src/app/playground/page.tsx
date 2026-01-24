@@ -22,11 +22,11 @@ export default function Page() {
           <RequestView />
         </GridItem>
 
-        <GridItem colSpan={5}>
+        <GridItem colSpan={4}>
           <ProcessView />
         </GridItem>
 
-        <GridItem colSpan={2}>
+        <GridItem colSpan={3}>
           <ResponseView />
         </GridItem>
       </SimpleGrid>

@@ -1,5 +1,7 @@
 import { fromPromise, setup, assign, enqueueActions, fromCallback } from "xstate"
-import { makeDocFromJson, makeJsonPresentation, makeStabeJson } from "../helpers"
+import { makeDocFromJson, makeJsonPresentation, makeStabeJson, makeSchemaFromJson,
+makeParsedJson, makeFriendlyJson, makeCompactedJson, makeStringJson, makeMinifiedJson
+} from "../helpers"
 
 export const jsonManagerMachine = setup({
   actions: {
@@ -7,6 +9,29 @@ export const jsonManagerMachine = setup({
       context.execution = {
         jsonDoc: context.config.jsonDoc,
         preferences: context.config.preferences,
+        jsonPresentation: {
+          parsed: {
+            data: null,
+          },
+          string: {
+            data: null,
+          },
+          minified: {
+            data: null,
+          },
+          compacted: {
+            data: null,
+          },
+          friendly: {
+            data: null,
+          },
+        },
+        jsonStablized: {
+          data: null,
+        },
+        jsonSchema: {
+          data: null,
+        },
       }
     }),
     rawJsonPersist: assign(({ context, event }: any) => {
@@ -16,16 +41,11 @@ export const jsonManagerMachine = setup({
       console.log("---persistDoc---", params)
       context.execution.jsonDoc = params
     }),
-
     persistStableJsonHander: assign(({ context, event }: any, params: any) => {
-      context.execution.jsonStablized = params
+      context.execution.jsonStablized.data = params
     }),
-
-    jsonPresentationHandler: assign(({ context, event }: any, params: any) => {
-      context.execution.jsonPresentation = makeJsonPresentation(
-        context?.execution?.jsonDoc?.content,
-        context?.execution?.preferences?.indent,
-      )
+    persistJsonSchemaHander: assign(({ context, event }: any, params: any) => {
+      context.execution.jsonSchema.data = params
     }),
   },
   actors: {
@@ -33,6 +53,10 @@ export const jsonManagerMachine = setup({
     makeStabeJson: fromPromise(({ input }) => {
       return makeStabeJson(input)
     }),
+    makeSchemaFromJson: fromPromise(({ input }) => {
+      return makeSchemaFromJson(input)
+    }),
+    //   makeSchemaFromJson
   },
   guards: {},
 }).createMachine({
@@ -60,13 +84,28 @@ export const jsonManagerMachine = setup({
         jsonDoc: null,
         preferences: null,
         jsonPresentation: {
-          parsed: null,
-          string: null,
-          minified: null,
-          compacted: null,
-          friendly: null,
+          parsed: {
+            data: null,
+          },
+          string: {
+            data: null,
+          },
+          minified: {
+            data: null,
+          },
+          compacted: {
+            data: null,
+          },
+          friendly: {
+            data: null,
+          },
         },
-        jsonStablized: null,
+        jsonStablized: {
+          data: null,
+        },
+        jsonSchema: {
+          data: null,
+        },
       },
     }
   },
@@ -78,10 +117,13 @@ export const jsonManagerMachine = setup({
           target: "makingDocFromJson",
         },
         "json.make-presentation": {
-          actions: ["jsonPresentationHandler"],
+          target: ["makingJsonPresentation"],
         },
         "json.make-stable": {
           target: "makingJsonStable",
+        },
+        "json.make-schema": {
+          target: "makingSchemaFromJson",
         },
       },
     },
@@ -116,12 +158,31 @@ export const jsonManagerMachine = setup({
         },
       },
     },
+    makingJsonPresentation: {
+      entry: enqueueActions(({ event, enqueue, check, context}) => {
+        const jsonContent = context?.execution?.jsonDoc?.content
+
+        // makeParsedJson
+        enqueue.assign(() => {
+          context.execution.jsonPresentation.parsed.data = makeParsedJson(jsonContent)
+        })
+
+        enqueue.assign(() => {
+          context.execution.jsonPresentation.friendly.data = makeFriendlyJson(context.execution.jsonPresentation.parsed.data)
+        })
+
+      }),
+      always: {
+        // actions: ["jsonPresentationHandler"],
+        target: "idle",
+      },
+    },
     makingJsonStable: {
       invoke: {
         src: "makeStabeJson",
         input: ({ context, event }: any) => {
           return {
-            json: context?.execution?.jsonPresentation?.parsed,
+            json: context?.execution?.jsonPresentation?.parsed.data,
             keyOrder: [],
           }
         },
@@ -130,6 +191,36 @@ export const jsonManagerMachine = setup({
           actions: [
             {
               type: "persistStableJsonHander",
+              params: ({ event }: any) => {
+                return event.output
+              },
+            },
+          ],
+        },
+        onError: {
+          target: "idle",
+          actions: [
+            ({ context, event }) => {
+              console.error("Error", event)
+            },
+          ],
+        },
+      },
+    },
+    makingSchemaFromJson: {
+      invoke: {
+        src: "makeSchemaFromJson",
+        input: ({ context, event }: any) => {
+          return {
+            json: context?.execution?.jsonStablized.data,
+            includeSchema: true,
+          }
+        },
+        onDone: {
+          target: "idle",
+          actions: [
+            {
+              type: "persistJsonSchemaHander",
               params: ({ event }: any) => {
                 return event.output
               },

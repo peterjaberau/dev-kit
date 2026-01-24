@@ -20,7 +20,7 @@ const CardSection = ({ title, children }: any) => {
 
 export const RequestView = ({ children }: any) => {
   const { isInspectorEnabled, enableInspection, disableInspection, fireInitiate } = usePlayground()
-  const { createDocFromJson, makeJsonPresentation, makeJsonStable  } = useJsonManager()
+  const { createDocFromJson, makeJsonPresentation, makeJsonStable, makeSchemaFromJson  } = useJsonManager()
   return (
     <AdaptiveCard.Root
       actions={[
@@ -66,6 +66,16 @@ export const RequestView = ({ children }: any) => {
             }}
           >
             Make JSON Stable
+          </Button>
+
+          <Button
+            size={"xs"}
+            variant={"solid"}
+            onClick={() => {
+              makeSchemaFromJson()
+            }}
+          >
+            Make Schema from Json
           </Button>
         </CardSection>
       </Stack>

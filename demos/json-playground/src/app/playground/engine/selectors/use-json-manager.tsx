@@ -21,6 +21,9 @@ export const useJsonManager = () => {
     sendToJsonManager({ type: "json.make-presentation" })
 
   const makeJsonStable = () => sendToJsonManager({ type: "json.make-stable" })
+  const makeSchemaFromJson = () => sendToJsonManager({ type: "json.make-schema" })
+
+
 
   return {
     jsonManagerRef,
@@ -33,5 +36,6 @@ export const useJsonManager = () => {
     createDocFromJson,
     makeJsonPresentation,
     makeJsonStable,
+    makeSchemaFromJson,
   }
 }
