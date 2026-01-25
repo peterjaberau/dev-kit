@@ -1,3 +1,4 @@
+"use client"
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react"
 import { AlertCircle, Check, Loader2 } from "lucide-react"
 import type * as Monaco from "monaco-editor"

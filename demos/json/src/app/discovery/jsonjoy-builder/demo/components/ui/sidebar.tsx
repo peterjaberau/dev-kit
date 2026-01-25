@@ -47,8 +47,10 @@ function useSidebar() {
 }
 
 interface CustomCSSProperties extends React.CSSProperties {
-  "--sidebar-width"?: string;
-  "--sidebar-width-icon"?: string;
+  //@ts-ignore
+  "--sidebar-width"?: string
+  //@ts-ignore
+  "--sidebar-width-icon"?: string
 }
 
 const SidebarProvider = React.forwardRef<

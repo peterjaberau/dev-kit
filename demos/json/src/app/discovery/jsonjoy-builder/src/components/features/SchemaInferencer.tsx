@@ -1,3 +1,4 @@
+"use client"
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";

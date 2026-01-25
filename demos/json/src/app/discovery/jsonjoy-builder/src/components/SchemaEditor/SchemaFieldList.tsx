@@ -1,3 +1,4 @@
+"use client"
 import { type FC, useMemo } from "react";
 import { useTranslation } from "../../hooks/use-translation";
 import { getSchemaProperties } from "../../lib/schemaEditor";

@@ -23,6 +23,10 @@ export default function Page() {
           <Link href="/discovery/jschema-dev">jschema-dev</Link>
         </Button>
 
+        <Button asChild>
+          <Link href="/discovery/jsonjoy-builder">jsonjoy-builder</Link>
+        </Button>
+
       </Wrap>
     </Container>
   )

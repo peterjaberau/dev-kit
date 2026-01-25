@@ -1,3 +1,4 @@
+"use client"
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "../../hooks/use-translation";

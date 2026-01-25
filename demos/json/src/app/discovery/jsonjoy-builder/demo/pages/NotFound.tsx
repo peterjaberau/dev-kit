@@ -1,12 +1,16 @@
+"use client"
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation"
+import Link from "next/link"
+
 
 const NotFound = () => {
-  const location = useLocation();
+
+  const pathname = usePathname()
 
   useEffect(() => {
-    console.error("Bad route", location.pathname);
-  }, [location.pathname]);
+    console.error("Bad route", pathname)
+  }, [pathname])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 jsonjoy">

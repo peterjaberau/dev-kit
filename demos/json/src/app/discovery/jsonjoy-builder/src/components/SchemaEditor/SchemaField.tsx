@@ -1,3 +1,4 @@
+"use client"
 import React, { Suspense } from "react";
 import { useTranslation } from "../../hooks/use-translation";
 import type {

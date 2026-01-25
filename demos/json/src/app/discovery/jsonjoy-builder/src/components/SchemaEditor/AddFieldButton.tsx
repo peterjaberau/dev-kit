@@ -1,3 +1,4 @@
+"use client"
 import { CirclePlus, HelpCircle, Info } from "lucide-react";
 import { type FC, type FormEvent, useId, useState } from "react";
 import { Badge } from "../../components/ui/badge";

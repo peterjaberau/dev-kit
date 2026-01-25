@@ -1,3 +1,4 @@
+'use client'
 import type * as Monaco from "monaco-editor";
 import type { json as MonacoJson } from "monaco-editor";
 import * as MonacoModule from "monaco-editor";

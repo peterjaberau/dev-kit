@@ -1,3 +1,4 @@
+"use client"
 import type { FC } from "react";
 import { useTranslation } from "../../hooks/use-translation";
 import type { Translation } from "../../i18n/translation-keys";
