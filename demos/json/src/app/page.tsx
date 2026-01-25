@@ -18,6 +18,11 @@ export default function Page() {
         <Button asChild>
           <Link href="/discovery/json-inspect">Json Inspect</Link>
         </Button>
+
+        <Button asChild>
+          <Link href="/discovery/jschema-dev">jschema-dev</Link>
+        </Button>
+
       </Wrap>
     </Container>
   )
