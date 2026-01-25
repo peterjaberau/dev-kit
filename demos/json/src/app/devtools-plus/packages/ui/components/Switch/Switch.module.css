@@ -1,0 +1,141 @@
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.track {
+  position: relative;
+  border-radius: 9999px;
+  background-color: var(--color-neutral-200);
+  border: 1px solid transparent; /* Add border for visibility in disabled state */
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+
+  /* Default variables (can be overridden by size classes) */
+  --switch-width: 2.75rem;
+  --switch-height: 1.5rem;
+  --knob-size: 1.25rem;
+  --knob-offset: 0px; /* Reset to 0 to ensure centering with border */
+
+  width: var(--switch-width);
+  height: var(--switch-height);
+}
+
+.track::after {
+  content: '';
+  position: absolute;
+  top: var(--knob-offset);
+  left: var(--knob-offset);
+  height: var(--knob-size);
+  width: var(--knob-size);
+  border-radius: 9999px;
+  background-color: white;
+  border: 1px solid var(--color-neutral-300);
+  transition: transform 0.2s ease-in-out;
+  box-sizing: border-box; /* Ensure border is included in size */
+}
+
+/* Size variants */
+.size-sm {
+  --switch-width: 1.75rem; /* 28px */
+  --switch-height: 1rem; /* 16px */
+  --knob-size: calc(1rem - 2px); /* 14px - accounting for border */
+  --knob-offset: 0px;
+}
+
+.size-md {
+  --switch-width: 2.25rem; /* 36px */
+  --switch-height: 1.25rem; /* 20px */
+  --knob-size: calc(1.25rem - 2px); /* 18px */
+  --knob-offset: 0px;
+}
+
+.size-lg {
+  --switch-width: 2.75rem; /* 44px */
+  --switch-height: 1.5rem; /* 24px */
+  --knob-size: calc(1.5rem - 2px); /* 22px */
+  --knob-offset: 0px;
+}
+
+/* Checked state */
+.input:checked + .track {
+  background-color: var(--color-primary-600);
+}
+
+.input:checked + .track::after {
+  /* Calculate translation based on width, knob size and offsets */
+  /* Subtract 2px for the transparent border on left and right */
+  transform: translateX(calc(var(--switch-width) - var(--knob-size) - (var(--knob-offset) * 2) - 2px));
+  border-color: white;
+}
+
+/* Focus state */
+.input:focus-visible + .track {
+  outline: 2px solid var(--color-primary-300);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.6; /* Slightly less transparent to improve visibility */
+}
+
+/* Specific styles for disabled unchecked state to ensure visibility */
+.disabled .track {
+  background-color: var(--color-neutral-200);
+  border-color: var(--color-neutral-300); /* Add border color for better contrast */
+}
+
+.disabled .track::after {
+  border-color: var(--color-neutral-400); /* Darker border for knob */
+}
+
+/* Disabled checked state */
+.disabled .input:checked + .track {
+  background-color: var(--color-primary-400); /* Lighter primary */
+  border-color: var(--color-primary-400);
+}
+
+.label {
+  margin-left: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary); /* Use theme color */
+}
+
+.disabled .label {
+  color: var(--color-text-secondary); /* Use theme secondary color */
+}
+
+/* Dark mode overrides adapt via variables */
+[data-theme='dark'] .track {
+  background-color: var(--color-neutral-700);
+  border-color: var(--color-neutral-600);
+}
+
+[data-theme='dark'] .track::after {
+  background-color: white; /* Keep knob white in dark mode for contrast? Or maybe neutral-200 */
+  border-color: var(--color-neutral-500);
+}
+
+/* Dark mode disabled overrides */
+[data-theme='dark'] .disabled .track {
+  background-color: var(--color-neutral-800);
+  border-color: var(--color-neutral-600);
+}

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+import { withReactDevTools } from "react-devtools-plus/next"
 
 const nextConfig = {
   /* config options here */
@@ -12,8 +13,11 @@ const nextConfig = {
     optimizePackageImports: ["@chakra-ui/react", "@ark-ui/react"],
     externalDir: true,
   },
-  output: 'standalone',
+  output: "standalone",
 }
+// const nextConfig = withReactDevTools(baseConfig, {
+  // scan: { enabled: true },
+// })
 
 initOpenNextCloudflareForDev().catch(console.error);
 

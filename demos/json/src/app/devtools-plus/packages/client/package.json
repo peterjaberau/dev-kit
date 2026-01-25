@@ -1,0 +1,40 @@
+{
+  "name": "@react-devtools-plus/client",
+  "type": "module",
+  "version": "0.9.1",
+  "private": true,
+  "author": "wzc520pyfm",
+  "license": "MIT",
+  "exports": {
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=v14.21.3"
+  },
+  "scripts": {
+    "build": "vite build",
+    "stub": "vite build --watch"
+  },
+  "dependencies": {
+    "@iconify/react": "^5.0.2",
+    "@react-devtools-plus/kit": "workspace:^",
+    "@react-devtools-plus/ui": "workspace:^",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router-dom": "^6.26.0",
+    "vis-network": "^9.1.9"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@unocss/reset": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "unocss": "catalog:",
+    "vite": "catalog:"
+  }
+}

@@ -1,0 +1,396 @@
+/* z-index: 3147483644 is higher than react-scan (z-index: 2xxxxxxxxxx) */
+
+/* Highlight box - must be below devtools panel (z-index: 3147483645) */
+#react-devtools-highlight {
+  position: fixed;
+  border: 2px solid rgba(108, 248, 169, 0.9);
+  background: rgba(108, 248, 169, 0.12);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 3147483644;
+  transition:
+    left 0.12s ease,
+    top 0.12s ease,
+    width 0.12s ease,
+    height 0.12s ease,
+    opacity 0.1s ease;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  display: none;
+  will-change: left, top, width, height, opacity;
+}
+
+/* Anchor container */
+.react-devtools-anchor {
+  position: fixed;
+  z-index: 3147483645;
+  transform-origin: center center;
+  /* transform is handled by React inline styles */
+  pointer-events: none;
+}
+
+/* Floating button group */
+.react-devtools-button-group {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 36px; /* Expanded height */
+  border-radius: 18px; /* Expanded radius */
+  background-color: #ffffff; /* Default Light */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    height 0.3s ease,
+    border-radius 0.3s ease,
+    padding 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+  user-select: none;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  opacity: 0.95;
+  padding: 0 2px;
+  /* Ensure consistent sizing logic */
+  box-sizing: border-box;
+}
+
+/* Dark mode class added by syncTheme */
+.dark .react-devtools-button-group {
+  background-color: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Expandable container for divider and inspector button */
+.react-devtools-expandable {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 60px; /* Enough to fit divider + button */
+  opacity: 1;
+  /* The liquid/playful animation comes from this bouncy transition */
+  transition:
+    max-width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease-in-out,
+    margin 0.4s ease;
+}
+
+.react-devtools-expandable--hidden {
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
+}
+
+/* Individual button */
+.react-devtools-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.react-devtools-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .react-devtools-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.react-devtools-divider {
+  width: 1px;
+  height: 18px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 0 4px;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease;
+}
+
+.dark .react-devtools-divider {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Light mode support (OS preference fallback if needed, but we use class now) */
+@media (prefers-color-scheme: dark) {
+  /* Default to dark if no class present, or just rely on class?
+     Better to rely on class for consistency with internal switch.
+     But for initial load before sync, maybe useful. */
+}
+
+.react-devtools-button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.react-devtools-button-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  transition:
+    width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease,
+    fill 0.3s ease,
+    stroke 0.3s ease,
+    color 0.3s ease;
+}
+
+.react-devtools-button-icon svg circle,
+.react-devtools-button-icon svg ellipse,
+.react-devtools-button-icon svg path {
+  transition:
+    fill 0.3s ease,
+    stroke 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Enlarge first icon when hidden/docked */
+.react-devtools-button--hidden > .react-devtools-button .react-devtools-button-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Shrink second icon when hidden/docked to prevent squeezing */
+.react-devtools-button--hidden .react-devtools-expandable .react-devtools-button-icon svg {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+/* Active state */
+.react-devtools-button--active {
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(var(--color-primary-500-rgb, 0, 216, 255), 0.4);
+}
+
+/* Hidden state modifiers */
+.react-devtools-button--hidden {
+  opacity: 0.9;
+  /* Box shadow reduced when hidden */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* Padding reduced to create a perfect circle/pill for the single icon */
+  padding: 0 6px; /* Keep same padding to maintain circle shape if width adjusts automatically */
+  /* Actually, if child is hidden, the remaining child + padding should define the shape */
+  height: 44px; /* Docked height */
+  border-radius: 22px; /* Docked radius */
+}
+
+.react-devtools-button--hidden:hover {
+  opacity: 1;
+}
+
+/* Glowing effect container */
+.react-devtools-anchor::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+  transition:
+    opacity 0.6s ease,
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(circle, var(--color-primary-500, #00d8ff), transparent 70%);
+  filter: blur(40px);
+}
+
+/* Show glow on hover/active */
+.react-devtools-anchor:hover::before,
+.react-devtools-anchor--active::before {
+  opacity: 0.5;
+  transform: translate(-50%, -50%) scale(1.2); /* Larger scale */
+}
+
+/* Iframe container */
+.react-devtools-iframe-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* width: min(80vw, 1000px); Overridden by inline style */
+  /* height: min(60vh, 800px); Overridden by inline style */
+  pointer-events: auto;
+  /* Default transform (bottom) */
+  transform: translate(-50%, calc(-100% - 24px)) scale(1);
+  transform-origin: center bottom;
+  opacity: 1;
+  visibility: visible;
+
+  /* Playful entry animation */
+  transition:
+    opacity 0.3s ease,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    visibility 0s linear 0s;
+}
+
+/* Hidden state - Playful exit */
+.react-devtools-iframe-container--hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+
+  /* Quicker, simpler exit, delay visibility until done */
+  transition:
+    opacity 0.2s ease,
+    transform 0.3s cubic-bezier(0.4, 0, 1, 1),
+    visibility 0s linear 0.3s;
+}
+
+/* Bottom position (Default) */
+.react-devtools-anchor[data-position='bottom'] .react-devtools-iframe-container {
+  transform-origin: center bottom;
+  transform: translate(-50%, calc(-100% - 24px)) scale(1);
+}
+.react-devtools-anchor[data-position='bottom'] .react-devtools-iframe-container--hidden {
+  transform: translate(-50%, calc(-100% - 10px)) scale(0.8);
+}
+
+/* Top position */
+.react-devtools-anchor[data-position='top'] .react-devtools-iframe-container {
+  transform-origin: center top;
+  transform: translate(-50%, calc(0% + 60px)) scale(1);
+}
+.react-devtools-anchor[data-position='top'] .react-devtools-iframe-container--hidden {
+  transform: translate(-50%, calc(0% + 46px)) scale(0.8);
+}
+
+/* Left position */
+.react-devtools-anchor[data-position='left'] .react-devtools-iframe-container {
+  transform-origin: left center;
+  transform: translate(calc(0% + 60px), -50%) scale(1);
+}
+.react-devtools-anchor[data-position='left'] .react-devtools-iframe-container--hidden {
+  transform: translate(calc(0% + 46px), -50%) scale(0.8);
+}
+
+/* Right position */
+.react-devtools-anchor[data-position='right'] .react-devtools-iframe-container {
+  transform-origin: right center;
+  transform: translate(calc(-100% - 24px), -50%) scale(1);
+}
+.react-devtools-anchor[data-position='right'] .react-devtools-iframe-container--hidden {
+  transform: translate(calc(-100% - 10px), -50%) scale(0.8);
+}
+
+@media (min-width: 1400px) {
+  .react-devtools-iframe-container {
+    /* width: min(80vw, 1200px); Overridden */
+  }
+}
+
+.react-devtools-iframe {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(125, 125, 125, 0.2);
+  border-radius: 16px; /* Increased radius */
+  background: transparent;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  z-index: 100;
+  touch-action: none;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  background-color: transparent;
+  border-radius: 2px;
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.resize-handle:hover::after,
+.resize-handle:active::after {
+  background-color: var(--color-primary-500, #00d8ff);
+}
+
+.resize-handle-top {
+  top: -4px;
+  left: 16px;
+  right: 16px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.resize-handle-top::after {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.resize-handle-top:hover::after {
+  transform: translate(-50%, -50%) scaleX(1.2);
+}
+
+.resize-handle-left {
+  top: 16px;
+  bottom: 16px;
+  left: -4px;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.resize-handle-left::after {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 48px;
+  border-radius: 2px;
+}
+
+.resize-handle-left:hover::after {
+  transform: translate(-50%, -50%) scaleY(1.2);
+}
+
+.resize-handle-right {
+  top: 16px;
+  bottom: 16px;
+  right: -4px;
+  width: 12px;
+  cursor: ew-resize;
+}
+
+.resize-handle-right::after {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 48px;
+  border-radius: 2px;
+}
+
+.resize-handle-right:hover::after {
+  transform: translate(-50%, -50%) scaleY(1.2);
+}
