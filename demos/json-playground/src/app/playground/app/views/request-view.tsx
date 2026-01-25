@@ -3,7 +3,7 @@ import { LuEye, LuEyeOff } from "react-icons/lu"
 import { Button, Card, Wrap, Stack } from "@chakra-ui/react"
 import { AdaptiveCard } from "#components/adaptive/adaptive-card"
 import { usePlayground, useJsonManager } from "../../engine"
-import { rawJsonData } from "../../store/data"
+import { rawJsonData, parsedJsonData } from "../../store/data"
 
 const CardSection = ({ title, children }: any) => {
   return (
@@ -43,7 +43,7 @@ export const RequestView = ({ children }: any) => {
             size={"xs"}
             variant={"solid"}
             onClick={() => {
-              createDocFromJson({ content: rawJsonData.xstateOpenapi })
+              createDocFromJson({ content: parsedJsonData.xstateOpenapi })
             }}
           >
             Create Doc from Raw JSON

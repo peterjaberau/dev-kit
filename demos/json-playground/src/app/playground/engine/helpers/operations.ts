@@ -43,6 +43,8 @@ export const makeDocFromJson = async (input: any = {}) => {
 export const makeStabeJson: any = (input: any = {}) => {
   const { json, keyOrder = [] } = input
 
+
+
   /**
    * CASE 1 — Array of objects with a shared shape
    * This block applies ONLY when:

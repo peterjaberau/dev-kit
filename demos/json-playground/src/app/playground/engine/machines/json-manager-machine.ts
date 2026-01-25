@@ -3,6 +3,11 @@ import { makeDocFromJson, makeJsonPresentation, makeStabeJson, makeSchemaFromJso
 makeParsedJson, makeFriendlyJson, makeCompactedJson, makeStringJson, makeMinifiedJson
 } from "../helpers"
 
+import { createRandomId } from '../helpers/functions'
+import { parsedJsonData as sourceData } from '../../store/data'
+import { stableJson } from '../utilities/stableJson'
+import { inferSchema } from "@jsonhero/schema-infer"
+
 export const jsonManagerMachine = setup({
   actions: {
     createExecutionFromConfig: assign(({ context, event }: any) => {
@@ -47,6 +52,8 @@ export const jsonManagerMachine = setup({
     persistJsonSchemaHander: assign(({ context, event }: any, params: any) => {
       context.execution.jsonSchema.data = params
     }),
+
+
   },
   actors: {
     makeDocFromJson: fromPromise(async ({ input }) => await makeDocFromJson(input)),
@@ -107,11 +114,76 @@ export const jsonManagerMachine = setup({
           data: null,
         },
       },
+      json: {
+        id: createRandomId(),
+        source: sourceData.xstateOpenapi,
+        parsed: null,
+        stable: null,
+        schema: null,
+        search: {
+          status: null,
+          query: null,
+          results: [],
+        },
+      },
     }
   },
   entry: ["createExecutionFromConfig"],
   states: {
     idle: {
+      entry: enqueueActions(({ event, enqueue, check, context}) => {
+        function ensureParsed(value: any) {
+          if (typeof value === "string") {
+            try {
+              return JSON.parse(value)
+            } catch {
+              return null
+            }
+          }
+          return value
+        }
+
+        const source = context.json.source
+        const parsed = ensureParsed(source)
+        const stable = stableJson(parsed)
+        const schema = inferSchema(stable).toJSONSchema({ includeSchema: true })
+
+        console.log("---initial-json---", {
+          source: context.json.source,
+          parsed,
+          stable,
+          schema,
+
+        })
+
+        // console.log("---ensure-parsed-input---", {
+        //   source: context.json.source,
+        //   ensureParsed: ensureParsed(context.json.source),
+        //   stableFromSource: stableJson(context.json.source),
+        //   stableFromParsed: ensureParsed(stableJson(context.json.source)),
+        // })
+
+        // parsed json
+        enqueue.assign({
+          ...context,
+          json: {
+            ...context.json,
+            // parsed: ensureParsed(context.json.source),
+            parsed: context.json.source,
+          },
+        })
+
+        console.log("---parsed-json---", stableJson(context?.json?.parsed))
+
+        // stable json
+        enqueue.assign({
+          ...context,
+          json: {
+            ...context.json,
+            stable: stableJson(context?.json?.parsed)
+          },
+        })
+      }),
       on: {
         "doc.make-from-json": {
           target: "makingDocFromJson",
@@ -125,6 +197,8 @@ export const jsonManagerMachine = setup({
         "json.make-schema": {
           target: "makingSchemaFromJson",
         },
+
+
       },
     },
     makingDocFromJson: {
@@ -181,6 +255,12 @@ export const jsonManagerMachine = setup({
       invoke: {
         src: "makeStabeJson",
         input: ({ context, event }: any) => {
+
+          console.log('---sabilize schema input----', {
+            json: context?.execution?.jsonPresentation?.parsed.data,
+            keyOrder: [],
+          })
+
           return {
             json: context?.execution?.jsonPresentation?.parsed.data,
             keyOrder: [],
@@ -192,6 +272,9 @@ export const jsonManagerMachine = setup({
             {
               type: "persistStableJsonHander",
               params: ({ event }: any) => {
+
+                console.log('---stable-json-output---', event);
+
                 return event.output
               },
             },
@@ -222,6 +305,9 @@ export const jsonManagerMachine = setup({
             {
               type: "persistJsonSchemaHander",
               params: ({ event }: any) => {
+
+
+
                 return event.output
               },
             },
