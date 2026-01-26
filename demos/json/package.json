@@ -11,6 +11,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@codemirror/commands": "^6.8.0",
+    "@codemirror/history": "^0.19.2",
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/lang-javascript": "^6.0.2",
+    "@codemirror/language": "^6.10.8",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.2",
+    "codemirror": "^6.0.1",
     "react-is": "^19.2.3",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-switch": "^1.2.6",
