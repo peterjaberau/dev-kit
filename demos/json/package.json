@@ -11,6 +11,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "react-is": "^19.2.3",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
@@ -56,9 +57,11 @@
     "fast-xml-parser": "^5.3.3",
     "papaparse": "^5.5.3",
     "cmdk": "^1.1.1",
-    "react-diff-viewer-continued": "^3.4.0"
+    "react-diff-viewer-continued": "^3.4.0",
+    "react-is": "^19.2.3"
   },
   "devDependencies": {
+    "@types/react-is": "^19.2.0",
     "@radix-ui/react-portal": "^1.1.10",
     "@use-gesture/react": "^10.3.1",
     "@radix-ui/react-tooltip": "^1.2.8",
@@ -70,7 +73,6 @@
     "v8n": "^1.5.1",
     "zustand": "^5.0.10",
     "react-use-measure": "^2.1.7",
-    "react-datepicker": "^9.1.0",
     "@microsoft/api-extractor": "^7.52.11",
     "@tailwindcss/postcss": "^4.1.12",
     "@tanstack/react-query": "^5.85.0",
@@ -86,12 +88,10 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "typescript": "^5.8.3",
-    "@types/node": "^20.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "peerDependencies": {
-    "@types/react-datepicker": "^7.0.0",
     "monaco-editor": ">= 0.25.0 < 1",
     "@tailwindcss/postcss": "^4.1.17"
   }

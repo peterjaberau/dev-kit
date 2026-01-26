@@ -1,1 +1,1 @@
-export { Root, Sidebar, SidebarList, SidebarItem } from "./root"
+export { Root, Sidebar, SidebarList, SidebarItem, SidebarItemCommand } from "./root"

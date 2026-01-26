@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
-import { withReactDevTools } from "react-devtools-plus/next"
 
 const nextConfig = {
   /* config options here */
