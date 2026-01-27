@@ -37,7 +37,13 @@
       "#components": ["./src/components"],
 
       "#app/*": ["./src/app/*"],
-      "#app": ["./src/app"]
+      "#app": ["./src/app"],
+
+      "#adaptive-tool/*": ["./src/app/adaptive-tool/*"],
+      "#adaptive-tool": ["./src/app/adaptive-tool"],
+
+      "#plugins/*": ["./src/app/adaptive-tool/packages/plugins/*"],
+      "#plugins": ["./src/app/adaptive-tool/packages/plugins"]
     }
   },
   "include": [

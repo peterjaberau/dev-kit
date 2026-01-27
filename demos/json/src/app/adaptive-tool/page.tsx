@@ -1,7 +1,11 @@
+'use client'
 import { Container, Stack, HStack, Button, IconButton, Icon, Flex, Box, Center } from "@chakra-ui/react"
 import { FilesIcon, RocketIcon, BugIcon, SettingsIcon, CircleUserIcon, ComponentIcon  } from 'lucide-react'
 import * as IconsKit from '@dev-kit/icons'
 import { AdaptiveTool as Tool } from './components'
+import { initiateRegistry } from './register'
+import { getRegistryNames, } from '#plugins'
+initiateRegistry()
 
 export default function Page() {
   return (
@@ -10,7 +14,7 @@ export default function Page() {
         <Tool.Sidebar h={"full"}>
           <Tool.SidebarList>
             <Tool.SidebarItem>
-              <Tool.SidebarItemCommand>
+              <Tool.SidebarItemCommand onClick={() => console.log('---getRegistryNames', getRegistryNames())}>
                 {/*home*/}
                 <IconsKit.HomeIcon />
               </Tool.SidebarItemCommand>
