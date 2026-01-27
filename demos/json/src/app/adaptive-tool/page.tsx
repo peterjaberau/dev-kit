@@ -10,7 +10,13 @@ initiateRegistry()
 export default function Page() {
   return (
     <Center px={40} py={10} h="100vh">
-      <Tool.Root css={{ boxShadow: "sm", borderRadius: "md" }}>
+      <Tool.Root
+        input={{
+          plugins: [],
+          data: {},
+        }}
+        css={{ boxShadow: "sm", borderRadius: "md" }}
+      >
         <Tool.Sidebar h={"full"}>
           <Tool.SidebarList>
             <Tool.SidebarItem>
