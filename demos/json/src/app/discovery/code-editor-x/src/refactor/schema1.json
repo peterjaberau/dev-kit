@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Code Editor X Schema",
-  "$ref": "#/definitions/AppState",
-  "definitions": {
+  "type": "object",
+  "properties": {
     "FileLanguage": {
       "type": "string",
       "enum": ["javascript", "typescript", "html", "css", "json", "markdown", "python", "rust", "go", "plaintext"]
@@ -19,7 +19,7 @@
       }
     },
     "FileSystemNode": {
-      "oneOf": [{ "$ref": "#/definitions/FileNode" }, { "$ref": "#/definitions/FolderNode" }]
+      "oneOf": [{ "$ref": "#/properties/FileNode" }, { "$ref": "#/properties/FolderNode" }]
     },
     "Project": {
       "type": "object",
@@ -32,7 +32,7 @@
         "rootFolderId": { "type": "string" },
         "nodes": {
           "type": "object",
-          "additionalProperties": { "$ref": "#/definitions/FileSystemNode" }
+          "additionalProperties": { "$ref": "#/properties/FileSystemNode" }
         }
       }
     },
@@ -62,7 +62,7 @@
     "EditorSettings": {
       "type": "object",
       "properties": {
-        "theme": { "$ref": "#/definitions/Theme" },
+        "theme": { "$ref": "#/properties/Theme" },
         "fontSize": { "type": "number" },
         "fontFamily": { "type": "string" },
         "tabSize": { "type": "number" },
@@ -81,7 +81,7 @@
     "Panel": {
       "type": "object",
       "properties": {
-        "id": { "$ref": "#/definitions/PanelId" },
+        "id": { "$ref": "#/properties/PanelId" },
         "title": { "type": "string" },
         "icon": { "type": "string" },
         "isVisible": { "type": "boolean" },
@@ -115,7 +115,7 @@
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "language": { "$ref": "#/definitions/FileLanguage" },
+        "language": { "$ref": "#/properties/FileLanguage" },
         "code": { "type": "string" },
         "fileName": { "type": "string" }
       }
@@ -124,12 +124,12 @@
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "role": { "$ref": "#/definitions/MessageRole" },
+        "role": { "$ref": "#/properties/MessageRole" },
         "content": { "type": "string" },
         "timestamp": { "type": "string", "format": "date-time" },
         "codeBlocks": {
           "type": "array",
-          "items": { "$ref": "#/definitions/CodeBlock" }
+          "items": { "$ref": "#/properties/CodeBlock" }
         },
         "isStreaming": { "type": "boolean" }
       }
@@ -141,7 +141,7 @@
         "title": { "type": "string" },
         "messages": {
           "type": "array",
-          "items": { "$ref": "#/definitions/ChatMessage" }
+          "items": { "$ref": "#/properties/ChatMessage" }
         },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
@@ -155,10 +155,10 @@
         "path": { "type": "string" },
         "parentId": { "type": ["string", "null"] },
         "type": { "type": "string", "enum": ["file", "folder"] },
-        "language": { "$ref": "#/definitions/FileLanguage" },
+        "language": { "$ref": "#/properties/FileLanguage" },
         "children": {
           "type": "array",
-          "items": { "$ref": "#/definitions/FileTreeItem" }
+          "items": { "$ref": "#/properties/FileTreeItem" }
         }
       }
     },
@@ -190,7 +190,7 @@
       "type": "object",
       "properties": {
         "children": {},
-        "defaultTheme": { "$ref": "#/definitions/Theme" }
+        "defaultTheme": { "$ref": "#/properties/Theme" }
       }
     },
     "FileNode": {
@@ -200,7 +200,7 @@
         "name": { "type": "string" },
         "path": { "type": "string" },
         "type": { "const": "file" },
-        "language": { "$ref": "#/definitions/FileLanguage" },
+        "language": { "$ref": "#/properties/FileLanguage" },
         "content": { "type": "string" },
         "parentId": { "type": ["string", "null"] }
       }
@@ -210,25 +210,25 @@
       "properties": {
         "projects": {
           "type": "array",
-          "items": { "$ref": "#/definitions/Project" }
+          "items": { "$ref": "#/properties/Project" }
         },
         "currentProjectId": { "type": ["string", "null"] },
         "tabs": {
           "type": "array",
-          "items": { "$ref": "#/definitions/EditorTab" }
+          "items": { "$ref": "#/properties/EditorTab" }
         },
         "activeTabId": { "type": ["string", "null"] },
-        "layoutMode": { "$ref": "#/definitions/LayoutMode" },
+        "layoutMode": { "$ref": "#/properties/LayoutMode" },
         "panes": {
           "type": "array",
-          "items": { "$ref": "#/definitions/EditorPane" }
+          "items": { "$ref": "#/properties/EditorPane" }
         },
         "panels": {
           "type": "array",
-          "items": { "$ref": "#/definitions/Panel" }
+          "items": { "$ref": "#/properties/Panel" }
         },
-        "settings": { "$ref": "#/definitions/EditorSettings" },
-        "theme": { "$ref": "#/definitions/Theme" }
+        "settings": { "$ref": "#/properties/EditorSettings" },
+        "theme": { "$ref": "#/properties/Theme" }
       }
     },
     "TemplateFile": {
@@ -236,7 +236,7 @@
       "properties": {
         "name": { "type": "string" },
         "path": { "type": "string" },
-        "language": { "$ref": "#/definitions/FileLanguage" },
+        "language": { "$ref": "#/properties/FileLanguage" },
         "content": { "type": "string" },
         "parentPath": { "type": "string" }
       }
@@ -247,18 +247,18 @@
         "id": { "type": "string" },
         "name": { "type": "string" },
         "description": { "type": "string" },
-        "icon": { "$ref": "#/definitions/TemplateIcon" },
+        "icon": { "$ref": "#/properties/TemplateIcon" },
         "category": {
           "type": "string",
           "enum": ["frontend", "backend", "fullstack", "other"]
         },
         "files": {
           "type": "array",
-          "items": { "$ref": "#/definitions/TemplateFile" }
+          "items": { "$ref": "#/properties/TemplateFile" }
         },
         "folders": {
           "type": "array",
-          "items": { "$ref": "#/definitions/TemplateFolder" }
+          "items": { "$ref": "#/properties/TemplateFolder" }
         }
       }
     },
@@ -267,10 +267,10 @@
       "properties": {
         "projects": {
           "type": "array",
-          "items": { "$ref": "#/definitions/Project" }
+          "items": { "$ref": "#/properties/Project" }
         },
         "currentProject": {
-          "anyOf": [{ "$ref": "#/definitions/Project" }, { "type": "null" }]
+          "anyOf": [{ "$ref": "#/properties/Project" }, { "type": "null" }]
         },
         "isLoading": { "type": "boolean" },
         "error": { "type": ["string", "null"] }
@@ -279,13 +279,13 @@
     "SettingsContextValue": {
       "type": "object",
       "properties": {
-        "settings": { "$ref": "#/definitions/EditorSettings" }
+        "settings": { "$ref": "#/properties/EditorSettings" }
       }
     },
     "ThemeContextValue": {
       "type": "object",
       "properties": {
-        "theme": { "$ref": "#/definitions/Theme" },
+        "theme": { "$ref": "#/properties/Theme" },
         "resolvedTheme": {
           "type": "string",
           "enum": ["light", "dark"]
