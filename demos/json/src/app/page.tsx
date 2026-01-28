@@ -27,6 +27,9 @@ export default function Page() {
           <Link href="/discovery/jsonjoy-builder">jsonjoy-builder</Link>
         </Button>
 
+        <Button asChild>
+          <Link href="/discovery/code-editor-x">code-editor-x</Link>
+        </Button>
       </Wrap>
     </Container>
   )

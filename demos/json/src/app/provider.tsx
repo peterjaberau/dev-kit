@@ -11,6 +11,7 @@ import ActorsApp from "#actors"
 
 const themeConfig: any = defineConfig({
   ...defaultConfig,
+  preflight: false,
   // cssVarsPrefix: 'chakra',
 } as any);
 const theme = createSystem(themeConfig);
