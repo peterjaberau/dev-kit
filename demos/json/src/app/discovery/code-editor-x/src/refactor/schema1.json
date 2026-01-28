@@ -1,0 +1,296 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Code Editor X Schema",
+  "$ref": "#/definitions/AppState",
+  "definitions": {
+    "FileLanguage": {
+      "type": "string",
+      "enum": ["javascript", "typescript", "html", "css", "json", "markdown", "python", "rust", "go", "plaintext"]
+    },
+    "FolderNode": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "type": { "const": "folder" },
+        "parentId": { "type": ["string", "null"] },
+        "isExpanded": { "type": "boolean" }
+      }
+    },
+    "FileSystemNode": {
+      "oneOf": [{ "$ref": "#/definitions/FileNode" }, { "$ref": "#/definitions/FolderNode" }]
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "rootFolderId": { "type": "string" },
+        "nodes": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/FileSystemNode" }
+        }
+      }
+    },
+    "EditorTab": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fileId": { "type": "string" },
+        "fileName": { "type": "string" },
+        "filePath": { "type": "string" },
+        "isDirty": { "type": "boolean" },
+        "isPinned": { "type": "boolean" }
+      }
+    },
+    "LayoutMode": {
+      "type": "string",
+      "enum": ["single", "vertical-split", "horizontal-split", "grid"]
+    },
+    "EditorPane": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "activeTabId": { "type": ["string", "null"] },
+        "tabIds": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "EditorSettings": {
+      "type": "object",
+      "properties": {
+        "theme": { "$ref": "#/definitions/Theme" },
+        "fontSize": { "type": "number" },
+        "fontFamily": { "type": "string" },
+        "tabSize": { "type": "number" },
+        "lineNumbers": { "type": "boolean" },
+        "wordWrap": { "type": "boolean" },
+        "minimap": { "type": "boolean" },
+        "bracketPairColorization": { "type": "boolean" },
+        "autoSave": { "type": "boolean" },
+        "autoSaveDelay": { "type": "number" }
+      }
+    },
+    "PanelId": {
+      "type": "string",
+      "enum": ["files", "search", "git", "extensions", "ai-chat", "output", "terminal", "problems", "debug"]
+    },
+    "Panel": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/definitions/PanelId" },
+        "title": { "type": "string" },
+        "icon": { "type": "string" },
+        "isVisible": { "type": "boolean" },
+        "position": { "type": "string", "enum": ["left", "right", "bottom"] }
+      }
+    },
+    "TerminalSession": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "cwd": { "type": "string" },
+        "isActive": { "type": "boolean" }
+      }
+    },
+    "TerminalOutput": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sessionId": { "type": "string" },
+        "type": { "type": "string", "enum": ["input", "output", "error"] },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+    "MessageRole": {
+      "type": "string",
+      "enum": ["user", "assistant", "system"]
+    },
+    "CodeBlock": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "language": { "$ref": "#/definitions/FileLanguage" },
+        "code": { "type": "string" },
+        "fileName": { "type": "string" }
+      }
+    },
+    "ChatMessage": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "$ref": "#/definitions/MessageRole" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "codeBlocks": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/CodeBlock" }
+        },
+        "isStreaming": { "type": "boolean" }
+      }
+    },
+    "ChatSession": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "messages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ChatMessage" }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "FileTreeItem": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "parentId": { "type": ["string", "null"] },
+        "type": { "type": "string", "enum": ["file", "folder"] },
+        "language": { "$ref": "#/definitions/FileLanguage" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/FileTreeItem" }
+        }
+      }
+    },
+    "Theme": {
+      "type": "string",
+      "enum": ["light", "dark", "system"]
+    },
+    "TemplateIcon": {
+      "type": "string",
+      "enum": ["react", "javascript", "typescript", "html", "python", "nodejs", "file"]
+    },
+    "TemplateFolder": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "parentPath": { "type": "string" }
+      }
+    },
+    "ProjectProviderProps": {
+      "type": "object",
+      "properties": { "children": {} }
+    },
+    "SettingsProviderProps": {
+      "type": "object",
+      "properties": { "children": {} }
+    },
+    "ThemeProviderProps": {
+      "type": "object",
+      "properties": {
+        "children": {},
+        "defaultTheme": { "$ref": "#/definitions/Theme" }
+      }
+    },
+    "FileNode": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "type": { "const": "file" },
+        "language": { "$ref": "#/definitions/FileLanguage" },
+        "content": { "type": "string" },
+        "parentId": { "type": ["string", "null"] }
+      }
+    },
+    "AppState": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Project" }
+        },
+        "currentProjectId": { "type": ["string", "null"] },
+        "tabs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/EditorTab" }
+        },
+        "activeTabId": { "type": ["string", "null"] },
+        "layoutMode": { "$ref": "#/definitions/LayoutMode" },
+        "panes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/EditorPane" }
+        },
+        "panels": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Panel" }
+        },
+        "settings": { "$ref": "#/definitions/EditorSettings" },
+        "theme": { "$ref": "#/definitions/Theme" }
+      }
+    },
+    "TemplateFile": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "language": { "$ref": "#/definitions/FileLanguage" },
+        "content": { "type": "string" },
+        "parentPath": { "type": "string" }
+      }
+    },
+    "ProjectTemplate": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": { "$ref": "#/definitions/TemplateIcon" },
+        "category": {
+          "type": "string",
+          "enum": ["frontend", "backend", "fullstack", "other"]
+        },
+        "files": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/TemplateFile" }
+        },
+        "folders": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/TemplateFolder" }
+        }
+      }
+    },
+    "ProjectContextValue": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Project" }
+        },
+        "currentProject": {
+          "anyOf": [{ "$ref": "#/definitions/Project" }, { "type": "null" }]
+        },
+        "isLoading": { "type": "boolean" },
+        "error": { "type": ["string", "null"] }
+      }
+    },
+    "SettingsContextValue": {
+      "type": "object",
+      "properties": {
+        "settings": { "$ref": "#/definitions/EditorSettings" }
+      }
+    },
+    "ThemeContextValue": {
+      "type": "object",
+      "properties": {
+        "theme": { "$ref": "#/definitions/Theme" },
+        "resolvedTheme": {
+          "type": "string",
+          "enum": ["light", "dark"]
+        }
+      }
+    }
+  }
+}
