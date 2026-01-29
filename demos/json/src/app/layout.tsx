@@ -1,6 +1,8 @@
 import "./globals.css"
-import { Provider as ChakraProvider } from "./provider"
+import { ProviderWithoutPreflight as ChakraProvider } from "./provider-without-preflight"
+import { ProviderActorApp } from './provider-actor-app'
 import { Suspense } from "react"
+
 
 export default function RootLayout({
   children,
@@ -9,9 +11,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning style={{ height: "100vh", width: "100%", overflow: "hidden" }}>
+      <body suppressHydrationWarning style={{ height: "100vh", width: "100%" }}>
         <Suspense>
-          <ChakraProvider>{children}</ChakraProvider>
+          <ProviderActorApp>
+            <ChakraProvider>{children}</ChakraProvider>
+          </ProviderActorApp>
         </Suspense>
       </body>
     </html>

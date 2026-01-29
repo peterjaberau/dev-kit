@@ -549,6 +549,16 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     ]
   )
 
+  console.log("----ProjectContext.Provider-----", {
+    localState: {
+      projects,
+      currentProject,
+      isLoading,
+      error,
+    },
+    value,
+  })
+
   return (
     <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>
   )
@@ -557,6 +567,11 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
 // eslint-disable-next-line react-refresh/only-export-components
 export function useProject() {
   const context = useContext(ProjectContext)
+
+  console.log('----useProject-----', {
+    context
+  })
+
   if (context === undefined) {
     throw new Error('useProject must be used within a ProjectProvider')
   }

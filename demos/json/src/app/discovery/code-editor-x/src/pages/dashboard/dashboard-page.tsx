@@ -367,6 +367,16 @@ export function DashboardPage() {
     (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
   )
 
+  console.log("----dashboard-page---", {
+    projects,
+    // router,
+    pathname,
+    activeNav,
+    isNewProjectDialogOpen,
+    getPageTitle: getPageTitle(),
+    sortedProjects
+  })
+
   return (
     <div className="flex h-screen flex-col bg-[var(--bg-base)]">
       <DashboardHeader

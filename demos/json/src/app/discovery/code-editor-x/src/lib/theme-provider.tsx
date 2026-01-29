@@ -23,9 +23,7 @@ const THEME_STORAGE_KEY = 'editorx-theme'
 
 function getSystemTheme(): 'light' | 'dark' {
   if (typeof window === 'undefined') return 'light'
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light'
+  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"
 }
 
 function getStoredTheme(): Theme {
@@ -38,7 +36,7 @@ function getStoredTheme(): Theme {
 }
 
 function subscribeToSystemTheme(callback: () => void) {
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: light)')
   mediaQuery.addEventListener('change', callback)
   return () => mediaQuery.removeEventListener('change', callback)
 }
@@ -50,7 +48,7 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'dark',
+  defaultTheme = 'light',
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(() => {
     const stored = getStoredTheme()
@@ -61,7 +59,7 @@ export function ThemeProvider({
   const systemTheme = useSyncExternalStore(
     subscribeToSystemTheme,
     getSystemTheme,
-    () => 'dark' as const
+    () => 'light' as const
   )
 
   // Derive resolved theme from current theme and system preference

@@ -309,6 +309,29 @@ function EditorPageContent() {
     )
   }
 
+
+  console.log("----editor-page---Content----", {
+    projectId: projectId,
+    settings: settings,
+    currentProject: currentProject,
+    isLoading: isLoading,
+    selectedFileId,
+    activeWidget,
+    isSidebarCollapsed,
+    isBottomPanelCollapsed,
+    isRightPanelCollapsed,
+    openTabs,
+    activeTabId,
+    bottomPanelActiveTab,
+    isNewFileDialogOpen,
+    isNewFolderDialogOpen,
+    isNotesDialogOpen,
+    isDebuggerDialogOpen,
+    isIntegrationDialogOpen,
+    openFiles,
+    fileTree,
+  })
+
   return (
     <>
       <EditorShell

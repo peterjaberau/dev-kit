@@ -8,7 +8,7 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   return (
-    <ThemeProvider defaultTheme="dark">
+    <ThemeProvider defaultTheme="light">
       <SettingsProvider>
         <ProjectProvider>
           {children}
