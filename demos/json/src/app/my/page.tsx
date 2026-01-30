@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link"
 import { Container, Button, Stack, Wrap, Center, Splitter } from "@chakra-ui/react"
-import {} from "@chakra-ui/react"
 
 export default function Page() {
 
