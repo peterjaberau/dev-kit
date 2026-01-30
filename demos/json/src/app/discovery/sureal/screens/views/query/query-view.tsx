@@ -5,7 +5,12 @@ import { memo, useState } from "react"
 import { Panel, PanelGroup } from "react-resizable-panels"
 import { PanelDragger } from "../../../components/pane/dragger"
 import { Box } from "@chakra-ui/react"
-import { QueryPane, VariablesPane, ResultPane, TabsPane } from "."
+import QueryPane from "./query-pane"
+import VariablesPane from "./variables-pane"
+import ResultPane from "./result-pane"
+import TabsPane from "./tabs-pane"
+
+
 import {
   usePanelMinSize,
   useStable,

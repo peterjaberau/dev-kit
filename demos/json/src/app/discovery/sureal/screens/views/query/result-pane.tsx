@@ -2,7 +2,7 @@
 import { Box, Icon, IconButton, CloseButton, Button, HStack } from "@chakra-ui/react"
 import { Pane } from "../../../components/pane"
 import { LuServer as IconServer, LuChevronRight, LuStar } from "react-icons/lu"
-export function ResultPane() {
+function ResultPane() {
 
   return (
     <Pane
@@ -27,3 +27,4 @@ export function ResultPane() {
   )
 
 }
+export default ResultPane

@@ -22,7 +22,7 @@ export interface VariablesPaneProps {
   closeVariables: () => void
 }
 
-export function VariablesPane({
+function VariablesPane({
   isValid,
   switchPortal,
   lineNumbers,
@@ -113,3 +113,5 @@ export function VariablesPane({
     </Pane>
   )
 }
+
+export default VariablesPane

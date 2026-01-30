@@ -2,7 +2,7 @@
 import { Box, Icon, IconButton, CloseButton, Button, HStack } from "@chakra-ui/react"
 import { Pane } from "../../../components/pane"
 import { LuServer as IconServer, LuChevronRight, LuStar } from "react-icons/lu"
-export function TabsPane() {
+function TabsPane() {
   return (
     <>
       <Pane
@@ -22,3 +22,4 @@ export function TabsPane() {
     </>
   )
 }
+export default TabsPane
