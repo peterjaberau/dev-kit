@@ -101,7 +101,8 @@
   "packageManager": "pnpm@10.8.1",
   "pnpm": {
     "overrides": {
-      "rimraf": "^5.0.1"
+      "rimraf": "^5.0.1",
+      "source-map@0.8.0-beta.0": "0.7.4"
     }
   }
 }
