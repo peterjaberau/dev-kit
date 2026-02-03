@@ -1,13 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import {
-  Box,
-  Flex,
-  IconButton,
-  Separator,
-  useSlotRecipe,
-} from "@chakra-ui/react"
+import { Box, Flex, IconButton, Separator, useSlotRecipe } from "@chakra-ui/react"
 import {
   Bold,
   Italic,
@@ -31,22 +25,12 @@ interface ToolbarButtonProps {
   onClick: () => void
 }
 
-const ToolbarButton = ({
-                         label,
-                         icon: Icon,
-                         isActive,
-                         onClick,
-                       }: ToolbarButtonProps) => {
+const ToolbarButton = ({ label, icon: Icon, isActive, onClick }: ToolbarButtonProps) => {
   const recipe = useSlotRecipe({ recipe: toolbarSlotRecipe })
   const styles = recipe({ active: isActive })
 
   return (
-    <IconButton
-      aria-label={label}
-      onClick={onClick}
-      variant="plain"
-      css={styles.button}
-    >
+    <IconButton aria-label={label} onClick={onClick} variant="plain" css={styles.button}>
       <Icon size={16} />
     </IconButton>
   )
@@ -60,11 +44,7 @@ const Toolbar = () => {
   const [activeButtons, setActiveButtons] = useState<string[]>([])
 
   const toggleActiveButton = (button: string) => {
-    setActiveButtons((prev) =>
-      prev.includes(button)
-        ? prev.filter((b) => b !== button)
-        : [...prev, button],
-    )
+    setActiveButtons((prev) => (prev.includes(button) ? prev.filter((b) => b !== button) : [...prev, button]))
   }
 
   return (

@@ -11,6 +11,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@mantine/hooks": "^8.3.14",
     "@codemirror/search": "^6.6.0",
     "@replit/codemirror-indentation-markers": "^6.5.3",
     "cm6-graphql": "^0.2.1",
