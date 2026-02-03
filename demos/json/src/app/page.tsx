@@ -47,8 +47,16 @@ export default function Page() {
             <Button asChild>
               <Link href="/inspector-drawer">inspector-drawer</Link>
             </Button>
+          </Wrap>
 
-            {/*  inspector-drawer*/}
+          <Wrap w={"full"}>
+            <Button asChild>
+              <Link href="/previews/panel">Resizable Panel</Link>
+            </Button>
+
+            <Button asChild>
+              <Link href="/previews/panel/with-children">Resizable Panel with children</Link>
+            </Button>
           </Wrap>
         </SimpleGrid>
       </Container>

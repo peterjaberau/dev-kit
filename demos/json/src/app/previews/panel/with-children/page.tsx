@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Button, Center, HStack, chakra, Container, SimpleGrid, GridItem } from "@chakra-ui/react"
-import { PanelTabsStory } from "#components/panel-chakra/story/with-children"
+import { PanelTabsStory } from "../components/story/with-children"
 
 export default function Page() {
   const [isClient, setIsClient] = useState(false)
