@@ -2,7 +2,7 @@ import type { Meta } from "@storybook/react-vite"
 import { Box } from "@chakra-ui/react"
 
 export default {
-  title: "Experiments / Components / Toolbar",
+  title: "Experiments / Components / Documenter",
   decorators: [
     (Story: any) => (
       <Box p="10">
@@ -12,4 +12,4 @@ export default {
   ],
 } as Meta
 
-export { Toolbar as Basic } from "@dev-kit/experiments"
+export { Documenter as Basic } from "../../compositions/examples/documenter"

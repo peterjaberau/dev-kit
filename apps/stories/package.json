@@ -22,6 +22,7 @@
     "react-payment-inputs": "1.2.0",
     "@dev-kit/components": "workspace:*",
     "@dev-kit/experiments": "workspace:*",
+    "@dev-kit/documenter": "workspace:*",
     "next": "^16.1.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
