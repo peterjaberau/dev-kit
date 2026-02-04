@@ -43,6 +43,10 @@ export default function Page() {
             <Button asChild>
               <Link href="/discovery/resizable-panels/react-sidepanes">React SidePanes</Link>
             </Button>
+            <Button asChild>
+              <Link href="/discovery/resizable-panels/react-split-pane">react-split-pane</Link>
+            </Button>
+            {/*react-split-pane*/}
 
             <Button asChild>
               <Link href="/inspector-drawer">inspector-drawer</Link>
