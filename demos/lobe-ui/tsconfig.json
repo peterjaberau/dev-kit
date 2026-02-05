@@ -1,0 +1,148 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "moduleDetection": "force",
+    "noUncheckedIndexedAccess": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/src/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./*"
+      ],
+      "~/*": [
+        "./public/*"
+      ],
+      "#/*": [
+        "./src/components/*"
+      ],
+      "#": [
+        "./src/components"
+      ],
+      "#actors/*": [
+        "./src/actors/*"
+      ],
+      "#actors": [
+        "./src/actors/"
+      ],
+      "#hooks/*": [
+        "./src/hooks/*"
+      ],
+      "#hooks": [
+        "./src/hooks"
+      ],
+      "#components/*": [
+        "./src/components/*"
+      ],
+      "#components": [
+        "./src/components"
+      ],
+      "#app/*": [
+        "./src/app/*"
+      ],
+      "#app": [
+        "./src/app"
+      ],
+      "@devkit/ui": [
+        "./src/components"
+      ],
+      "@devkit/ui/*": [
+        "./src/components/*"
+      ],
+      "@devkit/ui/mdx": [
+        "./src/components/mdx"
+      ],
+      "@devkit/ui/mdx/*": [
+        "./src/components/mdx/*"
+      ],
+      "@devkit/ui/brand": [
+        "./src/components/brand"
+      ],
+      "@devkit/ui/brand/*": [
+        "./src/components/brand/*"
+      ],
+      "@devkit/ui/mobile": [
+        "./src/components/mobile"
+      ],
+      "@devkit/ui/mobile/*": [
+        "./src/components/mobile/*"
+      ],
+      "@devkit/ui/chat": [
+        "./src/components/chat"
+      ],
+      "@devkit/ui/chat/*": [
+        "./src/components/chat/*"
+      ],
+      "@devkit/ui/storybook": [
+        "./src/components/storybook"
+      ],
+      "@devkit/ui/storybook/*": [
+        "./src/components/storybook/*"
+      ],
+      "@devkit/ui/awesome": [
+        "./src/components/awesome"
+      ],
+      "@devkit/ui/awesome/*": [
+        "./src/components/awesome/*"
+      ],
+      "@devkit/ui/color": [
+        "./src/components/color"
+      ],
+      "@devkit/ui/color/*": [
+        "./src/components/color/*"
+      ],
+      "@devkit/ui/icons": [
+        "./src/components/icons"
+      ],
+      "@devkit/ui/icons/*": [
+        "./src/components/icons/*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+//    "mdx.d.ts",
+//    "brand.d.ts",
+//    "mobile.d.ts",
+//    "chat.d.ts",
+//    "storybook.d.ts",
+//    "awesome.d.ts",
+//    "icons.d.ts"
+  ]
+}

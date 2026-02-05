@@ -1,0 +1,15 @@
+import { Avatar } from '@devkit/ui';
+
+import { Center } from '#/Flex';
+
+export default () => {
+  return (
+    <Center gap={16} horizontal wrap={'wrap'}>
+      <Avatar avatar={'Canis'} />
+      <Avatar avatar={'Minor'} />
+      <Avatar avatar={'Lobe'} />
+      <Avatar avatar={'A'} />
+      <Avatar avatar={'x'} />
+    </Center>
+  );
+};

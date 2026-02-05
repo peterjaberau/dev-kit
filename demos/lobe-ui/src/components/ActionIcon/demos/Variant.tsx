@@ -1,0 +1,15 @@
+import { ActionIcon } from '@devkit/ui';
+import { Settings } from 'lucide-react';
+
+import { Center } from '#/Flex';
+
+export default () => {
+  return (
+    <Center gap={16} horizontal wrap={'wrap'}>
+      <ActionIcon icon={Settings} />
+      <ActionIcon icon={Settings} variant={'filled'} />
+      <ActionIcon icon={Settings} variant={'outlined'} />
+      <ActionIcon icon={Settings} shadow variant={'outlined'} />
+    </Center>
+  );
+};
