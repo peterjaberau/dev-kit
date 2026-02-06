@@ -1,0 +1,17 @@
+{
+  "$ref": "#/definitions/PluginTrustLevel",
+  "definitions": {
+    "PluginTrustLevel": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "trusted",
+        "community",
+        "untrusted",
+        "blocked"
+      ],
+      "description": "Trust level of the plugin"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

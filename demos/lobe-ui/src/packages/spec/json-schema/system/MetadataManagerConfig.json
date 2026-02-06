@@ -1,0 +1,43 @@
+{
+  "$ref": "#/definitions/MetadataManagerConfig",
+  "definitions": {
+    "MetadataManagerConfig": {
+      "type": "object",
+      "properties": {
+        "loaders": {
+          "type": "array"
+        },
+        "watch": {
+          "type": "boolean"
+        },
+        "cache": {
+          "type": "boolean"
+        },
+        "basePath": {
+          "type": "string"
+        },
+        "rootDir": {
+          "type": "string"
+        },
+        "formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json",
+              "yaml",
+              "yml",
+              "ts",
+              "js",
+              "typescript",
+              "javascript"
+            ]
+          }
+        },
+        "watchOptions": {}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

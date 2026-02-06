@@ -27,99 +27,39 @@
       }
     ],
     "paths": {
-      "@/src/*": [
-        "./*"
-      ],
-      "@/*": [
-        "./*"
-      ],
-      "~/*": [
-        "./public/*"
-      ],
-      "#/*": [
-        "./src/components/*"
-      ],
-      "#": [
-        "./src/components"
-      ],
-      "#actors/*": [
-        "./src/actors/*"
-      ],
-      "#actors": [
-        "./src/actors/"
-      ],
-      "#hooks/*": [
-        "./src/hooks/*"
-      ],
-      "#hooks": [
-        "./src/hooks"
-      ],
-      "#components/*": [
-        "./src/components/*"
-      ],
-      "#components": [
-        "./src/components"
-      ],
-      "#app/*": [
-        "./src/app/*"
-      ],
-      "#app": [
-        "./src/app"
-      ],
-      "@devkit/ui": [
-        "./src/components"
-      ],
-      "@devkit/ui/*": [
-        "./src/components/*"
-      ],
-      "@devkit/ui/mdx": [
-        "./src/components/mdx"
-      ],
-      "@devkit/ui/mdx/*": [
-        "./src/components/mdx/*"
-      ],
-      "@devkit/ui/brand": [
-        "./src/components/brand"
-      ],
-      "@devkit/ui/brand/*": [
-        "./src/components/brand/*"
-      ],
-      "@devkit/ui/mobile": [
-        "./src/components/mobile"
-      ],
-      "@devkit/ui/mobile/*": [
-        "./src/components/mobile/*"
-      ],
-      "@devkit/ui/chat": [
-        "./src/components/chat"
-      ],
-      "@devkit/ui/chat/*": [
-        "./src/components/chat/*"
-      ],
-      "@devkit/ui/storybook": [
-        "./src/components/storybook"
-      ],
-      "@devkit/ui/storybook/*": [
-        "./src/components/storybook/*"
-      ],
-      "@devkit/ui/awesome": [
-        "./src/components/awesome"
-      ],
-      "@devkit/ui/awesome/*": [
-        "./src/components/awesome/*"
-      ],
-      "@devkit/ui/color": [
-        "./src/components/color"
-      ],
-      "@devkit/ui/color/*": [
-        "./src/components/color/*"
-      ],
-      "@devkit/ui/icons": [
-        "./src/components/icons"
-      ],
-      "@devkit/ui/icons/*": [
-        "./src/components/icons/*"
-      ]
+      "@/src/*": ["./*"],
+      "@/*": ["./*"],
+      "~/*": ["./public/*"],
+      "#/*": ["./src/components/*"],
+      "#": ["./src/components"],
+      "#object-ui/*": ["./src/packages/object-ui/*"],
+      "#object-ui": ["./src/packages/object-ui"],
+      "#actors/*": ["./src/actors/*"],
+      "#actors": ["./src/actors/"],
+      "#hooks/*": ["./src/hooks/*"],
+      "#hooks": ["./src/hooks"],
+      "#components/*": ["./src/components/*"],
+      "#components": ["./src/components"],
+      "#app/*": ["./src/app/*"],
+      "#app": ["./src/app"],
+      "@devkit/ui": ["./src/components"],
+      "@devkit/ui/*": ["./src/components/*"],
+      "@devkit/ui/mdx": ["./src/components/mdx"],
+      "@devkit/ui/mdx/*": ["./src/components/mdx/*"],
+      "@devkit/ui/brand": ["./src/components/brand"],
+      "@devkit/ui/brand/*": ["./src/components/brand/*"],
+      "@devkit/ui/mobile": ["./src/components/mobile"],
+      "@devkit/ui/mobile/*": ["./src/components/mobile/*"],
+      "@devkit/ui/chat": ["./src/components/chat"],
+      "@devkit/ui/chat/*": ["./src/components/chat/*"],
+      "@devkit/ui/storybook": ["./src/components/storybook"],
+      "@devkit/ui/storybook/*": ["./src/components/storybook/*"],
+      "@devkit/ui/awesome": ["./src/components/awesome"],
+      "@devkit/ui/awesome/*": ["./src/components/awesome/*"],
+      "@devkit/ui/color": ["./src/components/color"],
+      "@devkit/ui/color/*": ["./src/components/color/*"],
+      "@devkit/ui/icons": ["./src/components/icons"],
+      "@devkit/ui/icons/*": ["./src/components/icons/*"]
     }
   },
   "include": [
