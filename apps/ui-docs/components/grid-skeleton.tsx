@@ -15,7 +15,7 @@ export function GridSkeleton({
   showHeader = true,
 }: GridSkeletonProps) {
   return (
-    <div className="flex flex-col">
+    <div data-component='grid-skeleton' className="flex flex-col">
       {showHeader && (
         <div className="bg-background sticky top-0 z-10 flex h-[51px] items-center gap-4 border-b px-6">
           <Skeleton className="h-9 max-w-xs flex-1" />

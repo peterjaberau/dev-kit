@@ -222,7 +222,7 @@ export function PatternsIframeView({
   }, [iframeSrc])
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div data-component={'patterns-iframe-view'} className="flex flex-1 flex-col">
       <PatternsHeader iframeRef={iframeRef} count={count} />
       <div className="flex flex-1">
         <div className="relative flex flex-1 flex-col overflow-hidden">

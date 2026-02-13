@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 import { createMDX } from "fumadocs-mdx/next"
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+import { codeInspectorPlugin } from "code-inspector-plugin"
 
 const nextConfig = {
   devIndicators: false,
@@ -9,6 +10,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // turbopack: {
+  //   rules: codeInspectorPlugin({
+  //     bundler: "turbopack",
+  //     showSwitch: true,
+  //     editor: 'idea'
+  //   }),
+  // },
+
   outputFileTracingIncludes: {
     "/*": ["./registry/**/*", "./registry-reui/**/*", "./public/r/styles/**/*"],
   },

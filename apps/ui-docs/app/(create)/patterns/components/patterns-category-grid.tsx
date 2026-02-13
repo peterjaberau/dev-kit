@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { PatternsCategoryCard } from "./patterns-category-card"
 import { PatternsEmptyState } from "./patterns-empty-state"
 import { PatternsHeader } from "./patterns-header"
+import { chakra, SimpleGrid, Stack } from "@chakra-ui/react"
 
 interface PatternsCategoryGridProps {
   categories: CategoryInfo[]
@@ -19,21 +20,11 @@ function PatternsCategoryMasonryGrid({
   className?: string
 }) {
   return (
-    <div
-      className={cn(
-        "grid grid-cols-1 gap-6 @lg/category-grid:grid-cols-2 @2xl/category-grid:grid-cols-3 @5xl/category-grid:grid-cols-4",
-        className
-      )}
-    >
+    <SimpleGrid minChildWidth="2xs" gap={6} >
       {categories.map((item) => (
-        <PatternsCategoryCard
-          key={item.name}
-          name={item.name}
-          label={item.label}
-          count={item.count}
-        />
+        <PatternsCategoryCard key={item.name} name={item.name} label={item.label} count={item.count} />
       ))}
-    </div>
+    </SimpleGrid>
   )
 }
 
@@ -41,7 +32,7 @@ export function PatternsCategoryGrid({
   categories,
 }: PatternsCategoryGridProps) {
   return (
-    <div className="flex flex-col">
+    <Stack>
       <PatternsHeader isGridFixed />
       <div className="@container/category-grid container py-6">
         {categories.length === 0 ? (
@@ -50,6 +41,6 @@ export function PatternsCategoryGrid({
           <PatternsCategoryMasonryGrid categories={categories} />
         )}
       </div>
-    </div>
+    </Stack>
   )
 }

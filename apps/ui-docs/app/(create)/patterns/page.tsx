@@ -1,5 +1,4 @@
 import { Suspense } from "react"
-import type { Metadata } from "next"
 
 import { getCategories } from "@/lib/registry"
 import { Spinner } from "@/components/ui/spinner"
@@ -24,33 +23,6 @@ function PatternsIframeViewSkeleton() {
 // Fully static — view switching (category grid vs iframe) happens client-side
 export const dynamic = "force-static"
 export const revalidate = false
-
-const title = "Browse Patterns"
-const description =
-  "Discover a collection of 600+ high-quality React patterns and components built with Tailwind CSS. Perfect for building modern, accessible web applications."
-
-export const metadata: Metadata = {
-  title,
-  description,
-  keywords: [
-    "React patterns",
-    "Tailwind components",
-    "UI components",
-    "shadcn customizer",
-    "web design patterns",
-    "accessible UI",
-  ],
-  openGraph: {
-    title: `${title} - ReUI`,
-    description,
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${title} - ReUI`,
-    description,
-  },
-}
 
 export default function PatternsPage() {
   const categories = getCategories()

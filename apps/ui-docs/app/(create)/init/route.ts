@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
 
-    const result = designSystemConfigSchema.safeParse({
+    const result: any = designSystemConfigSchema.safeParse({
       base: searchParams.get("base"),
       style: searchParams.get("style"),
       iconLibrary: searchParams.get("iconLibrary"),

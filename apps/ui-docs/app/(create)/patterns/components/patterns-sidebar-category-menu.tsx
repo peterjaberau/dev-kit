@@ -8,6 +8,7 @@ import { getCategoryNames } from "@/lib/registry"
 import { cn, formatLabel, normalizeSlug } from "@/lib/utils"
 import { usePatternsState } from "@/hooks/use-config"
 import { SidebarGroup, SidebarGroupContent } from "@/components/ui/sidebar"
+import { Wrap } from "@chakra-ui/react"
 import {
   serializeDesignSystemSearchParams,
   useDesignSystemSearchParams,
@@ -71,7 +72,7 @@ export const PatternsSidebarCategoryMenu = React.memo(
       return (
         <SidebarGroup>
           <SidebarGroupContent>
-            <div className="flex flex-wrap gap-1.5">
+            <Wrap gap={1.5}>
               {!filter && (
                 <Link
                   href={buildHref("/patterns")}
@@ -128,7 +129,7 @@ export const PatternsSidebarCategoryMenu = React.memo(
                   </Link>
                 )
               })}
-            </div>
+            </Wrap>
             {filteredCategories.length === 0 && (
               <div className="text-muted-foreground px-1 py-4 text-center text-sm">
                 No category found
