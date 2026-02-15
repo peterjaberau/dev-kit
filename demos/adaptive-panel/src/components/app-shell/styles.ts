@@ -30,6 +30,7 @@ export const appShellSlotRecipe = defineSlotRecipe({
       "--side-panel-right-width": "200px",
       "--canvas-top-height": "40px",
       "--canvas-bottom-height": "200px",
+      position: "relative",
       display: "flex",
       flexDirection: "column",
       width: "100%",
@@ -74,6 +75,7 @@ export const appShellSlotRecipe = defineSlotRecipe({
       borderRightColor: "border",
       h: "100%",
       bg: "bg.panel",
+      zIndex: 1,
     },
     sidebarRight: {
       w: "var(--sidebar-right-width)",
@@ -87,8 +89,10 @@ export const appShellSlotRecipe = defineSlotRecipe({
       borderLeftColor: "border",
       h: "100%",
       bg: "bg.panel",
+      zIndex: 1,
     },
     body: {
+      position: "relative",
       flex: 1,
       display: "flex",
       flexDirection: "column",
@@ -188,11 +192,25 @@ export const appShellSlotRecipe = defineSlotRecipe({
     },
     pinnedSidePanelLeft: {
       true: {},
-      false: {},
+      false: {
+        sidePanelLeft: {
+          position: "absolute",
+          top: "0",
+          bottom: "0",
+          left: "var(--sidebar-left-width)",
+        },
+      },
     },
     pinnedSidePanelRight: {
       true: {},
-      false: {},
+      false: {
+        sidePanelRight: {
+          position: "absolute",
+          top: "0",
+          bottom: "0",
+          right: "var(--sidebar-right-width)",
+        },
+      },
     },
     pinnedCanvasBottom: {
       true: {},
@@ -200,8 +218,8 @@ export const appShellSlotRecipe = defineSlotRecipe({
         canvasBottom: {
           position: "absolute",
           flex: "0 0 auto",
-          // left: "var(--floating-offset)",
-          // right: "var(--floating-offset)",
+          left: "var(--floating-offset)",
+          right: "var(--floating-offset)",
           bottom: "var(--floating-offset)",
         },
       },
@@ -214,6 +232,7 @@ export const appShellSlotRecipe = defineSlotRecipe({
           flex: "0 0 auto",
           left: "var(--floating-offset)",
           right: "var(--floating-offset)",
+          bottom: "0",
         },
       },
     },
@@ -224,7 +243,7 @@ export const appShellSlotRecipe = defineSlotRecipe({
       showFooter: true,
       css: {
         bottom: {
-          bottom: "calc(var(--footer-height))",
+          bottom: "var(--footer-height)",
         },
       },
     },
@@ -233,11 +252,60 @@ export const appShellSlotRecipe = defineSlotRecipe({
       showFooter: false,
       css: {
         bottom: {
-          bottom: "var(--floating-offset)",
+          bottom: "0",
         },
       },
     },
 
+    {
+      pinnedSidePanelLeft: false,
+      showSidebarLeft: true,
+      css: {
+        sidePanelLeft: {
+          position: "absolute",
+          top: "0",
+          bottom: "0",
+          left: "var(--sidebar-left-width)",
+        },
+      },
+    },
+    {
+      pinnedSidePanelLeft: false,
+      showSidebarLeft: false,
+      css: {
+        sidePanelLeft: {
+          position: "absolute",
+          top: "0",
+          bottom: "0",
+          left: "0",
+        },
+      },
+    },
+
+    {
+      pinnedSidePanelRight: false,
+      showSidebarRight: true,
+      css: {
+        sidePanelRight: {
+          position: "absolute",
+          top: "0",
+          bottom: "0",
+          right: "var(--sidebar-right-width)",
+        },
+      },
+    },
+    {
+      pinnedSidePanelRight: false,
+      showSidebarRight: false,
+      css: {
+        sidePanelRight: {
+          position: "absolute",
+          top: "0",
+          bottom: "0",
+          right: "0",
+        },
+      },
+    },
   ],
   defaultVariants: {
     showHeader: true,
