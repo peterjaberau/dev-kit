@@ -72,6 +72,7 @@ export const appShellSlotRecipe = defineSlotRecipe({
     },
     sidePanelLeft: {
       w: "var(--side-panel-left-width)",
+      display: "flex",
       borderRight: "1px solid",
       borderRightColor: "border",
       h: "100%",
