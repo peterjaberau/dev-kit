@@ -1,0 +1,32 @@
+{
+  "name": "@dev-kit/demo-adaptive-panel",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3040",
+    "build": "next build",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20251106.1",
+    "@opennextjs/cloudflare": "^1.11.1",
+    "@dev-kit/components": "workspace:*",
+    "@dev-kit/icons": "workspace:*",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "next-themes": "^0.4.6"
+  },
+  "devDependencies": {
+    "wrangler": "^4.46.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.8.3",
+    "@types/node": "^20.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  }
+}
