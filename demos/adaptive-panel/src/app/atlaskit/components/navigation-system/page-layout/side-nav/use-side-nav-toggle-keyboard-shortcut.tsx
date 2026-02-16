@@ -1,0 +1,63 @@
+import { useEffect } from 'react';
+
+import { bind } from 'bind-event-listener';
+
+import { useStableRef } from "#atlaskit/ds-lib"
+import { useOpenLayerObserver } from '#atlaskit/components/layering/entry-points/experimental/open-layer-observer';
+
+import { useIsSideNavShortcutEnabled } from './is-side-nav-shortcut-enabled-context';
+import { useToggleSideNav } from './use-toggle-side-nav';
+
+/**
+ * Binds the keyboard shortcut to toggle the side nav.
+ */
+export function useSideNavToggleKeyboardShortcut({
+	canToggleWithShortcut,
+}: {
+	canToggleWithShortcut?: () => boolean;
+}): void {
+	const openLayerObserver = useOpenLayerObserver();
+	const toggleVisibilityByShortcut = useToggleSideNav({ trigger: 'keyboard' });
+
+	const canToggleWithShortcutStableRef = useStableRef(canToggleWithShortcut);
+	const isSideNavShortcutEnabled = useIsSideNavShortcutEnabled();
+
+	useEffect(() => {
+
+		if (!isSideNavShortcutEnabled) {
+			return;
+		}
+
+		return bind(window, {
+			type: 'keydown',
+			listener(event) {
+				if (event.ctrlKey && event.key === '[') {
+					if (canToggleWithShortcutStableRef.current && !canToggleWithShortcutStableRef.current()) {
+						// Return early if the callback returns false.
+						// If the callback is not provided, we assume the shortcut is enabled.
+						return;
+					}
+
+					if (event.repeat) {
+						// Ignore repeated keydown events from holding down the keys
+						return;
+					}
+
+					if (openLayerObserver && openLayerObserver.getCount({ type: 'modal' }) > 0) {
+						// Return early if there are any open modals
+						return;
+					}
+
+					openLayerObserver?.closeLayers();
+
+					toggleVisibilityByShortcut();
+				}
+			},
+		});
+	}, [
+		canToggleWithShortcutStableRef,
+		isSideNavShortcutEnabled,
+		openLayerObserver,
+		toggleVisibilityByShortcut,
+	]);
+}
