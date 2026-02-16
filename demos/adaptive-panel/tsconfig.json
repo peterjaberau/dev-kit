@@ -27,39 +27,19 @@
       }
     ],
     "paths": {
-      "@/src/*": [
-        "./*"
-      ],
-      "@/*": [
-        "./*"
-      ],
-      "~/*": [
-        "./public/*"
-      ],
-      "#actors/*": [
-        "./src/actors/*"
-      ],
-      "#actors": [
-        "./src/actors/"
-      ],
-      "#hooks/*": [
-        "./src/hooks/*"
-      ],
-      "#hooks": [
-        "./src/hooks"
-      ],
-      "#components/*": [
-        "./src/components/*"
-      ],
-      "#components": [
-        "./src/components"
-      ],
-      "#app/*": [
-        "./src/app/*"
-      ],
-      "#app": [
-        "./src/app"
-      ]
+      "@/src/*": ["./*"],
+      "@/*": ["./*"],
+      "~/*": ["./public/*"],
+      "#atlaskit/*": ["./src/app/atlaskit/*"],
+      "#atlaskit": ["./src/app/atlaskit/"],
+      "#actors/*": ["./src/actors/*"],
+      "#actors": ["./src/actors/"],
+      "#hooks/*": ["./src/hooks/*"],
+      "#hooks": ["./src/hooks"],
+      "#components/*": ["./src/components/*"],
+      "#components": ["./src/components"],
+      "#app/*": ["./src/app/*"],
+      "#app": ["./src/app"]
     }
   },
   "include": [
