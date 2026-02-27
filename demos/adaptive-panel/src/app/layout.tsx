@@ -1,6 +1,7 @@
 import { Provider as ChakraProvider } from "./provider"
 import 'react18-json-view/src/style.css'
 import { Suspense } from "react"
+import { AntdRegistry } from "@ant-design/nextjs-registry"
 
 export default function RootLayout({
   children,
@@ -19,9 +20,11 @@ export default function RootLayout({
           backgroundColor: "#FCF8F8",
         }}
       >
-        <Suspense>
-          <ChakraProvider>{children}</ChakraProvider>
-        </Suspense>
+        <AntdRegistry>
+          <Suspense>
+            <ChakraProvider>{children}</ChakraProvider>
+          </Suspense>
+        </AntdRegistry>
       </body>
     </html>
   )

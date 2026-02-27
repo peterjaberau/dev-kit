@@ -1,8 +1,4 @@
-/**
- * @jsxRuntime classic
- * @jsx jsx
- * @jsxFrag
- */
+
 import React, {
 	type CSSProperties,
 	useCallback,
@@ -14,25 +10,20 @@ import React, {
 	useState,
 } from 'react';
 
-import { cssMap, jsx } from '@compiled/react';
 import { bind } from 'bind-event-listener';
 import { flushSync } from 'react-dom';
 
-import { useAnalyticsEvents } from '@atlaskit/analytics-next';
-import mergeRefs from '@atlaskit/ds-lib/merge-refs';
-import useStableRef from '@atlaskit/ds-lib/use-stable-ref';
+import { mergeRefs, chakra } from "@chakra-ui/react"
+import { useStableRef } from "#atlaskit/ds-lib"
 import {
 	OpenLayerObserverNamespaceProvider,
 	useOpenLayerObserver,
-} from '@atlaskit/layering/experimental/open-layer-observer';
-import { fg } from '@atlaskit/platform-feature-flags';
+} from '#atlaskit/components/layering/entry-points/experimental/open-layer-observer';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { media } from '@atlaskit/primitives/responsive';
-import { token } from '@atlaskit/tokens';
+// import { media } from '@atlaskit/primitives/responsive';
+// import { token } from '@atlaskit/tokens';
 
-import { useSkipLinkInternal } from '../../../context/skip-links/skip-links-context';
-import { TopNavStartElement } from '../../../context/top-nav-start/top-nav-start-context';
-import { useIsFhsEnabled } from '../../fhs-rollout/use-is-fhs-enabled';
+import { TopNavStartElement } from '../../context/top-nav-start/top-nav-start-context';
 import {
 	bannerMountedVar,
 	contentHeightWhenFixed,
@@ -58,7 +49,7 @@ import { useSafeDefaultWidth } from '../use-safe-default-width';
 import { useSideNavRef } from './element-context';
 import { sideNavFlyoutCloseDelayMs } from './flyout-close-delay-ms';
 import { useIsSideNavShortcutEnabled } from './is-side-nav-shortcut-enabled-context';
-import { sideNavToggleTooltipKeyboardShortcut } from './side-nav-toggle-tooltip-keyboard-shortcut';
+// import { sideNavToggleTooltipKeyboardShortcut } from './side-nav-toggle-tooltip-keyboard-shortcut';
 import { SideNavToggleButtonElement } from './toggle-button-context';
 import { useExpandSideNav } from './use-expand-side-nav';
 import { useSideNavToggleKeyboardShortcut } from './use-side-nav-toggle-keyboard-shortcut';
@@ -96,280 +87,280 @@ type FlyoutState =
 	| { type: 'ready-to-close' }
 	| { type: 'not-active' };
 
-const panelSplitterPortalTargetStyles = cssMap({
-	root: {
-		position: 'fixed',
-		// eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-values, @atlaskit/ui-styling-standard/no-imported-style-values
-		zIndex: localSlotLayers.sideNavPanelSplitterFHS,
-		insetBlockEnd: 0,
-		// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-		transform: `translateX(calc(var(${panelSplitterResizingVar}, var(${sideNavClampedWidthVar}, 0px))))`,
-		// On small viewports, the panel splitter has the same height as the side nav (all of the available viewport space minus top bar + banner)
-		// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-		height: contentHeightWhenFixed,
-		'@media (min-width: 64rem)': {
-			// On large viewports, the panel splitter overlays the top nav (takes all available viewport space, minus the banner)
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-			height: `calc(100vh - var(${bannerMountedVar}, 0px))`,
-			// On large viewports, we need to factor in the side nav's border, and shift the panel splitter so it is centered over the border.
-			transform: `translateX(calc(var(${panelSplitterResizingVar}, var(${sideNavClampedWidthVar}, 0px)) - ${token('border.width')}))`,
-		},
-	},
-});
+const panelSplitterPortalTargetStyles = {
+  root: {
+    position: "fixed",
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-values, @atlaskit/ui-styling-standard/no-imported-style-values
+    zIndex: localSlotLayers.sideNavPanelSplitterFHS,
+    insetBlockEnd: 0,
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+    transform: `translateX(calc(var(${panelSplitterResizingVar}, var(${sideNavClampedWidthVar}, 0px))))`,
+    // On small viewports, the panel splitter has the same height as the side nav (all of the available viewport space minus top bar + banner)
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+    height: contentHeightWhenFixed,
+    "@media (min-width: 64rem)": {
+      // On large viewports, the panel splitter overlays the top nav (takes all available viewport space, minus the banner)
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+      height: `calc(100vh - var(${bannerMountedVar}, 0px))`,
+      // On large viewports, we need to factor in the side nav's border, and shift the panel splitter so it is centered over the border.
+      transform: `translateX(calc(var(${panelSplitterResizingVar}, var(${sideNavClampedWidthVar}, 0px)) - 1px))`,
+    },
+  },
+}
 
-const styles = cssMap({
-	root: {
-		backgroundColor: token('elevation.surface.overlay'),
-		boxShadow: token('elevation.shadow.overlay'),
-		boxSizing: 'border-box',
-		gridArea: 'main / aside / aside / aside',
-		// Height is set so it takes up all of the available viewport space minus top bar + banner.
-		// Since the side nav is always rendered ontop of other grid items across all viewports height is
-		// always set.
-		// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-		height: contentHeightWhenFixed,
-		// This sets the sticky point to be just below top bar + banner. It's needed to ensure the stick
-		// point is exactly where this element is rendered to with no wiggle room. Unfortunately the CSS
-		// spec for sticky doesn't support "stick to where I'm initially rendered" so we need to tell it.
-		// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-		insetBlockStart: contentInsetBlockStart,
-		position: 'sticky',
-		// For mobile viewports, the side nav will take up 90% of the screen width, up to a maximum of 320px (the default SideNav width)
-		width: 'min(90%, 320px)',
-		// On small viewports the side nav is displayed above other slots so we create a stacking context.
-		// We keep the side nav with a stacking context always so it is rendered above main content.
-		// This comes with a caveat that main is rendered underneath the side nav content so for any
-		// menu dialogs rendered with "shouldRenderToParent" they could be cut off unintentionally.
-		// Unfortunately this is the best of bad solutions.
-		// eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-values, @atlaskit/ui-styling-standard/no-imported-style-values -- Ignored via go/DSP-18766
-		zIndex: localSlotLayers.sideNav,
-		// Not required, but declaring explicitly because we really don't want a border at small sizes
-		// Previously we had a transparent border to maintain width, but this unintentionally acted as padding
-		borderInlineStart: 'none',
-		borderInlineEnd: 'none',
-		'@media (min-width: 48rem)': {
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-			width: `var(${panelSplitterResizingVar}, var(${sideNavVar}))`,
-		},
-		'@media (min-width: 64rem)': {
-			backgroundColor: token('elevation.surface'),
-			boxShadow: 'initial',
-			gridArea: 'side-nav',
-			// We only want the border to be visible when it is not an overlay
-			borderInlineEnd: `${token('border.width')} solid ${token('color.border')}`,
-		},
-	},
-	flyoutOpen: {
-		'@media (min-width: 64rem)': {
-			// These styles are in a media query to override the `styles.root` media query styles
-			backgroundColor: token('elevation.surface.overlay'),
-			boxShadow: token('elevation.shadow.overlay'),
-			gridArea: 'main',
-			// Hide the border for the flyout, because it has a shadow
-			borderInlineEnd: 'none',
-		},
-		// Disabling animations for Firefox, as it doesn't support the close animation. See comment block in `styles.animationBaseStyles` for more details.
-		'@supports not (-moz-appearance: none)': {
-			// Disabling animations if user has opted for reduced motion
-			'@media (prefers-reduced-motion: no-preference)': {
-				transitionProperty: 'transform, display',
-				transitionDuration: '0.2s',
-				transitionBehavior: 'allow-discrete',
+const styles = {
+  root: {
+    backgroundColor: "rgb(255, 255, 255, 0.8)",
+    boxShadow: "md",
+    boxSizing: "border-box",
+    gridArea: "main / aside / aside / aside",
+    // Height is set so it takes up all of the available viewport space minus top bar + banner.
+    // Since the side nav is always rendered ontop of other grid items across all viewports height is
+    // always set.
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+    height: contentHeightWhenFixed,
+    // This sets the sticky point to be just below top bar + banner. It's needed to ensure the stick
+    // point is exactly where this element is rendered to with no wiggle room. Unfortunately the CSS
+    // spec for sticky doesn't support "stick to where I'm initially rendered" so we need to tell it.
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+    insetBlockStart: contentInsetBlockStart,
+    position: "sticky",
+    // For mobile viewports, the side nav will take up 90% of the screen width, up to a maximum of 320px (the default SideNav width)
+    width: "min(90%, 320px)",
+    // On small viewports the side nav is displayed above other slots so we create a stacking context.
+    // We keep the side nav with a stacking context always so it is rendered above main content.
+    // This comes with a caveat that main is rendered underneath the side nav content so for any
+    // menu dialogs rendered with "shouldRenderToParent" they could be cut off unintentionally.
+    // Unfortunately this is the best of bad solutions.
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-values, @atlaskit/ui-styling-standard/no-imported-style-values -- Ignored via go/DSP-18766
+    zIndex: localSlotLayers.sideNav,
+    // Not required, but declaring explicitly because we really don't want a border at small sizes
+    // Previously we had a transparent border to maintain width, but this unintentionally acted as padding
+    borderInlineStart: "none",
+    borderInlineEnd: "none",
+    "@media (min-width: 48rem)": {
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+      width: `var(${panelSplitterResizingVar}, var(${sideNavVar}))`,
+    },
+    "@media (min-width: 64rem)": {
+      backgroundColor: "rgb(255, 255, 255, 0.8)",
+      boxShadow: "initial",
+      gridArea: "side-nav",
+      // We only want the border to be visible when it is not an overlay
+      borderInlineEnd: `1px solid gray.200`,
+    },
+  },
+  flyoutOpen: {
+    "@media (min-width: 64rem)": {
+      // These styles are in a media query to override the `styles.root` media query styles
+      backgroundColor: "rgb(255, 255, 255, 0.8)",
+      boxShadow: "rgb(255, 255, 255, 0.8)",
+      gridArea: "main",
+      // Hide the border for the flyout, because it has a shadow
+      borderInlineEnd: "none",
+    },
+    // Disabling animations for Firefox, as it doesn't support the close animation. See comment block in `styles.animationBaseStyles` for more details.
+    "@supports not (-moz-appearance: none)": {
+      // Disabling animations if user has opted for reduced motion
+      "@media (prefers-reduced-motion: no-preference)": {
+        transitionProperty: "transform, display",
+        transitionDuration: "0.2s",
+        transitionBehavior: "allow-discrete",
 
-				/**
-				 * Because we're transitioning from display: none, we need to define the
-				 * starting values for when the element is first displayed, so the
-				 * transition animation knows where to start from.
-				 */
-				// eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
-				'@starting-style': {
-					transform: 'translateX(-100%)',
-				},
-			},
-		},
-	},
-	flyoutAnimateClosed: {
-		display: 'none',
-		'@media (min-width: 64rem)': {
-			// These styles are in a media query to override the `styles.root` media query styles
-			gridArea: 'main',
-		},
-		// Disabling animations for Firefox, as it doesn't support the close animation. See comment block in `styles.animationBaseStyles` for more details.
-		'@supports not (-moz-appearance: none)': {
-			// Disabling animations if user has opted for reduced motion
-			'@media (prefers-reduced-motion: no-preference)': {
-				transitionProperty: 'transform, display',
-				transitionDuration: '0.2s',
-				transitionBehavior: 'allow-discrete',
-				transform: 'translateX(-100%)',
-			},
-		},
-	},
-	animationRTLSupport: {
-		// Used to support animations for right-to-left (RTL) languages/text direction. We need to flip the animation direction for RTL.
-		// There are currently no logical properties for translate transforms: https://github.com/w3c/csswg-drafts/issues/1544
-		// Instead, we are using a CSS variable to flip the translate value.
-		'--animation-direction': '1',
-		// eslint-disable-next-line @atlaskit/ui-styling-standard/no-nested-selectors, @atlaskit/ui-styling-standard/no-unsafe-selectors
-		"[dir='rtl'] &": {
-			'--animation-direction': '-1',
-		},
-	},
-	flyoutBaseStylesFullHeightSidebar: {
-		// These styles are shared between the open and close animations for flyout
-		'@media (min-width: 64rem)': {
-			// These styles are in a media query to override the `styles.root` media query styles
-			backgroundColor: token('elevation.surface.overlay'),
-			boxShadow: token('elevation.shadow.overlay'),
-			gridArea: 'main',
-			// Hide the border for the flyout, because it has a shadow
-			borderInlineEnd: 'none',
-		},
-		'@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)': {
-			transitionProperty: 'transform, display',
-			transitionBehavior: 'allow-discrete',
-		},
-	},
-	flyoutOpenFullHeightSidebar: {
-		'@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)': {
-			transitionDuration: '0.2s',
-			transitionTimingFunction: 'cubic-bezier(0.6, 0, 0, 1)',
+        /**
+         * Because we're transitioning from display: none, we need to define the
+         * starting values for when the element is first displayed, so the
+         * transition animation knows where to start from.
+         */
+        // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
+        "@starting-style": {
+          transform: "translateX(-100%)",
+        },
+      },
+    },
+  },
+  flyoutAnimateClosed: {
+    display: "none",
+    "@media (min-width: 64rem)": {
+      // These styles are in a media query to override the `styles.root` media query styles
+      gridArea: "main",
+    },
+    // Disabling animations for Firefox, as it doesn't support the close animation. See comment block in `styles.animationBaseStyles` for more details.
+    "@supports not (-moz-appearance: none)": {
+      // Disabling animations if user has opted for reduced motion
+      "@media (prefers-reduced-motion: no-preference)": {
+        transitionProperty: "transform, display",
+        transitionDuration: "0.2s",
+        transitionBehavior: "allow-discrete",
+        transform: "translateX(-100%)",
+      },
+    },
+  },
+  animationRTLSupport: {
+    // Used to support animations for right-to-left (RTL) languages/text direction. We need to flip the animation direction for RTL.
+    // There are currently no logical properties for translate transforms: https://github.com/w3c/csswg-drafts/issues/1544
+    // Instead, we are using a CSS variable to flip the translate value.
+    "--animation-direction": "1",
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-nested-selectors, @atlaskit/ui-styling-standard/no-unsafe-selectors
+    "[dir='rtl'] &": {
+      "--animation-direction": "-1",
+    },
+  },
+  flyoutBaseStylesFullHeightSidebar: {
+    // These styles are shared between the open and close animations for flyout
+    "@media (min-width: 64rem)": {
+      // These styles are in a media query to override the `styles.root` media query styles
+      backgroundColor: "rgb(255, 255, 255, 0.8)",
+      boxShadow: "rgb(255, 255, 255, 0.8)",
+      gridArea: "main",
+      // Hide the border for the flyout, because it has a shadow
+      borderInlineEnd: "none",
+    },
+    "@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)": {
+      transitionProperty: "transform, display",
+      transitionBehavior: "allow-discrete",
+    },
+  },
+  flyoutOpenFullHeightSidebar: {
+    "@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)": {
+      transitionDuration: "0.2s",
+      transitionTimingFunction: "cubic-bezier(0.6, 0, 0, 1)",
 
-			/**
-			 * Because we're transitioning from display: none, we need to define the
-			 * starting values for when the element is first displayed, so the
-			 * transition animation knows where to start from.
-			 */
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
-			'@starting-style': {
-				transform: 'translateX(calc(-100% * var(--animation-direction)))',
-			},
-		},
-	},
-	flyoutAnimateClosedFullHeightSidebar: {
-		'@media (min-width: 64rem)': {
-			display: 'none',
-		},
-		// Desktop media query is used here to prevent overriding mobile sidebar styles, if the flyout
-		// was just closed, and then the user resized to mobile viewport with the mobile sidebar expanded.
-		'@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)': {
-			transitionDuration: '0.2s',
-			transitionTimingFunction: 'cubic-bezier(0, 0.4, 0, 1)',
-			transform: 'translateX(calc(-100% * var(--animation-direction)))',
-		},
-	},
-	flexContainer: {
-		// This element controls the flex layout to position the slot elements correctly.
-		height: '100%',
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'space-between',
-	},
-	hiddenMobileAndDesktop: {
-		display: 'none',
-	},
-	hiddenMobileOnly: {
-		display: 'none',
-		'@media (min-width: 64rem)': {
-			display: 'initial',
-		},
-	},
-	hiddenDesktopOnly: {
-		'@media (min-width: 64rem)': {
-			display: 'none',
-		},
-	},
-	animationBaseStyles: {
-		/**
-		 * Disabling animations if user has opted for reduced motion
-		 *
-		 * ⚠️ Note: the `@media` query needs to be a top-level style to make sure Compiled orders the media queries correctly.
-		 * Compiled currently only sorts top-level CSS rules:
-		 * https://github.com/atlassian-labs/compiled/blob/master/packages/css/src/plugins/sort-atomic-style-sheet.ts#L39
-		 */
-		'@media (prefers-reduced-motion: no-preference)': {
-			transitionProperty: 'transform, display',
-			transitionBehavior: 'allow-discrete',
-			transitionDuration: '0.2s',
-		},
-	},
-	expandAnimationMobile: {
-		// These styles are not limited to "mobile" viewports, as they are not scoped to any media queries.
-		// Desktop styles will need to override these if required.
-		'@media (prefers-reduced-motion: no-preference)': {
-			transitionTimingFunction: 'cubic-bezier(0.6, 0, 0, 1)',
+      /**
+       * Because we're transitioning from display: none, we need to define the
+       * starting values for when the element is first displayed, so the
+       * transition animation knows where to start from.
+       */
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
+      "@starting-style": {
+        transform: "translateX(calc(-100% * var(--animation-direction)))",
+      },
+    },
+  },
+  flyoutAnimateClosedFullHeightSidebar: {
+    "@media (min-width: 64rem)": {
+      display: "none",
+    },
+    // Desktop media query is used here to prevent overriding mobile sidebar styles, if the flyout
+    // was just closed, and then the user resized to mobile viewport with the mobile sidebar expanded.
+    "@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)": {
+      transitionDuration: "0.2s",
+      transitionTimingFunction: "cubic-bezier(0, 0.4, 0, 1)",
+      transform: "translateX(calc(-100% * var(--animation-direction)))",
+    },
+  },
+  flexContainer: {
+    // This element controls the flex layout to position the slot elements correctly.
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  hiddenMobileAndDesktop: {
+    display: "none",
+  },
+  hiddenMobileOnly: {
+    display: "none",
+    "@media (min-width: 64rem)": {
+      display: "initial",
+    },
+  },
+  hiddenDesktopOnly: {
+    "@media (min-width: 64rem)": {
+      display: "none",
+    },
+  },
+  animationBaseStyles: {
+    /**
+     * Disabling animations if user has opted for reduced motion
+     *
+     * ⚠️ Note: the `@media` query needs to be a top-level style to make sure Compiled orders the media queries correctly.
+     * Compiled currently only sorts top-level CSS rules:
+     * https://github.com/atlassian-labs/compiled/blob/master/packages/css/src/plugins/sort-atomic-style-sheet.ts#L39
+     */
+    "@media (prefers-reduced-motion: no-preference)": {
+      transitionProperty: "transform, display",
+      transitionBehavior: "allow-discrete",
+      transitionDuration: "0.2s",
+    },
+  },
+  expandAnimationMobile: {
+    // These styles are not limited to "mobile" viewports, as they are not scoped to any media queries.
+    // Desktop styles will need to override these if required.
+    "@media (prefers-reduced-motion: no-preference)": {
+      transitionTimingFunction: "cubic-bezier(0.6, 0, 0, 1)",
 
-			/**
-			 * Because we're transitioning from display: none, we need to define the
-			 * starting values for when the element is first displayed, so the
-			 * transition animation knows where to start from.
-			 */
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
-			'@starting-style': {
-				transform: 'translateX(calc(-100% * var(--animation-direction)))',
-			},
-		},
-	},
-	collapseAnimationMobile: {
-		// These styles are not limited to "mobile" viewports, as they are not scoped to any media queries.
-		// Desktop styles will need to override these if required.
-		'@media (prefers-reduced-motion: no-preference)': {
-			gridArea: 'main',
-			transitionTimingFunction: 'cubic-bezier(0, 0.4, 0, 1)',
-		},
+      /**
+       * Because we're transitioning from display: none, we need to define the
+       * starting values for when the element is first displayed, so the
+       * transition animation knows where to start from.
+       */
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
+      "@starting-style": {
+        transform: "translateX(calc(-100% * var(--animation-direction)))",
+      },
+    },
+  },
+  collapseAnimationMobile: {
+    // These styles are not limited to "mobile" viewports, as they are not scoped to any media queries.
+    // Desktop styles will need to override these if required.
+    "@media (prefers-reduced-motion: no-preference)": {
+      gridArea: "main",
+      transitionTimingFunction: "cubic-bezier(0, 0.4, 0, 1)",
+    },
 
-		// We need to explicitly limit setting the `transform` property to small viewports.
-		// Unsetting the `transform` property with `transform: initial` on large viewports causes the whole
-		// animation to be disabled.
-		// Using `not` will flip the `min-width` condition. This is better than using `max-width` as it prevents an overlap
-		'@media (prefers-reduced-motion: no-preference) and (not (min-width: 64rem))': {
-			transform: 'translateX(calc(-100% * var(--animation-direction)))',
-		},
-	},
-	expandAnimationDesktop: {
-		'@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)': {
-			// We need to override the mobile styles for desktop
-			gridArea: 'side-nav',
-			transitionTimingFunction: 'cubic-bezier(0.6, 0, 0, 1)',
+    // We need to explicitly limit setting the `transform` property to small viewports.
+    // Unsetting the `transform` property with `transform: initial` on large viewports causes the whole
+    // animation to be disabled.
+    // Using `not` will flip the `min-width` condition. This is better than using `max-width` as it prevents an overlap
+    "@media (prefers-reduced-motion: no-preference) and (not (min-width: 64rem))": {
+      transform: "translateX(calc(-100% * var(--animation-direction)))",
+    },
+  },
+  expandAnimationDesktop: {
+    "@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)": {
+      // We need to override the mobile styles for desktop
+      gridArea: "side-nav",
+      transitionTimingFunction: "cubic-bezier(0.6, 0, 0, 1)",
 
-			/**
-			 * Because we're transitioning from display: none, we need to define the
-			 * starting values for when the element is first displayed, so the
-			 * transition animation knows where to start from.
-			 */
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
-			'@starting-style': {
-				transform: 'translateX(calc(-100% * var(--animation-direction)))',
-			},
-		},
-	},
-	collapseAnimationDesktop: {
-		'@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)': {
-			gridArea: 'main',
-			transitionTimingFunction: 'cubic-bezier(0, 0.4, 0, 1)',
-			transform: 'translateX(calc(-100% * var(--animation-direction)))',
-		},
-	},
-	fullHeightSidebar: {
-		'@media (min-width: 64rem)': {
-			// We want it to overlap the top nav
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-			height: `calc(100vh - var(${bannerMountedVar}, 0px))`,
+      /**
+       * Because we're transitioning from display: none, we need to define the
+       * starting values for when the element is first displayed, so the
+       * transition animation knows where to start from.
+       */
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-selectors
+      "@starting-style": {
+        transform: "translateX(calc(-100% * var(--animation-direction)))",
+      },
+    },
+  },
+  collapseAnimationDesktop: {
+    "@media (prefers-reduced-motion: no-preference) and (min-width: 64rem)": {
+      gridArea: "main",
+      transitionTimingFunction: "cubic-bezier(0, 0.4, 0, 1)",
+      transform: "translateX(calc(-100% * var(--animation-direction)))",
+    },
+  },
+  fullHeightSidebar: {
+    "@media (min-width: 64rem)": {
+      // We want it to overlap the top nav
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+      height: `calc(100vh - var(${bannerMountedVar}, 0px))`,
 
-			// This is the stick point for the sticky positioning, only relevant if the whole page scrolls for some reason
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-			insetBlockStart: `calc(var(${bannerMountedVar}, 0px))`,
+      // This is the stick point for the sticky positioning, only relevant if the whole page scrolls for some reason
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+      insetBlockStart: `calc(var(${bannerMountedVar}, 0px))`,
 
-			// Push the side nav items down, creating room for the top nav start items
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-			paddingBlockStart: `calc(var(${topNavMountedVar}, 0px))`,
+      // Push the side nav items down, creating room for the top nav start items
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+      paddingBlockStart: `calc(var(${topNavMountedVar}, 0px))`,
 
-			// Bleed for the side nav to overlap the top nav, relevant for the initial positioning / when the whole page is not scrolled
-			// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
-			marginBlockStart: `calc(-1 * var(${topNavMountedVar}, 0px))`,
-		},
-	},
-});
+      // Bleed for the side nav to overlap the top nav, relevant for the initial positioning / when the whole page is not scrolled
+      // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/no-unsafe-values
+      marginBlockStart: `calc(-1 * var(${topNavMountedVar}, 0px))`,
+    },
+  },
+}
 
 type SideNavProps = CommonSlotProps & {
 	/**
@@ -471,7 +462,6 @@ function SideNavInternal({
 	id: providedId,
 	canToggleWithShortcut,
 }: SideNavProps) {
-	const isFhsEnabled = useIsFhsEnabled();
 	const id = useLayoutId({ providedId });
 	const expandSideNav = useExpandSideNav({ trigger: 'skip-link' });
 	/**
@@ -490,11 +480,7 @@ function SideNavInternal({
 		});
 	}, [expandSideNav]);
 
-	useSkipLinkInternal({
-		id,
-		label: skipLinkLabel,
-		onBeforeNavigate: synchronouslyExpandSideNav,
-	});
+
 
 	const sideNavState = useContext(SideNavVisibilityState);
 	const setSideNavState = useContext(SetSideNavVisibilityState);
@@ -506,33 +492,9 @@ function SideNavInternal({
 	// to sync the side nav context (provided in `<Root>`) with the `defaultCollapsed` prop provided to `<SideNav>`.
 	const [initialDefaultCollapsed] = useState(defaultCollapsed);
 
-	const { createAnalyticsEvent } = useAnalyticsEvents();
 
 	const [initialIsExpandedOnDesktop] = useState(isExpandedOnDesktop);
 
-	/**
-	 * Captures the initial collapsed/expanded state of the side nav.
-	 *
-	 * Only firing on desktop because the nav is never open by default on mobile.
-	 */
-	useEffect(() => {
-		if (initialIsExpandedOnDesktop && fg('platform_dst_nav4_fhs_instrumentation_1')) {
-			const isDesktop = window.matchMedia('(min-width: 64rem)').matches;
-			if (isDesktop) {
-				const navigationAnalyticsEvent = createAnalyticsEvent({
-					source: 'topNav',
-					actionSubject: 'sideNav',
-					action: 'viewedOnLoad',
-					actionSubjectId: 'sideNavMenu',
-					attributes: {
-						screen: 'desktop',
-					},
-				});
-
-				navigationAnalyticsEvent.fire('navigation');
-			}
-		}
-	}, [createAnalyticsEvent, initialIsExpandedOnDesktop]);
 
 	const defaultWidth = useSafeDefaultWidth({
 		defaultWidthProp,
@@ -551,7 +513,7 @@ function SideNavInternal({
 	 * which observes the side nav to determine its maximum width.
 	 */
 	const sharedRef = useSideNavRef();
-	const mergedRef = mergeRefs([navRef, sharedRef]);
+	const mergedRef: any = mergeRefs([navRef, sharedRef] as any);
 
 	const toggleButtonElement = useContext(SideNavToggleButtonElement);
 	const topNavStartElement = useContext(TopNavStartElement);
@@ -587,8 +549,9 @@ function SideNavInternal({
 				openLayerObserver.getCount({
 					namespace: openLayerObserverTopNavStartNamespace,
 					type: 'popup',
-				}) > 0 &&
-				fg('platform_dst_nav4_side_nav_resize_tooltip_feedback')
+				}) > 0
+        // &&
+				// fg('platform_dst_nav4_side_nav_resize_tooltip_feedback')
 			) {
 				return;
 			}
@@ -743,56 +706,24 @@ function SideNavInternal({
 
 	const handleExpand = useCallback<VisibilityCallback>(
 		({ screen, trigger }) => {
-			if (fg('platform_dst_nav4_fhs_instrumentation_1')) {
-				onExpand?.({ screen, trigger });
-
-				const navigationAnalyticsEvent = createAnalyticsEvent({
-					source: 'topNav',
-					actionSubject: 'sideNav',
-					action: 'expanded',
-					actionSubjectId: 'sideNavMenu',
-					attributes: {
-						trigger,
-					},
-				});
-
-				navigationAnalyticsEvent.fire('navigation');
-			} else {
-				onExpand?.({ screen });
-			}
+      onExpand?.({ screen })
 
 			// When the side nav gets expanded, we close the flyout to reset it.
 			// This prevents the flyout from staying open and ensures we are respecting the user's intent to expand.
 			updateFlyoutState('force-close');
 		},
-		[onExpand, updateFlyoutState, createAnalyticsEvent],
+		[onExpand, updateFlyoutState],
 	);
 
 	const handleCollapse = useCallback<VisibilityCallback>(
 		({ screen, trigger }) => {
-			if (fg('platform_dst_nav4_fhs_instrumentation_1')) {
-				onCollapse?.({ screen, trigger });
-
-				const navigationAnalyticsEvent = createAnalyticsEvent({
-					source: 'topNav',
-					actionSubject: 'sideNav',
-					action: 'collapsed',
-					actionSubjectId: 'sideNavMenu',
-					attributes: {
-						trigger,
-					},
-				});
-
-				navigationAnalyticsEvent.fire('navigation');
-			} else {
-				onCollapse?.({ screen });
-			}
+      onCollapse?.({ screen })
 
 			// When the side nav gets collapsed, we close the flyout to reset it.
 			// This prevents the flyout from staying open and ensures we are respecting the user's intent to collapse.
 			updateFlyoutState('force-close');
 		},
-		[onCollapse, updateFlyoutState, createAnalyticsEvent],
+		[onCollapse, updateFlyoutState],
 	);
 
 	useSideNavVisibilityCallbacks({
@@ -1150,7 +1081,6 @@ function SideNavInternal({
 
 	// This is only used for the regular expand and collapse animations, not the flyout animations.
 	const shouldShowSidebarToggleAnimation =
-		isFhsEnabled &&
 		// We do not apply the animation styles on the initial render, as the `@starting-style` rule will cause the sidebar to
 		// slide in initially.
 		hasExpandedStateChanged &&
@@ -1175,161 +1105,82 @@ function SideNavInternal({
 		!isFirefox;
 
 	return (
-		<>
-			<nav
-				id={id}
-				{...devTimeOnlyAttributes}
-				data-layout-slot
-				aria-label={label}
-				style={
-					{
-						// eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/enforce-style-prop
-						[sideNavVar]: clampedWidth,
-					} as CSSProperties
-				}
-				ref={mergedRef}
-				css={[
-					styles.root,
-					// We are explicitly using the `isExpandedOnDesktop` and `isExpandedOnMobile` values here to ensure we are displaying the
-					// correct state during SSR render, as the context value would not have been set yet. These values are derived from the
-					// component props (defaultCollapsed) if context hasn't been set yet.
-					isExpandedOnDesktop &&
-					!isExpandedOnMobile &&
-					!isFlyoutVisible &&
-					styles.hiddenMobileOnly,
-					!isExpandedOnDesktop &&
-					isExpandedOnMobile &&
-					!isFlyoutVisible &&
-					styles.hiddenDesktopOnly,
-					!isExpandedOnDesktop &&
-					!isExpandedOnMobile &&
-					!isFlyoutVisible &&
-					styles.hiddenMobileAndDesktop,
+    <>
+      <chakra.nav
+        id={id}
+        {...devTimeOnlyAttributes}
+        data-layout-slot
+        aria-label={label}
+        style={
+          {
+            // eslint-disable-next-line @atlaskit/ui-styling-standard/no-imported-style-values, @atlaskit/ui-styling-standard/enforce-style-prop
+            [sideNavVar]: clampedWidth,
+          } as CSSProperties
+        }
+        ref={mergedRef}
+        css={[
+          styles.root,
+          // We are explicitly using the `isExpandedOnDesktop` and `isExpandedOnMobile` values here to ensure we are displaying the
+          // correct state during SSR render, as the context value would not have been set yet. These values are derived from the
+          // component props (defaultCollapsed) if context hasn't been set yet.
+          isExpandedOnDesktop && !isExpandedOnMobile && !isFlyoutVisible && styles.hiddenMobileOnly,
+          !isExpandedOnDesktop && isExpandedOnMobile && !isFlyoutVisible && styles.hiddenDesktopOnly,
+          !isExpandedOnDesktop && !isExpandedOnMobile && !isFlyoutVisible && styles.hiddenMobileAndDesktop,
 
-					isFhsEnabled && styles.animationRTLSupport,
-					// Expand/collapse animation styles
-					shouldShowSidebarToggleAnimation && styles.animationBaseStyles,
-					// We need to separately apply the styles for the expand or collapse animations for both mobile and desktop
-					// based on their relevant expansion state.
-					isExpandedOnMobile && shouldShowSidebarToggleAnimation && styles.expandAnimationMobile,
-					!isExpandedOnMobile && shouldShowSidebarToggleAnimation && styles.collapseAnimationMobile,
-					isExpandedOnDesktop && shouldShowSidebarToggleAnimation && styles.expandAnimationDesktop,
-					!isExpandedOnDesktop &&
-					shouldShowSidebarToggleAnimation &&
-					styles.collapseAnimationDesktop,
+          // isFhsEnabled && styles.animationRTLSupport,
+          // Expand/collapse animation styles
+          shouldShowSidebarToggleAnimation && styles.animationBaseStyles,
+          // We need to separately apply the styles for the expand or collapse animations for both mobile and desktop
+          // based on their relevant expansion state.
+          isExpandedOnMobile && shouldShowSidebarToggleAnimation && styles.expandAnimationMobile,
+          !isExpandedOnMobile && shouldShowSidebarToggleAnimation && styles.collapseAnimationMobile,
+          isExpandedOnDesktop && shouldShowSidebarToggleAnimation && styles.expandAnimationDesktop,
+          !isExpandedOnDesktop && shouldShowSidebarToggleAnimation && styles.collapseAnimationDesktop,
 
-					// Flyout styles
-					sideNavState?.flyout === 'open' && !isFhsEnabled && styles.flyoutOpen,
-					sideNavState?.flyout === 'triggered-animate-close' &&
-					!isFhsEnabled &&
-					styles.flyoutAnimateClosed,
+          // Flyout styles
+          sideNavState?.flyout === "open" && styles.flyoutOpen,
+          sideNavState?.flyout === "triggered-animate-close" && styles.flyoutAnimateClosed,
+        ]}
+        data-testid={testId}
+      >
+        {/**
+         * This CSS var is used by the `Panel` slot to enforce its maximum width constraint.
+         * When we remove the UNSAFE legacy usage, we can change this to `HoistCssVarToLocalGrid`
+         */}
+        <DangerouslyHoistCssVarToDocumentRoot
+          variableName={sideNavLiveWidthVar}
+          value="0px"
+          // mediaQuery={media.above.md}
+          responsiveValue={isExpandedOnDesktop ? `var(${panelSplitterResizingVar}, ${clampedWidth})` : 0}
+        />
+        {dangerouslyHoistSlotSizes && (
+          // ------ START UNSAFE STYLES ------
+          // These styles are only needed for the UNSAFE legacy use case for Jira + Confluence.
+          // When they aren't needed anymore we can delete them wholesale.
+          <DangerouslyHoistCssVarToDocumentRoot
+            variableName={UNSAFE_sideNavLayoutVar}
+            value={`var(${sideNavLiveWidthVar})`}
+          />
+          // ------ END UNSAFE STYLES ------
+        )}
+        <PanelSplitterProvider
+          panelId={sideNavPanelSplitterId}
+          panelRef={navRef}
+          portalRef={undefined}
+          panelWidth={width}
+          onCompleteResize={setWidth}
+          getResizeBounds={getResizeBounds}
+          resizingCssVar={panelSplitterResizingVar}
+          // Not resizable when in peek (flyout) mode.
+          isEnabled={isExpandedOnDesktop && !isFlyoutVisible}
+          shortcut={undefined}
+        >
+          <chakra.div css={styles.flexContainer}>{children}</chakra.div>
+        </PanelSplitterProvider>
+      </chakra.nav>
 
-					(sideNavState?.flyout === 'open' || sideNavState?.flyout === 'triggered-animate-close') &&
-					!isFirefox &&
-					isFhsEnabled &&
-					styles.flyoutBaseStylesFullHeightSidebar,
-					sideNavState?.flyout === 'triggered-animate-close' &&
-					!isFirefox &&
-					isFhsEnabled &&
-					styles.flyoutAnimateClosedFullHeightSidebar,
-					sideNavState?.flyout === 'open' &&
-					!isFirefox &&
-					isFhsEnabled &&
-					styles.flyoutOpenFullHeightSidebar,
-					sideNavState?.flyout === 'triggered-animate-close' &&
-					!isFirefox &&
-					isFhsEnabled &&
-					styles.flyoutAnimateClosedFullHeightSidebar,
-					// Flyout is not using full height styles
-					isFlyoutClosed &&
-					isFhsEnabled &&
-					!fg('platform-dst-side-nav-layering-fixes') &&
-					styles.fullHeightSidebar,
-				]}
-				data-testid={testId}
-			>
-				{/**
-				 * This CSS var is used by the `Panel` slot to enforce its maximum width constraint.
-				 * When we remove the UNSAFE legacy usage, we can change this to `HoistCssVarToLocalGrid`
-				 */}
-				<DangerouslyHoistCssVarToDocumentRoot
-					variableName={sideNavLiveWidthVar}
-					value="0px"
-					mediaQuery={media.above.md}
-					responsiveValue={
-						isExpandedOnDesktop ? `var(${panelSplitterResizingVar}, ${clampedWidth})` : 0
-					}
-				/>
-				{dangerouslyHoistSlotSizes && (
-					// ------ START UNSAFE STYLES ------
-					// These styles are only needed for the UNSAFE legacy use case for Jira + Confluence.
-					// When they aren't needed anymore we can delete them wholesale.
-					<DangerouslyHoistCssVarToDocumentRoot
-						variableName={UNSAFE_sideNavLayoutVar}
-						value={`var(${sideNavLiveWidthVar})`}
-					/>
-					// ------ END UNSAFE STYLES ------
-				)}
-				<PanelSplitterProvider
-					panelId={sideNavPanelSplitterId}
-					panelRef={navRef}
-					portalRef={
-						isFhsEnabled && fg('platform-dst-side-nav-layering-fixes')
-							? panelSplitterPortalTargetRef
-							: undefined
-					}
-					panelWidth={width}
-					onCompleteResize={setWidth}
-					getResizeBounds={getResizeBounds}
-					resizingCssVar={panelSplitterResizingVar}
-					// Not resizable when in peek (flyout) mode.
-					isEnabled={
-						fg('platform-dst-side-nav-layering-fixes')
-							? !isFlyoutVisible
-							: // Old behaviour has a bug: the panel splitter would only be visible on sm screens (between 48rem and 64rem)
-							// if the side nav was expanded on desktop.
-							isExpandedOnDesktop && !isFlyoutVisible
-					}
-					shortcut={isShortcutEnabled ? sideNavToggleTooltipKeyboardShortcut : undefined}
-				>
-					<div css={styles.flexContainer}>{children}</div>
-				</PanelSplitterProvider>
-			</nav>
-			{isFhsEnabled && fg('platform-dst-side-nav-layering-fixes') && (
-				// The side nav panel splitter is rendered outside of the side nav, so it can be layered above the top nav,
-				// while the actual side nav is layered below the top nav.
-				<div
-					ref={panelSplitterPortalTargetRef}
-					data-layout-slot
-					css={[
-						panelSplitterPortalTargetStyles.root,
-						// We need to apply the same styles to hide the panel splitter when the side nav is hidden, as it is rendered outside of the side nav.
-						isExpandedOnDesktop &&
-						!isExpandedOnMobile &&
-						!isFlyoutVisible &&
-						styles.hiddenMobileOnly,
-						!isExpandedOnDesktop &&
-						isExpandedOnMobile &&
-						!isFlyoutVisible &&
-						styles.hiddenDesktopOnly,
-						!isExpandedOnDesktop &&
-						!isExpandedOnMobile &&
-						!isFlyoutVisible &&
-						styles.hiddenMobileAndDesktop,
-					]}
-					style={
-						{
-							// We need to use an inline style here to share the side nav width to position the panel splitter.
-							// We can't use the existing --n_sNvlw variable (sideNavLiveWidthVar) because it is set to 0 when the side nav is collapsed on desktop,
-							// however the panel splitter is still visible and usable on small viewports until 48rem.
-							// eslint-disable-next-line @atlaskit/ui-styling-standard/enforce-style-prop
-							[sideNavClampedWidthVar]: clampedWidth,
-						} as CSSProperties
-					}
-				/>
-			)}
-		</>
-	);
+    </>
+  )
 }
 
 /**
@@ -1353,7 +1204,7 @@ export function SideNav({
 	onPeekEnd,
 	canToggleWithShortcut,
 	id,
-}: SideNavProps): JSX.Element {
+}: SideNavProps) {
 	return (
 		<OpenLayerObserverNamespaceProvider namespace={openLayerObserverSideNavNamespace}>
 			<SideNavInternal
