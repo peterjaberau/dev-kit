@@ -1,27 +1,13 @@
 'use client';
 
-import { cx } from 'antd-style';
 import { memo } from 'react';
+import { chakra, useSlotRecipe } from "@chakra-ui/react"
+import { stylesRecipe } from "../recipe"
 
-import { Flexbox } from "react-layout-kit"
-import { type DivProps } from '../type';
+export const DraggablePanelFooter = memo(({ ...rest }) => {
+  const recipe = useSlotRecipe({ recipe: stylesRecipe })
+  const styles = recipe()
 
-import { styles } from './style';
-
-export type DraggablePanelFooterProps = DivProps;
-
-export const DraggablePanelFooter = memo<DraggablePanelFooterProps>(({ className, ...rest }) => {
-  return (
-    <Flexbox
-      data-part={"draggable-panel-footer"}
-      horizontal
-      align={"center"}
-      className={cx(styles.footer, className)}
-      flex={"none"}
-      gap={8}
-      justify={"flex-start"}
-      {...rest}
-    />
-  )
+  return <chakra.div css={styles.footer} {...rest} />
 })
 

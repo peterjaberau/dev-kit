@@ -44,7 +44,11 @@ export default function Page() {
             <Text textStyle={"sm"} fontWeight={"bold"}>
               Bottom
             </Text>
-            <Button onClick={() => setExpandBottom(!expandBottom)} size={"2xs"} variant={expandBottom ? "solid" : "outline"}>
+            <Button
+              onClick={() => setExpandBottom(!expandBottom)}
+              size={"2xs"}
+              variant={expandBottom ? "solid" : "outline"}
+            >
               Expand {expandBottom ? "(ON)" : "(OFF)"}
             </Button>
           </HStack>
@@ -52,7 +56,11 @@ export default function Page() {
             <Text textStyle={"sm"} fontWeight={"bold"}>
               Right
             </Text>
-            <Button onClick={() => setExpandRight(!expandRight)} size={"2xs"} variant={expandRight ? "solid" : "outline"}>
+            <Button
+              onClick={() => setExpandRight(!expandRight)}
+              size={"2xs"}
+              variant={expandRight ? "solid" : "outline"}
+            >
               Expand {expandRight ? "(ON)" : "(OFF)"}
             </Button>
           </HStack>
@@ -72,10 +80,6 @@ export default function Page() {
           pin={pinLeft}
           fullscreen={fullScreenLeft}
           placement="left"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-          }}
           onExpandChange={setExpandLeft}
         >
           <DraggablePanelContainer style={{ flex: 1 }}>
@@ -84,15 +88,15 @@ export default function Page() {
               position="left"
               setExpand={setExpandLeft}
               setPin={setPinLeft}
-              title="Header"
+              title="Header Left"
             />
             <DraggablePanelBody>
               <Button onClick={() => setFullScreenPinLeft((prev) => !prev)}>
-                FullScreen {fullScreenLeft ? "(ON)" : "(OFF)"}
+                FullScreen Left {fullScreenLeft ? "(ON)" : "(OFF)"}
               </Button>
               DraggablePanel Left
             </DraggablePanelBody>
-            <DraggablePanelFooter>Footer</DraggablePanelFooter>
+            <DraggablePanelFooter>Footer Left</DraggablePanelFooter>
           </DraggablePanelContainer>
         </DraggablePanel>
 
@@ -122,10 +126,7 @@ export default function Page() {
             mode={pinBottom ? "fixed" : "float"}
             pin={pinBottom}
             placement="bottom"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-            }}
+
             onExpandChange={setExpandBottom}
           >
             <DraggablePanelContainer style={{ flex: 1 }}>
@@ -134,10 +135,10 @@ export default function Page() {
                 position="bottom"
                 setExpand={setExpandBottom}
                 setPin={setPinBottom}
-                title="Header"
+                title="Header Bottom"
               />
-              <DraggablePanelBody>DraggablePanel</DraggablePanelBody>
-              <DraggablePanelFooter>Footer</DraggablePanelFooter>
+              <DraggablePanelBody>DraggablePanel Bottom</DraggablePanelBody>
+              <DraggablePanelFooter>Footer Bottom</DraggablePanelFooter>
             </DraggablePanelContainer>
           </DraggablePanel>
         </Flexbox>
@@ -149,10 +150,6 @@ export default function Page() {
           mode={pinRight ? "fixed" : "float"}
           pin={pinRight}
           placement="right"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-          }}
           onExpandChange={setExpandRight}
         >
           <DraggablePanelContainer style={{ flex: 1 }}>
@@ -161,10 +158,10 @@ export default function Page() {
               position="left"
               setExpand={setExpandRight}
               setPin={setPinRight}
-              title="Header"
+              title="Header Right"
             />
-            <DraggablePanelBody>DraggablePanel</DraggablePanelBody>
-            <DraggablePanelFooter>Footer</DraggablePanelFooter>
+            <DraggablePanelBody>DraggablePanel Right</DraggablePanelBody>
+            <DraggablePanelFooter>Footer Right</DraggablePanelFooter>
           </DraggablePanelContainer>
         </DraggablePanel>
       </Flexbox>

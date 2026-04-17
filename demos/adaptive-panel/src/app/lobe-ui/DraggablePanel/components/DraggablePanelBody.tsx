@@ -1,16 +1,12 @@
-'use client';
+"use client"
 
-import { cx } from 'antd-style';
-import { memo } from 'react';
+import { memo } from "react"
 
-import { Flexbox } from "react-layout-kit"
-import { type DivProps } from '../type';
+import { chakra, useSlotRecipe } from "@chakra-ui/react"
+import { stylesRecipe } from "../recipe"
 
-import { styles } from './style';
-
-export type DraggablePanelBodyProps = DivProps;
-
-export const DraggablePanelBody = memo<DraggablePanelBodyProps>(({ className, ...rest }) => {
-  return <Flexbox data-part={"draggable-panel-body"} className={cx(styles.body, className)} flex={1} {...rest} />
+export const DraggablePanelBody = memo(({ ...rest }) => {
+  const recipe = useSlotRecipe({ recipe: stylesRecipe })
+  const styles = recipe()
+  return <chakra.div data-part={"draggable-panel-body"} css={styles.body} {...rest} />
 })
-
