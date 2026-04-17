@@ -49,10 +49,8 @@ function draggablePanelReducer(state: DraggablePanelState, action: DraggablePane
 export const DraggablePanel = memo<DraggablePanelProps>(
   ({
     headerHeight = 0,
-    fullscreen,
     maxHeight,
     pin = DEFAULT_PIN,
-    mode = "fixed",
     children,
     placement = "right",
     resize,
@@ -276,15 +274,6 @@ export const DraggablePanel = memo<DraggablePanelProps>(
       ],
     )
 
-    // For fullscreen mode, return a simpler layout
-    if (fullscreen) {
-      // return <chakra.div css={stylesFromRecipe.root}>{children}</chakra.div>
-      return (
-        <div className={cx(styles.fullscreen, className)} style={cssVariables}>
-          {children}
-        </div>
-      )
-    }
 
     return (
       <chakra.div
@@ -296,7 +285,7 @@ export const DraggablePanel = memo<DraggablePanelProps>(
         className={cx(
           panelVariants({
             isExpand,
-            mode,
+
             placement: placement,
             showBorder,
           }),

@@ -15,11 +15,14 @@ import { DraggablePanel } from "../../DraggablePanel/DraggablePanel"
 export default function Page() {
 
   const [expandLeft, setExpandLeft] = useState(true)
-  const [expandRight, setExpandRight] = useState(true)
-  const [expandBottom, setExpandBottom] = useState(true)
   const [pinLeft, setPinLeft] = useState(true)
-  const [fullScreenLeft, setFullScreenPinLeft] = useState(false)
+  const [showBorderLeft, setShowBorderLeft] = useState(true)
+
+
+  const [expandRight, setExpandRight] = useState(true)
   const [pinRight, setPinRight] = useState(true)
+
+  const [expandBottom, setExpandBottom] = useState(true)
   const [pinBottom, setPinBottom] = useState(true)
 
 
@@ -39,6 +42,16 @@ export default function Page() {
             <Button onClick={() => setExpandLeft(!expandLeft)} size={"2xs"} variant={expandLeft ? "solid" : "outline"}>
               Expand {expandLeft ? "(ON)" : "(OFF)"}
             </Button>
+            <Button onClick={() => setPinLeft(!pinLeft)} size={"2xs"} variant={pinLeft ? "solid" : "outline"}>
+              Pin {pinLeft ? "(ON)" : "(OFF)"}
+            </Button>
+            <Button
+              onClick={() => setShowBorderLeft(!showBorderLeft)}
+              size={"2xs"}
+              variant={showBorderLeft ? "solid" : "outline"}
+            >
+              Border {showBorderLeft ? "(ON)" : "(OFF)"}
+            </Button>
           </HStack>
           <HStack border={"1px solid"} borderColor={"border"} p={1}>
             <Text textStyle={"sm"} fontWeight={"bold"}>
@@ -51,6 +64,9 @@ export default function Page() {
             >
               Expand {expandBottom ? "(ON)" : "(OFF)"}
             </Button>
+            <Button onClick={() => setPinBottom(!pinBottom)} size={"2xs"} variant={pinBottom ? "solid" : "outline"}>
+              Pin {pinBottom ? "(ON)" : "(OFF)"}
+            </Button>
           </HStack>
           <HStack border={"1px solid"} borderColor={"border"} p={1}>
             <Text textStyle={"sm"} fontWeight={"bold"}>
@@ -62,6 +78,9 @@ export default function Page() {
               variant={expandRight ? "solid" : "outline"}
             >
               Expand {expandRight ? "(ON)" : "(OFF)"}
+            </Button>
+            <Button onClick={() => setPinRight(!pinRight)} size={"2xs"} variant={pinRight ? "solid" : "outline"}>
+              Pin {pinRight ? "(ON)" : "(OFF)"}
             </Button>
           </HStack>
         </HStack>
@@ -78,7 +97,6 @@ export default function Page() {
           showHandleWhenCollapsed={true}
           showHandleHighlight={true}
           pin={pinLeft}
-          fullscreen={fullScreenLeft}
           placement="left"
           onExpandChange={setExpandLeft}
         >
@@ -91,9 +109,6 @@ export default function Page() {
               title="Header Left"
             />
             <DraggablePanelBody>
-              <Button onClick={() => setFullScreenPinLeft((prev) => !prev)}>
-                FullScreen Left {fullScreenLeft ? "(ON)" : "(OFF)"}
-              </Button>
               DraggablePanel Left
             </DraggablePanelBody>
             <DraggablePanelFooter>Footer Left</DraggablePanelFooter>
@@ -126,7 +141,6 @@ export default function Page() {
             mode={pinBottom ? "fixed" : "float"}
             pin={pinBottom}
             placement="bottom"
-
             onExpandChange={setExpandBottom}
           >
             <DraggablePanelContainer style={{ flex: 1 }}>
