@@ -70,14 +70,26 @@ export const flexiblePanelStyles: any = defineSlotRecipe({
       flexDirection: "column",
       p: 3,
       overflow: "hidden",
-
-      // critical: allows the body to shrink and become the scrolling boundary
       minHeight: 0,
     },
   },
-  variants: {},
+  variants: {
+    mode: {
+      floating: {
+        positioner: {
+          position: "fixed",
+        },
+      },
+    },
+
+  },
+
+  // Dock look is handled inside `placement` now, so compoundVariants are optional.
   compoundVariants: [],
-  defaultVariants: {},
+
+  defaultVariants: {
+    mode: "floating",
+  },
 })
 
 export const axes = ["n", "s", "e", "w", "ne", "nw", "se", "sw"] as const
