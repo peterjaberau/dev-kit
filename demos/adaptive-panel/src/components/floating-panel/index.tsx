@@ -1,6 +1,6 @@
 "use client"
 import { floatingPanelRecipe, axes } from "./floating-panel-recipe"
-import { FloatingPanel as ArkFloatingPanel } from "@ark-ui/react/floating-panel"
+import { FloatingPanel as ArkFloatingPanel, useFloatingPanelContext, useFloatingPanel } from "@ark-ui/react/floating-panel"
 import { Portal } from "@chakra-ui/react"
 import { Button, IconButton, chakra, HStack, Box, Stack, useSlotRecipe, Icon } from "@chakra-ui/react"
 import { ScrollArea } from "@chakra-ui/react"
@@ -97,3 +97,5 @@ export function FloatingPanel(props: ArkFloatingPanel.RootProps | FloatingPanelP
     </ArkFloatingPanel.Root>
   )
 }
+
+export { useFloatingPanel, useFloatingPanelContext}

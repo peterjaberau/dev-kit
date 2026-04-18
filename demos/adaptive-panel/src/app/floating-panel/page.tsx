@@ -1,10 +1,14 @@
 'use client';
 import { useState } from "react"
 import { Flexbox } from "react-layout-kit"
-import { FloatingPanel } from '#components/floating-panel'
+import { FloatingPanel, useFloatingPanel, useFloatingPanelContext } from '#components/floating-panel'
+
 import { Button, HStack, Text } from "@chakra-ui/react"
 
 export default function Page() {
+
+  const [openLeft, setOpenLeft] = useState(true)
+  const floatingLeft = useFloatingPanelContext()
 
   const [expandLeft, setExpandLeft] = useState(true)
   const [pinLeft, setPinLeft] = useState(true)

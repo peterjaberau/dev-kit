@@ -1,7 +1,7 @@
 import { defineSlotRecipe } from "@chakra-ui/react/styled-system"
 
-export const floatingPanelRecipe: any = defineSlotRecipe({
-  className: "floating-panel-custom",
+export const flexiblePanelStyles: any = defineSlotRecipe({
+  className: "flexible-panel",
   slots: [
     "positioner",
     "trigger",
@@ -18,10 +18,10 @@ export const floatingPanelRecipe: any = defineSlotRecipe({
   ],
   base: {
     positioner: {
-      zIndex: "overlay",
+      zIndex: 50,
     },
     content: {
-      // bg: "bg.panel",
+      bg: "bg.panel",
       borderRadius: "md",
       boxShadow: "sm",
 
@@ -75,9 +75,7 @@ export const floatingPanelRecipe: any = defineSlotRecipe({
       minHeight: 0,
     },
   },
-  variants: {
-
-  },
+  variants: {},
   compoundVariants: [],
   defaultVariants: {},
 })
