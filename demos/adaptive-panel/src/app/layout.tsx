@@ -1,5 +1,5 @@
 import { Provider as ChakraProvider } from "./provider"
-import 'react18-json-view/src/style.css'
+import "react18-json-view/src/style.css"
 import { Suspense } from "react"
 import { AntdRegistry } from "@ant-design/nextjs-registry"
 

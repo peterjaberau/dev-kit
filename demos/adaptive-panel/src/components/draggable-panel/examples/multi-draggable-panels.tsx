@@ -3,9 +3,9 @@ import { useState } from "react"
 import { Flexbox } from "react-layout-kit"
 import { Button, HStack, IconButton, Text } from "@chakra-ui/react"
 
-import { DraggablePanel } from "./components"
+import { DraggablePanel } from ".."
 
-export default function Page() {
+export default function MultiDraggablePanels() {
   const [expandLeft, setExpandLeft] = useState(true)
   const [pinLeft, setPinLeft] = useState(true)
   const [showBorderLeft, setShowBorderLeft] = useState(true)
