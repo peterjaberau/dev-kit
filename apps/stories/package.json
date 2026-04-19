@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "react-layout-kit": "^2.0.1",
     "@remixicon/react": "^4.6.0",
     "@emotion/react": "^11.14.0",
     "react-lorem-ipsum": "^1.4.10",
@@ -23,7 +24,7 @@
     "@dev-kit/components": "workspace:*",
     "@dev-kit/experiments": "workspace:*",
     "@dev-kit/documenter": "workspace:*",
-    "next": "^16.1.6",
+    "next": "^16.2.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "next-themes": "^0.4.6",
