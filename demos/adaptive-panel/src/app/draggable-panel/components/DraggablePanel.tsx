@@ -266,10 +266,9 @@ export const DraggablePanel = memo<DraggablePanelProps>(
           }
           style={{
             ...cssVariables,
+            ...(stylesFromRecipe.panel as React.CSSProperties),
             opacity: isPending ? 0.95 : 1,
             transition: state.isResizing ? "unset" : undefined,
-            display: "flex",
-            flexDirection: "column",
           }}
           onResize={handleResize}
           onResizeStart={handleResizeStart}
