@@ -5,16 +5,11 @@ import React, { memo } from "react"
 import useControlledState from "use-merge-value"
 import { stylesRecipe } from "../recipe"
 import { chakra, useSlotRecipe } from "@chakra-ui/react"
+import { DraggablePanelHeaderProps } from '../type'
 
 import { IconButton } from "@chakra-ui/react"
 
-export interface DraggablePanelHeaderProps {
-  pin?: boolean
-  position?: "left" | "right" | "bottom" | "top"
-  setExpand?: (expand: boolean) => void
-  setPin?: (pin: boolean) => void
-  title?: string
-}
+
 
 export const DraggablePanelHeader = memo<DraggablePanelHeaderProps>((props) => {
   const { pin, setPin, setExpand, title, position = "left", ...rest } = props

@@ -4,7 +4,7 @@ import type { Props as RndProps } from 'react-rnd';
 
 export type DivProps = HTMLAttributes<HTMLDivElement>;
 
-type PlacementType = 'right' | 'left' | 'top' | 'bottom';
+export type PlacementType = 'right' | 'left' | 'top' | 'bottom';
 
 export interface DraggablePanelProps extends DivProps {
   backgroundColor?: string;
@@ -44,3 +44,19 @@ export interface DraggablePanelProps extends DivProps {
     handle?: CSSProperties;
   };
 }
+
+export interface DraggablePanelHeaderProps extends Omit<DivProps, "children"> {
+  pin?: boolean
+  position?: "left" | "right"
+  setExpand?: (expand: boolean) => void
+  setPin?: (pin: boolean) => void
+  title?: string
+  [key: string]: any
+}
+
+export type DraggablePanelFooterProps = DivProps
+
+export type DraggablePanelContainerProps = DivProps
+
+export type DraggablePanelBodyProps = DivProps
+

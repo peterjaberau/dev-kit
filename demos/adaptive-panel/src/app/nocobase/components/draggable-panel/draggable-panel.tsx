@@ -5,21 +5,9 @@ import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Resizable } from 're-resizable';
 import { draggablePanelRecipe } from './style';
+import { DraggablePanelProps } from '../DraggablePanel/types'
 
-export interface DraggablePanelProps {
-  headerHeight?: number;
-  fullscreen?: boolean;
-  pin?: boolean;
-  mode?: 'fixed' | 'float';
-  children?: React.ReactNode;
-  placement?: 'left' | 'right' | 'top' | 'bottom';
-  expandable?: boolean;
-  defaultExpand?: boolean;
-  expand?: boolean;
-  onExpandChange?: (v: boolean) => void;
-  destroyOnClose?: boolean;
-  style?: React.CSSProperties;
-}
+
 
 const DEFAULT_WIDTH = 280;
 const DEFAULT_HEIGHT = 180;

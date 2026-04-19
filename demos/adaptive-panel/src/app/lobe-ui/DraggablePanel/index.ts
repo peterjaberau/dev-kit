@@ -1,10 +1,10 @@
 'use client';
 
 import { type ReactNode, type RefAttributes } from 'react';
-
 import { DraggablePanelBody, DraggablePanelContainer, DraggablePanelFooter, DraggablePanelHeader } from "./components"
 import { DraggablePanel as DraggablePanelParent } from "./DraggablePanel"
-import { type DraggablePanelProps } from './type';
+import type { DraggablePanelProps } from './type';
+export * from "./type"
 
 interface IDraggablePanel {
   (props: DraggablePanelProps & RefAttributes<HTMLDivElement>): ReactNode;
@@ -22,11 +22,10 @@ DraggablePanel.Footer = DraggablePanelFooter;
 DraggablePanel.Header = DraggablePanelHeader;
 
 export default DraggablePanel;
-export { DraggablePanelBody, type DraggablePanelBodyProps } from "./components/DraggablePanelBody"
+export { DraggablePanelBody  } from "./components/DraggablePanelBody"
 export {
   DraggablePanelContainer,
-  type DraggablePanelContainerProps,
 } from './components/DraggablePanelContainer';
-export { DraggablePanelFooter, type DraggablePanelFooterProps } from "./components/DraggablePanelFooter"
-export { DraggablePanelHeader, type DraggablePanelHeaderProps } from "./components/DraggablePanelHeader"
-export type * from './type';
+export { DraggablePanelFooter  } from "./components/DraggablePanelFooter"
+export { DraggablePanelHeader  } from "./components/DraggablePanelHeader"
+
