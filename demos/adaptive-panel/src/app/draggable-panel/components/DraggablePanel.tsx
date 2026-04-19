@@ -16,8 +16,6 @@ import { IconButton, chakra, useSlotRecipe } from "@chakra-ui/react"
 import { PanelLeft, Pin, PinOff } from "lucide-react"
 
 
-import { cx } from "antd-style"
-import { handleVariants, panelVariants, styles } from "./style"
 import { stylesRecipe } from "./recipe"
 
 export const DraggablePanelHeader = memo<DraggablePanelHeaderProps>((props) => {
@@ -121,7 +119,14 @@ export const DraggablePanel = memo<DraggablePanelProps>(
     })
 
     const recipe = useSlotRecipe({ recipe: stylesRecipe })
-    const stylesFromRecipe = recipe()
+    const stylesFromRecipe = recipe({
+      mode,
+      placement,
+      expand: isExpand,
+      showBorder,
+      showHandleHighlight,
+      fullscreen,
+    })
 
     // Initialize state with useReducer for better performance
     const initialState: DraggablePanelState = {
@@ -248,16 +253,13 @@ export const DraggablePanel = memo<DraggablePanelProps>(
           data-transition-pending={isPending}
           data-transition-resizing={state.isResizing}
           {...sizeProps}
-          className={cx(classNames?.content)}
+          className={classNames?.content}
           enable={canResizing ? (resizing as Enable) : undefined}
-          handleClasses={
+          handleComponent={
             canResizing
               ? {
-                  [reversePlacement(placement)]: cx(
-                    handleVariants({
-                      placement: reversePlacement(placement),
-                    }),
-                    showHandleHighlight && styles.handleHighlight,
+                  [reversePlacement(placement)]: (
+                    <chakra.div css={stylesFromRecipe.resizeTrigger} />
                   ),
                 }
               : {}
@@ -268,7 +270,6 @@ export const DraggablePanel = memo<DraggablePanelProps>(
             transition: state.isResizing ? "unset" : undefined,
             display: "flex",
             flexDirection: "column",
-            ...(stylesFromRecipe.panel as any),
           }}
           onResize={handleResize}
           onResizeStart={handleResizeStart}
@@ -279,32 +280,32 @@ export const DraggablePanel = memo<DraggablePanelProps>(
       ),
       [
         sizeProps,
-        // styles.panel,
         classNames?.content,
         canResizing,
         resizing,
         placement,
-        handleVariants,
-        showHandleHighlight,
-        styles.handleHighlight,
+        stylesFromRecipe.resizeTrigger,
+        stylesFromRecipe.panel,
         handleResize,
         handleResizeStart,
         handleResizeStop,
         state.isResizing,
         isPending,
-        // style,
         children,
-        cx,
       ],
     )
 
     // For fullscreen mode, return a simpler layout
     if (fullscreen) {
-      // return <chakra.div css={stylesFromRecipe.root}>{children}</chakra.div>
       return (
-        <div className={cx(styles.fullscreen, className)} style={cssVariables}>
+        <chakra.div
+          data-part={"draggable-panel-root"}
+          css={stylesFromRecipe.root}
+          className={className}
+          style={cssVariables}
+        >
           {children}
-        </div>
+        </chakra.div>
       )
     }
 
@@ -313,17 +314,8 @@ export const DraggablePanel = memo<DraggablePanelProps>(
         data-part={"draggable-panel-root"}
         dir={dir}
         ref={ref}
-        // style={cssVariables}
-
-        className={cx(
-          panelVariants({
-            isExpand,
-            mode,
-            placement: placement,
-            showBorder,
-          }),
-          className,
-        )}
+        style={cssVariables}
+        className={className}
         css={stylesFromRecipe.root}
       >
         {destroyOnClose ? isExpand && inner : inner}

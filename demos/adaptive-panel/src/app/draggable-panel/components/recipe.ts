@@ -1,136 +1,22 @@
 import { defineSlotRecipe } from "@chakra-ui/react"
 
-const borderStyles = {
-  borderBottom: {
-    borderBlockEnd: "1px solid #d9d9d9",
-  },
-  borderBottomNone: {
-    borderBlockEndWidth: 0,
-  },
-  borderLeft: {
-    borderInlineStart: "1px solid #d9d9d9",
-  },
-  borderLeftNone: {
-    borderInlineStartWidth: 0,
-  },
-  borderRight: {
-    borderInlineEnd: "1px solid #d9d9d9",
-  },
-  borderRightNone: {
-    borderInlineEndWidth: 0,
-  },
-  borderTop: {
-    borderBlockStart: "1px solid #d9d9d9",
-  },
-  borderTopNone: {
-    borderBlockStartWidth: 0,
-  },
-}
-
-const handleBaseStyle = {
-  position: "relative",
-  background: "r !important",
-  "&::before": {
-    content: '""',
-    position: "absolute",
-    transition: "all 0.2s ease-out",
-  },
-}
-
-const handleHighlightStyle = {
-  "&:hover": {
-    "&::before": {
-      background: "#91caff",
-      boxShadow: "0 0 8px color-mix(in srgb, #1677ff 25%, transparent)",
-    },
-  },
-  "&:active": {
-    "&::before": {
-      background: "#1677ff !important",
-    },
-  },
-}
-
-const handleStyles = {
-  handleBottom: {
-    "&::before": {
-      insetBlockEnd: "50%",
-      width: "100%",
-      height: "2px",
-    },
-  },
-  handleLeft: {
-    "&::before": {
-      insetInlineStart: "50%",
-      width: "2px",
-      height: "100%",
-    },
-  },
-  handleRight: {
-    "&::before": {
-      insetInlineEnd: "50%",
-      width: "2px",
-      height: "100%",
-    },
-  },
-  handleRoot: handleBaseStyle,
-  handleTop: {
-    "&::before": {
-      insetBlockStart: "50%",
-      width: "100%",
-      height: "2px",
-    },
-  },
-}
-
-const componentStyles = {
-  fixed: {
-    position: "relative",
-  },
-
-
-
-  panel: {
-    overflow: "hidden",
-    background: "var(--draggable-panel-bg, #ffffff)",
-    transition: "all 0.2s ease-out",
-  },
-
-
-
-  root: {
-    flexShrink: 0,
-  },
-}
-
-const styles = {
-  ...borderStyles,
-  ...handleStyles,
-  handleHighlight: handleHighlightStyle,
-  ...componentStyles,
-}
-
-
-
 export const stylesRecipe = defineSlotRecipe({
   className: "draggable-panel",
-  slots: ["root", "panel", "body", "container", "footer", "handlerIcon", "header"],
+  slots: ["root", "panel", "body", "container", "footer", "header", "handlerIcon", "resizeTrigger"],
   base: {
     root: {
       "--draggable-panel-bg": "bg.panel",
       "--draggable-panel-header-height": "0px",
-      position: "relative",
       flexShrink: 0,
       display: "flex",
       flexDirection: "column",
-      backgroundColor: "bg.panel",
     },
     panel: {
       boxSizing: "border-box",
       position: "relative",
       userSelect: "auto",
       overflow: "hidden",
-      background: "var(--draggable-panel-bg)",
+      background: "var(--draggable-panel-bg, #ffffff)",
       transition: "all 0.2s ease-out",
       opacity: 1,
       display: "flex",
@@ -181,8 +67,101 @@ export const stylesRecipe = defineSlotRecipe({
       paddingInline: "16px",
       borderBlockStart: "1px solid #f0f0f0",
     },
+    // Base for the resize handle element rendered via handleComponent.
+    // The element fills the Resizable handle span (width/height 100%) and uses
+    // a ::before pseudo-element to render the thin visual drag indicator line.
+    resizeTrigger: {
+      display: "block",
+      width: "100%",
+      height: "100%",
+      position: "relative",
+      background: "transparent",
+      "&::before": {
+        content: '""',
+        position: "absolute",
+        transition: "all 0.2s ease-out",
+      },
+    },
   },
   variants: {
+    // Controls root positioning: fixed panels sit in normal flow; float panels
+    // are absolutely positioned over the content area.
+    mode: {
+      fixed: {
+        root: {
+          position: "relative",
+        },
+      },
+      float: {
+        root: {
+          position: "absolute",
+          zIndex: 200,
+        },
+      },
+    },
+
+    // When fullscreen=true the panel stretches to fill the entire content area
+    // (offset by the optional header height CSS variable).
+    fullscreen: {
+      true: {
+        root: {
+          position: "absolute",
+          insetBlock: "var(--draggable-panel-header-height, 0) 0",
+          insetInline: "0",
+          width: "100%",
+          height: "calc(100% - var(--draggable-panel-header-height, 0px))",
+          background: "var(--draggable-panel-bg, #ffffff)",
+          zIndex: 200,
+        },
+      },
+      false: {},
+    },
+
+    // Placement drives the position of the ::before indicator line inside the
+    // resize trigger.  The handle sits on the *opposite* side to placement (see
+    // reversePlacement util), so the indicator is anchored accordingly:
+    //   placement=right → handle is on left  → line anchored insetInlineStart
+    //   placement=left  → handle is on right → line anchored insetInlineEnd
+    //   placement=bottom→ handle is on top   → line anchored insetBlockStart
+    //   placement=top   → handle is on bottom→ line anchored insetBlockEnd
+    placement: {
+      left: {
+        resizeTrigger: {
+          "&::before": {
+            insetInlineEnd: "50%",
+            width: "2px",
+            height: "100%",
+          },
+        },
+      },
+      right: {
+        resizeTrigger: {
+          "&::before": {
+            insetInlineStart: "50%",
+            width: "2px",
+            height: "100%",
+          },
+        },
+      },
+      top: {
+        resizeTrigger: {
+          "&::before": {
+            insetBlockEnd: "50%",
+            width: "100%",
+            height: "2px",
+          },
+        },
+      },
+      bottom: {
+        resizeTrigger: {
+          "&::before": {
+            insetBlockStart: "50%",
+            width: "100%",
+            height: "2px",
+          },
+        },
+      },
+    },
 
     pin: {
       true: {},
@@ -193,336 +172,181 @@ export const stylesRecipe = defineSlotRecipe({
       true: {},
       false: {},
     },
+
+    // position is consumed by sub-components such as DraggablePanelHeader to
+    // determine icon layout (panel-icon left vs right).
     position: {
       left: {},
       right: {},
       top: {},
       bottom: {},
     },
-    placement: {
-      left: {},
-      right: {},
-      top: {},
-      bottom: {},
-    },
+
     showBorder: {
       true: {},
       false: {},
     },
+
+    // When showHandleHighlight=true the resize handle line illuminates on hover
+    // and turns solid blue while actively dragging.
+    showHandleHighlight: {
+      true: {
+        resizeTrigger: {
+          "&:hover": {
+            "&::before": {
+              background: "#91caff",
+              boxShadow: "0 0 8px color-mix(in srgb, #1677ff 25%, transparent)",
+            },
+          },
+          "&:active": {
+            "&::before": {
+              background: "#1677ff",
+            },
+          },
+        },
+      },
+      false: {},
+    },
   },
-  compoundVariants: [],
+
+  compoundVariants: [
+    // ── Float positions ────────────────────────────────────────────────────
+    // When mode=float the root is absolutely positioned; these variants add
+    // the edge-anchoring so it hugs the correct side of the container.
+    {
+      mode: "float",
+      placement: "bottom",
+      css: {
+        root: {
+          insetBlockEnd: "0",
+          insetInline: "0 0",
+          width: "100%",
+        },
+      },
+    },
+    {
+      mode: "float",
+      placement: "top",
+      css: {
+        root: {
+          insetBlockStart: "var(--draggable-panel-header-height, 0)",
+          insetInline: "0 0",
+          width: "100%",
+        },
+      },
+    },
+    {
+      mode: "float",
+      placement: "left",
+      css: {
+        root: {
+          insetBlock: "var(--draggable-panel-header-height, 0) 0",
+          insetInlineStart: "0",
+          height: "calc(100% - var(--draggable-panel-header-height, 0px))",
+        },
+      },
+    },
+    {
+      mode: "float",
+      placement: "right",
+      css: {
+        root: {
+          insetBlock: "var(--draggable-panel-header-height, 0) 0",
+          insetInlineEnd: "0",
+          height: "calc(100% - var(--draggable-panel-header-height, 0px))",
+        },
+      },
+    },
+
+    // ── Panel collapse sizing ──────────────────────────────────────────────
+    // When collapsed (expand=false) clamp the cross-axis to zero so the panel
+    // disappears cleanly.  Vertical panels use minHeight; horizontal use minWidth.
+    {
+      expand: false,
+      placement: "top",
+      css: { panel: { minHeight: 0 } },
+    },
+    {
+      expand: false,
+      placement: "bottom",
+      css: { panel: { minHeight: 0 } },
+    },
+    {
+      expand: false,
+      placement: "left",
+      css: { panel: { minWidth: 0 } },
+    },
+    {
+      expand: false,
+      placement: "right",
+      css: { panel: { minWidth: 0 } },
+    },
+
+    // ── Border on opposite side to placement (only when expanded) ──────────
+    // The border visually separates the panel from content.  It appears on the
+    // side that faces content (opposite to placement direction).
+    //   placement=top    → border on bottom edge (borderBlockEnd)
+    //   placement=bottom → border on top edge    (borderBlockStart)
+    //   placement=left   → border on right edge  (borderInlineEnd)
+    //   placement=right  → border on left edge   (borderInlineStart)
+    {
+      expand: true,
+      placement: "top",
+      showBorder: true,
+      css: { root: { borderBlockEnd: "1px solid #d9d9d9" } },
+    },
+    {
+      expand: true,
+      placement: "top",
+      showBorder: false,
+      css: { root: { borderBlockEndWidth: 0 } },
+    },
+    {
+      expand: true,
+      placement: "bottom",
+      showBorder: true,
+      css: { root: { borderBlockStart: "1px solid #d9d9d9" } },
+    },
+    {
+      expand: true,
+      placement: "bottom",
+      showBorder: false,
+      css: { root: { borderBlockStartWidth: 0 } },
+    },
+    {
+      expand: true,
+      placement: "left",
+      showBorder: true,
+      css: { root: { borderInlineEnd: "1px solid #d9d9d9" } },
+    },
+    {
+      expand: true,
+      placement: "left",
+      showBorder: false,
+      css: { root: { borderInlineEndWidth: 0 } },
+    },
+    {
+      expand: true,
+      placement: "right",
+      showBorder: true,
+      css: { root: { borderInlineStart: "1px solid #d9d9d9" } },
+    },
+    {
+      expand: true,
+      placement: "right",
+      showBorder: false,
+      css: { root: { borderInlineStartWidth: 0 } },
+    },
+  ],
+
   defaultVariants: {
+    mode: "fixed",
+    fullscreen: false,
+    placement: "right",
     position: "left",
     pin: true,
     expand: true,
-    placement: "right",
     showBorder: true,
+    showHandleHighlight: false,
   },
 })
-
-
-/**
- * An attempt to refactor antd cx styling approach in natively cover it by the slot recipe
- *
- * export const draggablePanelRecipe = defineSlotRecipe({
- *   className: "draggable-panel",
- *   slots: ["root", "panel", "container", "header", "footer", "resizeTrigger"],
- *   base: {
- *     root: {
- *       "--draggable-panel-bg": "bg.panel",
- *       "--draggable-panel-header-height": "0px",
- *       flexShrink: 0,
- *     },
- *     container: {},
- *     panel: {},
- *     header: {},
- *     footer: {},
- *     resizeTrigger: {
- *       position: "relative",
- *       background: "transparent",
- *       "&::before": {
- *         content: '""',
- *         position: "absolute",
- *         transition: "all 0.2s ease-out",
- *       },
- *       _hover: {
- *         "&::before": {
- *           background: "#91caff",
- *           boxShadow: "0 0 8px color-mix(in srgb, #1677ff 25%, transparent)",
- *         },
- *       },
- *       _active: {
- *         "&::before": {
- *           background: "#1677ff !important",
- *         },
- *       },
- *     },
- *   },
- *   variants: {
- *     mode: {
- *       fixed: {
- *         root: {
- *           position: "relative",
- *         },
- *         panel: {
- *           overflow: "hidden",
- *           background: "bg.panel",
- *           transition: "all 0.2s ease-out",
- *         },
- *       },
- *       float: {
- *         root: {
- *           position: "absolute",
- *           zIndex: 200,
- *         },
- *       },
- *     },
- *     fullscreen: {
- *       true: {
- *         root: {
- *           position: "absolute",
- *           insetBlock: "var(--draggable-panel-header-height, 0) 0",
- *           insetInline: 0,
- *           width: "100%",
- *           height: "calc(100% - var(--draggable-panel-header-height, 0px))",
- *           background: "bg.panel",
- *           zIndex: 200,
- *         },
- *       },
- *       false: {},
- *     },
- *     placement: {
- *       bottom: {
- *         resizeTrigger: {
- *           "&::before": {
- *             insetBlockEnd: "50%",
- *             width: "100%",
- *             height: "2px",
- *           },
- *         },
- *       },
- *       left: {
- *         resizeTrigger: {
- *           "&::before": {
- *             insetInlineStart: "50%",
- *             width: "2px",
- *             height: "100%",
- *           },
- *         },
- *       },
- *       right: {
- *         resizeTrigger: {
- *           "&::before": {
- *             insetInlineEnd: "50%",
- *             width: "2px",
- *             height: "100%",
- *           },
- *         },
- *       },
- *       top: {
- *         resizeTrigger: {
- *           "&::before": {
- *             insetBlockStart: "50%",
- *             width: "100%",
- *             height: "2px",
- *           },
- *         },
- *       },
- *     },
- *
- *     pin: {
- *       true: {},
- *       false: {},
- *     },
- *
- *
- *     expand: {
- *       true: {},
- *       false: {},
- *     },
- *     showBorder: {
- *       true: {},
- *       false: {},
- *     },
- *     showHandleHighlight: {
- *       true: {},
- *       false: {},
- *     },
- *     expandable: {
- *       true: {},
- *       false: {},
- *     },
- *   },
- *   compoundVariants: [
- *     {
- *       placement: "top",
- *       expand: false,
- *       css: {
- *         panel: {
- *           minHeight: 0,
- *         },
- *       },
- *     },
- *     {
- *       placement: "bottom",
- *       expand: false,
- *       css: {
- *         panel: {
- *           minWidth: 0,
- *         },
- *       },
- *     },
- *
- *     // mode=float, placement=top
- *     {
- *       placement: "top",
- *       mode: "float",
- *       css: {
- *         root: {
- *           insetBlockStart: "var(--draggable-panel-header-height, 0)",
- *           insetInline: "0 0",
- *           width: "100%",
- *         },
- *       },
- *     },
- *     // mode=float, placement=bottom
- *     {
- *       placement: "bottom",
- *       mode: "float",
- *       css: {
- *         root: {
- *           insetBlockEnd: "0",
- *           insetInline: "0 0",
- *           width: "100%",
- *         },
- *       },
- *     },
- *     // mode=float, placement=left
- *     {
- *       placement: "left",
- *       mode: "float",
- *       css: {
- *         root: {
- *           insetBlock: "var(--draggable-panel-header-height, 0) 0",
- *           insetInlineStart: "0",
- *           height: "calc(100% - var(--draggable-panel-header-height, 0px))",
- *         },
- *       },
- *     },
- *     // mode=float, placement=right
- *     {
- *       placement: "right",
- *       mode: "float",
- *       css: {
- *         root: {
- *           insetBlock: "var(--draggable-panel-header-height, 0) 0",
- *           insetInlineEnd: "0",
- *           height: "calc(100% - var(--draggable-panel-header-height, 0px))",
- *         },
- *       },
- *     },
- *
- *     // placement=top, showBorder=true, expand=true
- *     {
- *       placement: "top",
- *       expand: true,
- *       showBorder: true,
- *       css: {
- *         root: {
- *           borderBlockEnd: "1px solid #d9d9d9",
- *         },
- *       },
- *     },
- *     // placement=bottom, showBorder=true, expand=true
- *     {
- *       placement: "bottom",
- *       expand: true,
- *       showBorder: true,
- *       css: {
- *         root: {
- *           borderBlockStart: "1px solid #d9d9d9",
- *         },
- *       },
- *     },
- *     // placement=left, showBorder=true, expand=true
- *     {
- *       placement: "left",
- *       expand: true,
- *       showBorder: true,
- *       css: {
- *         root: {
- *           borderInlineEnd: "1px solid #d9d9d9",
- *         },
- *       },
- *     },
- *     // placement=right, showBorder=true, expand=true
- *     {
- *       placement: "right",
- *       expand: true,
- *       showBorder: true,
- *       css: {
- *         root: {
- *           borderInlineStart: "1px solid #d9d9d9",
- *         },
- *       },
- *     },
- *     // placement=top, showBorder=false, expand=true
- *     {
- *       placement: "top",
- *       expand: true,
- *       showBorder: false,
- *       css: {
- *         root: {
- *           borderBlockEnd: "none",
- *         },
- *       },
- *     },
- *     // placement=bottom, showBorder=false, expand=true
- *     {
- *       placement: "bottom",
- *       expand: true,
- *       showBorder: false,
- *       css: {
- *         root: {
- *           borderBlockStart: "none",
- *         },
- *       },
- *     },
- *     // placement=left, showBorder=false, expand=true
- *     {
- *       placement: "left",
- *       expand: true,
- *       showBorder: false,
- *       css: {
- *         root: {
- *           borderInlineEnd: "none",
- *         },
- *       },
- *     },
- *     // placement=right, showBorder=false, expand=true
- *     {
- *       placement: "right",
- *       expand: true,
- *       showBorder: false,
- *       css: {
- *         root: {
- *           borderInlineStart: "none",
- *         },
- *       },
- *     },
- *   ],
- *   defaultVariants: {
- *     pin: true,
- *     mode: "fixed",
- *     expandable: true,
- *     expand: true,
- *
- *     placement: "right",
- *     showBorder: true,
- *     showHandleHighlight: false,
- *     fullscreen: false,
- *   },
- * })
- *
- *
- */
