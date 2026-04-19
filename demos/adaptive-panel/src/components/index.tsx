@@ -1,1 +1,1 @@
-export * from "./resizable-panel";
+export * from "./draggable-panel";
