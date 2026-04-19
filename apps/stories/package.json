@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "react-layout-kit": "^2.0.1",
     "@remixicon/react": "^4.6.0",
     "@emotion/react": "^11.14.0",
     "react-lorem-ipsum": "^1.4.10",

@@ -1,3 +1,6 @@
+export * from "./draggable-panel"
+export * from './floating-panel'
+
 export * from './accordion'
 export * from './action-bar'
 export * from './alert'
