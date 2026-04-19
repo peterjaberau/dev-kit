@@ -57,7 +57,7 @@ export const DraggablePanelBody = memo(({ ...rest }) => {
 export const DraggablePanelContainer = memo(({ ...rest }: any) => {
   const recipe = useSlotRecipe({ recipe: stylesRecipe })
   const styles = recipe()
-  return <chakra.div data-part={"draggable-panel-body"} css={styles.container} {...rest} />
+  return <chakra.div data-part={"draggable-panel-container"} css={styles.container} {...rest} />
 })
 
 export const DraggablePanelFooter = memo(({ ...rest }) => {

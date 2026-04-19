@@ -98,7 +98,9 @@ export default function Page() {
               setPin={setPinLeft}
               title="Header Left"
             />
-            <DraggablePanel.Body>DraggablePanel Left</DraggablePanel.Body>
+            <DraggablePanel.Body>
+              DraggablePanel Left DraggablePanel Left DraggablePanel Left DraggablePanel Left DraggablePanel Left{" "}
+            </DraggablePanel.Body>
             <DraggablePanel.Footer>Footer Left</DraggablePanel.Footer>
           </DraggablePanel.Container>
         </DraggablePanel>
@@ -139,7 +141,12 @@ export default function Page() {
                 setPin={setPinBottom}
                 title="Header Bottom"
               />
-              <DraggablePanel.Body>DraggablePanel Bottom</DraggablePanel.Body>
+              <DraggablePanel.Body>
+                DraggablePanel Bottom DraggablePanel Bottom DraggablePanel Bottom DraggablePanel Bottom DraggablePanel
+                Bottom DraggablePanel Bottom DraggablePanel Bottom DraggablePanel Bottom DraggablePanel Bottom{" "}
+                DraggablePanel Bottom DraggablePanel Bottom DraggablePanel Bottom DraggablePanel Bottom DraggablePanel
+                Bottom DraggablePanel Bottom DraggablePanel Bottom DraggablePanel Bottom{" "}
+              </DraggablePanel.Body>
               <DraggablePanel.Footer>Footer Bottom</DraggablePanel.Footer>
             </DraggablePanel.Container>
           </DraggablePanel>

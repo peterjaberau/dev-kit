@@ -8,15 +8,15 @@ export const stylesRecipe = defineSlotRecipe({
       "--draggable-panel-bg": "bg.panel",
       "--draggable-panel-header-height": "0px",
       flexShrink: 0,
-      display: "flex",
       flexDirection: "column",
+      background: "bg.panel",
     },
     panel: {
       boxSizing: "border-box",
       position: "relative",
       userSelect: "auto",
       overflow: "hidden",
-      background: "var(--draggable-panel-bg, #ffffff)",
+
       transition: "all 0.2s ease-out",
       opacity: 1,
       display: "flex",
@@ -36,6 +36,7 @@ export const stylesRecipe = defineSlotRecipe({
       flex: 1,
       position: "relative",
       overflow: "hidden",
+      height: "100%",
     },
     handlerIcon: {
       display: "flex",
