@@ -116,3 +116,49 @@ export const dataTree = [
     ],
   },
 ]
+
+
+export const dataTreeMachineGraph = [
+  {
+    type: "node",
+    id: "sessionTimeout.active",
+    parentId: "sessionTimeout",
+    label: "active",
+    data: {
+      key: "active",
+      type: "atomic",
+      entry: [],
+      exit: [],
+      invocations: [],
+      initialId: null,
+    },
+  },
+  {
+    type: "node",
+    id: "sessionTimeout.warning",
+    parentId: "sessionTimeout",
+    label: "warning",
+    data: {
+      key: "warning",
+      type: "atomic",
+      entry: [],
+      exit: [],
+      invocations: [],
+      initialId: null,
+    },
+  },
+  {
+    type: "node",
+    id: "sessionTimeout.signedOut",
+    parentId: "sessionTimeout",
+    label: "signedOut",
+    data: {
+      key: "signedOut",
+      type: "final",
+      entry: [],
+      exit: [],
+      invocations: [],
+      initialId: null,
+    },
+  },
+]

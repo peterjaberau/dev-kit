@@ -2,7 +2,7 @@ import React, { forwardRef } from "react"
 import { Collapsible, IconButton, Icon } from "@chakra-ui/react"
 import { LuChevronRight } from "react-icons/lu"
 import { TiDocument } from "react-icons/ti"
-import { useTreeItem } from "#modules/actor-model/selectors"
+import { useTreeItem } from "../selectors"
 
 export const ControlTriggerIndicator = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { itemRef, css, ...rest } = props

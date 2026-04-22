@@ -1,4 +1,4 @@
-import { DragDrop } from "../components/dnd-ui"
+import { DragDrop } from "../components"
 import { SimpleGrid, GridItem, Container } from "@chakra-ui/react"
 
 export const DraggableTree = () => {

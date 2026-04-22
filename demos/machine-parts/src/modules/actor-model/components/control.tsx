@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react"
 import { Collapsible, Stack, useCollapsible, mergeRefs } from "@chakra-ui/react"
-import { useTreeItem } from "../../selectors"
+import { useTreeItem } from "../selectors"
 
 export const Control = forwardRef<HTMLDivElement, any>((props: any, ref: any) => {
   const { itemRef, children, ...rest } = props

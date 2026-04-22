@@ -1,5 +1,5 @@
 import { forwardRef, Fragment, memo, useRef } from "react"
-import { useTree, useTreeItem } from "../../selectors"
+import { useTree, useTreeItem } from "../selectors"
 import { useDndNode } from "#components/dnd/use-dnd-node"
 import { chakra, HStack } from "@chakra-ui/react"
 import { GroupDropIndicator } from "#components/dnd/drop-indicator/group"

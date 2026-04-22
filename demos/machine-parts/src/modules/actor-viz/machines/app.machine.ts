@@ -14,6 +14,17 @@ export const appMachine = setup({
         systemId: CONSTANTS.TREE,
         input: {
           data: context?.data,
+          machine: context?.machine,
+        },
+      })
+    }),
+    spawnGraph: assign(({ context, spawn, self }) => {
+      context.treeRef = spawn("treeMachine", {
+        id: CONSTANTS.TREE,
+        systemId: CONSTANTS.TREE,
+        input: {
+          data: context?.data,
+          machine: context?.machine,
         },
       })
     }),
@@ -27,9 +38,13 @@ export const appMachine = setup({
     return {
       data: input?.data,
       treeRef: null,
+
+      graph: null,
     }
   },
   entry: enqueueActions(({ context, enqueue, check, event }) => {
     enqueue("spawnTree")
+
+    //machineToGraph
   }),
 })

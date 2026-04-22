@@ -4,7 +4,7 @@ import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
 import { GroupDropIndicator } from "#components/dnd/drop-indicator/group"
 import { useDndTree } from "#components/dnd"
 import { DragDrop } from '.'
-import { useTreeItem } from "../../selectors"
+import { useTreeItem } from "../selectors"
 import { mergeRefs } from "@chakra-ui/react"
 
 
