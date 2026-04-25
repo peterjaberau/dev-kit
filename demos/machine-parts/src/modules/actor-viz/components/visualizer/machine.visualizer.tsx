@@ -8,7 +8,21 @@ import {
 } from "@statelyai/graph"
 import { useCallback, useMemo, useState } from "react"
 import { StateNodeData, TransitionData, MachineGraph } from "../../utils"
-import { chakra, Button, Card, Center, Container, Heading, Icon, Stack, Text, HStack, Flex } from "@chakra-ui/react"
+import {
+  chakra,
+  Button,
+  Card,
+  Center,
+  Container,
+  Heading,
+  Icon,
+  Stack,
+  Text,
+  HStack,
+  Flex,
+  VStack,
+  Box,
+} from "@chakra-ui/react"
 
 interface MachineVizProps {
   graph: MachineGraph
@@ -63,21 +77,16 @@ export function MachineVisualizer({ graph }: MachineVizProps) {
             </Flex>
           )}
           {/* Child states */}
-          <Flex
-            css={{
-              mt: 4,
-              flexWrap: "wrap",
-              alignItems: "flex-start",
-              gap: 2,
-            }}
-          >
+          <Stack gap={2}>
             {sortedStates.map(
               (child) => (
-                <div>StateNodeViz</div>
+                <chakra.div key={child.id} css={{ borderRadius: 2, border: "1px solid", borderColor: "border"}}>
+                  {child.id} StateNodeViz
+                </chakra.div>
               ),
               // <StateNodeViz key={child.id} node={child} graph={graph} isInitial={root.data.initialId === child.id} />
             )}
-          </Flex>
+          </Stack>
         </Card.Body>
       </Card.Root>
     </Container>

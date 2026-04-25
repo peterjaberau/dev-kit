@@ -1,0 +1,129 @@
+"use client"
+import { setup } from "xstate"
+import { toTree } from "./toTree"
+import { TreeVisualizer } from "./TreeVisualizer"
+import { type TreeVisualizerOptions } from "./types"
+import { sessionTimeoutMachine, authMachine, checkoutMachine, vendingMachineMachine, mediaPlayerMachine, dragMachine, otpVerificationMachine, stopwatchMachine, trafficLightMachine, wizardMachine } from "#modules/actor-viz/data/machines"
+
+const orderMachine: any = setup({
+  types: {
+    events: {} as
+      | { type: "SUBMIT" }
+      | { type: "CANCEL" }
+      | { type: "PAYMENT_SUCCESS" }
+      | { type: "PAYMENT_FAILED" }
+      | { type: "RETRY" },
+    tags: {} as
+      | "loading"
+      | "error"
+      | "success"
+      | "INV:stock_reserved"
+      | "INV:payment_not_charged"
+      | "INV:payment_charged"
+      | "INV:stock_shipped"
+      | "INV:stock_released",
+  },
+  guards: {
+    hasValidPayment: () => true,
+    stockAvailable: () => true,
+  },
+  actions: {
+    notifyUser: () => {},
+    reserveStock: () => {},
+    chargeCard: () => {},
+    releaseStock: () => {},
+    logCancellation: () => {},
+    cleanupResources: () => {},
+  },
+  actors: {
+    // XState actors require proper implementations (Promise/Callback/Observable creators).
+    // For examples demonstrating machine structure, we use `as any` stubs.
+    // This is the recommended pattern from Stately.ai for documentation examples.
+    // See: https://stately.ai/docs/actors#actor-logic-creators
+    paymentProcessor: {} as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  },
+}).createMachine({
+  id: "order",
+  initial: "idle",
+  states: {
+    idle: {
+      description: "Waiting for order submission",
+      on: {
+        SUBMIT: {
+          target: "validating",
+          guard: { type: "stockAvailable" },
+          actions: [{ type: "reserveStock" }],
+        },
+      },
+    },
+    validating: {
+      tags: ["loading", "INV:stock_reserved", "INV:payment_not_charged"],
+      entry: [{ type: "notifyUser" }],
+      on: {
+        CANCEL: { target: "cancelled", actions: [{ type: "releaseStock" }] },
+      },
+      after: {
+        5000: { target: "processing" },
+      },
+    },
+    processing: {
+      tags: ["loading", "INV:stock_reserved"],
+      description: "Processing payment",
+      invoke: [{ src: "paymentProcessor", id: "payment" }],
+      on: {
+        PAYMENT_SUCCESS: { target: "completed" },
+        PAYMENT_FAILED: { target: "failed" },
+      },
+    },
+    completed: {
+      tags: ["success", "INV:payment_charged", "INV:stock_shipped"],
+      description: "Order fulfilled",
+      entry: [{ type: "chargeCard" }],
+    },
+    failed: {
+      tags: ["error", "INV:stock_released"],
+      description: "Payment failed. Manual retry available.",
+      entry: [{ type: "releaseStock" }],
+      on: {
+        RETRY: {
+          target: "processing",
+          guard: { type: "hasValidPayment" },
+        },
+      },
+    },
+    cancelled: {
+      description: "Order cancelled by user",
+      entry: [{ type: "logCancellation" }],
+      exit: [{ type: "cleanupResources" }],
+    },
+  },
+})
+
+
+export default function Page() {
+  const tree = toTree(checkoutMachine, {
+    title: "My State Machine",
+    includeEntryActions: true,
+    includeExitActions: true,
+    includeInvokes: true,
+    includeTags: true,
+    expandedByDefault: false,
+  })
+
+  return (
+    <TreeVisualizer
+      tree={tree}
+      options={{
+        title: "Order Machine Visualizer",
+        includeGuards: true,
+        includeActions: true,
+        includeEntryActions: true,
+        includeExitActions: true,
+        includeInvokes: true,
+        includeTags: true,
+        includeMeta: true,
+      }}
+      onNodeSelect={(node) => console.log(node.data.name)}
+    />
+  )
+}
