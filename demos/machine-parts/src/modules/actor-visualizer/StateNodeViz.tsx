@@ -8,13 +8,12 @@ import {
 import { useMemo } from 'react';
 import { useSelector } from '@xstate/store-react';
 import { StateNodeActions } from "./components/state-node/StateNodeActions"
-import { StateNodeCard } from "./components/state-node/StateNodeCard"
+import { StateNodeRoot } from "./components/state-node/StateNodeRoot"
 import { StateNodeChildren } from "./components/state-node/StateNodeChildren"
 import { StateNodeDescription } from "./components/state-node/StateNodeDescription"
 import { StateNodeBody } from "./components/state-node/StateNodeBody"
 import { StateNodeHeader } from "./components/state-node/StateNodeHeader"
 import { StateNodeInvocation } from "./components/state-node/StateNodeInvocation"
-import { StateNodeRoot } from "./components/state-node/StateNodeRoot"
 import { StateNodeTransitionItem } from "./components/state-node/StateNodeTransitionItem"
 import { StateNodeTransitionList } from "./components/state-node/StateNodeTransitionList"
 import { TransitionVisual } from './TransitionViz';
@@ -63,8 +62,9 @@ export function StateNodeVisual({ node, graph, isInitial, isRegion }: StateNodeV
   }, [children, graph, isParallel]);
 
   return (
-    <StateNodeRoot id={node.id}>
-      <StateNodeCard
+    // <StateNodeRoot id={node.id}>
+      <StateNodeRoot
+        id={node.id}
         isAtomic={isAtomic}
         isFinal={isFinal}
         isHighlighted={isHighlighted}
@@ -81,7 +81,7 @@ export function StateNodeVisual({ node, graph, isInitial, isRegion }: StateNodeV
           label={data.key}
           description={data.description}
         />
-        <StateNodeBody>
+        <StateNodeBody isHighlighted={isHighlighted}>
           {data.invocations.length > 0 && <StateNodeInvocation invocations={data.invocations} />}
 
           {(data.entry.length > 0 || data.exit.length > 0) && <StateNodeActions entry={data.entry} exit={data.exit} />}
@@ -110,8 +110,8 @@ export function StateNodeVisual({ node, graph, isInitial, isRegion }: StateNodeV
             </StateNodeTransitionList>
           )}
         </StateNodeBody>
-      </StateNodeCard>
-    </StateNodeRoot>
+      </StateNodeRoot>
+    // </StateNodeRoot>
   )
 }
 

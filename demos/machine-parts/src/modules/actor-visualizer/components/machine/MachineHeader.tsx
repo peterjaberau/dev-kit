@@ -6,10 +6,11 @@ interface MachineHeaderProps {
 
 export function MachineHeader({ name, description }: MachineHeaderProps) {
   return (
-    <Card.Header>
-      <Card.Title data-testid="machine-name">{name} <Badge>Machine</Badge></Card.Title>
-      <Card.Description data-testid="root-description">{description}</Card.Description>
-      <Separator/>
+    <Card.Header css={{ py: 2, borderBottom: "1px solid", borderBottomColor: "border" }}>
+      <Card.Title data-testid="machine-name">
+        <Badge>Machine</Badge> {name}
+      </Card.Title>
+      {description && <Card.Description data-testid="root-description">{description}</Card.Description>}
     </Card.Header>
   )
 }

@@ -4,7 +4,7 @@ import {
 } from 'react-icons/ri';
 
 import { TbTargetArrow as RiTargetLine } from "react-icons/tb"
-import { chakra, Icon } from "@chakra-ui/react"
+import { chakra, Icon, Badge } from "@chakra-ui/react"
 
 interface StateNodeTypeIndicatorProps {
   historyType?: 'shallow' | 'deep';
@@ -26,9 +26,11 @@ export function StateNodeTypeIndicator({
   return (
     <>
       {isInitial && (
-        <Icon size={'sm'} color={"fg.muted"} css={{ shrink: 0}}>
-        <RiCornerDownRightLine   />
-        </Icon>
+        <Badge variant={'surface'}>
+          <RiCornerDownRightLine/>
+          Initial
+        </Badge>
+
       )}
       {isParallel && (
         <Icon size={'sm'} color={"fg.muted"} css={{ shrink: 0}}>

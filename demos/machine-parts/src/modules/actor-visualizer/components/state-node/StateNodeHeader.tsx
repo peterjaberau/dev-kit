@@ -26,9 +26,11 @@ export function StateNodeHeader({
     <Card.Header
       css={{
         py: 2,
+        borderBottom: "1px solid",
+        borderBottomColor: "border",
       }}
     >
-      <HStack>
+      <HStack css={{ alignItems: "center" }}>
         <StateNodeTypeIndicator
           historyType={historyType}
           isChoice={isChoice}
@@ -37,14 +39,10 @@ export function StateNodeHeader({
           isInitial={isInitial}
           isParallel={isParallel}
         />
-        <HStack css={{ alignItems: "center" }}>
-          <Card.Title>{label}</Card.Title>
-          <Badge>state</Badge>
-        </HStack>
-
+        <Badge>state</Badge>
+        <Card.Title>{label}</Card.Title>
         <Card.Description>{description}</Card.Description>
       </HStack>
-      <Separator />
     </Card.Header>
   )
 }

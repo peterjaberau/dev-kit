@@ -12,7 +12,7 @@ export function StateNodeChildren({ isParallel, children }: StateNodeChildrenPro
     <Flex
       css={{
         // bg: 'bg.muted',
-        padding: 6,
+        padding: 4,
         gap: 4,
         flexDirection: 'column',
         // display: "flex",

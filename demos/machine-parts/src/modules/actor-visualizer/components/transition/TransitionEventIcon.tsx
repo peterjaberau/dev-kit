@@ -1,48 +1,55 @@
-import { chakra, Icon } from "@chakra-ui/react"
-import { RiCheckboxCircleFill, RiCloseCircleFill, RiInfinityLine, RiTimerLine } from "react-icons/ri"
+import { chakra, Icon, Badge } from "@chakra-ui/react"
+import { RiCheckboxCircleFill, RiFlashlightLine, RiCloseCircleFill, RiInfinityLine, RiTimerLine } from "react-icons/ri"
 
 interface TransitionEventIconProps {
-  category: 'after' | 'always' | 'done' | 'error' | string | null;
+  category: "after" | "always" | "done" | "error" | string | null
 }
 
 export function TransitionEventIcon({ category }: TransitionEventIconProps) {
-  if (category === 'after') {
+  if (category === "after") {
     return (
-      <Icon size={"sm"} color={"fg.muted"} css={{ shrink: 0 }}>
+      <Badge variant={"outline"}>
         <RiTimerLine />
-      </Icon>
+        after
+      </Badge>
     )
-
   }
 
-  if (category === 'always') {
+  if (category === "always") {
     return (
-      <Icon size={"sm"} color={"fg.muted"} css={{ shrink: 0 }}>
+      <Badge variant={"outline"}>
         <RiInfinityLine />
-      </Icon>
+        always
+      </Badge>
     )
-
-
   }
 
-  if (category === 'done') {
-
+  if (category === "done") {
     return (
-      <Icon size={"sm"} color={"fg.success"} css={{ shrink: 0 }}>
+      <Badge variant={"outline"}>
         <RiCheckboxCircleFill />
-      </Icon>
+        done
+      </Badge>
     )
   }
 
-  if (category === 'error') {
-
+  if (category === "error") {
     return (
-      <Icon size={"sm"} color={"fg.error"} css={{ shrink: 0 }}>
+      <Badge colorPalette={"red"} variant={"solid"}>
         <RiCloseCircleFill />
-      </Icon>
+        error
+      </Badge>
     )
-
   }
 
-  return null;
+  if (!category) {
+    return (
+      <Badge variant={"outline"}>
+        <RiFlashlightLine />
+        event
+      </Badge>
+    )
+  }
+
+  return null
 }

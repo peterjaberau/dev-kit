@@ -5,5 +5,5 @@ interface MachineBodyProps {
 }
 
 export function MachineBody({ children }: MachineBodyProps) {
-  return <Card.Body data-testid="machine-body">{children}</Card.Body>
+  return <Card.Body data-testid="machine-body" css={{ bg: 'bg.muted'}}>{children}</Card.Body>
 }

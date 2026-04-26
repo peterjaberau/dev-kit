@@ -7,10 +7,14 @@ interface MachineRootProps {
 export function MachineRoot({ children }: MachineRootProps) {
   return (
     <Card.Root
+      size={"sm"}
       data-testid="machine-root"
       css={{
+
         mx: "auto",
-        maxW: "6xl",
+        minW: "xl",
+        w: "xl",
+        maxW: "2xl",
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { chakra } from "@chakra-ui/react"
+import { chakra, Badge } from "@chakra-ui/react"
 import type { ReactNode } from 'react';
 
 interface TransitionRootProps {
@@ -31,7 +31,7 @@ export function TransitionRoot({
         display: "flex",
         flexDirection: "column",
         gap: 0.5,
-        px: 2.5,
+       px: 2,
         py: 1.5,
         fontSize: "xs",
         transition: "colors",
