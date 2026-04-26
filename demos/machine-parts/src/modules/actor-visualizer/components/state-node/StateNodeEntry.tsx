@@ -1,5 +1,5 @@
 import { StateNodeToken } from './StateNodeToken';
-import { chakra } from "@chakra-ui/react"
+import { chakra, Badge } from "@chakra-ui/react"
 
 interface StateNodeEntryProps {
   actions: string[];
@@ -20,18 +20,7 @@ export function StateNodeEntry({ actions }: StateNodeEntryProps) {
         alignItems: "center",
       }}
     >
-      <chakra.span
-        css={{
-          textTransform: "uppercase",
-          color: "fg.muted",
-          mr: 0.5,
-          fontSize: "md",
-          fontWeight: "semibold",
-          letterSpacing: "wider"
-        }}
-      >
-        entry
-      </chakra.span>
+      <Badge>Entry</Badge>
       {actions.map((action, index) => (
         <StateNodeToken key={`${action}-${index}`} value={action} />
       ))}

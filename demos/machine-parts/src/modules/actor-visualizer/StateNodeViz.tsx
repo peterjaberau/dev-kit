@@ -11,6 +11,7 @@ import { StateNodeActions } from "./components/state-node/StateNodeActions"
 import { StateNodeCard } from "./components/state-node/StateNodeCard"
 import { StateNodeChildren } from "./components/state-node/StateNodeChildren"
 import { StateNodeDescription } from "./components/state-node/StateNodeDescription"
+import { StateNodeBody } from "./components/state-node/StateNodeBody"
 import { StateNodeHeader } from "./components/state-node/StateNodeHeader"
 import { StateNodeInvocation } from "./components/state-node/StateNodeInvocation"
 import { StateNodeRoot } from "./components/state-node/StateNodeRoot"
@@ -19,6 +20,7 @@ import { StateNodeTransitionList } from "./components/state-node/StateNodeTransi
 import { TransitionVisual } from './TransitionViz';
 import { StateNodeData, TransitionData, MachineGraph, getEventCategory } from "./utils"
 import { appStore } from './lib/store';
+import { Card } from '@chakra-ui/react'
 
 interface StateNodeVizProps {
   node: GraphNode<StateNodeData>;
@@ -77,51 +79,40 @@ export function StateNodeVisual({ node, graph, isInitial, isRegion }: StateNodeV
           isInitial={isInitial}
           isParallel={isParallel}
           label={data.key}
+          description={data.description}
         />
+        <StateNodeBody>
+          {data.invocations.length > 0 && <StateNodeInvocation invocations={data.invocations} />}
 
-        {data.description && (
-          <StateNodeDescription description={data.description} />
-        )}
+          {(data.entry.length > 0 || data.exit.length > 0) && <StateNodeActions entry={data.entry} exit={data.exit} />}
 
-        {data.invocations.length > 0 && (
-          <StateNodeInvocation invocations={data.invocations} />
-        )}
+          {children.length > 0 && (
+            <StateNodeChildren isParallel={isParallel}>
+              {sortedChildren.map((child) => (
+                <StateNodeVisual
+                  key={child.id}
+                  node={child}
+                  graph={graph}
+                  isInitial={data.initialId === child.id}
+                  isRegion={isParallel}
+                />
+              ))}
+            </StateNodeChildren>
+          )}
 
-        {(data.entry.length > 0 || data.exit.length > 0) && (
-          <StateNodeActions entry={data.entry} exit={data.exit} />
-        )}
-
-        {children.length > 0 && (
-          <StateNodeChildren isParallel={isParallel}>
-            {sortedChildren.map((child) => (
-              <StateNodeVisual
-                key={child.id}
-                node={child}
-                graph={graph}
-                isInitial={data.initialId === child.id}
-                isRegion={isParallel}
-              />
-            ))}
-          </StateNodeChildren>
-        )}
+          {outEdges.length > 0 && (
+            <StateNodeTransitionList>
+              {outEdges.map((edge) => (
+                // <StateNodeTransitionItem key={edge.id}>
+                <TransitionVisual key={edge.id} edge={edge} graph={graph} sourceId={node.id} isFirst={false} />
+                // </StateNodeTransitionItem>
+              ))}
+            </StateNodeTransitionList>
+          )}
+        </StateNodeBody>
       </StateNodeCard>
-
-      {outEdges.length > 0 && (
-        <StateNodeTransitionList>
-          {outEdges.map((edge) => (
-            <StateNodeTransitionItem key={edge.id}>
-              <TransitionVisual
-                edge={edge}
-                graph={graph}
-                sourceId={node.id}
-                isFirst={false}
-              />
-            </StateNodeTransitionItem>
-          ))}
-        </StateNodeTransitionList>
-      )}
     </StateNodeRoot>
-  );
+  )
 }
 
 export function StateNodeViz(props: StateNodeVizProps) {

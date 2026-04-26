@@ -1,5 +1,5 @@
 import { StateNodeToken } from './StateNodeToken';
-import { chakra } from "@chakra-ui/react"
+import { chakra, Badge } from "@chakra-ui/react"
 interface StateNodeInvocationProps {
   invocations: string[];
 }
@@ -19,18 +19,8 @@ export function StateNodeInvocation({ invocations }: StateNodeInvocationProps) {
         alignItems: "center",
       }}
     >
-      <chakra.span
-        css={{
-          textTransform: "uppercase",
-          color: "fg.muted",
-          mr: 0.5,
-          fontSize: "md",
-          fontWeight: "semibold",
-          letterSpacing: "wider",
-        }}
-      >
-        invoke
-      </chakra.span>
+
+      <Badge>invoke</Badge>
       {invocations.map((invocation, index) => (
         <StateNodeToken key={`${invocation}-${index}`} value={invocation} />
       ))}

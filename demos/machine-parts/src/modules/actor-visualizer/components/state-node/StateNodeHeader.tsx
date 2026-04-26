@@ -1,14 +1,15 @@
-import { StateNodeTypeIndicator } from './StateNodeTypeIndicator';
-import { chakra } from "@chakra-ui/react"
+import { StateNodeTypeIndicator } from "./StateNodeTypeIndicator"
+import { chakra, Card, Separator, HStack, VStack, Badge } from "@chakra-ui/react"
 
 interface StateNodeHeaderProps {
-  historyType?: 'shallow' | 'deep';
-  isChoice: boolean;
-  isFinal: boolean;
-  isHistory: boolean;
-  isInitial?: boolean;
-  isParallel: boolean;
-  label: string;
+  historyType?: "shallow" | "deep"
+  isChoice: boolean
+  isFinal: boolean
+  isHistory: boolean
+  isInitial?: boolean
+  isParallel: boolean
+  label: string
+  description?: string
 }
 
 export function StateNodeHeader({
@@ -19,27 +20,15 @@ export function StateNodeHeader({
   isInitial,
   isParallel,
   label,
+  description,
 }: StateNodeHeaderProps) {
   return (
-    <chakra.div
+    <Card.Header
       css={{
-        display: "flex",
-        alignItems: "center",
-        gap: 1.5,
-        px: 2.5,
-        py: 1.5,
+        py: 2,
       }}
     >
-      <chakra.span
-        css={{
-          fontSize: "lg",
-          fontWeight: "semibold",
-          gap: 1,
-          display: "flex",
-          alignItems: "center",
-
-        }}
-      >
+      <HStack>
         <StateNodeTypeIndicator
           historyType={historyType}
           isChoice={isChoice}
@@ -48,8 +37,14 @@ export function StateNodeHeader({
           isInitial={isInitial}
           isParallel={isParallel}
         />
-        {label}
-      </chakra.span>
-    </chakra.div>
+        <HStack css={{ alignItems: "center" }}>
+          <Card.Title>{label}</Card.Title>
+          <Badge>state</Badge>
+        </HStack>
+
+        <Card.Description>{description}</Card.Description>
+      </HStack>
+      <Separator />
+    </Card.Header>
   )
 }

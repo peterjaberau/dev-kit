@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { chakra } from "@chakra-ui/react"
+import { chakra, Card } from "@chakra-ui/react"
 
 interface StateNodeCardProps {
   isAtomic: boolean
@@ -19,17 +19,18 @@ export function StateNodeCard({
   children,
 }: StateNodeCardProps) {
   return (
-    <chakra.div
+    <Card.Root
+
       data-testid="state-card"
       data-sim-active={isSimActive && (isAtomic || isFinal) ? "" : undefined}
       css={{
-        bg: "bg.panel",
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: "md",
-        borderWidth: "thin",
-        borderStyle: "solid",
-        borderColor: "border",
+        // bg: "bg.panel",
+        // display: "flex",
+        // flexDirection: "column",
+        // borderRadius: "md",
+        // borderWidth: "thin",
+        // borderStyle: "solid",
+        // borderColor: "border",
         boxShadow: "sm",
         ...(isFinal && {
           borderWidth: "medium",
@@ -39,17 +40,18 @@ export function StateNodeCard({
           borderStyle: "dashed",
         }),
         ...(isHighlighted && {
-          borderColor: "blue",
+          bg: "bg.info",
+          borderColor: "border.info",
           boxShadow: "md",
         }),
         ...(isSimActive &&
           (isAtomic || isFinal) && {
-            borderColor: "border.info",
-            bg: "blue.100",
+            borderColor: "border.emphasized",
+            bg: "bg.muted",
           }),
       }}
     >
       {children}
-    </chakra.div>
+    </Card.Root>
   )
 }

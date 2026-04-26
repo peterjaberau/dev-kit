@@ -7,9 +7,9 @@ import {
   type AnyEventObject,
 } from "xstate"
 import { machineToGraph, MachineGraph } from "../utils"
-import { sessionTimeoutMachine } from "../data/machines/sessionTimeout"
+import { sessionTimeoutMachine, authMachine, mediaPlayerMachine, trafficLightMachine } from "../data/machines"
 
-const currentMachine = sessionTimeoutMachine
+const currentMachine = trafficLightMachine
 
 
 

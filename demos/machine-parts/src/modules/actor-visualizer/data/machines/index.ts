@@ -8,3 +8,4 @@ export * from "./stopwatch"
 export * from "./trafficLight"
 export * from './vendingMachine'
 export * from "./wizard"
+export * from "./savageMachine"

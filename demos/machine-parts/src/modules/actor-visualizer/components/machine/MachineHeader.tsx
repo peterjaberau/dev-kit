@@ -1,4 +1,4 @@
-import { chakra, Text, Heading } from "@chakra-ui/react"
+import { Card, Separator, Badge } from "@chakra-ui/react"
 interface MachineHeaderProps {
   name: string;
   description?: string;
@@ -6,20 +6,10 @@ interface MachineHeaderProps {
 
 export function MachineHeader({ name, description }: MachineHeaderProps) {
   return (
-    <>
-      <Heading
-        data-testid="machine-name"
-        css={{
-          track: "wider",
-        }}
-      >
-        {name}
-      </Heading>
-      {description && (
-        <Text data-testid="root-description" textStyle="sm" css={{ color: "fg.muted", mt: 1}} >
-          {description}
-        </Text>
-      )}
-    </>
+    <Card.Header>
+      <Card.Title data-testid="machine-name">{name} <Badge>Machine</Badge></Card.Title>
+      <Card.Description data-testid="root-description">{description}</Card.Description>
+      <Separator/>
+    </Card.Header>
   )
 }

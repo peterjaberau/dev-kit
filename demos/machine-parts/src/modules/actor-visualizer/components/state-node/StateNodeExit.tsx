@@ -1,5 +1,5 @@
 import { StateNodeToken } from './StateNodeToken';
-import { chakra } from "@chakra-ui/react"
+import { chakra, Badge } from "@chakra-ui/react"
 
 interface StateNodeExitProps {
   actions: string[];
@@ -27,18 +27,7 @@ export function StateNodeExit({ actions, hasEntry }: StateNodeExitProps) {
         }),
       }}
     >
-      <chakra.span
-        css={{
-          textTransform: "uppercase",
-          color: "fg.muted",
-          mr: 0.5,
-          fontSize: "md",
-          fontWeight: "semibold",
-          letterSpacing: "wider",
-        }}
-      >
-        exit
-      </chakra.span>
+      <Badge>Exit</Badge>
       {actions.map((action, index) => (
         <StateNodeToken key={`${action}-${index}`} value={action} />
       ))}
