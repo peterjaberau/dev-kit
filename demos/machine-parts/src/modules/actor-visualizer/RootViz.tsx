@@ -1,14 +1,15 @@
 import { useSelector } from "@xstate/store-react"
 import { appStore } from "./lib/store"
-import { useCallback, useEffect, useRef } from "react"
-import { chakra, Container, Button, Card, Center, Heading, Icon, Stack, Text, HStack, Flex } from "@chakra-ui/react"
+import { type ChangeEvent, useCallback, useEffect, useRef } from "react"
+import { chakra, Button, HStack, Text } from "@chakra-ui/react"
 import { MachineViz } from "./MachineViz"
+import { actorVisualizerMachines } from "./data/machines"
 
 export const RootViz = () => {
   const graph = useSelector(appStore, (s) => s.context.graph)
   const error = useSelector(appStore, (s) => s.context.error)
   const mode = useSelector(appStore, (s) => s.context.mode)
-  const vizPanelRef = useRef(null)
+  const selectedMachineId = useSelector(appStore, (s) => s.context.selectedMachineId)
   const vizScrollRef = useRef<HTMLDivElement>(null)
 
   // Scroll to first active leaf node when a sim event comes in
@@ -37,11 +38,56 @@ export const RootViz = () => {
     appStore.trigger.stopSim()
   }, [])
 
+  const handleMachineSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+    appStore.trigger.selectMachine({ machineId: event.target.value })
+  }, [])
+
   const isEmpty = !graph
   const isSim = mode === "sim"
 
+  const toolbar = (
+    <HStack gap={2}>
+      <chakra.select
+        aria-label="Select machine"
+        value={selectedMachineId}
+        onChange={handleMachineSelect}
+        css={{
+          minW: "180px",
+          h: "32px",
+          borderWidth: "1px",
+          borderColor: "border",
+          borderRadius: "6px",
+          bg: "bg",
+          px: 2,
+          fontSize: "sm",
+        }}
+      >
+        {actorVisualizerMachines.map((machine) => (
+          <option key={machine.id} value={machine.id}>
+            {machine.label}
+          </option>
+        ))}
+      </chakra.select>
+
+      {!isEmpty && !error && (
+        <Button size={"xs"} onClick={isSim ? handleStopSim : handleStartSim}>
+          {isSim ? "Stop" : "Play"}
+        </Button>
+      )}
+    </HStack>
+  )
+
   const vizContent = isEmpty ? (
-    <div>empty</div>
+    <chakra.div
+      css={{
+        p: 8,
+      }}
+    >
+      <HStack justify="space-between" align="center">
+        <Text>{error ?? "empty"}</Text>
+        {toolbar}
+      </HStack>
+    </chakra.div>
   ) : (
     <chakra.div
       ref={vizScrollRef}
@@ -52,25 +98,8 @@ export const RootViz = () => {
         p: 8,
       }}
     >
-      <MachineViz graph={graph} />
+      <MachineViz graph={graph} toolbar={toolbar} />
     </chakra.div>
-  )
-
-  const footerBar = (
-    <HStack css={{ justifyContent: "space-between", borderTop: "solid 1px", borderTopColor: "border" }}>
-      <Flex css={{ alignItems: "center", gap: 2 }}>
-        {!isEmpty &&
-          (isSim ? (
-            <Button size={"sm"} onClick={handleStopSim}>
-              Stop
-            </Button>
-          ) : (
-            <Button size={"sm"} onClick={handleStartSim}>
-              Play
-            </Button>
-          ))}
-      </Flex>
-    </HStack>
   )
 
   return (
@@ -82,7 +111,6 @@ export const RootViz = () => {
       }}
     >
       {vizContent}
-      {footerBar}
     </chakra.div>
   )
 }

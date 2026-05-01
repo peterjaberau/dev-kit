@@ -50,8 +50,9 @@ export function StateNodeRoot({
         }),
         ...(isSimActive &&
           (isAtomic || isFinal) && {
-            borderColor: "border.emphasized",
-            bg: "bg.muted",
+            boxShadow: "md",
+            borderColor: "border.warning",
+            bg: "bg.warning",
           }),
       }}
     >

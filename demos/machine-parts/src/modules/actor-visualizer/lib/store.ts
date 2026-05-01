@@ -7,11 +7,14 @@ import {
   type AnyEventObject,
 } from "xstate"
 import { machineToGraph, MachineGraph } from "../utils"
-import { sessionTimeoutMachine, authMachine, mediaPlayerMachine, trafficLightMachine } from "../data/machines"
+import {
+  actorVisualizerMachines,
+  defaultActorVisualizerMachineId,
+  trafficLightMachine,
+} from "../data/machines"
 
-const currentMachine = trafficLightMachine
-
-
+const defaultMachine =
+  actorVisualizerMachines.find((option) => option.id === defaultActorVisualizerMachineId)?.machine ?? trafficLightMachine
 
 export interface SimEvent {
   timestamp: number
@@ -166,12 +169,11 @@ export function getCurrentSimValue(): string | null {
   return JSON.stringify(snapshot.value)
 }
 
-function getInitialContext() {
-
+function createMachineContext(machine: AnyStateMachine) {
   try {
     return {
-      machine: currentMachine as AnyStateMachine | null,
-      graph: machineToGraph(currentMachine) as MachineGraph | null,
+      machine: machine as AnyStateMachine | null,
+      graph: machineToGraph(machine) as MachineGraph | null,
       error: null as string | null,
     }
   } catch (e) {
@@ -181,6 +183,10 @@ function getInitialContext() {
       error: String(e) as string | null,
     }
   }
+}
+
+function getInitialContext() {
+  return createMachineContext(defaultMachine)
 }
 
 const initialCtx = getInitialContext()
@@ -193,6 +199,7 @@ export const appStore = createStore({
     sharing: "idle" as "idle" | "saving" | "copied" | "error",
     mode: "view" as "view" | "sim",
     machine: initialCtx.machine,
+    selectedMachineId: defaultActorVisualizerMachineId,
     simMachine: null as AnyStateMachine | null,
     simEvents: [] as SimEvent[],
     simActiveIds: new Set<string>(),
@@ -210,6 +217,23 @@ export const appStore = createStore({
       ...context,
       machine: event.machine,
     }),
+    selectMachine: (context, event: { machineId: string }) => {
+      const option = actorVisualizerMachines.find((machineOption) => machineOption.id === event.machineId)
+      if (!option) return context
+
+      clearAllScheduledTimeouts()
+      const next = createMachineContext(option.machine)
+      return {
+        ...context,
+        ...next,
+        selectedMachineId: option.id,
+        highlights: new Set<string>(),
+        mode: "view" as const,
+        simMachine: null,
+        simEvents: [],
+        simActiveIds: new Set<string>(),
+      }
+    },
     highlight: (context, event: { ids: string[] }) => ({
       ...context,
       highlights: new Set([...context.highlights, ...event.ids]),

@@ -6,7 +6,7 @@ import {
   type GraphNode,
   type GraphEdge,
 } from "@statelyai/graph"
-import { useMemo } from "react"
+import { ReactNode, useMemo } from "react"
 import { MachineHeader } from "./components/machine/MachineHeader"
 import { MachineRoot } from "./components/machine/MachineRoot"
 import { MachineBody } from "./components/machine/MachineBody"
@@ -18,9 +18,10 @@ import { StateNodeData, TransitionData, MachineGraph } from "./utils"
 
 interface MachineVizProps {
   graph: MachineGraph
+  toolbar?: ReactNode
 }
 
-export function MachineVisual({ graph }: MachineVizProps) {
+export function MachineVisual({ graph, toolbar }: MachineVizProps) {
   const roots = getRoots(graph) as GraphNode<StateNodeData>[]
   if (roots.length === 0) return null
 
@@ -38,7 +39,7 @@ export function MachineVisual({ graph }: MachineVizProps) {
 
   return (
     <MachineRoot>
-      <MachineHeader name={root.data.key} description={root.data.description} />
+      <MachineHeader name={root.data.key} description={root.data.description} toolbar={toolbar} />
 
       <MachineBody>
         {rootEdges.length > 0 && (
