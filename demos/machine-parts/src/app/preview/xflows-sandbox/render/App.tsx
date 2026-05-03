@@ -4,7 +4,7 @@ import { FlowSandbox } from "./components/FlowSandbox"
 
 export function App() {
   return (
-      <Container css={{ mx: "auto", w: "full", maxW: "5xl", h: "100dvh", py: 4, overflow: "hidden" }}>
+      <Container css={{ mx: "auto", w: "full", maxW: "full", h: "100dvh", py: 4, overflow: "hidden" }}>
         <Card.Root css={{ h: "full", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           <Card.Header css={{ py: 2, borderBottom: "1px solid", borderBottomColor: "border", flexShrink: 0 }}>
             <HStack>

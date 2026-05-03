@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Badge, Button, chakra, HStack, Stack, Textarea } from "@chakra-ui/react"
 
 interface FlowEditorProps {
-  initialFlow: any;
+  initialFlow: any | null;
   onFlowChange: (flow: any, error: string | null) => void;
   error: string | null;
 }
@@ -14,6 +14,14 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
   const [historyIndex, setHistoryIndex] = useState(-1);
 
   useEffect(() => {
+    if (!initialFlow) {
+      setFlowJson('');
+      setHistory(['']);
+      setHistoryIndex(0);
+      setSyntaxErrors([]);
+      return;
+    }
+
     const jsonString = JSON.stringify(initialFlow, null, 2);
     setFlowJson(jsonString);
     setHistory([jsonString]);
@@ -22,6 +30,10 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
 
   const validateFlow = (jsonString: string): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
+
+    if (!jsonString.trim()) {
+      return { isValid: true, errors };
+    }
 
     try {
       const parsed = JSON.parse(jsonString);
@@ -58,6 +70,12 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
 
   const handleJsonChange = (newJsonString: string) => {
     setFlowJson(newJsonString);
+
+    if (!newJsonString.trim()) {
+      setSyntaxErrors([]);
+      onFlowChange(null, null);
+      return;
+    }
 
     let errors: string[] | any = [];
     try {

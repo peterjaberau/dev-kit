@@ -1,4 +1,4 @@
-export default [
+export const data: any[] = [
   {
     id: "basic-demo",
     name: "Basic Demo Flow",
@@ -348,6 +348,7 @@ export default [
   },
   {
     id: "ecommerce-checkout",
+    name: "Ecommerce Checkout Flow",
     initial: "browse",
     context: {
       user: {
@@ -582,6 +583,7 @@ export default [
   },
   {
     id: "insurance-quote",
+    name: "Insurance Quote Flow",
     initial: "personal-info",
     context: {
       applicant: {
@@ -917,6 +919,7 @@ export default [
   },
   {
     id: "sales-flow",
+    name: "Sales Flow",
     initial: "quote",
     context: {
       session: {
@@ -1208,4 +1211,4 @@ export default [
       },
     ],
   },
-]
+] as any[]

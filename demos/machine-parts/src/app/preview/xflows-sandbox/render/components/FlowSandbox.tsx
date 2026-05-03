@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState } from 'react';
 import { FlowEditor } from './FlowEditor';
 import { FlowRenderer } from './FlowRenderer';
 import { StateInspector } from './StateInspector';
@@ -7,11 +7,10 @@ import { ServiceDebugger } from './ServiceDebugger';
 import { PerformanceMonitor } from './PerformanceMonitor';
 import { LayoutManager } from './panels/LayoutManager';
 import { PanelLayout } from './panels/PanelLayout';
-import { flowExamples } from './examples';
+import { data } from "../data"
 
 export function FlowSandbox() {
   const [activeFlow, setActiveFlow] = useState<any>(null);
-  const [initialized, setInitialized] = useState(false);
   const [flowError, setFlowError] = useState<string | null>(null);
   const [selectedPanel, setSelectedPanel] = useState<'editor' | 'renderer' | 'inspector' | 'events' | 'services' | 'performance'>('editor');
   const [panelLayout, setPanelLayout] = useState<'full' | 'split-2' | 'split-3'>('split-2');
@@ -20,39 +19,6 @@ export function FlowSandbox() {
   const [eventCount] = useState<number>(0);
   const [renderTime] = useState<number>(0);
   const [updateCount, setUpdateCount] = useState<number>(0);
-
-  // Load basic demo as default
-  const defaultFlow = useMemo(() => {
-    const basicDemo = flowExamples.find((ex: any) => ex.id === 'basic-demo');
-
-
-    return basicDemo ? basicDemo.flow : {
-      "id": "empty",
-      "initial": "welcome",
-      "context": {},
-      "states": {
-        "welcome": {
-          "view": { "moduleId": "welcome", "slot": "main" },
-          "on": { "NEXT": "complete" }
-        },
-        "complete": {
-          "type": "final",
-          "view": { "moduleId": "complete", "slot": "main" }
-        }
-      }
-    };
-  }, []);
-
-
-
-  // Initialize with default flow
-  useEffect(() => {
-    if (!initialized) {
-      setActiveFlow(defaultFlow);
-      setInitialized(true);
-      console.log('Initialized with default flow:', defaultFlow);
-    }
-  }, [defaultFlow, initialized]);
 
   const handleFlowChange = (newFlow: any, error: string | null) => {
     setFlowError(error);
@@ -65,18 +31,25 @@ export function FlowSandbox() {
   };
 
   const loadExample = (exampleId: string) => {
-    if (!exampleId) return;
+    if (!exampleId) {
+      setActiveFlow(null);
+      setSelectedExample('');
+      setCurrentState('');
+      setFlowError(null);
+      return;
+    }
     
-    const example: any = flowExamples.find(ex => ex.id === exampleId);
+    const example: any = data.find(ex => ex.id === exampleId);
     if (!example) {
       console.error('Example not found:', exampleId);
       return;
     }
 
     console.log('📦 Loading example:', example.name);
-    setActiveFlow(example.flow);
+    const exampleFlow = example.flow || example;
+    setActiveFlow(exampleFlow);
     setSelectedExample(exampleId);
-    setCurrentState(example?.flow?.initial || '');
+    setCurrentState(exampleFlow.initial || exampleFlow.initialStep || '');
     setFlowError(null);
     setUpdateCount(prev => prev + 1);
   };
@@ -92,24 +65,24 @@ export function FlowSandbox() {
   };
 
   // Prepare examples for selector
-  const examples = flowExamples.map(ex => ({
+  const examples = data.map((ex) => ({
     value: ex.id,
     label: ex.name,
-    group: ex.category || 'Demos'
-  }));
+    group: ex.category || "Demos",
+  }))
 
   const panelComponents = {
     editor: (
       <FlowEditor
         data-id="flow-editor"
-        initialFlow={activeFlow || defaultFlow}
+        initialFlow={activeFlow}
         onFlowChange={handleFlowChange}
         error={flowError}
       />
     ),
-    renderer: <FlowRenderer data-id="flow-renderer" flow={activeFlow || defaultFlow} />,
-    inspector: <StateInspector data-id="state-inspector" flow={activeFlow || defaultFlow} />,
-    events: <EventTester data-id="event-tester" flow={activeFlow || defaultFlow} />,
+    renderer: <FlowRenderer data-id="flow-renderer" flow={activeFlow} />,
+    inspector: <StateInspector data-id="state-inspector" flow={activeFlow} />,
+    events: <EventTester data-id="event-tester" flow={activeFlow} />,
     services: <ServiceDebugger data-id="service-debugger" />,
     performance: <PerformanceMonitor data-id="performance-monitor" />,
   }

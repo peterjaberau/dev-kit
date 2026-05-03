@@ -1,1 +1,1 @@
-export * as flowExamplesData from './flow-examples'
+export { data } from "./flow-examples"

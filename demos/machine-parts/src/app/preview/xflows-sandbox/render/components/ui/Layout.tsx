@@ -122,6 +122,7 @@ export function SplitPanel({ children, css, className = '', size = 'full' }: Spl
       data-id="split-panel"
       css={{
         w: sizeCss[size],
+        flex: 1,
         borderRight: "1px solid",
         borderRightColor: "border",
         _last: {

@@ -48,6 +48,10 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
     }
 
     const flowObj = oldFlow as Record<string, unknown>;
+    if (Array.isArray(flowObj.steps)) {
+      return oldFlow as FlowConfig;
+    }
+
     const states = flowObj.states as Record<string, unknown> || {};
     const steps = Object.entries(states).map(([id, state]) => {
       const stateObj = state as Record<string, unknown>;
@@ -83,7 +87,13 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
   }, []);
 
   useEffect(() => {
-    if (!flow) return;
+    if (!flow) {
+      setError(null);
+      setFlowConfig(null);
+      setCurrentState(null);
+      setRenderTime(0);
+      return;
+    }
 
     try {
       setError(null);
