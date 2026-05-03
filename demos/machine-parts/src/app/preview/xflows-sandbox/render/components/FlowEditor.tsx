@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Badge, Button, Card, chakra, HStack, ScrollArea, Stack, Textarea } from "@chakra-ui/react"
+import JsonView from "react18-json-view"
 
 interface FlowEditorProps {
   initialFlow: any | null;
@@ -224,7 +225,7 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
       </Card.Header>
 
       {allErrors.length > 0 && (
-        <chakra.div css={{ flexShrink: 0, borderBottomWidth: "1px", bg: "red.50", px: 4, py: 2 }}>
+        <chakra.div css={{ borderBottomWidth: "1px", bg: "red.50", px: 4, py: 2 }}>
           <HStack align="flex-start" gap={2}>
             <chakra.span css={{ color: "red.600" }}>⚠️</chakra.span>
             <Stack gap={1} css={{ fontSize: "sm", color: "red.700" }}>
@@ -240,25 +241,14 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
         <ScrollArea.Root css={{ flex: 1, minH: 0, h: "full", maxH: "full", w: "full" }} size="sm" variant="always">
           <ScrollArea.Viewport css={{ h: "full", maxH: "full", minH: 0 }}>
             <ScrollArea.Content p={4} pe={6}>
-              <Textarea
-                value={flowJson}
-                onChange={(e) => handleJsonChange(e.target.value)}
-                placeholder="Enter your flow JSON here..."
-                spellCheck={false}
-                css={{
-                  w: "full",
-                  h: "full",
-                  p: 4,
-                  fontFamily: "JetBrains Mono, Fira Code, Monaco, Consolas, monospace",
-                  fontSize: "13px",
-                  lineHeight: "1.5",
-                  borderWidth: 0,
-                  borderRadius: 0,
-                  resize: "none",
-                  bg: "gray.50",
-                  _focus: { outline: "none", boxShadow: "none" },
-                }}
-              />
+              {flowJson && (
+                <JsonView
+                  src={JSON.parse(flowJson)}
+                  collapsed={2}
+                  theme={"github"}
+                  style={{ fontSize: "13px", fontWeight: "bold" }}
+                />
+              )}
             </ScrollArea.Content>
           </ScrollArea.Viewport>
           <ScrollArea.Scrollbar>
@@ -268,7 +258,7 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
       </Card.Body>
 
       <Card.Footer css={{ flexShrink: 0, p: 0 }}>
-        <chakra.div css={{ borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+        <chakra.div css={{ flex: 1, borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
           <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
             <HStack gap={4}>
               <chakra.span>📝 Lines: {flowJson?.split("\n").length}</chakra.span>
@@ -288,22 +278,22 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
 
 /*
   <Textarea
-          value={flowJson}
-          onChange={(e) => handleJsonChange(e.target.value)}
-          placeholder="Enter your flow JSON here..."
-          spellCheck={false}
-          css={{
-            w: "full",
-            h: "full",
-            p: 4,
-            fontFamily: "JetBrains Mono, Fira Code, Monaco, Consolas, monospace",
-            fontSize: "13px",
-            lineHeight: "1.5",
-            borderWidth: 0,
-            borderRadius: 0,
-            resize: "none",
-            bg: "gray.50",
-            _focus: { outline: "none", boxShadow: "none" },
-          }}
-        />
+                value={flowJson}
+                onChange={(e) => handleJsonChange(e.currentTarget.value)}
+                placeholder="Enter your flow JSON here..."
+                spellCheck={false}
+                css={{
+                  w: "full",
+                  h: "full",
+                  p: 4,
+                  fontFamily: "JetBrains Mono, Fira Code, Monaco, Consolas, monospace",
+                  fontSize: "13px",
+                  lineHeight: "1.5",
+                  borderWidth: 0,
+                  borderRadius: 0,
+                  resize: "none",
+                  bg: "gray.50",
+                  _focus: { outline: "none", boxShadow: "none" },
+                }}
+              />
  */

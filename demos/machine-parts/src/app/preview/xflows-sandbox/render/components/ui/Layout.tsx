@@ -72,9 +72,6 @@ export function LayoutFooter({ children, css, className = "" }: LayoutProps) {
       css={{
         borderTop: "1px solid",
         borderColor: "border",
-        bg: "bg.panel",
-        px: 6,
-        py: 2,
         flexShrink: 0,
         ...css,
       }}

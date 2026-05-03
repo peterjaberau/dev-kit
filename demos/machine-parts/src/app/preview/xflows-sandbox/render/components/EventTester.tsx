@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, chakra, Field, Input, ScrollArea, Stack, Textarea, VStack } from "@chakra-ui/react"
+import { Button, Card, chakra, Field, HStack, IconButton, Input, ScrollArea, Stack, Textarea, VStack } from "@chakra-ui/react"
+import { FaCode as PayloadIcon } from "react-icons/fa6";
 
 interface EventTesterProps {
   flow: any;
@@ -97,8 +98,6 @@ export function EventTester({ flow }: EventTesterProps) {
       <chakra.div
         css={{
           mt: 2,
-          borderRadius: "full",
-          bg: "gray.50",
           p: 2,
           fontSize: "xs",
         }}
@@ -249,7 +248,16 @@ export function EventTester({ flow }: EventTesterProps) {
     <Card.Root
       size={"sm"}
       variant={"subtle"}
-      css={{ display: "flex", flexDirection: "column", flex: 1, minH: 0, h: "full", maxH: "full", w: "full", overflow: "hidden" }}
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minH: 0,
+        h: "full",
+        maxH: "full",
+        w: "full",
+        overflow: "hidden",
+      }}
     >
       {/* Event Tester Toolbar */}
       <Card.Header
@@ -310,101 +318,90 @@ export function EventTester({ flow }: EventTesterProps) {
                     }}
                   >
                     {events.map((event) => (
-                      <chakra.div
+                      <Card.Root
                         key={event.id}
+                        size={"sm"}
+                        variant={selectedEvent === event.name ? "elevated" : "outline"}
+                        onClick={() => setSelectedEvent(event.name)}
                         css={{
                           cursor: "pointer",
-                          borderRadius: "full",
-                          border: "1px solid",
-                          transition: "colors",
-                          ...(selectedEvent === event.name
-                            ? {
-                                borderColor: "blue.200",
-                                bg: "blue.50",
-                              }
-                            : {
-                                borderColor: "gray.200",
-                                bg: "gray.50",
-                              }),
+                          bg: selectedEvent === event.name ? "bg.info" : "bg.panel",
                         }}
-                        onClick={() => setSelectedEvent(event.name)}
                       >
-                        <chakra.div
+                        <Card.Header css={{ px: 2, py: 2, borderBottom: "1px solid", borderBottomColor: "border" }}>
+                          <HStack>
+                            <Card.Title css={{ flex: 1, fontSize: "sm" }}>{event.name}</Card.Title>
+                            <IconButton size={"2xs"} variant={'ghost'}><PayloadIcon/></IconButton>
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                const payload = generateRandomPayload(event.name)
+                                sendEvent(event.name, payload)
+                              }}
+                              colorPalette={"blue"}
+                              size={"2xs"}
+                            >
+                              Send
+                            </Button>
+                          </HStack>
+                        </Card.Header>
+                        <Card.Body
                           css={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
+                            px: 2,
+                            py: 2,
+                            m: 0,
                           }}
                         >
-                          <chakra.span
-                            css={{
-                              fontWeight: "medium",
-                              color: "gray.700",
-                            }}
-                          >
-                            {event.name}
-                          </chakra.span>
-                          <Button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              const payload = generateRandomPayload(event.name)
-                              sendEvent(event.name, payload)
-                            }}
-                            colorPalette={"blue"}
-                            size={"xs"}
-                          >
-                            Send
-                          </Button>
-                        </chakra.div>
-                        {renderEventPreview(event.name)}
-                      </chakra.div>
+                          {renderEventPreview(event.name)}
+                        </Card.Body>
+                      </Card.Root>
                     ))}
                   </chakra.div>
                 </chakra.div>
 
-        {/* Custom Event */}
-        <Card.Root size={"sm"}>
-          <Card.Header>
-            <Card.Title>🎯 Custom Events</Card.Title>
-          </Card.Header>
-          <Card.Body>
-            <chakra.form onSubmit={handleCustomEventSubmit}>
-              <VStack css={{ gap: 4 }}>
-                <Field.Root>
-                  <Field.Label>Custom Event Name</Field.Label>
-                  <Input
-                    type="text"
-                    value={customEvent}
-                    onChange={(e) => setCustomEvent(e.currentTarget.value)}
-                    placeholder="e.g., CUSTOM_ACTION"
-                  />
-                </Field.Root>
+                {/* Custom Event */}
+                <Card.Root size={"sm"}>
+                  <Card.Header>
+                    <Card.Title>🎯 Custom Events</Card.Title>
+                  </Card.Header>
+                  <Card.Body>
+                    <chakra.form onSubmit={handleCustomEventSubmit}>
+                      <VStack css={{ gap: 4 }}>
+                        <Field.Root>
+                          <Field.Label>Custom Event Name</Field.Label>
+                          <Input
+                            type="text"
+                            value={customEvent}
+                            onChange={(e) => setCustomEvent(e.currentTarget.value)}
+                            placeholder="e.g., CUSTOM_ACTION"
+                          />
+                        </Field.Root>
 
-                <Field.Root>
-                  <Field.Label>Event Payload (JSON)</Field.Label>
-                  <Textarea
-                    value={customPayload}
-                    onChange={(e) => setCustomPayload(e.target.value)}
-                    placeholder='{"key": "value"}'
-                    rows={3}
-                  />
-                </Field.Root>
+                        <Field.Root>
+                          <Field.Label>Event Payload (JSON)</Field.Label>
+                          <Textarea
+                            value={customPayload}
+                            onChange={(e) => setCustomPayload(e.target.value)}
+                            placeholder='{"key": "value"}'
+                            rows={3}
+                          />
+                        </Field.Root>
 
-                <Button size={"sm"} colorPalette={"purple"}>
-                  🚀 Send Custom Event
-                </Button>
-              </VStack>
-            </chakra.form>
-          </Card.Body>
-        </Card.Root>
+                        <Button size={"sm"} colorPalette={"purple"}>
+                          🚀 Send Custom Event
+                        </Button>
+                      </VStack>
+                    </chakra.form>
+                  </Card.Body>
+                </Card.Root>
 
-        {/* Event History */}
-        <Card.Root size={"sm"}>
-          <Card.Header>
-            <Card.Title>📜 Event History</Card.Title>
-          </Card.Header>
-          <Card.Body css={{ maxH: 48, overflow: "auto", bg: "bg.subtle" }}>{renderEventHistory()}</Card.Body>
-        </Card.Root>
+                {/* Event History */}
+                <Card.Root size={"sm"}>
+                  <Card.Header>
+                    <Card.Title>📜 Event History</Card.Title>
+                  </Card.Header>
+                  <Card.Body css={{ maxH: 48, overflow: "auto", bg: "bg.subtle" }}>{renderEventHistory()}</Card.Body>
+                </Card.Root>
               </Stack>
             </ScrollArea.Content>
           </ScrollArea.Viewport>
@@ -454,11 +451,11 @@ export function EventTester({ flow }: EventTesterProps) {
               <chakra.span
                 css={{
                   borderRadius: "full",
-                  bg: 'green.100',
+                  bg: "green.100",
                   px: 2,
                   py: 0.5,
-                  fontSize: 'xs',
-                  color: 'green.700'
+                  fontSize: "xs",
+                  color: "green.700",
                 }}
               >
                 Ready ✓

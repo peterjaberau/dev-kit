@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Badge, Button, Card, chakra, HStack, ScrollArea, SimpleGrid, Stack } from "@chakra-ui/react"
-
 export function ServiceDebugger() {
   const [services, setServices] = useState<Array<{name: string, type: 'http' | 'mock', status: 'working' | 'error' | 'pending'}>>([
     { name: 'getUserData', type: 'http', status: 'working' },

@@ -5,8 +5,13 @@
   "description": "Simple user registration flow",
   "initialStep": "personal-info",
   "context": {
-    "user": {},
-    "errors": []
+    "user": null,
+    "stepData": {},
+    "errors": [],
+    "ui": {
+      "isLoading": false,
+      "currentStep": "welcome"
+    }
   },
   "steps": [
     {
@@ -108,7 +113,18 @@
         "title": "Registration Complete!",
         "message": "Welcome to our platform!",
         "template": "Hello {{context.user.personalInfo.firstName}}!",
-        "actions": [{ "type": "button", "label": "Continue", "event": "NEXT" }]
+        "actions": [
+          { "type": "button", "label": "Continue", "event": "NEXT" },
+          {
+            "type": "button",
+            "label": "Start Over",
+            "event": "RESTART_DEMO"
+          }
+        ]
+      },
+      "navigation": {
+        "onNext": "personal-info",
+        "RESTART_DEMO": "personal-info"
       }
     }
   ]

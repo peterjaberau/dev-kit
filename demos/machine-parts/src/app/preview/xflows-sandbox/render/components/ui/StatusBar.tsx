@@ -11,17 +11,26 @@ export function StatusBar({ children, css, className = '' }: StatusBarProps) {
   return (
     <chakra.div
       css={{
-        borderTop: "1px solid",
-        borderColor: "border",
         bg: "bg.panel",
-        px: 6,
+
         py: 2,
         ...css,
       }}
       data-id="statusbar"
       className={className}
     >
-      <chakra.div className="flex items-center justify-between text-sm text-gray-600">{children}</chakra.div>
+      <chakra.div
+        css={{
+          px: 6,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: "sm",
+          color: "gray.600",
+        }}
+      >
+        {children}
+      </chakra.div>
     </chakra.div>
   )
 }

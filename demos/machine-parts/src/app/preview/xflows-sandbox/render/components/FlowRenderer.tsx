@@ -133,18 +133,30 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
     <Card.Root
       size={"sm"}
       variant={"subtle"}
-      css={{ display: "flex", flexDirection: "column", flex: 1, minH: 0, h: "full", maxH: "full", w: "full", overflow: "hidden" }}
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minH: 0,
+        h: "full",
+        maxH: "full",
+        w: "full",
+        overflow: "hidden",
+      }}
     >
       <Card.Header css={{ py: 3, flexShrink: 0, borderBottom: "1px solid", borderBottomColor: "border" }}>
         <HStack justify="space-between">
           <HStack gap={4}>
             <Card.Title>Flow Renderer</Card.Title>
-            <HStack css={{ px: 2, py: 1, bg: "green.50", borderRadius: "full", borderWidth: "1px", borderColor: "green.200" }}>
+            <HStack
+              css={{ px: 2, py: 1, bg: "green.50", borderRadius: "full", borderWidth: "1px", borderColor: "green.200" }}
+            >
               <chakra.div css={{ w: 2, h: 2, bg: "green.500", borderRadius: "full", animation: "pulse 1s infinite" }} />
               <chakra.span css={{ fontSize: "xs", fontWeight: "medium", color: "green.700" }}>Live</chakra.span>
             </HStack>
             <chakra.div css={{ fontSize: "sm", color: "gray.600" }}>
-              State: <chakra.span css={{ fontFamily: "mono", fontWeight: "medium" }}>{currentState || 'None'}</chakra.span>
+              State:{" "}
+              <chakra.span css={{ fontFamily: "mono", fontWeight: "medium" }}>{currentState || "None"}</chakra.span>
             </chakra.div>
           </HStack>
           <chakra.div css={{ fontSize: "xs", color: "gray.500" }}>{renderTime.toFixed(2)}ms</chakra.div>
@@ -160,12 +172,27 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
                   <FlowComponent flowConfig={flowConfig} className="flow-renderer" />
                 </chakra.div>
               ) : (
-                <chakra.div css={{ minH: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <chakra.div css={{ h: "full", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <chakra.div css={{ textAlign: "center" }}>
-                    <chakra.div css={{ w: 16, h: 16, bg: "gray.200", borderRadius: "full", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 4, color: "gray.400" }}>
+                    <chakra.div
+                      css={{
+                        w: 16,
+                        h: 16,
+                        bg: "gray.200",
+                        borderRadius: "full",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        mx: "auto",
+                        mb: 4,
+                        color: "gray.400",
+                      }}
+                    >
                       ◌
                     </chakra.div>
-                    <chakra.h3 css={{ fontSize: "lg", fontWeight: "medium", color: "gray.900", mb: 2 }}>No flow loaded</chakra.h3>
+                    <chakra.h3 css={{ fontSize: "lg", fontWeight: "medium", color: "gray.900", mb: 2 }}>
+                      No flow loaded
+                    </chakra.h3>
                     <chakra.p css={{ color: "gray.500" }}>Load a flow example to start testing.</chakra.p>
                   </chakra.div>
                 </chakra.div>
@@ -178,5 +205,5 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
         </ScrollArea.Root>
       </Card.Body>
     </Card.Root>
-  );
+  )
 }
