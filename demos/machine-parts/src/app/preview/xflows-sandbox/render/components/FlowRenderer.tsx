@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FlowComponent } from '@xflows/plugin-react';
 import type { FlowConfig } from '@xflows/core';
-import { Button, Card, chakra, HStack } from "@chakra-ui/react"
+import { Button, Card, chakra, HStack, ScrollArea } from "@chakra-ui/react"
 
 interface FlowRendererProps {
   flow: unknown;
@@ -130,11 +130,15 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
   }
 
   return (
-    <chakra.div css={{ h: "full", display: "flex", flexDirection: "column", bg: "bg.panel" }}>
-      <chakra.div css={{ bg: "gray.50", borderBottomWidth: "1px", borderColor: "gray.200", px: 4, py: 3 }}>
+    <Card.Root
+      size={"sm"}
+      variant={"subtle"}
+      css={{ display: "flex", flexDirection: "column", flex: 1, minH: 0, h: "full", maxH: "full", w: "full", overflow: "hidden" }}
+    >
+      <Card.Header css={{ py: 3, flexShrink: 0, borderBottom: "1px solid", borderBottomColor: "border" }}>
         <HStack justify="space-between">
           <HStack gap={4}>
-            <chakra.h3 css={{ fontSize: "lg", fontWeight: "semibold", color: "gray.900" }}>Flow Renderer</chakra.h3>
+            <Card.Title>Flow Renderer</Card.Title>
             <HStack css={{ px: 2, py: 1, bg: "green.50", borderRadius: "full", borderWidth: "1px", borderColor: "green.200" }}>
               <chakra.div css={{ w: 2, h: 2, bg: "green.500", borderRadius: "full", animation: "pulse 1s infinite" }} />
               <chakra.span css={{ fontSize: "xs", fontWeight: "medium", color: "green.700" }}>Live</chakra.span>
@@ -145,25 +149,34 @@ export function FlowRenderer({ flow }: FlowRendererProps) {
           </HStack>
           <chakra.div css={{ fontSize: "xs", color: "gray.500" }}>{renderTime.toFixed(2)}ms</chakra.div>
         </HStack>
-      </chakra.div>
+      </Card.Header>
 
-      <chakra.div css={{ flex: 1, overflow: "auto", p: 6, bg: "gray.50" }}>
-        {flowConfig ? (
-          <chakra.div css={{ maxW: "2xl", mx: "auto" }}>
-            <FlowComponent flowConfig={flowConfig} className="flow-renderer" />
-          </chakra.div>
-        ) : (
-          <chakra.div css={{ h: "full", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <chakra.div css={{ textAlign: "center" }}>
-              <chakra.div css={{ w: 16, h: 16, bg: "gray.200", borderRadius: "full", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 4, color: "gray.400" }}>
-                ◌
-              </chakra.div>
-              <chakra.h3 css={{ fontSize: "lg", fontWeight: "medium", color: "gray.900", mb: 2 }}>No flow loaded</chakra.h3>
-              <chakra.p css={{ color: "gray.500" }}>Load a flow example to start testing.</chakra.p>
-            </chakra.div>
-          </chakra.div>
-        )}
-      </chakra.div>
-    </chakra.div>
+      <Card.Body css={{ display: "flex", flex: 1, minH: 0, overflow: "hidden", p: 0, bg: "gray.50" }}>
+        <ScrollArea.Root css={{ flex: 1, minH: 0, h: "full", maxH: "full", w: "full" }} size="sm" variant="always">
+          <ScrollArea.Viewport css={{ h: "full", maxH: "full", minH: 0 }}>
+            <ScrollArea.Content p={6} pe={8}>
+              {flowConfig ? (
+                <chakra.div css={{ maxW: "2xl", mx: "auto" }}>
+                  <FlowComponent flowConfig={flowConfig} className="flow-renderer" />
+                </chakra.div>
+              ) : (
+                <chakra.div css={{ minH: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <chakra.div css={{ textAlign: "center" }}>
+                    <chakra.div css={{ w: 16, h: 16, bg: "gray.200", borderRadius: "full", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 4, color: "gray.400" }}>
+                      ◌
+                    </chakra.div>
+                    <chakra.h3 css={{ fontSize: "lg", fontWeight: "medium", color: "gray.900", mb: 2 }}>No flow loaded</chakra.h3>
+                    <chakra.p css={{ color: "gray.500" }}>Load a flow example to start testing.</chakra.p>
+                  </chakra.div>
+                </chakra.div>
+              )}
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar>
+            <ScrollArea.Thumb />
+          </ScrollArea.Scrollbar>
+        </ScrollArea.Root>
+      </Card.Body>
+    </Card.Root>
   );
 }

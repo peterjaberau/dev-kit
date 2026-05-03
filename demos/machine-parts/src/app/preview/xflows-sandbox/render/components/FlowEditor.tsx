@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Badge, Button, chakra, HStack, Stack, Textarea } from "@chakra-ui/react"
+import { Badge, Button, Card, chakra, HStack, ScrollArea, Stack, Textarea } from "@chakra-ui/react"
 
 interface FlowEditorProps {
   initialFlow: any | null;
@@ -176,11 +176,25 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
     handleJsonChange(templateValue);
   };
 
-  const allErrors = [...syntaxErrors, ...validateFlow(flowJson).errors];
+  const allErrors = [...syntaxErrors, ...validateFlow(flowJson).errors]
+
 
   return (
-    <chakra.div css={{ h: "full", display: "flex", flexDirection: "column", bg: "bg.panel" }}>
-      <chakra.div css={{ borderBottomWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+    <Card.Root
+      size={"sm"}
+      variant={"subtle"}
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minH: 0,
+        h: "full",
+        maxH: "full",
+        w: "full",
+        overflow: "hidden",
+      }}
+    >
+      <Card.Header css={{ py: 2, flexShrink: 0, borderBottom: "1px solid", borderBottomColor: "border" }}>
         <HStack justify="space-between">
           <HStack gap={2}>
             <Button size="xs" variant="subtle" onClick={handleUndo} disabled={historyIndex <= 0}>
@@ -196,21 +210,21 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
 
           <HStack gap={2}>
             <chakra.span css={{ fontSize: "sm", color: "gray.600" }}>Templates:</chakra.span>
-            <Button size="xs" colorPalette="green" variant="subtle" onClick={() => insertTemplate('button')}>
+            <Button size="xs" colorPalette="green" variant="subtle" onClick={() => insertTemplate("button")}>
               Button
             </Button>
-            <Button size="xs" colorPalette="yellow" variant="subtle" onClick={() => insertTemplate('validation')}>
+            <Button size="xs" colorPalette="yellow" variant="subtle" onClick={() => insertTemplate("validation")}>
               Validation
             </Button>
-            <Button size="xs" colorPalette="purple" variant="subtle" onClick={() => insertTemplate('parallel')}>
+            <Button size="xs" colorPalette="purple" variant="subtle" onClick={() => insertTemplate("parallel")}>
               Parallel
             </Button>
           </HStack>
         </HStack>
-      </chakra.div>
+      </Card.Header>
 
       {allErrors.length > 0 && (
-        <chakra.div css={{ borderBottomWidth: "1px", bg: "red.50", px: 4, py: 2 }}>
+        <chakra.div css={{ flexShrink: 0, borderBottomWidth: "1px", bg: "red.50", px: 4, py: 2 }}>
           <HStack align="flex-start" gap={2}>
             <chakra.span css={{ color: "red.600" }}>⚠️</chakra.span>
             <Stack gap={1} css={{ fontSize: "sm", color: "red.700" }}>
@@ -222,8 +236,58 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
         </chakra.div>
       )}
 
-      <chakra.div css={{ flex: 1, overflow: "hidden" }}>
-        <Textarea
+      <Card.Body css={{ display: "flex", flex: 1, minH: 0, overflow: "hidden", p: 0 }}>
+        <ScrollArea.Root css={{ flex: 1, minH: 0, h: "full", maxH: "full", w: "full" }} size="sm" variant="always">
+          <ScrollArea.Viewport css={{ h: "full", maxH: "full", minH: 0 }}>
+            <ScrollArea.Content p={4} pe={6}>
+              <Textarea
+                value={flowJson}
+                onChange={(e) => handleJsonChange(e.target.value)}
+                placeholder="Enter your flow JSON here..."
+                spellCheck={false}
+                css={{
+                  w: "full",
+                  h: "full",
+                  p: 4,
+                  fontFamily: "JetBrains Mono, Fira Code, Monaco, Consolas, monospace",
+                  fontSize: "13px",
+                  lineHeight: "1.5",
+                  borderWidth: 0,
+                  borderRadius: 0,
+                  resize: "none",
+                  bg: "gray.50",
+                  _focus: { outline: "none", boxShadow: "none" },
+                }}
+              />
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar>
+            <ScrollArea.Thumb />
+          </ScrollArea.Scrollbar>
+        </ScrollArea.Root>
+      </Card.Body>
+
+      <Card.Footer css={{ flexShrink: 0, p: 0 }}>
+        <chakra.div css={{ borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+          <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
+            <HStack gap={4}>
+              <chakra.span>📝 Lines: {flowJson?.split("\n").length}</chakra.span>
+              <chakra.span>📏 Chars: {flowJson?.length}</chakra.span>
+              <chakra.span>✅ Valid: {allErrors.length === 0 ? "Yes" : "No"}</chakra.span>
+            </HStack>
+            <HStack gap={2}>
+              <Badge colorPalette="green">JSON {allErrors.length === 0 ? "✓" : "✗"}</Badge>
+              <Badge colorPalette="blue">Flow Schema {allErrors.length === 0 ? "✓" : "✗"}</Badge>
+            </HStack>
+          </HStack>
+        </chakra.div>
+      </Card.Footer>
+    </Card.Root>
+  )
+}
+
+/*
+  <Textarea
           value={flowJson}
           onChange={(e) => handleJsonChange(e.target.value)}
           placeholder="Enter your flow JSON here..."
@@ -242,21 +306,4 @@ export function FlowEditor({ initialFlow, onFlowChange }: FlowEditorProps) {
             _focus: { outline: "none", boxShadow: "none" },
           }}
         />
-      </chakra.div>
-
-      <chakra.div css={{ borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
-        <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
-          <HStack gap={4}>
-            <chakra.span>📝 Lines: {flowJson?.split('\n').length}</chakra.span>
-            <chakra.span>📏 Chars: {flowJson?.length}</chakra.span>
-            <chakra.span>✅ Valid: {allErrors.length === 0 ? 'Yes' : 'No'}</chakra.span>
-          </HStack>
-          <HStack gap={2}>
-            <Badge colorPalette="green">JSON {allErrors.length === 0 ? '✓' : '✗'}</Badge>
-            <Badge colorPalette="blue">Flow Schema {allErrors.length === 0 ? '✓' : '✗'}</Badge>
-          </HStack>
-        </HStack>
-      </chakra.div>
-    </chakra.div>
-  );
-}
+ */
