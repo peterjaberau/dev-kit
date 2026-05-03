@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Badge, Button, chakra, HStack, Input, SimpleGrid, Stack } from "@chakra-ui/react"
+import { Badge, Button, chakra, ScrollArea, HStack, Card, Input, SimpleGrid, Stack } from "@chakra-ui/react"
 
 export function PerformanceMonitor() {
   const [metrics, setMetrics] = useState({
@@ -187,92 +187,149 @@ export function PerformanceMonitor() {
   );
 
   return (
-    <chakra.div css={{ h: "full", display: "flex", flexDirection: "column", bg: "bg.panel" }}>
-      <chakra.div css={{ borderBottomWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
-        <HStack justify="space-between">
-          <chakra.span css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>📊 Performance Monitor</chakra.span>
-          <HStack gap={2}>
-            <Button size="xs" variant="subtle" onClick={() => setHistory([])}>🗑️ Clear Data</Button>
+    <Card.Root
+      size={"sm"}
+      variant={"subtle"}
+      css={{ display: "flex", flexDirection: "column", flex: 1, minH: 0, h: "full", maxH: "full", w: "full", overflow: "hidden" }}
+    >
+      <Card.Header css={{ py: 2, flexShrink: 0, borderBottom: "1px solid", borderBottomColor: 'border' }}>
+        <HStack>
+          <Card.Title>📊 Performance Monitor</Card.Title>
+          <HStack css={{ gap: 2, flex: 1 }}>
+            <Button size="xs" variant="subtle" onClick={() => setHistory([])}>
+              🗑️ Clear Data
+            </Button>
             <Button
               size="xs"
               colorPalette="blue"
               variant="subtle"
-              onClick={() => setMetrics(prev => ({
-                ...prev,
-                renderTime: 16,
-                memoryUsage: 45,
-                updateCount: 0,
-                stateTransitions: 0,
-                eventCount: 0,
-                serviceCalls: 0
-              }))}
+              onClick={() =>
+                setMetrics((prev) => ({
+                  ...prev,
+                  renderTime: 16,
+                  memoryUsage: 45,
+                  updateCount: 0,
+                  stateTransitions: 0,
+                  eventCount: 0,
+                  serviceCalls: 0,
+                }))
+              }
             >
               🔄 Reset Metrics
             </Button>
           </HStack>
         </HStack>
-      </chakra.div>
+      </Card.Header>
+      <Card.Body css={{ display: "flex", flex: 1, minH: 0, overflow: "hidden", p: 0 }}>
+        <ScrollArea.Root css={{ flex: 1, minH: 0, h: "full", maxH: "full", w: "full" }} size="sm" variant="always">
+          <ScrollArea.Viewport css={{ h: "full", maxH: "full", minH: 0 }}>
+            <ScrollArea.Content p={4} pe={6}>
+              <Stack gap={6}>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>
+                    📈 Current Metrics
+                  </chakra.h3>
+                  <SimpleGrid columns={3} gap={4}>
+                    {metricCard(
+                      "Render Time",
+                      `${metrics.renderTime.toFixed(1)}ms`,
+                      getMetricColor(metrics.renderTime, thresholds.renderTime),
+                      `${thresholds.renderTime}ms`,
+                    )}
+                    {metricCard(
+                      "Memory",
+                      `${metrics.memoryUsage.toFixed(1)}MB`,
+                      getMetricColor(metrics.memoryUsage, thresholds.memoryUsage),
+                      `${thresholds.memoryUsage}MB`,
+                    )}
+                    {metricCard("Updates", metrics.updateCount, "blue.600", String(thresholds.updateCount))}
+                  </SimpleGrid>
+                </chakra.div>
 
-      <Stack gap={6} css={{ flex: 1, overflow: "auto", p: 4 }}>
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📈 Current Metrics</chakra.h3>
-          <SimpleGrid columns={3} gap={4}>
-            {metricCard("Render Time", `${metrics.renderTime.toFixed(1)}ms`, getMetricColor(metrics.renderTime, thresholds.renderTime), `${thresholds.renderTime}ms`)}
-            {metricCard("Memory", `${metrics.memoryUsage.toFixed(1)}MB`, getMetricColor(metrics.memoryUsage, thresholds.memoryUsage), `${thresholds.memoryUsage}MB`)}
-            {metricCard("Updates", metrics.updateCount, "blue.600", String(thresholds.updateCount))}
-          </SimpleGrid>
-        </chakra.div>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>
+                    🔄 Activity Metrics
+                  </chakra.h3>
+                  <SimpleGrid columns={3} gap={4}>
+                    {metricCard("State Transitions", metrics.stateTransitions, "blue.800")}
+                    {metricCard("Events Processed", metrics.eventCount, "purple.800")}
+                    {metricCard("Service Calls", metrics.serviceCalls, "green.800")}
+                  </SimpleGrid>
+                </chakra.div>
 
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>🔄 Activity Metrics</chakra.h3>
-          <SimpleGrid columns={3} gap={4}>
-            {metricCard("State Transitions", metrics.stateTransitions, "blue.800")}
-            {metricCard("Events Processed", metrics.eventCount, "purple.800")}
-            {metricCard("Service Calls", metrics.serviceCalls, "green.800")}
-          </SimpleGrid>
-        </chakra.div>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>
+                    📊 Performance Trends
+                  </chakra.h3>
+                  {renderPerformanceChart()}
+                </chakra.div>
 
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📊 Performance Trends</chakra.h3>
-          {renderPerformanceChart()}
-        </chakra.div>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>
+                    🚨 Alerts & Thresholds
+                  </chakra.h3>
+                  {renderAlerts()}
+                </chakra.div>
 
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>🚨 Alerts & Thresholds</chakra.h3>
-          {renderAlerts()}
-        </chakra.div>
-
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>⚙️ Threshold Settings</chakra.h3>
-          <chakra.div css={{ bg: "gray.50", p: 3, borderRadius: "md", borderWidth: "1px" }}>
-            <Stack gap={3}>
-              <chakra.label css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>
-                Render Time Threshold (ms)
-                <Input mt={1} size="sm" type="number" value={thresholds.renderTime} onChange={(e) => setThresholds(prev => ({ ...prev, renderTime: Number(e.target.value) }))} />
-              </chakra.label>
-              <chakra.label css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>
-                Memory Usage Threshold (MB)
-                <Input mt={1} size="sm" type="number" value={thresholds.memoryUsage} onChange={(e) => setThresholds(prev => ({ ...prev, memoryUsage: Number(e.target.value) }))} />
-              </chakra.label>
-              <chakra.label css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>
-                Update Count Threshold
-                <Input mt={1} size="sm" type="number" value={thresholds.updateCount} onChange={(e) => setThresholds(prev => ({ ...prev, updateCount: Number(e.target.value) }))} />
-              </chakra.label>
-            </Stack>
-          </chakra.div>
-        </chakra.div>
-      </Stack>
-
-      <chakra.div css={{ borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
-        <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
-          <HStack gap={4}>
-            <chakra.span>⚡ Render: {metrics.renderTime.toFixed(1)}ms</chakra.span>
-            <chakra.span>💾 Memory: {metrics.memoryUsage.toFixed(1)}MB</chakra.span>
-            <chakra.span>🔄 Updates: {metrics.updateCount}</chakra.span>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>
+                    ⚙️ Threshold Settings
+                  </chakra.h3>
+                  <chakra.div css={{ bg: "gray.50", p: 3, borderRadius: "md", borderWidth: "1px" }}>
+                    <Stack gap={3}>
+                      <chakra.label css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>
+                        Render Time Threshold (ms)
+                        <Input
+                          mt={1}
+                          size="sm"
+                          type="number"
+                          value={thresholds.renderTime}
+                          onChange={(e) => setThresholds((prev) => ({ ...prev, renderTime: Number(e.target.value) }))}
+                        />
+                      </chakra.label>
+                      <chakra.label css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>
+                        Memory Usage Threshold (MB)
+                        <Input
+                          mt={1}
+                          size="sm"
+                          type="number"
+                          value={thresholds.memoryUsage}
+                          onChange={(e) => setThresholds((prev) => ({ ...prev, memoryUsage: Number(e.target.value) }))}
+                        />
+                      </chakra.label>
+                      <chakra.label css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>
+                        Update Count Threshold
+                        <Input
+                          mt={1}
+                          size="sm"
+                          type="number"
+                          value={thresholds.updateCount}
+                          onChange={(e) => setThresholds((prev) => ({ ...prev, updateCount: Number(e.target.value) }))}
+                        />
+                      </chakra.label>
+                    </Stack>
+                  </chakra.div>
+                </chakra.div>
+              </Stack>
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar>
+            <ScrollArea.Thumb />
+          </ScrollArea.Scrollbar>
+        </ScrollArea.Root>
+      </Card.Body>
+      <Card.Footer css={{ flexShrink: 0, p: 0 }}>
+        <chakra.div css={{ w: "full", borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+          <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
+            <HStack gap={4}>
+              <chakra.span>⚡ Render: {metrics.renderTime.toFixed(1)}ms</chakra.span>
+              <chakra.span>💾 Memory: {metrics.memoryUsage.toFixed(1)}MB</chakra.span>
+              <chakra.span>🔄 Updates: {metrics.updateCount}</chakra.span>
+            </HStack>
+            <Badge colorPalette="green">Monitoring ✓</Badge>
           </HStack>
-          <Badge colorPalette="green">Monitoring ✓</Badge>
-        </HStack>
-      </chakra.div>
-    </chakra.div>
-  );
+        </chakra.div>
+      </Card.Footer>
+    </Card.Root>
+  )
 }

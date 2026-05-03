@@ -11,7 +11,7 @@ interface PanelLayoutProps {
 export function PanelLayout({ layout, selectedPanel, panelComponents }: PanelLayoutProps) {
   if (layout === 'full') {
     return (
-      <chakra.div css={{ h: 'full'}}>
+      <chakra.div css={{ display: "flex", h: 'full', minH: 0, w: "full", overflow: "hidden" }}>
         {panelComponents[selectedPanel]}
       </chakra.div>
     );

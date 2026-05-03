@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Button, chakra, HStack, Stack } from "@chakra-ui/react"
+import { Badge, Button, Card, chakra, HStack, ScrollArea, Stack } from "@chakra-ui/react"
 
 interface StateInspectorProps {
   flow: any;
@@ -200,53 +200,70 @@ export function StateInspector({ flow }: StateInspectorProps) {
   }
 
   return (
-    <chakra.div css={{ h: "full", display: "flex", flexDirection: "column", bg: "bg.panel" }}>
-      <chakra.div css={{ borderBottomWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+    <Card.Root
+      size={"sm"}
+      variant={"subtle"}
+      css={{ display: "flex", flexDirection: "column", flex: 1, minH: 0, h: "full", maxH: "full", w: "full", overflow: "hidden" }}
+    >
+      <Card.Header css={{ py: 2, flexShrink: 0, borderBottom: "1px solid", borderBottomColor: "border" }}>
         <HStack justify="space-between">
-          <chakra.span css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>🔍 State Inspector</chakra.span>
+          <Card.Title>🔍 State Inspector</Card.Title>
           <HStack gap={2}>
             <Button size="xs" variant="subtle">🗜️ Collapse All</Button>
             <Button size="xs" colorPalette="green" variant="subtle">📄 Expand All</Button>
           </HStack>
         </HStack>
-      </chakra.div>
+      </Card.Header>
 
-      <Stack gap={4} css={{ flex: 1, overflow: "auto", p: 4 }}>
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 2 }}>📋 Flow Structure</chakra.h3>
-          <chakra.div css={{ bg: "bg.panel", borderWidth: "1px", borderRadius: "md", p: 2, maxH: 40, overflow: "auto" }}>
-            {renderObjectNode('states', flow.states)}
-          </chakra.div>
-        </chakra.div>
+      <Card.Body css={{ display: "flex", flex: 1, minH: 0, overflow: "hidden", p: 0 }}>
+        <ScrollArea.Root css={{ flex: 1, minH: 0, h: "full", maxH: "full", w: "full" }} size="sm" variant="always">
+          <ScrollArea.Viewport css={{ h: "full", maxH: "full", minH: 0 }}>
+            <ScrollArea.Content p={4} pe={6}>
+              <Stack gap={4}>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 2 }}>📋 Flow Structure</chakra.h3>
+                  <chakra.div css={{ bg: "bg.panel", borderWidth: "1px", borderRadius: "md", p: 2, maxH: 40, overflow: "auto" }}>
+                    {renderObjectNode('states', flow.states)}
+                  </chakra.div>
+                </chakra.div>
 
-        {renderStateDiagram()}
+                {renderStateDiagram()}
 
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 2 }}>⚙️ State Details</chakra.h3>
-          <chakra.div css={{ bg: "bg.panel", borderWidth: "1px", borderRadius: "md", p: 4 }}>
-            {renderStateDetails()}
-          </chakra.div>
-        </chakra.div>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 2 }}>⚙️ State Details</chakra.h3>
+                  <chakra.div css={{ bg: "bg.panel", borderWidth: "1px", borderRadius: "md", p: 4 }}>
+                    {renderStateDetails()}
+                  </chakra.div>
+                </chakra.div>
 
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 2 }}>📋 Context</chakra.h3>
-          <chakra.div css={{ bg: "bg.panel", borderWidth: "1px", borderRadius: "md", p: 2, maxH: 32, overflow: "auto" }}>
-            <chakra.pre css={{ fontSize: "xs", color: "gray.600" }}>
-              {JSON.stringify(flow.context || {}, null, 2)}
-            </chakra.pre>
-          </chakra.div>
-        </chakra.div>
-      </Stack>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 2 }}>📋 Context</chakra.h3>
+                  <chakra.div css={{ bg: "bg.panel", borderWidth: "1px", borderRadius: "md", p: 2, maxH: 32, overflow: "auto" }}>
+                    <chakra.pre css={{ fontSize: "xs", color: "gray.600" }}>
+                      {JSON.stringify(flow.context || {}, null, 2)}
+                    </chakra.pre>
+                  </chakra.div>
+                </chakra.div>
+              </Stack>
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar>
+            <ScrollArea.Thumb />
+          </ScrollArea.Scrollbar>
+        </ScrollArea.Root>
+      </Card.Body>
 
-      <chakra.div css={{ borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
-        <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
-          <HStack gap={4}>
-            <chakra.span>📍 States: {Object.keys(flow?.states || {}).length}</chakra.span>
-            <chakra.span>🎯 Selected: {selectedState || 'None'}</chakra.span>
+      <Card.Footer css={{ flexShrink: 0, p: 0 }}>
+        <chakra.div css={{ w: "full", borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+          <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
+            <HStack gap={4}>
+              <chakra.span>📍 States: {Object.keys(flow?.states || {}).length}</chakra.span>
+              <chakra.span>🎯 Selected: {selectedState || 'None'}</chakra.span>
+            </HStack>
+            <Badge colorPalette="blue">Live ✓</Badge>
           </HStack>
-          <Badge colorPalette="blue">Live ✓</Badge>
-        </HStack>
-      </chakra.div>
-    </chakra.div>
+        </chakra.div>
+      </Card.Footer>
+    </Card.Root>
   );
 }

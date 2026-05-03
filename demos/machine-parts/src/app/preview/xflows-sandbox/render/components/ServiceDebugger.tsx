@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Badge, Button, chakra, HStack, SimpleGrid, Stack } from "@chakra-ui/react"
+import { Badge, Button, Card, chakra, HStack, ScrollArea, SimpleGrid, Stack } from "@chakra-ui/react"
 
 export function ServiceDebugger() {
   const [services, setServices] = useState<Array<{name: string, type: 'http' | 'mock', status: 'working' | 'error' | 'pending'}>>([
@@ -132,10 +132,14 @@ export function ServiceDebugger() {
   };
 
   return (
-    <chakra.div css={{ h: "full", display: "flex", flexDirection: "column", bg: "bg.panel" }}>
-      <chakra.div css={{ borderBottomWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+    <Card.Root
+      size={"sm"}
+      variant={"subtle"}
+      css={{ display: "flex", flexDirection: "column", flex: 1, minH: 0, h: "full", maxH: "full", w: "full", overflow: "hidden" }}
+    >
+      <Card.Header css={{ py: 2, flexShrink: 0, borderBottom: "1px solid", borderBottomColor: "border" }}>
         <HStack justify="space-between">
-          <chakra.span css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700" }}>🌐 Service Debugger</chakra.span>
+          <Card.Title>🌐 Service Debugger</Card.Title>
           <HStack gap={2}>
             <Button size="xs" colorPalette={mockMode ? "yellow" : "blue"} variant="subtle" onClick={() => setMockMode(!mockMode)}>
               {mockMode ? '🎭 Mock' : '🔗 Real'}
@@ -144,101 +148,114 @@ export function ServiceDebugger() {
             <Button size="xs" colorPalette="green" variant="subtle" onClick={addMockRequest}>➕ New Request</Button>
           </HStack>
         </HStack>
-      </chakra.div>
+      </Card.Header>
 
-      <Stack gap={6} css={{ flex: 1, overflow: "auto", p: 4 }}>
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📡 Registered Services</chakra.h3>
-          <SimpleGrid columns={3} gap={3}>
-            {services.map(service => (
-              <chakra.div
-                key={service.name}
-                css={{
-                  p: 3,
-                  borderRadius: "md",
-                  borderWidth: "1px",
-                  cursor: "pointer",
-                  transition: "background 0.15s ease, border-color 0.15s ease",
-                  ...(selectedService === service.name
-                    ? { bg: "blue.50", borderColor: "blue.200" }
-                    : { bg: "gray.50", borderColor: "gray.200", _hover: { bg: "gray.100" } }),
-                }}
-                onClick={() => setSelectedService(service.name)}
-              >
-                <HStack justify="space-between" css={{ mb: 2 }}>
-                  <chakra.span css={{ fontWeight: "medium", color: "gray.700" }}>{service.name}</chakra.span>
-                  <Badge colorPalette={getStatusColor(service.status)}>{service.status}</Badge>
-                </HStack>
-                <chakra.div css={{ fontSize: "xs", color: "gray.600" }}>
-                  Type: {service.type} • Mode: {mockMode ? 'Mock' : 'Real'}
+      <Card.Body css={{ display: "flex", flex: 1, minH: 0, overflow: "hidden", p: 0 }}>
+        <ScrollArea.Root css={{ flex: 1, minH: 0, h: "full", maxH: "full", w: "full" }} size="sm" variant="always">
+          <ScrollArea.Viewport css={{ h: "full", maxH: "full", minH: 0 }}>
+            <ScrollArea.Content p={4} pe={6}>
+              <Stack gap={6}>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📡 Registered Services</chakra.h3>
+                  <SimpleGrid columns={3} gap={3}>
+                    {services.map(service => (
+                      <chakra.div
+                        key={service.name}
+                        css={{
+                          p: 3,
+                          borderRadius: "md",
+                          borderWidth: "1px",
+                          cursor: "pointer",
+                          transition: "background 0.15s ease, border-color 0.15s ease",
+                          ...(selectedService === service.name
+                            ? { bg: "blue.50", borderColor: "blue.200" }
+                            : { bg: "gray.50", borderColor: "gray.200", _hover: { bg: "gray.100" } }),
+                        }}
+                        onClick={() => setSelectedService(service.name)}
+                      >
+                        <HStack justify="space-between" css={{ mb: 2 }}>
+                          <chakra.span css={{ fontWeight: "medium", color: "gray.700" }}>{service.name}</chakra.span>
+                          <Badge colorPalette={getStatusColor(service.status)}>{service.status}</Badge>
+                        </HStack>
+                        <chakra.div css={{ fontSize: "xs", color: "gray.600" }}>
+                          Type: {service.type} • Mode: {mockMode ? 'Mock' : 'Real'}
+                        </chakra.div>
+                      </chakra.div>
+                    ))}
+                  </SimpleGrid>
                 </chakra.div>
-              </chakra.div>
-            ))}
-          </SimpleGrid>
-        </chakra.div>
 
-        {renderServiceDetails()}
+                {renderServiceDetails()}
 
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📋 Request Logs</chakra.h3>
-          <chakra.div css={{ bg: "gray.50", borderRadius: "md", borderWidth: "1px", maxH: 48, overflow: "auto" }}>
-            {requests.length === 0 ? (
-              <chakra.div css={{ textAlign: "center", color: "gray.500", py: 8 }}>
-                <chakra.p css={{ fontSize: "lg", mb: 2 }}>📝</chakra.p>
-                <chakra.p>No requests yet</chakra.p>
-                <chakra.p css={{ fontSize: "sm", mt: 1 }}>Interact with your flow to see requests appear</chakra.p>
-              </chakra.div>
-            ) : (
-              <Stack gap={2} css={{ p: 3 }}>
-                {requests.map((request, index) => (
-                  <chakra.div key={index} css={{ bg: "bg.panel", p: 2, borderRadius: "md", borderWidth: "1px", fontSize: "sm" }}>
-                    <HStack justify="space-between">
-                      <HStack gap={3}>
-                        <chakra.span css={{ fontWeight: "medium", color: getStatusColorForCode(request.status) }}>{request.method}</chakra.span>
-                        <chakra.span css={{ color: "gray.600" }}>{request.service}</chakra.span>
-                        <chakra.span css={{ color: "gray.500", fontSize: "xs" }}>{request.url}</chakra.span>
-                      </HStack>
-                      <HStack gap={3} css={{ fontSize: "xs", color: "gray.500" }}>
-                        <chakra.span>{request.time.toFixed(0)}ms</chakra.span>
-                        <chakra.span>{new Date(request.timestamp).toLocaleTimeString()}</chakra.span>
-                      </HStack>
-                    </HStack>
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📋 Request Logs</chakra.h3>
+                  <chakra.div css={{ bg: "gray.50", borderRadius: "md", borderWidth: "1px", maxH: 48, overflow: "auto" }}>
+                    {requests.length === 0 ? (
+                      <chakra.div css={{ textAlign: "center", color: "gray.500", py: 8 }}>
+                        <chakra.p css={{ fontSize: "lg", mb: 2 }}>📝</chakra.p>
+                        <chakra.p>No requests yet</chakra.p>
+                        <chakra.p css={{ fontSize: "sm", mt: 1 }}>Interact with your flow to see requests appear</chakra.p>
+                      </chakra.div>
+                    ) : (
+                      <Stack gap={2} css={{ p: 3 }}>
+                        {requests.map((request, index) => (
+                          <chakra.div key={index} css={{ bg: "bg.panel", p: 2, borderRadius: "md", borderWidth: "1px", fontSize: "sm" }}>
+                            <HStack justify="space-between">
+                              <HStack gap={3}>
+                                <chakra.span css={{ fontWeight: "medium", color: getStatusColorForCode(request.status) }}>{request.method}</chakra.span>
+                                <chakra.span css={{ color: "gray.600" }}>{request.service}</chakra.span>
+                                <chakra.span css={{ color: "gray.500", fontSize: "xs" }}>{request.url}</chakra.span>
+                              </HStack>
+                              <HStack gap={3} css={{ fontSize: "xs", color: "gray.500" }}>
+                                <chakra.span>{request.time.toFixed(0)}ms</chakra.span>
+                                <chakra.span>{new Date(request.timestamp).toLocaleTimeString()}</chakra.span>
+                              </HStack>
+                            </HStack>
+                          </chakra.div>
+                        ))}
+                      </Stack>
+                    )}
                   </chakra.div>
-                ))}
+                </chakra.div>
+
+                <chakra.div>
+                  <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📊 Service Performance</chakra.h3>
+                  <SimpleGrid columns={3} gap={4}>
+                    <chakra.div css={{ bg: "green.50", p: 3, borderRadius: "md", borderWidth: "1px", textAlign: "center" }}>
+                      <chakra.div css={{ fontSize: "lg", fontWeight: "bold", color: "green.800" }}>{requests.filter(r => r.status >= 200 && r.status < 300).length}</chakra.div>
+                      <chakra.div css={{ fontSize: "sm", color: "green.600" }}>Success</chakra.div>
+                    </chakra.div>
+                    <chakra.div css={{ bg: "red.50", p: 3, borderRadius: "md", borderWidth: "1px", textAlign: "center" }}>
+                      <chakra.div css={{ fontSize: "lg", fontWeight: "bold", color: "red.800" }}>{requests.filter(r => r.status >= 400).length}</chakra.div>
+                      <chakra.div css={{ fontSize: "sm", color: "red.600" }}>Errors</chakra.div>
+                    </chakra.div>
+                    <chakra.div css={{ bg: "blue.50", p: 3, borderRadius: "md", borderWidth: "1px", textAlign: "center" }}>
+                      <chakra.div css={{ fontSize: "lg", fontWeight: "bold", color: "blue.800" }}>{requests.length > 0 ? (requests.reduce((sum, r) => sum + r.time, 0) / requests.length).toFixed(0) : '0'}ms</chakra.div>
+                      <chakra.div css={{ fontSize: "sm", color: "blue.600" }}>Avg Time</chakra.div>
+                    </chakra.div>
+                  </SimpleGrid>
+                </chakra.div>
               </Stack>
-            )}
-          </chakra.div>
-        </chakra.div>
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar>
+            <ScrollArea.Thumb />
+          </ScrollArea.Scrollbar>
+        </ScrollArea.Root>
+      </Card.Body>
 
-        <chakra.div>
-          <chakra.h3 css={{ fontSize: "sm", fontWeight: "medium", color: "gray.700", mb: 3 }}>📊 Service Performance</chakra.h3>
-          <SimpleGrid columns={3} gap={4}>
-            <chakra.div css={{ bg: "green.50", p: 3, borderRadius: "md", borderWidth: "1px", textAlign: "center" }}>
-              <chakra.div css={{ fontSize: "lg", fontWeight: "bold", color: "green.800" }}>{requests.filter(r => r.status >= 200 && r.status < 300).length}</chakra.div>
-              <chakra.div css={{ fontSize: "sm", color: "green.600" }}>Success</chakra.div>
-            </chakra.div>
-            <chakra.div css={{ bg: "red.50", p: 3, borderRadius: "md", borderWidth: "1px", textAlign: "center" }}>
-              <chakra.div css={{ fontSize: "lg", fontWeight: "bold", color: "red.800" }}>{requests.filter(r => r.status >= 400).length}</chakra.div>
-              <chakra.div css={{ fontSize: "sm", color: "red.600" }}>Errors</chakra.div>
-            </chakra.div>
-            <chakra.div css={{ bg: "blue.50", p: 3, borderRadius: "md", borderWidth: "1px", textAlign: "center" }}>
-              <chakra.div css={{ fontSize: "lg", fontWeight: "bold", color: "blue.800" }}>{requests.length > 0 ? (requests.reduce((sum, r) => sum + r.time, 0) / requests.length).toFixed(0) : '0'}ms</chakra.div>
-              <chakra.div css={{ fontSize: "sm", color: "blue.600" }}>Avg Time</chakra.div>
-            </chakra.div>
-          </SimpleGrid>
-        </chakra.div>
-      </Stack>
-
-      <chakra.div css={{ borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
-        <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
-          <HStack gap={4}>
-            <chakra.span>🌐 Services: {services.length}</chakra.span>
-            <chakra.span>📋 Requests: {requests.length}</chakra.span>
-            <chakra.span>🎭 Mode: {mockMode ? 'Mock' : 'Real'}</chakra.span>
+      <Card.Footer css={{ flexShrink: 0, p: 0 }}>
+        <chakra.div css={{ w: "full", borderTopWidth: "1px", px: 4, py: 2, bg: "gray.50" }}>
+          <HStack justify="space-between" css={{ fontSize: "sm", color: "gray.600" }}>
+            <HStack gap={4}>
+              <chakra.span>🌐 Services: {services.length}</chakra.span>
+              <chakra.span>📋 Requests: {requests.length}</chakra.span>
+              <chakra.span>🎭 Mode: {mockMode ? 'Mock' : 'Real'}</chakra.span>
+            </HStack>
+            <Badge colorPalette="green">Monitoring ✓</Badge>
           </HStack>
-          <Badge colorPalette="green">Monitoring ✓</Badge>
-        </HStack>
-      </chakra.div>
-    </chakra.div>
+        </chakra.div>
+      </Card.Footer>
+    </Card.Root>
   );
 }

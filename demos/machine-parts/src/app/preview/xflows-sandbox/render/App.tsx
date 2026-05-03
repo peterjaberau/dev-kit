@@ -25,11 +25,10 @@ export function App() {
               </HStack>
             </HStack>
           </Card.Header>
-          <Card.Body>
+          <Card.Body css={{ display: "flex", flex: 1, h: "full", minH: 0, overflow: "hidden", p: 0 }}>
             <FlowSandbox />
           </Card.Body>
         </Card.Root>
       </Container>
   )
 }
-

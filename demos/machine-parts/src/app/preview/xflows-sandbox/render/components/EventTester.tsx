@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, chakra, Field, Input, Stack, Textarea, VStack } from "@chakra-ui/react"
+import { Button, Card, chakra, Field, Input, ScrollArea, Stack, Textarea, VStack } from "@chakra-ui/react"
 
 interface EventTesterProps {
   flow: any;
@@ -246,22 +246,18 @@ export function EventTester({ flow }: EventTesterProps) {
   };
 
   return (
-    <chakra.div
-      css={{
-        h: "full",
-        display: "flex",
-        flexDirection: "column",
-        bg: "bg.panel",
-      }}
+    <Card.Root
+      size={"sm"}
+      variant={"subtle"}
+      css={{ display: "flex", flexDirection: "column", flex: 1, minH: 0, h: "full", maxH: "full", w: "full", overflow: "hidden" }}
     >
       {/* Event Tester Toolbar */}
-      <chakra.div
+      <Card.Header
         css={{
-          px: 4,
           py: 2,
-          bg: "gray.5",
+          flexShrink: 0,
           borderBottom: "1px solid",
-          borderColor: "border",
+          borderBottomColor: "border",
         }}
       >
         <chakra.div
@@ -271,15 +267,7 @@ export function EventTester({ flow }: EventTesterProps) {
             justifyContent: "space-between",
           }}
         >
-          <chakra.span
-            css={{
-              fontSize: "sm",
-              fontWeight: "medium",
-              color: "gray.700",
-            }}
-          >
-            ⚡ Event Tester
-          </chakra.span>
+          <Card.Title>⚡ Event Tester</Card.Title>
           <chakra.div
             css={{
               display: "flex",
@@ -294,88 +282,85 @@ export function EventTester({ flow }: EventTesterProps) {
             </Button>
           </chakra.div>
         </chakra.div>
-      </chakra.div>
+      </Card.Header>
 
       {/* Content Area */}
-      <chakra.div
-        css={{
-          flex: 1,
-          spaceY: 6,
-          overflow: "auto",
-          p: 4,
-        }}
-      >
-        {/* Available Events */}
-        <chakra.div>
-          <chakra.h3
-            css={{
-              mb: 3,
-              fontSize: "sm",
-              fontWeight: "medium",
-              color: "gray.700",
-            }}
-          >
-            🎯 Available Events
-          </chakra.h3>
-          <chakra.div
-            css={{
-              display: "grid",
-              gridColumn: 2,
-              gap: 2,
-            }}
-          >
-            {events.map((event) => (
-              <chakra.div
-                key={event.id}
-                css={{
-                  cursor: "pointer",
-                  borderRadius: "full",
-                  border: "1px solid",
-                  transition: "colors",
-                  ...(selectedEvent === event.name
-                    ? {
-                        borderColor: "blue.200",
-                        bg: "blue.50",
-                      }
-                    : {
-                        borderColor: "gray.200",
-                        bg: "gray.50",
-                      }),
-                }}
-                onClick={() => setSelectedEvent(event.name)}
-              >
-                <chakra.div
-                  css={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <chakra.span
+      <Card.Body css={{ display: "flex", flex: 1, minH: 0, overflow: "hidden", p: 0 }}>
+        <ScrollArea.Root css={{ flex: 1, minH: 0, h: "full", maxH: "full", w: "full" }} size="sm" variant="always">
+          <ScrollArea.Viewport css={{ h: "full", maxH: "full", minH: 0 }}>
+            <ScrollArea.Content p={4} pe={6}>
+              <Stack gap={6}>
+                {/* Available Events */}
+                <chakra.div>
+                  <chakra.h3
                     css={{
+                      mb: 3,
+                      fontSize: "sm",
                       fontWeight: "medium",
                       color: "gray.700",
                     }}
                   >
-                    {event.name}
-                  </chakra.span>
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      const payload = generateRandomPayload(event.name)
-                      sendEvent(event.name, payload)
+                    🎯 Available Events
+                  </chakra.h3>
+                  <chakra.div
+                    css={{
+                      display: "grid",
+                      gridColumn: 2,
+                      gap: 2,
                     }}
-                    colorPalette={"blue"}
-                    size={"xs"}
                   >
-                    Send
-                  </Button>
+                    {events.map((event) => (
+                      <chakra.div
+                        key={event.id}
+                        css={{
+                          cursor: "pointer",
+                          borderRadius: "full",
+                          border: "1px solid",
+                          transition: "colors",
+                          ...(selectedEvent === event.name
+                            ? {
+                                borderColor: "blue.200",
+                                bg: "blue.50",
+                              }
+                            : {
+                                borderColor: "gray.200",
+                                bg: "gray.50",
+                              }),
+                        }}
+                        onClick={() => setSelectedEvent(event.name)}
+                      >
+                        <chakra.div
+                          css={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <chakra.span
+                            css={{
+                              fontWeight: "medium",
+                              color: "gray.700",
+                            }}
+                          >
+                            {event.name}
+                          </chakra.span>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              const payload = generateRandomPayload(event.name)
+                              sendEvent(event.name, payload)
+                            }}
+                            colorPalette={"blue"}
+                            size={"xs"}
+                          >
+                            Send
+                          </Button>
+                        </chakra.div>
+                        {renderEventPreview(event.name)}
+                      </chakra.div>
+                    ))}
+                  </chakra.div>
                 </chakra.div>
-                {renderEventPreview(event.name)}
-              </chakra.div>
-            ))}
-          </chakra.div>
-        </chakra.div>
 
         {/* Custom Event */}
         <Card.Root size={"sm"}>
@@ -420,58 +405,68 @@ export function EventTester({ flow }: EventTesterProps) {
           </Card.Header>
           <Card.Body css={{ maxH: 48, overflow: "auto", bg: "bg.subtle" }}>{renderEventHistory()}</Card.Body>
         </Card.Root>
-      </chakra.div>
+              </Stack>
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar>
+            <ScrollArea.Thumb />
+          </ScrollArea.Scrollbar>
+        </ScrollArea.Root>
+      </Card.Body>
 
       {/* Event Tester Status */}
-      <chakra.div
-        css={{
-          borderTop: "1px solid",
-          bg: "gray.50",
-          px: 4,
-          py: 2,
-        }}
-      >
+      <Card.Footer css={{ flexShrink: 0, p: 0 }}>
         <chakra.div
           css={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: "sm",
-            color: "gray.600",
+            w: "full",
+            borderTop: "1px solid",
+            bg: "gray.50",
+            px: 4,
+            py: 2,
           }}
         >
           <chakra.div
             css={{
               display: "flex",
               alignItems: "center",
-              gap: 4,
+              justifyContent: "space-between",
+              fontSize: "sm",
+              color: "gray.600",
             }}
           >
-            <chakra.span>⚡ Events: {events.length}</chakra.span>
-            <chakra.span>📜 History: {eventHistory.length}</chakra.span>
-          </chakra.div>
-          <chakra.div
-            css={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-            <chakra.span
+            <chakra.div
               css={{
-                borderRadius: "full",
-                bg: 'green.100',
-                px: 2,
-                py: 0.5,
-                fontSize: 'xs',
-                color: 'green.700'
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
               }}
             >
-              Ready ✓
-            </chakra.span>
+              <chakra.span>⚡ Events: {events.length}</chakra.span>
+              <chakra.span>📜 History: {eventHistory.length}</chakra.span>
+            </chakra.div>
+            <chakra.div
+              css={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <chakra.span
+                css={{
+                  borderRadius: "full",
+                  bg: 'green.100',
+                  px: 2,
+                  py: 0.5,
+                  fontSize: 'xs',
+                  color: 'green.700'
+                }}
+              >
+                Ready ✓
+              </chakra.span>
+            </chakra.div>
           </chakra.div>
         </chakra.div>
-      </chakra.div>
-    </chakra.div>
+      </Card.Footer>
+    </Card.Root>
   )
 }

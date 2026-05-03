@@ -14,7 +14,10 @@ export function Layout({ children, css, className = '' }: LayoutProps) {
       css={{
         display: "flex",
         flexDirection: "column",
+        flex: 1,
         h: "full",
+        minH: 0,
+        overflow: "hidden",
         bg: "bg.subtle",
         ...css,
       }}
@@ -33,6 +36,7 @@ export function LayoutHeader({ children, css, className = '' }: LayoutProps) {
         bg: "bg.panel",
         borderBottom: "1px solid",
         borderBottomColor: "border",
+        flexShrink: 0,
         ...css,
       }}
       className={className}
@@ -47,7 +51,10 @@ export function LayoutContent({ children, css, className = '' }: LayoutProps) {
     <chakra.main
       data-id="layout-content"
       css={{
+        display: "flex",
+        flexDirection: "column",
         flex: 1,
+        minH: 0,
         overflow: "hidden",
         ...css,
       }}
@@ -68,6 +75,7 @@ export function LayoutFooter({ children, css, className = "" }: LayoutProps) {
         bg: "bg.panel",
         px: 6,
         py: 2,
+        flexShrink: 0,
         ...css,
       }}
       className={className}
@@ -82,7 +90,11 @@ export function SplitLayout({ children, css, className = '' }: LayoutProps) {
     <chakra.div
       css={{
         display: "flex",
+        flex: 1,
         h: "full",
+        minH: 0,
+        w: "full",
+        overflow: "hidden",
         ...css,
       }}
       data-id="split-layout"
@@ -121,8 +133,8 @@ export function SplitPanel({ children, css, className = '', size = 'full' }: Spl
     <chakra.div
       data-id="split-panel"
       css={{
+        flex: 1, minH: 0, overflow: "hidden",
         w: sizeCss[size],
-        flex: 1,
         borderRight: "1px solid",
         borderRightColor: "border",
         _last: {
