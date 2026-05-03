@@ -13,6 +13,7 @@ export function EventTester({ flow }: EventTesterProps) {
   const [customPayload, setCustomPayload] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [expandedPayloadEvents, setExpandedPayloadEvents] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Extract available events from flow states
@@ -35,12 +36,29 @@ export function EventTester({ flow }: EventTesterProps) {
     }));
 
     setEvents(eventList);
+    setExpandedPayloadEvents(new Set());
     
     // Set first event as selected
     if (eventList.length > 0 && !selectedEvent) {
       setSelectedEvent(eventList[0].name);
     }
   }, [flow]);
+
+  const togglePayloadPreview = (eventId: string) => {
+    setExpandedPayloadEvents((prev) => {
+      const next = new Set(prev);
+      if (next.has(eventId)) {
+        next.delete(eventId);
+      } else {
+        next.add(eventId);
+      }
+      return next;
+    });
+  };
+
+  const selectEvent = (eventName: string) => {
+    setSelectedEvent(eventName);
+  };
 
   const sendEvent = (eventName: string, payload?: any) => {
     const timestamp = Date.now();
@@ -154,7 +172,6 @@ export function EventTester({ flow }: EventTesterProps) {
             css={{
               p: 2,
               border: "1px solid",
-              borderRadius: "full",
               fontSize: "sm",
 
               ...(entry.result === "success"
@@ -184,7 +201,6 @@ export function EventTester({ flow }: EventTesterProps) {
               >
                 <chakra.span
                   css={{
-                    borderRadus: "full",
                     px: 2,
                     py: 0.5,
                     fontSize: "xs",
@@ -228,13 +244,11 @@ export function EventTester({ flow }: EventTesterProps) {
                   css={{
                     maxH: 20,
                     overflow: 'auto',
-                    borderRadius: 'full',
-                    bg: 'bg.panel',
                     p: 1,
                     color: 'gray.600'
                   }}
                   >
-                  {JSON.stringify(entry.payload, null, 2)}
+                  {JSON.stringify(entry.payload)}
                 </chakra.pre>
               </chakra.div>
             )}
@@ -299,69 +313,80 @@ export function EventTester({ flow }: EventTesterProps) {
             <ScrollArea.Content p={4} pe={6}>
               <Stack gap={6}>
                 {/* Available Events */}
-                <chakra.div>
-                  <chakra.h3
-                    css={{
-                      mb: 3,
-                      fontSize: "sm",
-                      fontWeight: "medium",
-                      color: "gray.700",
-                    }}
-                  >
-                    🎯 Available Events
-                  </chakra.h3>
-                  <chakra.div
-                    css={{
-                      display: "grid",
-                      gridColumn: 2,
-                      gap: 2,
-                    }}
-                  >
-                    {events.map((event) => (
-                      <Card.Root
-                        key={event.id}
-                        size={"sm"}
-                        variant={selectedEvent === event.name ? "elevated" : "outline"}
-                        onClick={() => setSelectedEvent(event.name)}
-                        css={{
-                          cursor: "pointer",
-                          bg: selectedEvent === event.name ? "bg.info" : "bg.panel",
-                        }}
-                      >
-                        <Card.Header css={{ px: 2, py: 2, borderBottom: "1px solid", borderBottomColor: "border" }}>
-                          <HStack>
-                            <Card.Title css={{ flex: 1, fontSize: "sm" }}>{event.name}</Card.Title>
-                            <IconButton size={"2xs"} variant={'ghost'}><PayloadIcon/></IconButton>
-                            <Button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                const payload = generateRandomPayload(event.name)
-                                sendEvent(event.name, payload)
-                              }}
-                              colorPalette={"blue"}
-                              size={"2xs"}
-                            >
-                              Send
-                            </Button>
-                          </HStack>
-                        </Card.Header>
-                        <Card.Body
+                <Card.Root size={"sm"} variant={"elevated"}>
+                  <Card.Header css={{ py: 2, borderBottom: "1px solid", borderBottomColor: "border" }}>
+                    <Card.Title>🎯 Available Events</Card.Title>
+                  </Card.Header>
+                  <Card.Body css={{ gap: 2, bg: "bg.muted" }}>
+                    {events.map((event) => {
+                      const isPayloadExpanded = expandedPayloadEvents.has(event.id)
+
+                      return (
+                        <Card.Root
+                          key={event.id}
+                          size={"sm"}
+                          variant={selectedEvent === event.name ? "elevated" : "outline"}
+                          onClick={() => selectEvent(event.name)}
                           css={{
-                            px: 2,
-                            py: 2,
-                            m: 0,
+                            cursor: "pointer",
+                            bg: selectedEvent === event.name ? "bg.info" : "bg.panel",
                           }}
                         >
-                          {renderEventPreview(event.name)}
-                        </Card.Body>
-                      </Card.Root>
-                    ))}
-                  </chakra.div>
-                </chakra.div>
+                          <Card.Header
+                            css={{
+                              px: 2,
+                              py: 2,
+                              borderBottom: isPayloadExpanded ? "1px solid" : undefined,
+                              borderBottomColor: "border",
+                            }}
+                          >
+                            <HStack>
+                              <Card.Title css={{ flex: 1, fontSize: "sm" }}>{event.name}</Card.Title>
+                              <IconButton
+                                aria-label={`${isPayloadExpanded ? "Hide" : "Show"} payload preview for ${event.name}`}
+                                size={"2xs"}
+                                variant={isPayloadExpanded ? "surface" : "ghost"}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  togglePayloadPreview(event.id)
+                                }}
+                              >
+                                <PayloadIcon />
+                              </IconButton>
+                              <Button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  const payload = generateRandomPayload(event.name)
+                                  sendEvent(event.name, payload)
+                                }}
+                                colorPalette={"blue"}
+                                size={"2xs"}
+                              >
+                                Send
+                              </Button>
+                            </HStack>
+                          </Card.Header>
+                          {isPayloadExpanded && (
+                            <Card.Body
+                              css={{
+                                px: 2,
+                                py: 2,
+                                m: 0,
+                              }}
+                            >
+                              {renderEventPreview(event.name)}
+                            </Card.Body>
+                          )}
+                        </Card.Root>
+                      )
+                    })}
+                  </Card.Body>
+                </Card.Root>
 
                 {/* Custom Event */}
-                <Card.Root size={"sm"}>
-                  <Card.Header>
+                <Card.Root size={"sm"} variant={"elevated"}>
+                  <Card.Header css={{ py: 2, borderBottom: "1px solid", borderBottomColor: "border" }}>
                     <Card.Title>🎯 Custom Events</Card.Title>
                   </Card.Header>
                   <Card.Body>
@@ -396,11 +421,11 @@ export function EventTester({ flow }: EventTesterProps) {
                 </Card.Root>
 
                 {/* Event History */}
-                <Card.Root size={"sm"}>
-                  <Card.Header>
+                <Card.Root size={"sm"} variant={"elevated"}>
+                  <Card.Header css={{ py: 2, borderBottom: "1px solid", borderBottomColor: "border"  }}>
                     <Card.Title>📜 Event History</Card.Title>
                   </Card.Header>
-                  <Card.Body css={{ maxH: 48, overflow: "auto", bg: "bg.subtle" }}>{renderEventHistory()}</Card.Body>
+                  <Card.Body css={{  bg: "bg.muted" }}>{renderEventHistory()}</Card.Body>
                 </Card.Root>
               </Stack>
             </ScrollArea.Content>
