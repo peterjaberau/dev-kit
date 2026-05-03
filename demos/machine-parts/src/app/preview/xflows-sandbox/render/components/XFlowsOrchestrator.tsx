@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FlowOrchestrator } from "@xflows/core"
 import { HttpActionPlugin } from "@xflows/plugin-http"
 import { FlowComponent } from "@xflows/plugin-react"
-
-import { createHeadlessHost, Services } from '@xflows/core';
-import { createReactRenderer, asReactView } from '@xflows/adapter-react';
-import type { ViewRegistry } from '@xflows/renderer-core';
+import { createActor, createMachine, type AnyActorRef } from "xstate"
 import { Badge, Button, Card, chakra, Checkbox, HStack, Input, SimpleGrid, Stack } from "@chakra-ui/react"
 
-import salesFlow from '../../../xflows/render/flows/sales-flow.json';
+import salesFlow from '../data/flows/sales-flow.json';
 
-const QuoteStartView = asReactView(({ nodeId, contextSlice, send }: any) => (
+interface FlowViewProps {
+  nodeId: string;
+  contextSlice: any;
+  send: (event: any) => void;
+}
+
+const QuoteStartView = ({ nodeId, contextSlice, send }: FlowViewProps) => (
   <Card.Root>
     <Card.Body css={{ p: 6 }}>
       <Card.Title css={{ fontSize: "xl", mb: 4 }}>Quote Start [{nodeId}]</Card.Title>
@@ -27,9 +30,9 @@ const QuoteStartView = asReactView(({ nodeId, contextSlice, send }: any) => (
       </Stack>
     </Card.Body>
   </Card.Root>
-));
+);
 
-const CoverageView = asReactView(({ nodeId, contextSlice, send }: any) => (
+const CoverageView = ({ nodeId, contextSlice, send }: FlowViewProps) => (
   <Card.Root>
     <Card.Body css={{ p: 6 }}>
       <Card.Title css={{ fontSize: "xl", mb: 4 }}>Coverage [{nodeId}]</Card.Title>
@@ -62,9 +65,9 @@ const CoverageView = asReactView(({ nodeId, contextSlice, send }: any) => (
       </Stack>
     </Card.Body>
   </Card.Root>
-));
+);
 
-const SummaryView = asReactView(({ nodeId, contextSlice, send }: any) => (
+const SummaryView = ({ nodeId, contextSlice, send }: FlowViewProps) => (
   <Card.Root>
     <Card.Body css={{ p: 6 }}>
       <Card.Title css={{ fontSize: "xl", mb: 4 }}>Summary [{nodeId}]</Card.Title>
@@ -81,61 +84,56 @@ const SummaryView = asReactView(({ nodeId, contextSlice, send }: any) => (
       </Stack>
     </Card.Body>
   </Card.Root>
-));
+);
+
+function stateValueToNodeId(value: unknown): string {
+  if (typeof value === 'string') return value;
+  if (value && typeof value === 'object') {
+    const quoteState = (value as Record<string, unknown>).quote;
+    if (typeof quoteState === 'string') return `quote.${quoteState}`;
+  }
+  return JSON.stringify(value);
+}
 
 export function XFlowsOrchestrator() {
   const [currentNodeId, setCurrentNodeId] = useState<string>('');
   const [contextSlice, setContextSlice] = useState<any>({});
   const [isComplete, setIsComplete] = useState(false);
+  const actorRef = useRef<AnyActorRef | null>(null);
+
+  const integrations = useMemo(() => {
+    const orchestrator = new FlowOrchestrator();
+    const httpPlugin = new HttpActionPlugin();
+
+    return {
+      orchestrator,
+      httpPlugin,
+      flowComponentName: FlowComponent.displayName || FlowComponent.name || 'FlowComponent',
+    };
+  }, []);
+
+  const send = useCallback((event: any) => {
+    actorRef.current?.send(event);
+  }, []);
 
   useEffect(() => {
-    const viewRegistry: ViewRegistry = new Map([
-      ['quote-start', { factory: QuoteStartView }],
-      ['coverage', { factory: CoverageView }],
-      ['summary', { factory: SummaryView }],
-    ]) as any;
+    const machine = createMachine(salesFlow as any);
+    const actor = createActor(machine);
+    actorRef.current = actor;
 
-    const services: Services = {
-      http: async (config: any, ctx: any) => {
-        console.log("HTTP Service:", config, ctx)
-        return { success: true, data: config.url }
-      },
-      analytics: async (config: any, ctx: any) => {
-        console.log("Analytics Service:", config, ctx)
-        return { tracked: true }
-      },
-    }
-
-    const apis = {
-      lifecycle: {
-        enter: (path: string[]) => {
-          console.log('Enter:', path);
-          setCurrentNodeId(path[path.length - 1] || '');
-        },
-        leave: (path: string[]) => console.log('Leave:', path),
-      },
-      readFrom: (ev: any, path?: string) => {
-        if (path) return ev.payload?.[path] ?? ev?.[path];
-        return ev.payload ?? ev;
-      },
-      track: (event: string, props?: Record<string, any>) => {
-        console.log('Track:', event, props);
-      },
-    };
-
-    const host = createHeadlessHost(salesFlow, { services, apis });
-    const actor = host.spawnActor();
-
-    actor.subscribe((snapshot: any) => {
-      const state = snapshot.value;
-      setCurrentNodeId(typeof state === 'string' ? state : JSON.stringify(state));
+    const subscription = actor.subscribe((snapshot) => {
+      setCurrentNodeId(stateValueToNodeId(snapshot.value));
       setContextSlice(snapshot.context || {});
       setIsComplete(snapshot.status === 'done');
     });
 
     actor.start();
 
-    return () => actor.stop();
+    return () => {
+      subscription.unsubscribe();
+      actor.stop();
+      actorRef.current = null;
+    };
   }, []);
 
   return (
@@ -182,15 +180,15 @@ export function XFlowsOrchestrator() {
             <Card.Title css={{ fontSize: "lg", mb: 4 }}>Active Flow Node</Card.Title>
 
             {currentNodeId.includes('quote.start') && (
-              <QuoteStartView nodeId={currentNodeId} contextSlice={contextSlice} send={() => {}} />
+              <QuoteStartView nodeId={currentNodeId} contextSlice={contextSlice} send={send} />
             )}
 
             {currentNodeId.includes('coverage') && (
-              <CoverageView nodeId={currentNodeId} contextSlice={contextSlice} send={() => {}} />
+              <CoverageView nodeId={currentNodeId} contextSlice={contextSlice} send={send} />
             )}
 
             {currentNodeId.includes('summary') && (
-              <SummaryView nodeId={currentNodeId} contextSlice={contextSlice} send={() => {}} />
+              <SummaryView nodeId={currentNodeId} contextSlice={contextSlice} send={send} />
             )}
           </Card.Body>
         </Card.Root>
@@ -208,15 +206,15 @@ export function XFlowsOrchestrator() {
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={4} css={{ fontSize: "sm" }}>
           <chakra.div>
             <chakra.strong css={{ color: "blue.800" }}>@xflows/core</chakra.strong>
-            <chakra.div css={{ color: "blue.700", mt: 1 }}>Flow orchestration engine</chakra.div>
+            <chakra.div css={{ color: "blue.700", mt: 1 }}>{integrations.orchestrator.constructor.name}</chakra.div>
           </chakra.div>
           <chakra.div>
-            <chakra.strong css={{ color: "blue.800" }}>@xflows/adapter-react</chakra.strong>
-            <chakra.div css={{ color: "blue.700", mt: 1 }}>React integration layer</chakra.div>
+            <chakra.strong css={{ color: "blue.800" }}>@xflows/plugin-react</chakra.strong>
+            <chakra.div css={{ color: "blue.700", mt: 1 }}>{integrations.flowComponentName}</chakra.div>
           </chakra.div>
           <chakra.div>
-            <chakra.strong css={{ color: "blue.800" }}>@xflows/renderer-core</chakra.strong>
-            <chakra.div css={{ color: "blue.700", mt: 1 }}>UI contracts & types</chakra.div>
+            <chakra.strong css={{ color: "blue.800" }}>@xflows/plugin-http</chakra.strong>
+            <chakra.div css={{ color: "blue.700", mt: 1 }}>{integrations.httpPlugin.name}</chakra.div>
           </chakra.div>
         </SimpleGrid>
       </chakra.div>

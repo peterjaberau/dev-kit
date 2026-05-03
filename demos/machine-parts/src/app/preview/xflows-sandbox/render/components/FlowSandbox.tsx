@@ -7,7 +7,6 @@ import { ServiceDebugger } from './ServiceDebugger';
 import { PerformanceMonitor } from './PerformanceMonitor';
 import { LayoutManager } from './panels/LayoutManager';
 import { PanelLayout } from './panels/PanelLayout';
-import { Card, Stack, HStack, Button, Flex } from "@chakra-ui/react"
 import { flowExamples } from './examples';
 
 export function FlowSandbox() {
@@ -25,6 +24,8 @@ export function FlowSandbox() {
   // Load basic demo as default
   const defaultFlow = useMemo(() => {
     const basicDemo = flowExamples.find((ex: any) => ex.id === 'basic-demo');
+
+
     return basicDemo ? basicDemo.flow : {
       "id": "empty",
       "initial": "welcome",
@@ -41,6 +42,8 @@ export function FlowSandbox() {
       }
     };
   }, []);
+
+
 
   // Initialize with default flow
   useEffect(() => {
