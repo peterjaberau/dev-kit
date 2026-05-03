@@ -1,0 +1,334 @@
+{
+  "id": "insurance-quote",
+  "initial": "personal-info",
+  "context": {
+    "applicant": {
+      "personal": {},
+      "contact": {},
+      "drivingHistory": {}
+    },
+    "vehicle": {
+      "details": {},
+      "safety": {}
+    },
+    "coverage": {
+      "selectedOptions": {},
+      "limits": {}
+    },
+    "quote": {
+      "premiums": {},
+      "breakdown": {}
+    },
+    "session": {
+      "startTime": "",
+      "riskIndex": 0
+    },
+    "errors": {}
+  },
+  "states": {
+    "personal-info": {
+      "view": {
+        "moduleId": "applicant-form",
+        "slot": "main-content"
+      },
+      "on": {
+        "NEXT": {
+          "target": "vehicle-info",
+          "actions": [
+            {
+              "type": "assign",
+              "to": "applicant.personal",
+              "fromEventPath": "payload.personal"
+            },
+            {
+              "type": "assign",
+              "to": "applicant.contact",
+              "fromEventPath": "payload.contact"
+            },
+            {
+              "type": "track",
+              "event": "Personal Info Submitted",
+              "props": {
+                "step": "personal-info",
+                "hasPhone": "payload.contact.phone !== ''"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    "vehicle-info": {
+      "view": {
+        "moduleId": "vehicle-form",
+        "slot": "main-content"
+      },
+      "on": {
+        "NEXT": {
+          "target": "driving-history",
+          "actions": [
+            {
+              "type": "assign",
+              "degrees": "vehicle.details",
+              "fromEventPath": "payload"
+            }
+          ]
+        },
+        "BACK": "personal-info"
+      }
+    },
+
+    "driving-history": {
+      "view": {
+        "moduleId": "driving-history-form",
+        "slot": "main-content"
+      },
+      "on": {
+        "SUBMIT_HISTORY": {
+          "target": "risk-assessment",
+          "actions": [
+            {
+              "type": "assign",
+              "to": "applicant.drivingHistory",
+              "fromEventPath": "payload"
+            },
+            {
+              "type": "track",
+              "event": "Driving History Submitted",
+              "props": {
+                "violationsCount": "payload.violations.length",
+                "accidentsCount": "payload.accidents.length"
+              }
+            }
+          ]
+        },
+        "BACK": "vehicle-info"
+      }
+    },
+
+    "risk-assessment": {
+      "view": {
+        "moduleId": "risk-assessment",
+        "slot": "main-content"
+      },
+      "invoke": [
+        {
+          "id": "calculate-risk",
+          "type": "risk-calculator",
+          "config": {
+            "applicantData": "{{context.applicant}}",
+            "vehicleData": "{{context.vehicle}}",
+            "drivingHistory": "{{context.applicant.drivingHistory}}"
+          },
+          "assignTo": "session.riskIndex"
+        }
+      ],
+      "on": {
+        "RISK_CALCULATED": {
+          "target": "coverage-selection",
+          "actions": [
+            {
+              "type": "track",
+              "event": "Risk Assessment Complete",
+              "props": {
+                "riskIndex": "{{context.session.riskIndex}}",
+                "riskLevel": "{{context.session.riskIndex > 0.7 ? 'high' : context.session.riskIndex > 0.4 ? 'medium' : 'low'}}"
+              }
+            }
+          ]
+        }
+      },
+      "onError": {
+        "target": "error-state",
+        "actions": [
+          {
+            "type": "assign",
+            "to": "errors.riskAssessment",
+            "fromEventPath": "error"
+          }
+        ]
+      }
+    },
+
+    "coverage-selection": {
+      "view": {
+        "moduleId": "coverage-options",
+        "slot": "main-content"
+      },
+      "on": {
+        "COVERAGE_SELECTED": {
+          "target": "quote-generation",
+          "actions": [
+            {
+              "type": "assign",
+              "to": "coverage.selectedOptions",
+              "fromEventPath": "payload.coverage"
+            },
+            {
+              "type": "assign",
+              "to": "coverage.limits",
+              "fromEventPath": "payload.limits"
+            }
+          ]
+        },
+        "BACK": "risk-assessment"
+      }
+    },
+
+    "quote-generation": {
+      "view": {
+        "moduleId": "loading-quote",
+        "slot": "main-content"
+      },
+      "invoke": [
+        {
+          "id": "generate-quote",
+          "type": "quote-generator",
+          "config": {
+            "riskIndex": "{{context.session.riskIndex}}",
+            "coverageOptions": "{{context.coverage.selectedOptions}}",
+            "coverageLimits": "{{context.coverage.limits}}",
+            "vehicleData": "{{context.vehicle}}",
+            "applicantData": "{{context.applicant}}"
+          },
+          "assignTo": "quote.premiums"
+        }
+      ],
+      "onDone": {
+        "target": "quote-review",
+        "actions": [
+          {
+            "type": "assign",
+            "to": "quote.breakdown",
+            "fromEventPath": "data"
+          },
+          {
+            "type": "track",
+            "event": "Quote Generated",
+            "props": {
+              "totalPremium": "{{data.totalPremium}}",
+              "riskIndex": "{{context.session.riskIndex}}",
+              "coverageTypes": "{{data.coverageTypes}}"
+            }
+          }
+        ]
+      },
+      "onError": {
+        "target": "quote-error",
+        "actions": [
+          {
+            "type": "assign",
+            "to": "errors.quoteGeneration",
+            "fromEventPath": "error"
+          }
+        ]
+      }
+    },
+
+    "quote-review": {
+      "view": {
+        "moduleId": "quote-summary",
+        "slot": "main-content"
+      },
+      "on": {
+        "ACCEPT_QUOTE": {
+          "target": "payment-processing",
+          "actions": [
+            {
+              "type": "track",
+              "event": "Quote Accepted",
+              "props": {
+                "finalPremium": "{{context.quote.premiums.total}}"
+              }
+            }
+          ]
+        },
+        "MODIFY_COVERAGE": "coverage-selection",
+        "START_OVER": "personal-info"
+      }
+    },
+
+    "payment-processing": {
+      "view": {
+        "moduleId": "payment-form",
+        "slot": "main-content"
+      },
+      "invoke": [
+        {
+          "id": "process-payment",
+          "type": "payment-processor",
+          "config": {
+            "amount": "{{context.quote.premiums.total}}",
+            "currency": "USD",
+            "customerData": "{{context.applicanten}}"
+          }
+        }
+      ],
+      "onDone": {
+        "target": "success",
+        "actions": [
+          {
+            "type": "track",
+            "event": "Payment Successful",
+            "props": {
+              "transactionId": "{{data.transactionId}}",
+              "quoteId": "{{context.quote.id}}"
+            }
+          }
+        ]
+      },
+      "onError": {
+        "target": "payment-error",
+        "actions": [
+          {
+            "type": "assign",
+            "to": "errors.payment",
+            "fromEventPath": "error"
+          }
+        ]
+      }
+    },
+
+    "payment-error": {
+      "view": {
+        "moduleId": "payment-error",
+        "slot": "main-content"
+      },
+      "on": {
+        "RETRY_PAYMENT": "payment-processing",
+        "MODIFY_PAYMENT": "quote-review",
+        "CANCEL": "quote-review"
+      }
+    },
+
+    "quote-error": {
+      "view": {
+        "moduleId": "quote-error",
+        "slot": "main-content"
+      },
+      "on": {
+        "RETRY": "quote-generation",
+        "START_OVER": "personal-info"
+      }
+    },
+
+    "error-state": {
+      "view": {
+        "moduleId": "generic-error",
+        "slot": "main-content"
+      },
+      "on": {
+        "RETRY": "risk-assessment",
+        "START_OVER": "personal-info"
+      }
+    },
+
+    "success": {
+      "type": "final",
+      "view": {
+        "moduleId": "policy-confirmation",
+        "slot": "main-content"
+      }
+    }
+  }
+}

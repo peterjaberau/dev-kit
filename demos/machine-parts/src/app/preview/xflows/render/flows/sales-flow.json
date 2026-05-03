@@ -1,0 +1,50 @@
+{
+  "id": "sales-flow",
+  "initial": "quote.start",
+  "context": {
+    "session": {
+      "channel": "web"
+    },
+    "quote": {},
+    "errors": {}
+  },
+  "states": {
+    "quote": {
+      "initial": "start",
+      "states": {
+        "start": {
+          "view": {
+            "moduleId": "quote-start",
+            "slot": "app"
+          },
+          "on": {
+            "NEXT": "coverage"
+          }
+        },
+        "coverage": {
+          "view": {
+            "moduleId": "coverage",
+            "slot": "app"
+          },
+          "on": {
+            "NEXT": "summary",
+            "BACK": "#salesFlow.quote.start"
+          }
+        },
+        "summary": {
+          "view": {
+            "moduleId": "summary",
+            "slot": "app"
+          },
+          "on": {
+            "CONFIRM": "#salesFlow.done",
+            "BACK": "coverage"
+          }
+        }
+      }
+    },
+    "done": {
+      "type": "final"
+    }
+  }
+}

@@ -1,0 +1,545 @@
+{
+  "$id": "https://xflows.dev/flow-schema.json",
+  "title": "XFlows Flow Configuration Schema",
+  "description": "JSON Schema for XFlows flow configuration definitions",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$",
+      "description": "Unique identifier for the flow"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable name for the flow"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the flow"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the flow"
+    },
+    "initialStep": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Initial step ID"
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Initial context data"
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ActionConfig"
+      },
+      "description": "Global actions configuration"
+    },
+    "guards": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/GuardConfig"
+      },
+      "description": "Global guards configuration"
+    },
+    "actors": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ActorConfig"
+      },
+      "description": "Global actors configuration"
+    },
+    "plugins": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/PluginConfig"
+      },
+      "description": "Global plugins configuration"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Step"
+      },
+      "minItems": 1,
+      "description": "Flow steps configuration"
+    }
+  },
+  "required": ["id", "name", "initialStep", "context", "steps"],
+  "additionalProperties": false,
+  "definitions": {
+    "Step": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique step identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable step name"
+        },
+        "view": {
+          "$ref": "#/definitions/ViewConfig"
+        },
+        "hooks": {
+          "type": "object",
+          "properties": {
+            "before": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Hook"
+              }
+            },
+            "after": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Hook"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "invoke": {
+          "$ref": "#/definitions/InvokeConfig"
+        },
+        "navigation": {
+          "$ref": "#/definitions/Navigation"
+        }
+      },
+      "required": ["id", "name", "view", "navigation"],
+      "additionalProperties": false
+    },
+    "ViewConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["form", "display", "decision", "loading", "error", "success", "federated-module", "custom-component"],
+          "description": "Type of view to render"
+        },
+        "title": {
+          "type": "string",
+          "description": "View title"
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "View subtitle"
+        },
+        "message": {
+          "type": "string",
+          "description": "View message"
+        },
+        "template": {
+          "type": "string",
+          "description": "Template string with {{variable}} syntax"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FormField"
+          },
+          "description": "Form fields for form views"
+        },
+        "content": {
+          "type": "object",
+          "description": "Additional content data"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewAction"
+          },
+          "description": "View actions"
+        },
+        "data": {
+          "type": "string",
+          "description": "Data template string"
+        },
+        "moduleId": {
+          "type": "string",
+          "description": "Module identifier for federated modules"
+        },
+        "moduleUrl": {
+          "type": "string",
+          "description": "Module URL for federated modules"
+        },
+        "componentName": {
+          "type": "string",
+          "description": "Component name for federated modules"
+        },
+        "props": {
+          "type": "object",
+          "description": "Props to pass to component"
+        },
+        "fallback": {
+          "$ref": "#/definitions/ViewConfig",
+          "description": "Fallback view configuration"
+        },
+        "componentPath": {
+          "type": "string",
+          "description": "Path to custom component"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "FormField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Field name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "email", "number", "select", "radio", "checkbox", "textarea", "file", "date"],
+          "description": "Field type"
+        },
+        "label": {
+          "type": "string",
+          "description": "Field label"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Field placeholder"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether field is required"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value for number fields"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value for number fields"
+        },
+        "step": {
+          "type": "number",
+          "description": "Step value for number fields"
+        },
+        "rows": {
+          "type": "number",
+          "description": "Number of rows for textarea"
+        },
+        "maxLength": {
+          "type": "number",
+          "description": "Maximum length for text fields"
+        },
+        "accept": {
+          "type": "string",
+          "description": "Accepted file types for file fields"
+        },
+        "maxSize": {
+          "type": "string",
+          "description": "Maximum file size for file fields"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" }
+            },
+            "required": ["value", "label"],
+            "additionalProperties": false
+          },
+          "description": "Options for select/radio fields"
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "minLength": { "type": "number" },
+            "maxLength": { "type": "number" },
+            "pattern": { "type": "string" }
+          },
+          "additionalProperties": false,
+          "description": "Field validation rules"
+        }
+      },
+      "required": ["name", "type", "label"],
+      "additionalProperties": false
+    },
+    "ViewAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["submit", "button"],
+          "description": "Action type"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Action label"
+        },
+        "event": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Event to trigger"
+        }
+      },
+      "required": ["type", "label", "event"],
+      "additionalProperties": false
+    },
+    "Hook": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Hook identifier"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["http_call", "assign", "log", "analytics", "delay", "condition"],
+          "description": "Hook type"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "HTTP endpoint for http_call hooks"
+        },
+        "method": {
+          "type": "string",
+          "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+          "description": "HTTP method for http_call hooks"
+        },
+        "body": {
+          "description": "Request body for http_call hooks"
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "HTTP headers for http_call hooks"
+        },
+        "target": {
+          "type": "string",
+          "description": "Target for assign hooks"
+        },
+        "value": {
+          "description": "Value for assign hooks"
+        },
+        "message": {
+          "type": "string",
+          "description": "Message for log hooks"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["info", "warn", "error"],
+          "description": "Log level for log hooks"
+        },
+        "event": {
+          "type": "string",
+          "description": "Event for analytics hooks"
+        },
+        "data": {
+          "description": "Data for analytics hooks"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Duration in milliseconds for delay hooks"
+        },
+        "expression": {
+          "description": "Expression for condition hooks"
+        },
+        "onTrue": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Hook" },
+          "description": "Hooks to execute when condition is true"
+        },
+        "onFalse": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Hook" },
+          "description": "Hooks to execute when condition is false"
+        },
+        "updateContext": {
+          "type": "string",
+          "description": "Context update path"
+        },
+        "onError": {
+          "type": "string",
+          "enum": ["fail", "ignore"],
+          "description": "Error handling strategy"
+        }
+      },
+      "required": ["id", "type"],
+      "additionalProperties": false
+    },
+    "Navigation": {
+      "type": "object",
+      "properties": {
+        "onNext": {
+          "oneOf": [
+            { "type": "string" },
+            { "$ref": "#/definitions/NavigationConfig" },
+            { "type": "array", "items": { "$ref": "#/definitions/NavigationConfig" } }
+          ],
+          "description": "Next step navigation"
+        },
+        "onBack": {
+          "type": "string",
+          "description": "Back step navigation"
+        },
+        "onError": {
+          "type": "string",
+          "description": "Error step navigation"
+        },
+        "onCancel": {
+          "type": "string",
+          "description": "Cancel step navigation"
+        }
+      },
+      "additionalProperties": true
+    },
+    "NavigationConfig": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Target step ID"
+        },
+        "guard": {
+          "type": "string",
+          "description": "Guard condition"
+        },
+        "actions": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ],
+          "description": "Actions to execute"
+        }
+      },
+      "required": ["target"],
+      "additionalProperties": false
+    },
+    "InvokeConfig": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Invoke identifier"
+        },
+        "src": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Source for invocation"
+        },
+        "input": {
+          "description": "Input data for invocation"
+        },
+        "onDone": {
+          "$ref": "#/definitions/NavigationConfig",
+          "description": "Navigation on successful completion"
+        },
+        "onError": {
+          "$ref": "#/definitions/NavigationConfig",
+          "description": "Navigation on error"
+        }
+      },
+      "required": ["id", "src"],
+      "additionalProperties": false
+    },
+    "ActionConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["assign", "log", "analytics"],
+          "description": "Action type"
+        },
+        "target": {
+          "type": "string",
+          "description": "Target for assign actions"
+        },
+        "value": {
+          "description": "Value for assign actions"
+        },
+        "message": {
+          "type": "string",
+          "description": "Message for log actions"
+        },
+        "event": {
+          "type": "string",
+          "description": "Event for analytics actions"
+        },
+        "data": {
+          "description": "Data for analytics actions"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "GuardConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["jsonLogic", "simple"],
+          "description": "Guard type"
+        },
+        "expression": {
+          "description": "Expression for jsonLogic guards"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition for simple guards"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "ActorConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["fromPromise"],
+          "description": "Actor type"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "HTTP endpoint"
+        },
+        "method": {
+          "type": "string",
+          "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+          "description": "HTTP method"
+        },
+        "body": {
+          "description": "Request body"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "PluginConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["actor", "action"],
+          "description": "Plugin type"
+        },
+        "config": {
+          "description": "Plugin-specific configuration"
+        }
+      },
+      "required": ["type", "config"],
+      "additionalProperties": false
+    }
+  }
+}
