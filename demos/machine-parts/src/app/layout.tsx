@@ -1,6 +1,19 @@
+import { Geist, Geist_Mono } from "next/font/google"
+
 import { Provider as ChakraProvider } from "./provider"
-import "react18-json-view/src/style.css"
+import "./globals.css"
+
 import { Suspense } from "react"
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+})
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+})
 
 export default function RootLayout({
   children,
@@ -18,10 +31,11 @@ export default function RootLayout({
           overflow: "hidden",
           backgroundColor: "#FCF8F8",
         }}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          <Suspense>
-            <ChakraProvider>{children}</ChakraProvider>
-          </Suspense>
+        <Suspense>
+          <ChakraProvider>{children}</ChakraProvider>
+        </Suspense>
       </body>
     </html>
   )

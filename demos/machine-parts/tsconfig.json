@@ -44,7 +44,14 @@
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
       "#app/*": ["./src/app/*"],
-      "#app": ["./src/app"]
+      "#app": ["./src/app"],
+
+      "@/lib/*": ["./src/lib/*"],
+      "@/lib": ["./src/lib"],
+      "@/components/*": ["./src/components/*"],
+      "@/components": ["./src/components"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/hooks": ["./src/hooks"]
     }
   },
   "include": [

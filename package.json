@@ -3,7 +3,7 @@
   "author": "Peter Jaber",
   "license": "MIT",
   "scripts": {
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6010",
     "build-storybook": "storybook build",
     "start-ui-actors-stateless": "pnpm --filter \"./apps/ui-actors-stateless\" dev",
     "packages": "pnpm --filter=./packages/** -r",

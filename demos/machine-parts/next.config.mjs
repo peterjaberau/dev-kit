@@ -12,7 +12,20 @@ const nextConfig = {
     optimizePackageImports: ["@chakra-ui/react", "@ark-ui/react"],
     externalDir: true,
   },
-  output: 'standalone',
+  output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        hostname: "images.unsplash.com",
+      },
+      {
+        hostname: "oud.pics",
+      },
+      {
+        hostname: "i.pravatar.cc",
+      },
+    ],
+  },
 }
 
 initOpenNextCloudflareForDev().catch(console.error);
