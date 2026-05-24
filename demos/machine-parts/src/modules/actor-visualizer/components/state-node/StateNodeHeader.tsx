@@ -3,22 +3,26 @@ import { chakra, Card, Separator, HStack, VStack, Badge } from "@chakra-ui/react
 
 interface StateNodeHeaderProps {
   historyType?: "shallow" | "deep"
+  type?: string | "directed" | "compound" | "atomic" | "final" | "parallel" | null
   isChoice: boolean
   isFinal: boolean
   isHistory: boolean
   isInitial?: boolean
   isParallel: boolean
+  isRegion?: boolean
   label: string
   description?: string
 }
 
 export function StateNodeHeader({
   historyType,
+  type,
   isChoice,
   isFinal,
   isHistory,
   isInitial,
   isParallel,
+  isRegion,
   label,
   description,
 }: StateNodeHeaderProps) {
@@ -26,11 +30,14 @@ export function StateNodeHeader({
     <Card.Header
       css={{
         py: 2,
-        borderBottom: "1px solid",
+        borderBottomWidth: "thin",
+        borderBottomStyle: isRegion ? "dashed" : "solid",
+        // borderBottomStyle: "solid",
         borderBottomColor: "border",
       }}
     >
       <HStack css={{ alignItems: "center" }}>
+        <Card.Title css={{ flex: 1 }}>{label}</Card.Title>
         <StateNodeTypeIndicator
           historyType={historyType}
           isChoice={isChoice}
@@ -40,9 +47,9 @@ export function StateNodeHeader({
           isParallel={isParallel}
         />
         <Badge>state</Badge>
-        <Card.Title>{label}</Card.Title>
-        <Card.Description>{description}</Card.Description>
+        {type && <Badge variant="outline">{type}</Badge>}
       </HStack>
+      {description && <Card.Description>{description}</Card.Description>}
     </Card.Header>
   )
 }

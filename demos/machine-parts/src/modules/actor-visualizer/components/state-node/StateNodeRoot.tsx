@@ -27,12 +27,15 @@ export function StateNodeRoot({
       size={"sm"}
       data-testid="state-card"
       data-sim-active={isSimActive && (isAtomic || isFinal) ? "" : undefined}
+      variant={isRegion ? "subtle" : "outline"}
       css={{
         // bg: "bg.panel",
         // display: "flex",
         // flexDirection: "column",
         // borderRadius: "md",
-        borderWidth: "thin",
+        flex: 1,
+        w: "full",
+        borderWidth: "1px",
         borderStyle: "solid",
         borderColor: "border",
         // boxShadow: "sm",

@@ -1,55 +1,34 @@
-import { chakra, Icon, Badge } from "@chakra-ui/react"
+import { chakra, Icon, Badge, HStack, Text } from "@chakra-ui/react"
 import { RiCheckboxCircleFill, RiFlashlightLine, RiCloseCircleFill, RiInfinityLine, RiTimerLine } from "react-icons/ri"
 
 interface TransitionEventIconProps {
-  category: "after" | "always" | "done" | "error" | string | null
+  category: "after" | "always" | "done" | "error" | "none" | string | null | any
+}
+
+const iconMap: any = {
+  after: <RiTimerLine />,
+  always: <RiInfinityLine />,
+  done: <RiCheckboxCircleFill />,
+  error: <RiCloseCircleFill />,
+  event: <RiFlashlightLine />,
+  none: <RiFlashlightLine />,
 }
 
 export function TransitionEventIcon({ category }: TransitionEventIconProps) {
-  if (category === "after") {
-    return (
-      <Badge variant={"outline"}>
-        <RiTimerLine />
-        after
-      </Badge>
-    )
-  }
 
-  if (category === "always") {
-    return (
-      <Badge variant={"outline"}>
-        <RiInfinityLine />
-        always
-      </Badge>
-    )
-  }
+  return (
+    <HStack
+      css={{
+        alignItems: "center",
+      }}
+    >
+      <Icon size="sm" color={"gray.500"}>
+        {iconMap[category || "none"]}
+      </Icon>
+      <Text css={{ textTransform: "uppercase", color: "gray.500", fontFamily: "mono", fontSize: "xs", fontWeight: "semibold" }}>
+        {category || "event"}
+      </Text>
+    </HStack>
+  )
 
-  if (category === "done") {
-    return (
-      <Badge variant={"outline"}>
-        <RiCheckboxCircleFill />
-        done
-      </Badge>
-    )
-  }
-
-  if (category === "error") {
-    return (
-      <Badge colorPalette={"red"} variant={"solid"}>
-        <RiCloseCircleFill />
-        error
-      </Badge>
-    )
-  }
-
-  if (!category) {
-    return (
-      <Badge variant={"outline"}>
-        <RiFlashlightLine />
-        event
-      </Badge>
-    )
-  }
-
-  return null
 }

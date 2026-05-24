@@ -9,13 +9,13 @@ export function StateNodeBody({ children, isHighlighted }: StateNodeBodyProps) {
   return (
     <Card.Body
       css={{
-        bg: "bg.muted",
+        // bg: "bg.muted",
         p: 0,
-        borderWidth: 8,
-        borderColor: "bg.panel",
+        // borderWidth: 8,
+        // borderColor: "bg.panel",
         ...(isHighlighted && {
-          bg: "bg.info",
-          borderColor: "transparent",
+          // bg: "bg.info",
+          // borderColor: "transparent",
         }),
       }}
       data-testid="state-node-body"

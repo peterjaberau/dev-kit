@@ -1,4 +1,4 @@
-import { chakra, Badge } from "@chakra-ui/react"
+import { chakra, Badge, Button, Separator, Text } from "@chakra-ui/react"
 import type { ReactNode } from 'react';
 
 interface TransitionRootProps {
@@ -24,26 +24,35 @@ export function TransitionRoot({
     <chakra.div
       data-testid="transition"
       css={{
+        borderRadius: "full",
+        boxShadow: "xs",
+        cursor: "pointer",
+        border: "thin solid",
+        borderColor: "border.subtle",
+        px: 2,
+        py: 1,
         _hover: {
-          bg: "blue.100",
+          borderColor: "border.info",
+          bg: "bg.info",
         },
+
         position: "relative",
         display: "flex",
         flexDirection: "column",
         gap: 0.5,
-       px: 2,
-        py: 1.5,
+
         fontSize: "xs",
         transition: "colors",
-        ...(!isFirst && {
-          borderWidth: "thin",
-          borderStyle: "dashed",
-          borderColor: "border",
-        }),
+        ...(!isFirst &&
+          {
+            // border: "1px solid",
+            // borderColor: "border",
+          }),
         ...(isSim && {
           cursor: "pointer",
           _hover: {
-            bg: "blue.100",
+            borderColor: "border.info",
+            bg: "bg.info",
           },
         }),
 
@@ -52,7 +61,6 @@ export function TransitionRoot({
             opacity: 40,
           }),
       }}
-
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

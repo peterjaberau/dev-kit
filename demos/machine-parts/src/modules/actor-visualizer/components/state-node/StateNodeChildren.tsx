@@ -19,9 +19,9 @@ export function StateNodeChildren({ isParallel, children }: StateNodeChildrenPro
         // flexWrap: "wrap",
         alignItems: "flex-start",
         ...(!isParallel && {
-          borderTopWidth: "thin",
-          borderStyle: "solid",
-          borderColor: "border",
+          // borderTopWidth: "thin",
+          // borderStyle: "dashed",
+          // borderColor: "border",
         }),
         // '& > div > [data-testid="state-card"]': {
         //   boxShadow: "md",

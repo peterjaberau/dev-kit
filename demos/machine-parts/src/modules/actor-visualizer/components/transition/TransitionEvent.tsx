@@ -1,4 +1,4 @@
-import { chakra, Badge } from "@chakra-ui/react"
+import { chakra, Badge, Separator } from "@chakra-ui/react"
 import { TransitionEventIcon } from './TransitionEventIcon';
 import { TransitionTarget } from './TransitionTarget';
 
@@ -26,18 +26,22 @@ export function TransitionEvent({
       }}
     >
       <TransitionEventIcon category={category} />
+      {displayEvent && targetDisplay && <Separator orientation="vertical" size="md" css={{ height: 3 }} />}
+
       {displayEvent && (
         <chakra.span
           data-testid="transition-event"
           css={{
             fontFamily: "mono",
             fontSize: "xs",
+
             fontWeight: "semibold",
           }}
         >
           {displayEvent}
         </chakra.span>
       )}
+
       {targetDisplay && <TransitionTarget isSim={isSim} targetDisplay={targetDisplay} targetId={targetId} />}
     </chakra.div>
   )

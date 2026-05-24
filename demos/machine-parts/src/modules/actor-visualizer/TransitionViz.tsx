@@ -13,6 +13,7 @@ import {
   getNextSimAllIds,
   getActiveTimerProgress,
 } from './lib/store';
+import { Separator } from "@chakra-ui/react"
 
 interface TransitionVizProps {
   edge: GraphEdge<TransitionData>;
@@ -60,33 +61,31 @@ export function TransitionVisual({
       isFirst={isFirst}
       isSim={isSim}
       onClick={() => {
-        if (isSim && data.eventType && eventCategory !== 'always') {
-          appStore.trigger.simSend({ event: simEvent });
+        if (isSim && data.eventType && eventCategory !== "always") {
+          appStore.trigger.simSend({ event: simEvent })
         }
       }}
       onMouseEnter={() => {
         if (isSim) {
           // Highlight what would become active if this event were sent
-          const nextIds = [...getNextSimAllIds(simEvent)];
-          highlightedIdsRef.current = nextIds;
+          const nextIds = [...getNextSimAllIds(simEvent)]
+          highlightedIdsRef.current = nextIds
           if (nextIds.length > 0) {
-            appStore.trigger.highlight({ ids: nextIds });
+            appStore.trigger.highlight({ ids: nextIds })
           }
         } else if (!data.isTargetless) {
-          highlightedIdsRef.current = [edge.targetId];
-          appStore.trigger.highlight({ ids: [edge.targetId] });
+          highlightedIdsRef.current = [edge.targetId]
+          appStore.trigger.highlight({ ids: [edge.targetId] })
         }
       }}
       onMouseLeave={() => {
         if (highlightedIdsRef.current.length > 0) {
-          appStore.trigger.unhighlight({ ids: highlightedIdsRef.current });
-          highlightedIdsRef.current = [];
+          appStore.trigger.unhighlight({ ids: highlightedIdsRef.current })
+          highlightedIdsRef.current = []
         }
       }}
     >
-      {timerProgress !== null && (
-        <TransitionTimerProgress progress={timerProgress} />
-      )}
+      {timerProgress && <TransitionTimerProgress progress={timerProgress} />}
 
       <TransitionGuard guard={data.guard} prefix={prefix} />
       <TransitionEvent
@@ -97,15 +96,12 @@ export function TransitionVisual({
         targetId={edge.targetId}
       />
 
-      {data.description && (
-        <TransitionDescription description={data.description} />
-      )}
 
-      {data.actions.length > 0 && (
-        <TransitionActions actions={data.actions} />
-      )}
+      {data.description && <TransitionDescription description={data.description} />}
+
+      {data.actions.length > 0 && <TransitionActions actions={data.actions} />}
     </TransitionRoot>
-  );
+  )
 }
 
 export function TransitionViz(props: TransitionVizProps) {

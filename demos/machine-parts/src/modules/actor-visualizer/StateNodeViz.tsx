@@ -19,7 +19,7 @@ import { StateNodeTransitionList } from "./components/state-node/StateNodeTransi
 import { TransitionVisual } from './TransitionViz';
 import { StateNodeData, TransitionData, MachineGraph, getEventCategory } from "./utils"
 import { appStore } from './lib/store';
-import { Card } from '@chakra-ui/react'
+import { Badge, Card, Wrap } from "@chakra-ui/react"
 
 interface StateNodeVizProps {
   node: GraphNode<StateNodeData>;
@@ -63,24 +63,28 @@ export function StateNodeVisual({ node, graph, isInitial, isRegion }: StateNodeV
 
   return (
     // <StateNodeRoot id={node.id}>
-      <StateNodeRoot
-        id={node.id}
-        isAtomic={isAtomic}
+    <StateNodeRoot
+      id={node.id}
+      isAtomic={isAtomic}
+      isFinal={isFinal}
+      isHighlighted={isHighlighted}
+      isRegion={isRegion}
+      isSimActive={isSimActive}
+    >
+      <StateNodeHeader
+        historyType={data.historyType}
+        type={data.type}
+        isChoice={isChoice}
         isFinal={isFinal}
-        isHighlighted={isHighlighted}
+        isHistory={isHistory}
+        isInitial={isInitial}
+        isParallel={isParallel}
         isRegion={isRegion}
-        isSimActive={isSimActive}
-      >
-        <StateNodeHeader
-          historyType={data.historyType}
-          isChoice={isChoice}
-          isFinal={isFinal}
-          isHistory={isHistory}
-          isInitial={isInitial}
-          isParallel={isParallel}
-          label={data.key}
-          description={data.description}
-        />
+        label={data.key}
+        description={data.description}
+      />
+
+      {outEdges.length + children.length + data.entry.length + data.exit.length + data.invocations.length > 0 && (
         <StateNodeBody isHighlighted={isHighlighted}>
           {data.invocations.length > 0 && <StateNodeInvocation invocations={data.invocations} />}
 
@@ -103,14 +107,13 @@ export function StateNodeVisual({ node, graph, isInitial, isRegion }: StateNodeV
           {outEdges.length > 0 && (
             <StateNodeTransitionList>
               {outEdges.map((edge) => (
-                // <StateNodeTransitionItem key={edge.id}>
                 <TransitionVisual key={edge.id} edge={edge} graph={graph} sourceId={node.id} isFirst={false} />
-                // </StateNodeTransitionItem>
               ))}
             </StateNodeTransitionList>
           )}
         </StateNodeBody>
-      </StateNodeRoot>
+      )}
+    </StateNodeRoot>
     // </StateNodeRoot>
   )
 }

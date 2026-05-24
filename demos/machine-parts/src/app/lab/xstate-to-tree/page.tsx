@@ -3,7 +3,7 @@ import { setup } from "xstate"
 import { toTree } from "./toTree"
 import { TreeVisualizer } from "./TreeVisualizer"
 import { type TreeVisualizerOptions } from "./types"
-import { sessionTimeoutMachine, authMachine, checkoutMachine, vendingMachineMachine, mediaPlayerMachine, dragMachine, otpVerificationMachine, stopwatchMachine, trafficLightMachine, wizardMachine } from "#modules/actor-viz/data/machines"
+import { sessionTimeoutMachine, authMachine, parallelMachine, checkoutMachine, vendingMachineMachine, mediaPlayerMachine, dragMachine, otpVerificationMachine, stopwatchMachine, trafficLightMachine, wizardMachine } from "#modules/actor-visualizer/data/machines"
 
 const orderMachine: any = setup({
   types: {
