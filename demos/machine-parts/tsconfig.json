@@ -37,6 +37,8 @@
       "#actors": ["./src/actors/"],
       "#hooks/*": ["./src/hooks/*"],
       "#hooks": ["./src/hooks"],
+      "#likec4/*": ["./src/app/likec4/*", "./src/app/likec4/packages/*"],
+      "#likec4": ["./src/app/likec4", "./src/app/likec4/packages"],
       "#utils/*": ["./src/utils/*"],
       "#utils": ["./src/utils"],
       "#modules/*": ["./src/modules/*"],

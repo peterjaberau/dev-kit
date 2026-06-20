@@ -1,0 +1,28 @@
+import type { Config } from '@pandacss/dev'
+import { __v, vars } from './const'
+import { defaultTheme } from './defaults/index'
+import { rem } from './helpers'
+
+type ExtendableGlobalVars = NonNullable<Config['globalVars']>
+
+export const globalVars: ExtendableGlobalVars = {
+  extend: {
+    [vars.font]: 'var(--likec4-app-font-default)',
+    [vars.spacing]: '/*-*/ /*-*/',
+    [vars.textsize]: rem(defaultTheme.textSizes.md),
+    // Use the primary color as the default palette
+    [vars.palette.fill]: defaultTheme.colors.primary.elements.fill,
+    [vars.palette.stroke]: defaultTheme.colors.primary.elements.stroke,
+    [vars.palette.hiContrast]: defaultTheme.colors.primary.elements.hiContrast,
+    [vars.palette.loContrast]: defaultTheme.colors.primary.elements.loContrast,
+    [vars.palette.relationStroke]: defaultTheme.colors.gray.relationships.line,
+    [vars.palette.relationLabel]: defaultTheme.colors.gray.relationships.label,
+    [vars.palette.relationLabelBg]: defaultTheme.colors.gray.relationships.labelBg,
+    [vars.palette.relationStrokeSelected]: __v('palette.relationStroke'),
+    '--mantine-scale': '1',
+    [vars.palette.outline]: __v('palette.loContrast'),
+    '--text-fz': '/*-*/ /*-*/',
+    [vars.icon.color]: '/*-*/ /*-*/',
+    [vars.icon.size]: '/*-*/ /*-*/',
+  },
+}

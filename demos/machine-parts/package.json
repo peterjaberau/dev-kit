@@ -11,6 +11,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "pandacss-preset-radix-colors": "^0.2.1",
+    "@radix-ui/colors": "^3.0.0",
+    "chroma-js": "^3.2.0",
+    "defu": "^6.1.7",
+    "remeda": "^2.39.0",
+    "type-fest": "^5.7.0",
     "react18-json-view": "^0.2.10",
     "@ant-design/icons": "^6.2.2",
     "@cloudflare/workers-types": "^4.20251106.1",
@@ -77,6 +83,7 @@
     "input-otp": "^1.4.2"
   },
   "devDependencies": {
+    "@types/chroma-js":"^3.1.2",
     "postcss": "^8.5.6",
     "@tailwindcss/postcss": "^4.1.17",
     "wrangler": "^4.46.0",
