@@ -3,20 +3,12 @@
 // Copyright (c) 2023-2026 Denis Davydkov
 // Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
-import { defineParts, defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 
-const parts = defineParts({
-  root: { selector: '&' },
-  stepNumber: { selector: '& .likec4-edge-label__step-number' },
-  contents: { selector: '& .likec4-edge-label__contents' },
-  label: { selector: '& .likec4-edge-label__text' },
-  technology: { selector: '& .likec4-edge-label__technology' },
-})
-
-export const edgeLabel = defineRecipe({
+export const edgeLabel = defineSlotRecipe({
   className: 'likec4-edge-label',
-  jsx: [],
-  base: parts({
+  slots: ['root', 'stepNumber', 'contents', 'label', 'technology'],
+  base: {
     root: {
       fontFamily: 'likec4.relation',
       paddingBlock: '1',
@@ -75,35 +67,35 @@ export const edgeLabel = defineRecipe({
       lineHeight: '1',
       opacity: 0.75,
     },
-  }),
+  },
   variants: {
     pointerEvents: {
-      none: parts({
+      none: {
         root: {
           pointerEvents: 'none',
         },
-      }),
-      all: parts({
+      },
+      all: {
         root: {
           pointerEvents: 'all',
         },
-      }),
+      },
     },
     cursor: {
-      pointer: parts({
+      pointer: {
         root: {
           cursor: 'pointer',
         },
-      }),
-      default: parts({
+      },
+      default: {
         root: {
           cursor: 'default',
         },
-      }),
+      },
     },
     isStepEdge: {
       false: {},
-      true: parts({
+      true: {
         root: {
           flexDirection: 'row',
           gap: '1',
@@ -122,7 +114,7 @@ export const edgeLabel = defineRecipe({
           py: '0.5',
           paddingRight: '0.5',
         },
-      }),
+      },
     },
   },
   defaultVariants: {
@@ -130,10 +122,4 @@ export const edgeLabel = defineRecipe({
     isStepEdge: false,
     cursor: 'default',
   },
-  staticCss: [{
-    conditions: ['*'],
-    isStepEdge: ['*'],
-    cursor: ['*'],
-    pointerEvents: ['*'],
-  }],
 })

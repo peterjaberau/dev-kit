@@ -1,25 +1,16 @@
-import { defineParts, defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 import { __v, vars } from '../const'
 import { defaultSizes } from '../defaults/sizes'
-
-const parts = defineParts({
-  root: { selector: '&' },
-  icon: { selector: '& [data-likec4-icon]' },
-  content: { selector: '& .likec4-element-node-content' },
-  title: { selector: '& [data-likec4-node-title]' },
-  description: { selector: '& [data-likec4-node-description]' },
-  technology: { selector: '& [data-likec4-node-technology]' },
-})
 
 const hasIcon = '&:has([data-likec4-icon])'
 
 const textAlign = '--__text-align'
 const varTextAlign = `var(${textAlign})`
 
-export const elementNodeData = defineRecipe({
+export const elementNodeData = defineSlotRecipe({
   className: 'likec4-element-node-data',
-  jsx: ['ElementNodeData', 'ElementNodeData.Root', 'ElementTitle', 'Root'],
-  base: parts({
+  slots: ['root', 'icon', 'content', 'title', 'description', 'technology'],
+  base: {
     root: {
       position: 'relative',
       flex: '1',
@@ -110,7 +101,7 @@ export const elementNodeData = defineRecipe({
             // 'drop-shadow(0 0 3px rgb(0 0 0 / 12%))',
             // 'drop-shadow(1px 1px 16px rgb(0 0 0 / 3%))',
           ].join('\n'),
-          _whenHovered: [
+          _hover: [
             'drop-shadow(0 2px 4px rgb(0 0 0 / 30%))',
             // `drop-shadow(1px 2px 3px var(--likec4-palette-stroke))`,
             // 'drop-shadow(0 0 3px rgb(0 0 0 / 12%))',
@@ -204,7 +195,7 @@ export const elementNodeData = defineRecipe({
       textWrap: 'balance',
       opacity: {
         base: 0.92,
-        _whenHovered: 1,
+        _hover: 1,
       },
       display: {
         _shapeSizeXs: 'none!',
@@ -212,10 +203,10 @@ export const elementNodeData = defineRecipe({
         _smallZoom: 'none!',
       },
     },
-  }),
+  },
   variants: {
     iconPosition: {
-      left: parts({
+      left: {
         root: {
           [hasIcon]: {
             [textAlign]: 'left',
@@ -225,8 +216,8 @@ export const elementNodeData = defineRecipe({
             },
           },
         },
-      }),
-      right: parts({
+      },
+      right: {
         root: {
           [hasIcon]: {
             flexDirection: 'row-reverse',
@@ -238,8 +229,8 @@ export const elementNodeData = defineRecipe({
             },
           },
         },
-      }),
-      top: parts({
+      },
+      top: {
         root: {
           [hasIcon]: {
             flexDirection: 'column',
@@ -254,8 +245,8 @@ export const elementNodeData = defineRecipe({
         icon: {
           alignSelf: 'center',
         },
-      }),
-      bottom: parts({
+      },
+      bottom: {
         root: {
           [hasIcon]: {
             flexDirection: 'column-reverse',
@@ -270,33 +261,28 @@ export const elementNodeData = defineRecipe({
         icon: {
           alignSelf: 'center',
         },
-      }),
+      },
     },
     withIconColor: {
-      true: parts({
+      true: {
         icon: {
           '& svg': {
             color: __v('icon.color', 'palette.stroke'),
           },
         },
-      }),
-      false: parts({
+      },
+      false: {
         icon: {
           mixBlendMode: {
             base: 'hard-light',
             _reduceGraphicsOnPan: 'normal',
           },
         },
-      }),
+      },
     },
   },
   defaultVariants: {
     iconPosition: 'left',
     withIconColor: false,
   },
-  staticCss: [{
-    withIconColor: ['*'],
-    iconPosition: ['*'],
-    conditions: ['*'],
-  }],
 })

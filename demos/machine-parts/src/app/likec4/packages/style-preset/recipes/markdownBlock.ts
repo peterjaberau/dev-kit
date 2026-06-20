@@ -1,16 +1,13 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 import { __v } from '../const'
 import { mantine } from '../generated'
 import { alpha } from '../helpers'
 
-export const markdownBlock = defineRecipe({
+export const markdownBlock = defineSlotRecipe({
   className: 'likec4-markdown-block',
-  jsx: [
-    'MarkdownBlock',
-    'Markdown',
-  ],
-  description: 'Block with Markdown content',
+  slots: ['root'],
   base: {
+    root: {
     '--text-fz': '1em',
     '--text-fz-sm': 'calc(var(--text-fz) * var(--mantine-scale, 1) / 1.125)',
     '--text-fz-md': 'calc(var(--text-fz) * var(--mantine-scale, 1))',
@@ -320,6 +317,7 @@ export const markdownBlock = defineRecipe({
         ],
       },
     },
+    } as any,
   },
 
   variants: {
@@ -328,7 +326,8 @@ export const markdownBlock = defineRecipe({
      */
     uselikec4palette: {
       true: {
-        '--code-background': 'color-mix(in oklab , var(--likec4-palette-stroke) 70%, transparent)',
+        root: {
+          '--code-background': 'color-mix(in oklab , var(--likec4-palette-stroke) 70%, transparent)',
         '--code-color': 'var(--likec4-palette-loContrast)',
         '--typography-spacing': 'calc(0.5 * var(--text-fz-md))',
         '& :where(a)': {
@@ -348,6 +347,7 @@ export const markdownBlock = defineRecipe({
         '& :where(hr)': {
           borderColor: alpha(__v('palette.stroke'), 85),
         },
+        },
       },
       false: {},
     },
@@ -356,11 +356,15 @@ export const markdownBlock = defineRecipe({
      */
     value: {
       // default
-      markdown: {},
+      markdown: {
+        root: {},
+      },
       // when block receives a plain text
       plaintext: {
-        '& :where(p)': {
+        root: {
+          '& :where(p)': {
           whiteSpace: 'preserve-breaks',
+          },
         },
       },
     },
@@ -370,10 +374,4 @@ export const markdownBlock = defineRecipe({
     uselikec4palette: false,
     value: 'markdown',
   },
-
-  staticCss: [{
-    uselikec4palette: ['*'],
-    value: ['plaintext'],
-    conditions: ['*'],
-  }],
 })

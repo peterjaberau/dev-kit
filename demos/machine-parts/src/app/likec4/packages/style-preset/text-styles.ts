@@ -1,13 +1,12 @@
-import { type CompositionStyles, defineTextStyles as _defineTextStyles } from '@pandacss/dev'
+import { type CompositionStyles, defineTextStyles as _defineTextStyles } from '@chakra-ui/react'
 
 function defineTextStyles<const T extends CompositionStyles['textStyles']>(definition: T): T {
-  return _defineTextStyles(definition) as T
+  return defineTextStyles(definition) as T
 }
 
 export const textStyles = defineTextStyles({
   dimmed: {
     DEFAULT: {
-      description: 'Text style for dimmed content',
       value: {
         fontSize: 'md',
         lineHeight: 'md',
@@ -81,7 +80,6 @@ export const textStyles = defineTextStyles({
   },
   likec4: {
     DEFAULT: {
-      description: 'Text style for panel content',
       value: {
         fontSize: 'md',
         lineHeight: 'md',
@@ -91,7 +89,6 @@ export const textStyles = defineTextStyles({
     },
     panel: {
       DEFAULT: {
-        description: 'Text style for panel content',
         value: {
           fontSize: 'sm',
           lineHeight: 'sm',
@@ -100,7 +97,6 @@ export const textStyles = defineTextStyles({
         },
       },
       action: {
-        description: 'Text style for panel action items',
         value: {
           fontSize: 'sm',
           lineHeight: 'sm',

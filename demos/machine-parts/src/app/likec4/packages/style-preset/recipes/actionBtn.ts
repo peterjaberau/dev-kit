@@ -1,16 +1,9 @@
-import { defineParts, defineRecipe } from '@pandacss/dev'
-import { defineSlotRecipe } from "@chakra-ui/react"
+import { defineSlotRecipe } from '@chakra-ui/react'
 
-
-const parts = defineParts({
-  root: { selector: '&' },
-  container: { selector: '& > div' },
-})
-
-export const actionButtons = defineRecipe({
+export const actionButtons = defineSlotRecipe({
   className: 'action-buttons',
-  description: 'Action Buttons Container within Diagram Node (Bottom-Center)',
-  base: parts({
+  slots: ['root', 'container'],
+  base: {
     root: {
       display: 'flex',
       flexDirection: 'row',
@@ -26,7 +19,7 @@ export const actionButtons = defineRecipe({
       _smallZoom: {
         display: 'none',
       },
-    },
+    } as any,
     container: {
       display: 'flex',
       flexDirection: 'row',
@@ -34,84 +27,94 @@ export const actionButtons = defineRecipe({
       justifyContent: 'center',
       alignItems: 'center',
     },
-  }),
-  staticCss: [{
-    conditions: ['*'],
-  }],
+  },
 })
 
-export const actionBtn = defineRecipe({
+export const actionBtn = defineSlotRecipe({
   className: 'action-btn',
-  description: 'Action Button within Diagram Node (Bottom-Center)',
+  slots: ['root'],
   base: {
-    color: 'var(--actionbtn-color)',
-    opacity: 0.75,
+    root: {
+      color: 'var(--actionbtn-color)',
+      opacity: 0.75,
 
-    '--actionbtn-color': 'var(--likec4-palette-loContrast)',
-    '--actionbtn-color-hovered': 'var(--likec4-palette-loContrast)',
-    '--actionbtn-color-hovered-btn': 'var(--likec4-palette-hiContrast)',
+      '--actionbtn-color': 'var(--likec4-palette-loContrast)',
+      '--actionbtn-color-hovered': 'var(--likec4-palette-loContrast)',
+      '--actionbtn-color-hovered-btn': 'var(--likec4-palette-hiContrast)',
 
-    '--actionbtn-bg-idle': `color-mix(in oklab , var(--likec4-palette-fill),  transparent 99%)`,
-    '--actionbtn-bg-hovered': `color-mix(in oklab , var(--likec4-palette-fill) 65%, var(--likec4-palette-stroke))`,
-    '--actionbtn-bg-hovered-btn': `color-mix(in oklab , var(--likec4-palette-fill) 50%, var(--likec4-palette-stroke))`,
+      '--actionbtn-bg-idle': `color-mix(in oklab , var(--likec4-palette-fill),  transparent 99%)`,
+      '--actionbtn-bg-hovered': `color-mix(in oklab , var(--likec4-palette-fill) 65%, var(--likec4-palette-stroke))`,
+      '--actionbtn-bg-hovered-btn': `color-mix(in oklab , var(--likec4-palette-fill) 50%, var(--likec4-palette-stroke))`,
 
-    '--ai-bg': `var(--actionbtn-bg-idle)`,
+      '--ai-bg': `var(--actionbtn-bg-idle)`,
 
-    background: `var(--ai-bg)`,
+      background: `var(--ai-bg)`,
 
-    _whenSelectable: {
-      pointerEvents: 'all',
-      cursor: 'pointer',
-    },
+      _selectable: {
+        pointerEvents: 'all',
+        cursor: 'pointer',
+      },
 
-    _whenHovered: {
-      opacity: 1,
-      color: 'var(--actionbtn-color-hovered)',
-      '--ai-bg': `var(--actionbtn-bg-hovered)`,
-    },
-    _hover: {
-      opacity: 1,
-      color: 'var(--actionbtn-color-hovered-btn)',
-      '--ai-bg': `var(--actionbtn-bg-hovered-btn)`,
-    },
-    _reduceGraphicsOnPan: {
-      display: 'none',
-    },
-    _smallZoom: {
-      display: 'none',
-    },
-    '& *': {
-      pointerEvents: 'none',
-    },
-    _print: {
-      display: 'none',
-    },
+      _hover: {
+        opacity: 1,
+        color: 'var(--actionbtn-color-hovered-btn)',
+        '--ai-bg': `var(--actionbtn-bg-hovered-btn)`,
+      },
+      _reduceGraphicsOnPan: {
+        display: 'none',
+      },
+      _smallZoom: {
+        display: 'none',
+      },
+      '& *': {
+        pointerEvents: 'none',
+      },
+      _print: {
+        display: 'none',
+      },
+    } as any,
   },
 
   variants: {
     variant: {
       transparent: {
-        '--actionbtn-bg-hovered': `var(--actionbtn-bg-idle)`,
+        root: {
+          '--actionbtn-bg-hovered': `var(--actionbtn-bg-idle)`,
+        },
       },
       filled: {
-        boxShadow: {
-          base: '1px 1px 3px 0px transparent',
-          _whenHovered: '1px 1px 3px 0px rgba(0, 0, 0, 0.2)',
-          _reduceGraphics: 'none',
+        root: {
+          boxShadow: {
+            base: '1px 1px 3px 0px transparent',
+            _hover: '1px 1px 3px 0px rgba(0, 0, 0, 0.2)',
+            _reduceGraphics: 'none',
+          },
         },
       },
     },
     size: {
       sm: {
-        ['--ai-size']: `22px`,
+        root: {
+          ['--ai-size']: `22px`,
+        },
       },
       md: {
-        ['--ai-size']: `28px`,
+        root: {
+          ['--ai-size']: `28px`,
+        },
       },
     },
     radius: {
-      sm: { '--ai-radius': `{radii.sm}` },
-      md: { '--ai-radius': `{radii.md}` },
+      sm: {
+        root: {
+          '--ai-radius': `{radii.sm}`,
+        },
+      },
+      md: {
+        root: {
+          '--ai-radius': `{radii.md}`,
+        },
+      },
     },
   },
   defaultVariants: {
@@ -119,10 +122,4 @@ export const actionBtn = defineRecipe({
     radius: 'md',
     variant: 'filled',
   },
-  staticCss: [{
-    size: ['*'],
-    radius: ['*'],
-    variant: ['*'],
-    conditions: ['*'],
-  }],
 })

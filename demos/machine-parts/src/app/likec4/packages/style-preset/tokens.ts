@@ -1,4 +1,4 @@
-import { defineTokens } from '@pandacss/dev'
+import { defineTokens } from '@chakra-ui/react'
 import { mapValues } from 'remeda'
 import { defaultTheme } from './defaults/index'
 import { rem } from './helpers'

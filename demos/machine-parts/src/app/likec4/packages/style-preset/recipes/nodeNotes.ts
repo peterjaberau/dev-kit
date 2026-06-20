@@ -1,18 +1,10 @@
-import { defineParts, defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 import { __v } from '../const'
 
-const parts = defineParts({
-  root: { selector: '&' },
-  paper: { selector: '& .__paper' },
-  // paperBack: { selector: '& .__paper:is(.__paper-back)' },
-  // paperFront: { selector: '& .__paper:is(.__paper-front)' },
-  popover: { selector: '& .__popover' },
-})
-
-export const nodeNotes = defineRecipe({
+export const nodeNotes = defineSlotRecipe({
   className: 'likec4-node-notes',
-  jsx: ['NodeNotesr'],
-  base: parts({
+  slots: ['root', 'paper', 'popover'],
+  base: {
     root: {
       position: 'absolute',
       top: '-20px',
@@ -58,7 +50,7 @@ export const nodeNotes = defineRecipe({
         ].join(', '),
         backgroundColor: 'var(--paper-bg)',
       },
-      _whenHovered: {
+      _hover: {
         transform: 'rotateZ(-4deg) scale(1.06)',
         _before: {
           transform: 'translate(-1px, -2px) rotateZ(6deg) scale(1.02)', // scale(1.025)',
@@ -123,29 +115,26 @@ export const nodeNotes = defineRecipe({
       backgroundColor: 'likec4.overlay.body',
       padding: 'sm',
     },
-  }),
+  },
   variants: {
     opened: {
-      false: parts({
+      false: {
         // paperFront: {
         //   _after: {
 
         //   },
         // },
-      }),
-      true: parts({
+      },
+      true: {
         // paperFront: {
         //   _after: {
         //     display: 'none',
         //   },
         // },
-      }),
+      },
     },
   },
   defaultVariants: {
     opened: false,
   },
-  staticCss: [{
-    opened: ['*'],
-  }],
 })

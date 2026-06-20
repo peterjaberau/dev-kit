@@ -3,13 +3,15 @@
 // Copyright (c) 2023-2026 Denis Davydkov
 // Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
-import type { Config } from '@pandacss/dev'
+import { defineGlobalStyles } from '@chakra-ui/react'
+import type { SystemConfig } from '@chakra-ui/react'
 import { keys, mapToObj } from 'remeda'
 import { __v, vars } from './const'
 import { defaultTheme } from './defaults/index'
+import { globalVars } from './globalVars'
 import { alpha } from './helpers'
 
-type ExtendableGlobalCss = NonNullable<Config['globalCss']>
+type ExtendableGlobalCss = NonNullable<SystemConfig['globalCss']>
 
 const sizeConditions = {
   ...mapToObj(keys(defaultTheme.textSizes), (size) =>
@@ -28,13 +30,13 @@ const sizeConditions = {
     ] satisfies [string, Record<string, string>]),
 }
 
-export const globalCss: ExtendableGlobalCss = {
-  extend: {
+export const globalCss: ExtendableGlobalCss = defineGlobalStyles({
     // '@supports ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none))': {
     //   // TODO: this workaround disables animations in Safari (to improve performance)
     //   ['--likec4-safari-animation-hook']: '/*-*/ /*-*/',
     // },
     ':where(:root,:host)': {
+      ...globalVars,
       ['--likec4-app-font-default']:
         `'IBM Plex Sans Variable',ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"`,
     },
@@ -218,5 +220,4 @@ export const globalCss: ExtendableGlobalCss = {
       {
         display: 'none',
       },
-  },
-}
+})

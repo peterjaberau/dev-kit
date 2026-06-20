@@ -1,10 +1,8 @@
-import { defineSlotRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 
 export const edgePath = defineSlotRecipe({
-  description: 'Recipe for Edge Path',
   slots: ['path', 'pathBg', 'markersCtx', 'middlePoint'],
   className: 'likec4-edge',
-  jsx: [],
   base: {
     path: {
       fill: 'none',
@@ -17,7 +15,7 @@ export const edgePath = defineSlotRecipe({
       [`:where([data-edge-dir='back']) &`]: {
         animationDirection: 'reverse',
       },
-      _whenHovered: {
+      _hover: {
         _noReduceGraphics: {
           animationPlayState: 'running',
           animationDelay: '450ms',
@@ -29,13 +27,13 @@ export const edgePath = defineSlotRecipe({
           animationDelay: '0ms',
         },
       },
-      _whenDimmed: {
+      _dimmed: {
         animationPlayState: 'paused',
       },
       _smallZoom: {
         animationName: 'none',
       },
-      _whenPanning: {
+      _panning: {
         strokeDasharray: 'none !important',
         animationPlayState: 'paused',
       },
@@ -53,7 +51,7 @@ export const edgePath = defineSlotRecipe({
         transitionDuration: 'fast',
         transitionTimingFunction: 'inOut',
       },
-      _whenHovered: {
+      _hover: {
         transitionTimingFunction: 'out',
         strokeWidth: 'calc(var(--xy-edge-stroke-width) + 4)',
         strokeOpacity: {
@@ -61,13 +59,13 @@ export const edgePath = defineSlotRecipe({
           _dark: 0.45,
         },
       },
-      _whenSelected: {
+      _selected: {
         strokeWidth: 'calc(var(--xy-edge-stroke-width) + 6)',
         strokeOpacity: {
           base: 0.25,
           _dark: 0.5,
         },
-        _whenHovered: {
+        _hover: {
           strokeOpacity: {
             base: 0.4,
             _dark: 0.65,
@@ -91,7 +89,4 @@ export const edgePath = defineSlotRecipe({
       pointerEvents: 'none',
     },
   },
-  staticCss: [{
-    conditions: ['*'],
-  }],
 })

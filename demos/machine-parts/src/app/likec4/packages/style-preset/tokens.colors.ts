@@ -1,4 +1,4 @@
-import { defineTokens } from '@pandacss/dev'
+import { defineTokens } from '@chakra-ui/react'
 import { tokens as generated } from './generated'
 
 export const colors = defineTokens.colors({

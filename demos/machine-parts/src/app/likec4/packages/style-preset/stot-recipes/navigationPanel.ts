@@ -1,10 +1,8 @@
-import { defineSlotRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 
 export const navigationPanel = defineSlotRecipe({
   className: 'likec4-navigation-panel',
-  jsx: ['NavigationPanel', /NavigationPanel/],
   slots: ['root', 'body', 'logo', 'label', 'dropdown'],
-  description: 'LikeC4 Navigation panel',
   base: {
     root: {
       display: 'flex',
@@ -25,7 +23,7 @@ export const navigationPanel = defineSlotRecipe({
         'calc(100vw)',
         'calc(100cqw)',
       ],
-      '@/sm': {
+      'sm': {
         margin: 'xs',
         gap: 'xs',
         width: 'max-content',
@@ -38,7 +36,7 @@ export const navigationPanel = defineSlotRecipe({
           'calc(100cqh - 2 * {spacing.xs})',
         ],
       },
-      '@/md': {
+      'md': {
         margin: 'sm',
         width: 'max-content',
         maxWidth: [
@@ -63,7 +61,7 @@ export const navigationPanel = defineSlotRecipe({
       gap: 'xs',
       pointerEvents: 'all',
       width: '100%',
-      '@/sm': {
+      'sm': {
         width: 'auto',
       },
       minHeight: '40px',
@@ -79,19 +77,19 @@ export const navigationPanel = defineSlotRecipe({
       cursor: 'pointer',
       width: {
         base: '20px',
-        '@/sm': '64px',
+        'sm': '64px',
       },
 
       ['& > [data-logo-icon]']: {
         display: {
           base: 'block',
-          '@/sm': 'none',
+          'sm': 'none',
         },
       },
       ['& > [data-logo-full]']: {
         display: {
           base: 'none',
-          '@/sm': 'block',
+          'sm': 'block',
         },
       },
     },
@@ -118,7 +116,7 @@ export const navigationPanel = defineSlotRecipe({
       md: {},
       lg: {
         body: {
-          '@/sm': {
+          'sm': {
             gap: 'sm',
             minHeight: '48px',
             paddingInline: 'md',
@@ -128,7 +126,7 @@ export const navigationPanel = defineSlotRecipe({
           },
         },
         label: {
-          '@/sm': {
+          'sm': {
             fontSize: 'md',
           },
         },
@@ -153,8 +151,4 @@ export const navigationPanel = defineSlotRecipe({
     size: 'md',
     panelPosition: 'left',
   },
-  staticCss: [{
-    size: ['*'],
-    panelPosition: ['*'],
-  }],
 })

@@ -1,9 +1,8 @@
-import { defineLayerStyles } from '@pandacss/dev'
+import { defineLayerStyles } from '@chakra-ui/react'
 
 export const layerStyles = /* @__PURE__ */ defineLayerStyles({
   likec4: {
     tag: {
-      description: 'LikeC4 tag layer',
       value: {
         color: 'likec4.tag.text',
         backgroundColor: 'likec4.tag.bg',
@@ -16,13 +15,12 @@ export const layerStyles = /* @__PURE__ */ defineLayerStyles({
     },
     panel: {
       DEFAULT: {
-        description: 'LikeC4 panel layer',
         value: {
           padding: '1',
           borderRadius: '0',
           backgroundColor: 'likec4.panel.bg',
           border: '1px solid {colors.likec4.panel.border}',
-          '@/sm': {
+          'sm': {
             boxShadow: 'lg',
             borderRadius: 'md',
             paddingInline: '2',
@@ -34,7 +32,6 @@ export const layerStyles = /* @__PURE__ */ defineLayerStyles({
       },
       action: {
         DEFAULT: {
-          description: 'LikeC4 panel action layer',
           value: {
             color: {
               base: 'likec4.panel.action',
@@ -60,7 +57,6 @@ export const layerStyles = /* @__PURE__ */ defineLayerStyles({
         },
 
         filled: {
-          description: 'LikeC4 action panel filled layer',
           value: {
             color: {
               base: 'likec4.panel.action',
@@ -89,7 +85,6 @@ export const layerStyles = /* @__PURE__ */ defineLayerStyles({
       },
     },
     dropdown: {
-      description: 'LikeC4 dropdown layer',
       value: {
         padding: '2',
         backgroundColor: 'likec4.dropdown.bg',

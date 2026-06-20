@@ -1,10 +1,8 @@
-import { defineSlotRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 import { mantine } from '../generated'
 
 export const navigationLink = defineSlotRecipe({
   className: 'likec4-navlink',
-  description: 'Navigation Link (classes for Mantine NavLink)',
-  jsx: ['NavLink'],
   slots: ['root', 'body', 'section', 'label', 'description'],
   base: {
     root: {
@@ -37,20 +35,11 @@ export const navigationLink = defineSlotRecipe({
       fontWeight: '500',
       lineHeight: 1.2,
     },
-    description: {
-      display: 'block',
-      fontSize: 'xxs',
-      lineHeight: 1.2,
-    },
   },
   variants: {
     truncateLabel: {
       'true': {
         label: {
-          width: '100%',
-          truncate: true,
-        },
-        description: {
           width: '100%',
           truncate: true,
         },
@@ -61,8 +50,4 @@ export const navigationLink = defineSlotRecipe({
   defaultVariants: {
     truncateLabel: false,
   },
-  staticCss: [{
-    truncateLabel: ['*'],
-    conditions: ['*'],
-  }],
 })

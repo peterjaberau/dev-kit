@@ -1,36 +1,41 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 
-export const navigationPanelActionIcon = defineRecipe({
+export const navigationPanelActionIcon = defineSlotRecipe({
   className: 'likec4-navigation-panel-icon',
-  jsx: ['PanelActionIcon'],
-  description: 'ActionIcon for navigation panel',
+  slots: ['root'],
   base: {
-    color: {
-      base: 'likec4.panel.action',
-      _disabled: 'likec4.panel.action.disabled',
-      _notDisabled: {
-        _hover: 'likec4.panel.action.hover',
+    root: {
+      color: {
+        base: 'likec4.panel.action',
+        _disabled: 'likec4.panel.action.disabled',
+        _notDisabled: {
+          _hover: 'likec4.panel.action.hover',
+        },
       },
-    },
-    _disabled: {
-      opacity: 0.5,
-    },
+      _disabled: {
+        opacity: 0.5,
+      },
+    } as any,
   },
   variants: {
     variant: {
       'default': {
-        backgroundColor: {
-          base: 'transparent',
-          _notDisabled: {
-            _hover: 'likec4.panel.action.bg.hover',
+        root: {
+          backgroundColor: {
+            base: 'transparent',
+            _notDisabled: {
+              _hover: 'likec4.panel.action.bg.hover',
+            },
           },
         },
       },
       'filled': {
-        backgroundColor: {
-          base: 'likec4.panel.action.bg',
-          _notDisabled: {
-            _hover: 'likec4.panel.action.bg.hover',
+        root: {
+          backgroundColor: {
+            base: 'likec4.panel.action.bg',
+            _notDisabled: {
+              _hover: 'likec4.panel.action.bg.hover',
+            },
           },
         },
       },
@@ -38,9 +43,11 @@ export const navigationPanelActionIcon = defineRecipe({
     type: {
       'default': {},
       'warning': {
-        color: {
-          base: 'likec4.panel.action.warning',
-          _hover: 'likec4.panel.action.warning.hover',
+        root: {
+          color: {
+            base: 'likec4.panel.action.warning',
+            _hover: 'likec4.panel.action.warning.hover',
+          },
         },
       },
     },
@@ -49,9 +56,11 @@ export const navigationPanelActionIcon = defineRecipe({
     type: 'warning',
     variant: 'filled',
     css: {
-      backgroundColor: {
-        base: 'likec4.panel.action.warning.bg',
-        _hover: 'likec4.panel.action.warning.bg.hover',
+      root: {
+        backgroundColor: {
+          base: 'likec4.panel.action.warning.bg',
+          _hover: 'likec4.panel.action.warning.bg.hover',
+        },
       },
     },
   }],
@@ -59,8 +68,4 @@ export const navigationPanelActionIcon = defineRecipe({
     variant: 'default',
     type: 'default',
   },
-  staticCss: [{
-    variant: ['*'],
-    conditions: ['*'],
-  }],
 })

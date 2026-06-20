@@ -1,4 +1,4 @@
-import { defineSemanticTokens } from '@pandacss/dev'
+import { defineSemanticTokens } from '@chakra-ui/react'
 import { mantine } from './generated'
 import { alpha } from './helpers'
 

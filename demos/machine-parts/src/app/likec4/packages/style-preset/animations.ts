@@ -1,5 +1,5 @@
-import { defineAnimationStyles, defineKeyframes } from '@pandacss/dev'
-import type { AnimationStyles, CssKeyframes } from '@pandacss/types'
+import { defineAnimationStyles, defineKeyframes } from '@chakra-ui/react'
+import type { AnimationStyles, CssKeyframes } from '@chakra-ui/react'
 
 export const keyframes: CssKeyframes = defineKeyframes({
   'indicatorOpacity': {

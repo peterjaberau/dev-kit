@@ -1,4 +1,4 @@
-import { defineParts, defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 
 const backdropBlur = '--_blur'
 const backdropOpacity = '--_opacity'
@@ -9,15 +9,9 @@ const inset = '--_inset'
 
 const borderRadius = '--_border-radius'
 
-const parts = defineParts({
-  dialog: { selector: '&' },
-  body: { selector: '& .likec4-overlay-body' },
-})
-
-export const overlay = defineRecipe({
-  description: 'Recipe for Overlay Dialog',
+export const overlay = defineSlotRecipe({
   className: 'likec4-overlay',
-  base: parts({
+  base: {
     dialog: {
       boxSizing: 'border-box',
       margin: '0',
@@ -55,7 +49,7 @@ export const overlay = defineRecipe({
       height: '100%',
       background: 'likec4.overlay.body',
     },
-  }),
+  },
   variants: {
     fullscreen: {
       false: {
@@ -108,5 +102,4 @@ export const overlay = defineRecipe({
     fullscreen: false,
     withBackdrop: true,
   },
-  staticCss: ['*'],
 })

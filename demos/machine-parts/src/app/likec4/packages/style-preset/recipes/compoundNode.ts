@@ -1,4 +1,4 @@
-import { defineParts, defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 import { __v, vars } from '../const'
 import { alpha } from '../helpers'
 
@@ -32,21 +32,12 @@ const compoundColor = {
   ref: 'var(--_compound-color)',
 } as const
 
-const parts = defineParts({
-  root: { selector: '&' },
-  titleContainer: { selector: '& .likec4-compound-title-container' },
-  title: { selector: '& .likec4-compound-title' },
-  icon: { selector: '& .likec4-compound-icon' },
-  navigationBtn: { selector: '& .likec4-compound-navigation' },
-  detailsBtn: { selector: '& .likec4-compound-details' },
-  actionBtn: { selector: '& .action-btn' },
-})
-
 const iconSize = '20px'
 
-export const compoundNode = defineRecipe({
+export const compoundNode = defineSlotRecipe({
   className: 'likec4-compound-node',
-  base: parts({
+  slots: ['root', 'titleContainer', 'title', 'icon', 'navigationBtn', 'detailsBtn', 'actionBtn'],
+  base: {
     root: {
       position: 'relative',
       width: '100%',
@@ -85,15 +76,15 @@ export const compoundNode = defineRecipe({
         pointerEvents: 'none',
         display: {
           base: 'none',
-          _whenFocused: 'block',
-          _whenSelected: 'block',
+          _focusVisible: 'block',
+          _selected: 'block',
         },
         animationStyle: 'indicator',
         animationPlayState: {
           base: 'paused',
-          _whenFocused: 'running',
-          _whenSelected: 'running',
-          _whenPanning: 'paused',
+          _focusVisible: 'running',
+          _selected: 'running',
+          _panning: 'paused',
         },
       },
       [`&:has(.likec4-compound-navigation) .likec4-compound-title-container`]: {
@@ -162,8 +153,7 @@ export const compoundNode = defineRecipe({
       '--actionbtn-color-hovered-btn': `oklch(from ${compoundColor.ref} calc(l + 0.2) c h)`,
       opacity: {
         base: 0.6,
-        _whenHovered: 0.75,
-        _whenSelected: 0.75,
+        _selected: 0.75,
         _hover: 1,
       },
       _noReduceGraphics: {
@@ -195,32 +185,32 @@ export const compoundNode = defineRecipe({
         display: 'none',
       },
     },
-  }),
+  },
   variants: {
     isTransparent: {
-      false: parts({
+      false: {
         root: {
           boxShadow: {
             _noReduceGraphics: '0 4px 10px 0.5px rgb(0 0 0/10%) , 0 2px 2px -1px rgb(0 0 0/40%)',
-            _whenSelected: 'none',
-            _whenPanning: 'none !important',
+            _selected: 'none',
+            _panning: 'none !important',
           },
           backgroundColor: __v('palette.fill'),
           borderColor: __v('palette.stroke'),
           [compoundColor.var]: alpha(__v('palette.hiContrast'), 90),
         },
-      }),
-      true: parts({
+      },
+      true: {
         root: {
           backgroundColor: alpha(__v('palette.fill'), compoundTransparency.ref),
           borderColor: alpha(__v('palette.stroke'), borderTransparency.ref),
           [compoundColor.var]: `color-mix(in oklch, ${__v('palette.hiContrast')}, ${__v('palette.stroke')} 10%)`,
         },
-      }),
+      },
     },
     // When the compound node is too transparent, the text color should be inverted
     inverseColor: {
-      true: parts({
+      true: {
         root: {
           '--_mix': `color-mix(in oklch, ${__v('palette.hiContrast')}, ${__v('palette.stroke')} 60%)`,
           [compoundColor.var]: {
@@ -237,26 +227,26 @@ export const compoundNode = defineRecipe({
             '--actionbtn-bg-hovered-btn': __v('palette.fill'),
           },
         },
-      }),
+      },
       false: {},
     },
     borderStyle: {
-      solid: parts({
+      solid: {
         root: {
           borderStyle: 'solid',
         },
-      }),
-      dashed: parts({
+      },
+      dashed: {
         root: {
           borderStyle: 'dashed',
         },
-      }),
-      dotted: parts({
+      },
+      dotted: {
         root: {
           borderStyle: 'dotted',
         },
-      }),
-      none: parts({
+      },
+      none: {
         root: {
           // We still need to have a border for consistent internal coordinates
           // So we use a transparent border and extend background
@@ -264,7 +254,7 @@ export const compoundNode = defineRecipe({
           backgroundClip: 'border-box!',
           [indicatorSpacing.var]: `calc(${borderWidth.ref} * 2)`,
         },
-      }),
+      },
     },
   },
   defaultVariants: {
@@ -272,9 +262,4 @@ export const compoundNode = defineRecipe({
     inverseColor: false,
     borderStyle: 'none',
   },
-  staticCss: [{
-    isTransparent: ['*'],
-    inverseColor: ['*'],
-    borderStyle: ['*'],
-  }],
 })

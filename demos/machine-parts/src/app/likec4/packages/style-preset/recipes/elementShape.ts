@@ -1,18 +1,10 @@
-import { defineParts, defineRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@chakra-ui/react'
 import { __v, vars } from '../const'
 
-const parts = defineParts({
-  root: { selector: '&' },
-  outline: { selector: '& .likec4-shape-outline' },
-  multipleHtml: { selector: '& .likec4-shape-multiple' },
-  componentTopLeftRect: { selector: '& .top-left-rect' },
-  multipleSvg: { selector: '&:is([data-likec4-shape-multiple="true"])' },
-})
-
-export const elementShapeRecipe = defineRecipe({
-  description: 'Recipe for Diagram node shape',
+export const elementShapeRecipe = defineSlotRecipe({
   className: 'likec4-element-shape',
-  base: parts({
+  slots: ['root', 'outline'],
+  base: {
     root: {
       top: '0',
       left: '0',
@@ -33,23 +25,23 @@ export const elementShapeRecipe = defineRecipe({
       visibility: {
         base: 'hidden',
         _smallZoom: 'hidden',
-        _whenSelected: 'visible',
-        _whenFocused: 'visible',
+        _selected: 'visible',
+        _focusVisible: 'visible',
         _groupFocusVisible: 'visible',
       },
       animationPlayState: {
         base: 'paused',
-        _whenSelected: 'running',
-        _whenFocused: 'running',
+        _selected: 'running',
+        _focusVisible: 'running',
         _groupFocusVisible: 'running',
-        _whenPanning: 'paused',
+        _panning: 'paused',
       },
       pointerEvents: 'none',
     },
-  }),
+  },
   variants: {
     shapetype: {
-      html: parts({
+      html: {
         root: {
           backgroundColor: 'var(--likec4-palette-fill)',
           border: 'none',
@@ -60,13 +52,13 @@ export const elementShapeRecipe = defineRecipe({
               '0 1px 1px 0 color-mix(in oklab, var(--likec4-palette-stroke) 40%, transparent)',
               '0 5px 3px 0 rgb(0 0 0 / 10%)',
             ].join(','),
-            _whenHovered: {
+            _hover: {
               base: `rgba(38, 57, 77, 95%) 0px 20px 30px -10px`,
               _dark: `rgba(10, 11, 16, 90%) 0px 20px 30px -10px`,
             },
-            _whenSelected: 'none',
+            _selected: 'none',
             _smallZoom: 'none',
-            _whenPanning: 'none',
+            _panning: 'none',
           },
           transition: {
             base: 'background-color 150ms, box-shadow 130ms',
@@ -89,12 +81,12 @@ export const elementShapeRecipe = defineRecipe({
           visibility: {
             base: 'visible',
             _smallZoom: 'hidden',
-            _whenSelected: 'hidden',
-            _whenFocused: 'hidden',
+            _selected: 'hidden',
+            _focusVisible: 'hidden',
             _reduceGraphicsOnPan: 'hidden',
           },
           transition: 'normal',
-          _whenHovered: {
+          _hover: {
             transform: 'translate(-14px, -14px)',
           },
         },
@@ -111,15 +103,15 @@ export const elementShapeRecipe = defineRecipe({
           borderColor: 'var(--likec4-palette-outline)',
           animationStyle: 'indicator',
         },
-      }),
-      svg: parts({
+      },
+      svg: {
         root: {
           fill: 'var(--likec4-palette-fill)',
           stroke: 'var(--likec4-palette-stroke)',
           transition: `fill 120ms {easings.in}, filter 130ms {easings.in}`,
           transitionTimingFunction: {
             base: 'out',
-            _whenHovered: 'in',
+            _hover: 'in',
           },
           transitionDelay: '0ms',
           filter: {
@@ -128,16 +120,16 @@ export const elementShapeRecipe = defineRecipe({
               'drop-shadow(0 1px 1px color-mix(in oklab, var(--likec4-palette-stroke) 40%, transparent))',
               'drop-shadow(0 5px 3px rgba(0, 0, 0, 0.1))',
             ].join('\n'),
-            _whenHovered: [
+            _hover: [
               'drop-shadow(0 2px 1px rgba(0, 0, 0, 0.12))',
               'drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.12))',
               'drop-shadow(0px 8px 4px rgba(0, 0, 0, 0.12))',
               'drop-shadow(0px 16px 8px rgba(0, 0, 0, 0.1))',
               'drop-shadow(0px 32px 16px rgba(0, 0, 0, 0.09))',
             ].join('\n'),
-            _whenSelected: 'none',
+            _selected: 'none',
             _smallZoom: 'none',
-            _whenPanning: 'none',
+            _panning: 'none',
           },
           '& [data-likec4-fill="fill"]': {
             fill: 'var(--likec4-palette-fill)',
@@ -155,12 +147,12 @@ export const elementShapeRecipe = defineRecipe({
           transition: `all 120ms {easings.in}`,
           transitionDelay: '0ms',
           strokeOpacity: 0.8,
-          _whenSelected: {
+          _selected: {
             transitionTimingFunction: 'out',
             '--mix-bg': '60%',
             strokeOpacity: 1,
           },
-          _whenHovered: {
+          _hover: {
             transitionTimingFunction: 'out',
             '--mix-bg': '60%',
             strokeOpacity: 1,
@@ -175,7 +167,7 @@ export const elementShapeRecipe = defineRecipe({
           },
           transform: {
             base: 'translate(14px, 14px) perspective(200px) translateZ(-4px)',
-            _whenHovered: 'translate(2px, 2px) perspective(200px) translateZ(-4px)',
+            _hover: 'translate(2px, 2px) perspective(200px) translateZ(-4px)',
           },
           transitionBehavior: 'allow-discrete',
           transitionProperty: 'fill, filter, transform',
@@ -185,8 +177,8 @@ export const elementShapeRecipe = defineRecipe({
           display: {
             _smallZoom: 'none',
             _reduceGraphicsOnPan: 'none',
-            _whenSelected: 'none',
-            _whenFocused: 'none',
+            _selected: 'none',
+            _focusVisible: 'none',
           },
           '& [data-likec4-fill="mix-stroke"]': {
             fill: 'var(--likec4-palette-fill)',
@@ -198,23 +190,23 @@ export const elementShapeRecipe = defineRecipe({
           strokeWidth: 4,
           animationStyle: 'indicator',
         },
-      }),
+      },
     },
     withBorder: {
       true: {},
       false: {},
     },
     withOutline: {
-      true: parts({
+      true: {
         outline: {
           display: 'block',
         },
-      }),
-      false: parts({
+      },
+      false: {
         outline: {
           display: 'none',
         },
-      }),
+      },
     },
   },
   defaultVariants: {
@@ -224,7 +216,7 @@ export const elementShapeRecipe = defineRecipe({
   compoundVariants: [{
     shapetype: 'html',
     withBorder: true,
-    css: parts({
+    css: {
       root: {
         borderStyle: 'solid',
         borderWidth: '3px',
@@ -234,11 +226,6 @@ export const elementShapeRecipe = defineRecipe({
       outline: {
         borderRadius: '10px',
       },
-    }),
-  }],
-  staticCss: [{
-    shapetype: ['*'],
-    withOutline: ['*'],
-    withBorder: ['*'],
+    },
   }],
 })
