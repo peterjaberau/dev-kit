@@ -35,4 +35,4 @@ export const edgeActionBtn = defineSlotRecipe({
       },
     } as any,
   },
-})
+} as any)

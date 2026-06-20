@@ -137,4 +137,4 @@ export const nodeNotes = defineSlotRecipe({
   defaultVariants: {
     opened: false,
   },
-})
+} as any)

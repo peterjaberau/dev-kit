@@ -122,4 +122,4 @@ export const edgeLabel = defineSlotRecipe({
     isStepEdge: false,
     cursor: 'default',
   },
-})
+} as any)

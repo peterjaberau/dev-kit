@@ -122,4 +122,4 @@ export const actionBtn = defineSlotRecipe({
     radius: 'md',
     variant: 'filled',
   },
-})
+} as any)

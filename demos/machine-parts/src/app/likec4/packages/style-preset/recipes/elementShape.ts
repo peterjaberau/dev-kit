@@ -228,4 +228,4 @@ export const elementShapeRecipe = defineSlotRecipe({
       },
     },
   }],
-})
+} as any)

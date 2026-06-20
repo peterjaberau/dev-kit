@@ -29,4 +29,4 @@ export const likec4tag = defineSlotRecipe({
       },
     } as any,
   },
-})
+} as any)

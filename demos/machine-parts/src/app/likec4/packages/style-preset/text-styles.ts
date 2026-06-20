@@ -1,7 +1,7 @@
 import { type CompositionStyles, defineTextStyles as _defineTextStyles } from '@chakra-ui/react'
 
 function defineTextStyles<const T extends CompositionStyles['textStyles']>(definition: T): T {
-  return defineTextStyles(definition) as T
+  return _defineTextStyles(definition) as T
 }
 
 export const textStyles = defineTextStyles({

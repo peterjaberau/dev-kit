@@ -285,4 +285,4 @@ export const elementNodeData = defineSlotRecipe({
     iconPosition: 'left',
     withIconColor: false,
   },
-})
+} as any)

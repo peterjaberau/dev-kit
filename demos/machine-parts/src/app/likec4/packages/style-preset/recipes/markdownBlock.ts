@@ -374,4 +374,4 @@ export const markdownBlock = defineSlotRecipe({
     uselikec4palette: false,
     value: 'markdown',
   },
-})
+} as any)

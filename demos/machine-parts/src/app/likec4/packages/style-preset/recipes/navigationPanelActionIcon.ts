@@ -68,4 +68,4 @@ export const navigationPanelActionIcon = defineSlotRecipe({
     variant: 'default',
     type: 'default',
   },
-})
+} as any)

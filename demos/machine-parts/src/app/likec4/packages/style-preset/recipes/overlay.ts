@@ -11,6 +11,7 @@ const borderRadius = '--_border-radius'
 
 export const overlay = defineSlotRecipe({
   className: 'likec4-overlay',
+  slots: ['dialog', 'body'],
   base: {
     dialog: {
       boxSizing: 'border-box',
@@ -102,4 +103,4 @@ export const overlay = defineSlotRecipe({
     fullscreen: false,
     withBackdrop: true,
   },
-})
+} as any)

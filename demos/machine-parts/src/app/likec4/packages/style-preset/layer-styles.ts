@@ -94,4 +94,4 @@ export const layerStyles = /* @__PURE__ */ defineLayerStyles({
       },
     },
   },
-})
+} as any)

@@ -46,4 +46,4 @@ export const elementNode = defineSlotRecipe({
       },
     } as any,
   },
-})
+} as any)

@@ -1,4 +1,4 @@
-import compare from 'natural-compare-lite'
+import compare from "natural-compare-lite"
 import { isString, sort } from 'remeda'
 import type { IterableContainer, ReorderedArray } from '../types/_common'
 

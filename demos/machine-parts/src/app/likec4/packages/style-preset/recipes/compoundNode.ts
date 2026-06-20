@@ -262,4 +262,4 @@ export const compoundNode = defineSlotRecipe({
     inverseColor: false,
     borderStyle: 'none',
   },
-})
+} as any)

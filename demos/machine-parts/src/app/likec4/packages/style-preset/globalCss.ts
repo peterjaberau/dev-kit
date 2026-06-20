@@ -220,4 +220,4 @@ export const globalCss: ExtendableGlobalCss = defineGlobalStyles({
       {
         display: 'none',
       },
-})
+} as any)

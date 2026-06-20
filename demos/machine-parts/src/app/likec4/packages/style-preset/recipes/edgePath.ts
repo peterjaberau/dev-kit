@@ -89,4 +89,4 @@ export const edgePath = defineSlotRecipe({
       pointerEvents: 'none',
     },
   },
-})
+} as any)
