@@ -1,5 +1,4 @@
-import { css } from '@likec4/styles/css'
-import { HStack, VStack } from '@chakra-ui/react'
+import { chakra, HStack, VStack } from '@chakra-ui/react'
 import { Button, ScrollAreaAutosize, Text, ThemeIcon } from '@mantine/core'
 import { IconX } from '@tabler/icons-react'
 import { useEffect, useRef } from 'react'
@@ -17,9 +16,9 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   }, [])
 
   return (
-    <dialog
+    <chakra.dialog
       ref={dialogRef}
-      className={css({
+      css={{
         margin: '0',
         padding: '0',
         position: 'fixed',
@@ -39,7 +38,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           backdropFilter: `blur(18px)`,
           bg: '[color-mix(in oklab, {colors.likec4.overlay.backdrop} 60%, transparent)]',
         },
-      })}
+      }}
       onClick={e => {
         e.stopPropagation()
         if ((e.target as any)?.nodeName?.toUpperCase() === 'DIALOG') {
@@ -73,7 +72,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           </HStack>
         </VStack>
       </HStack>
-    </dialog>
+    </chakra.dialog>
   )
 }
 

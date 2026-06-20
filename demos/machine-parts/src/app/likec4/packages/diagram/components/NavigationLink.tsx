@@ -1,5 +1,5 @@
-import { cx } from '@likec4/styles/css'
-import { navigationLink } from '@likec4/styles/recipes'
+import { classNames } from '../utils/classNames'
+import { navigationLink } from '#likec4/style-preset/recipes'
 import { type NavLinkProps, NavLink } from '@mantine/core'
 import { forwardRef } from 'react'
 import type { ComponentPropsWithoutRef } from 'react'
@@ -20,7 +20,7 @@ export const NavigationLink = forwardRef<HTMLButtonElement, NavigationLinkProps>
     classNames={navigationLink({
       truncateLabel,
     })}
-    className={cx(
+    className={classNames(
       'group',
       'mantine-active',
       className,

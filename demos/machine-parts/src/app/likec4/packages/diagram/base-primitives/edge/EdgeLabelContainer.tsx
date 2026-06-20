@@ -4,7 +4,7 @@
 // Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 import type { DiagramEdge } from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../../utils/classNames'
 import { EdgeLabelRenderer } from '@xyflow/react'
 import type { HTMLAttributes } from 'react'
 import { isNumber } from 'remeda'
@@ -71,7 +71,7 @@ export function EdgeLabelContainer({
       <div
         key={id}
         {...rest}
-        className={cx(
+        className={classNames(
           'nodrag nopan',
           'likec4-edge-label-container',
           className,

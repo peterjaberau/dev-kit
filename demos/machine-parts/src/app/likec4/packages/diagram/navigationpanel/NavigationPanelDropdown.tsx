@@ -6,9 +6,8 @@ import {
 } from '#likec4/core/model'
 import type { ViewId } from '#likec4/core/types'
 import { compareNaturalHierarchically, ifilter, ifirst, nonexhaustive, toArray } from '#likec4/core/utils'
-import { css, cx } from '@likec4/styles/css'
-import { Box, HStack, VStack } from "@chakra-ui/react"
-import { hstack, vstack } from '@likec4/styles/patterns'
+import { classNames } from '../utils/classNames'
+import { Box, chakra, HStack, VStack } from "@chakra-ui/react"
 import {
   Breadcrumbs,
   Button,
@@ -57,6 +56,16 @@ import {
 } from './hooks'
 import { breadcrumbTitle } from './styles.css'
 
+const ChakraHighlight = chakra(Highlight) as any
+const ChakraPopoverDropdown = chakra(PopoverDropdown) as any
+const ChakraScrollAreaAutosize = chakra(ScrollAreaAutosize) as any
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
+const ChakraIconFolderFilled = chakra(IconFolderFilled) as any
+const ChakraIconStarFilled = chakra(IconStarFilled) as any
+const ChakraIconZoomScan = chakra(IconZoomScan) as any
+const ChakraIconStack2 = chakra(IconStack2) as any
+const ChakraIconDirectionSignFilled = chakra(IconDirectionSignFilled) as any
+
 const scopedKeydownHandler: KeyboardEventHandler<HTMLElement> = createScopedKeydownHandler({
   siblingSelector: '[data-likec4-focusable]',
   parentSelector: '[data-likec4-breadcrumbs-dropdown]',
@@ -89,15 +98,16 @@ export const NavigationPanelDropdown = memo(() => {
   }, 250)
 
   return (
-    <PopoverDropdown
-      className={cx(
-        'nowheel',
-        vstack({
-          layerStyle: 'likec4.dropdown',
-          gap: 'xs',
-          pointerEvents: 'all',
-        }),
-      )}
+    <ChakraPopoverDropdown
+      className={classNames('nowheel')}
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        layerStyle: 'likec4.dropdown',
+        gap: 'xs',
+        pointerEvents: 'all',
+      }}
       data-likec4-breadcrumbs-dropdown
       onMouseLeave={() => actor.send({ type: 'dropdown.mouseLeave' })}
       onMouseEnter={() => actor.send({ type: 'dropdown.mouseEnter' })}
@@ -121,17 +131,15 @@ export const NavigationPanelDropdown = memo(() => {
         </Button> */
         }
       </HStack>
-      <ScrollAreaAutosize
+      <ChakraScrollAreaAutosize
         scrollbars="x"
         type="auto"
         offsetScrollbars="present"
-        classNames={{
-          root: css({
-            maxWidth: [
-              'calc(100vw - 50px)',
-              'calc(100cqw - 50px)',
-            ],
-          }),
+        css={{
+          maxWidth: [
+            'calc(100vw - 50px)',
+            'calc(100cqw - 50px)',
+          ],
         }}
         styles={{
           viewport: {
@@ -142,8 +150,8 @@ export const NavigationPanelDropdown = memo(() => {
         {hasSearchQuery
           ? <SearchResults />
           : <FolderColumns />}
-      </ScrollAreaAutosize>
-    </PopoverDropdown>
+      </ChakraScrollAreaAutosize>
+    </ChakraPopoverDropdown>
   )
 })
 NavigationPanelDropdown.displayName = 'NavigationPanelDropdown'
@@ -187,10 +195,10 @@ const SearchResults = memo(() => {
   if (found.length === 0) return <div>no results</div>
 
   return (
-    <ScrollAreaAutosize
+    <ChakraScrollAreaAutosize
       scrollbars="xy"
       offsetScrollbars={false}
-      className={css({
+      css={{
         width: '100%',
         maxWidth: [
           'calc(100vw - 250px)',
@@ -200,7 +208,7 @@ const SearchResults = memo(() => {
           'calc(100vh - 200px)',
           'calc(100cqh - 200px)',
         ],
-      })}>
+      }}>
       <VStack gap="0.5">
         {found.map(v => (
           <FoundedView
@@ -216,7 +224,7 @@ const SearchResults = memo(() => {
           />
         ))}
       </VStack>
-    </ScrollAreaAutosize>
+    </ChakraScrollAreaAutosize>
   )
 })
 
@@ -225,7 +233,10 @@ interface FoundedViewProps {
   highlight: string | string[]
 }
 
-const foundedViewClass = hstack({
+const foundedViewStyle = {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
   gap: 'xxs',
   rounded: 'sm',
   px: 'xs',
@@ -241,13 +252,13 @@ const foundedViewClass = hstack({
     color: 'mantine.colors.primary.lightColor!',
     backgroundColor: 'mantine.colors.primary.lightHover!',
   },
-})
-const inheritColor = css({
+}
+const inheritColor = {
   _groupFocus: {
     color: '[inherit!]',
     transition: 'none',
   },
-})
+}
 
 function FoundedView(
   { view, highlight, ...props }: FoundedViewProps & Omit<ComponentPropsWithoutRef<'button'>, keyof FoundedViewProps>,
@@ -256,13 +267,13 @@ function FoundedView(
 
   const viewIcon = ViewTypeIcon[view.id === 'index' ? 'index' : view._type]
   const viewLabel = (
-    <Highlight
+    <ChakraHighlight
       key={view.id}
       component={'div'}
-      className={cx(
+      css={[
         inheritColor,
         breadcrumbTitle({ truncate: true }),
-        css({
+        {
           '& > mark': {
             backgroundColor: {
               base: 'mantine.colors.yellow[2]/90',
@@ -273,50 +284,50 @@ function FoundedView(
               _groupFocus: '[inherit!]',
             },
           },
-        }),
-      )}
+        },
+      ]}
       maw={350}
       highlight={highlight}
     >
       {view.title ?? view.id}
-    </Highlight>
+    </ChakraHighlight>
   )
-  const className = cx(
+  const className = classNames(
     props.className,
     'group',
-    foundedViewClass,
   )
 
   if (folder.isRoot) {
     return (
-      <UnstyledButton
+      <ChakraUnstyledButton
         {...props}
         className={className}
+        css={foundedViewStyle}
       >
         {viewIcon}
         {viewLabel}
-      </UnstyledButton>
+      </ChakraUnstyledButton>
     )
   }
 
   const breadcrumbs = folder.breadcrumbs.map(b => (
-    <Highlight
+    <ChakraHighlight
       key={b.path}
       component={'div'}
-      className={cx(
-        css({
+      css={[
+        inheritColor,
+        {
           _groupHover: {
             color: 'text.dimmed',
           },
-        }),
-        inheritColor,
+        },
         breadcrumbTitle({ dimmed: true, truncate: true }),
-      )}
+      ]}
       maw={170}
       highlight={isArray(highlight) ? highlight : []}
     >
       {b.title}
-    </Highlight>
+    </ChakraHighlight>
   ))
   breadcrumbs.push(
     <HStack gap="[4px]">
@@ -326,34 +337,35 @@ function FoundedView(
   )
 
   return (
-    <UnstyledButton
+    <ChakraUnstyledButton
       {...props}
       className={className}
+      css={foundedViewStyle}
     >
       {folderIcon}
       <Breadcrumbs separator={btnRightSection} separatorMargin={3}>
         {breadcrumbs}
       </Breadcrumbs>
-    </UnstyledButton>
+    </ChakraUnstyledButton>
   )
 }
 
 const btnRightSection = <IconChevronRight size={12} stroke={1.5} className="mantine-rotate-rtl" />
 const folderIcon = (
-  <IconFolderFilled
+  <ChakraIconFolderFilled
     size={16}
     // stroke={1.5}
-    className={css({
+    css={{
       opacity: {
         base: 0.3,
         _groupHover: 0.5,
         _groupActive: 0.5,
         _groupFocus: 0.5,
       },
-    })} />
+    }} />
 )
 
-const viewTypeIconCss = css({
+const viewTypeIconCss = {
   opacity: {
     base: 0.3,
     _dark: 0.5,
@@ -361,28 +373,31 @@ const viewTypeIconCss = css({
     _groupActive: 0.8,
     _groupFocus: 0.8,
   },
-})
+}
 const ViewTypeIcon = {
-  index: <IconStarFilled size={16} className={viewTypeIconCss} />,
+  index: <ChakraIconStarFilled size={16} css={viewTypeIconCss} />,
   element: (
-    <IconZoomScan
+    <ChakraIconZoomScan
       size={18}
       stroke={2}
-      className={viewTypeIconCss} />
+      css={viewTypeIconCss} />
   ),
-  deployment: <IconStack2 size={16} stroke={1.5} className={viewTypeIconCss} />,
-  dynamic: <IconDirectionSignFilled size={18} className={viewTypeIconCss} />,
+  deployment: <ChakraIconStack2 size={16} stroke={1.5} css={viewTypeIconCss} />,
+  dynamic: <ChakraIconDirectionSignFilled size={18} css={viewTypeIconCss} />,
 }
 
-const ColumnScrollArea = ScrollAreaAutosize.withProps({
-  scrollbars: 'y',
-  className: css({
-    maxHeight: [
-      'calc(100vh - 160px)',
-      'calc(100cqh - 160px)',
-    ],
-  }),
-})
+const ColumnScrollArea = (props: ComponentPropsWithoutRef<typeof ChakraScrollAreaAutosize>) => (
+  <ChakraScrollAreaAutosize
+    scrollbars="y"
+    css={{
+      maxHeight: [
+        'calc(100vh - 160px)',
+        'calc(100cqh - 160px)',
+      ],
+    }}
+    {...props}
+  />
+)
 
 type ColumnItem =
   | {
@@ -557,31 +572,20 @@ function SearchInput(props: {
       onKeyDown={scopedKeydownHandler}
       onChange={e => handleChange(e.currentTarget.value)}
       data-likec4-focusable
-      classNames={{
-        wrapper: css({
+      styles={{
+        wrapper: {
           flexGrow: 1,
-          backgroundColor: {
-            base: 'mantine.colors.gray[1]',
-            _dark: 'mantine.colors.dark[5]/80',
-            _hover: {
-              base: 'mantine.colors.gray[2]',
-              _dark: 'mantine.colors.dark[4]',
-            },
-            _focus: {
-              base: 'mantine.colors.gray[2]',
-              _dark: 'mantine.colors.dark[4]',
-            },
-          },
-          rounded: 'sm',
-        }),
-        input: css({
-          _placeholder: {
+          backgroundColor: 'var(--mantine-color-gray-1)',
+          borderRadius: 'var(--radii-sm)',
+        },
+        input: {
+          '&::placeholder': {
             color: 'text.dimmed',
           },
-          _focus: {
+          '&:focus': {
             outline: 'none',
           },
-        }),
+        },
       }}
       style={{
         ['--input-fz']: 'var(--mantine-font-size-sm)',

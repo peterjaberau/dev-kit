@@ -1,5 +1,4 @@
 import { type LayoutType, invariant } from '#likec4/core'
-import { css } from '@likec4/styles/css'
 import { type SegmentedControlItem, SegmentedControl } from '@mantine/core'
 import * as m from 'motion/react-m'
 
@@ -25,11 +24,11 @@ export function LayoutTypeSwitcher({
           invariant(layout === 'manual' || layout === 'auto', 'Invalid layout type')
           onChange(layout)
         }}
-        classNames={{
-          label: css({
+        styles={{
+          label: {
             fontSize: 'xxs',
             fontWeight: 'medium',
-          }),
+          },
         }}
         data={data} />
     </m.div>

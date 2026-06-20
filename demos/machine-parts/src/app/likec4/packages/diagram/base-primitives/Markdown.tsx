@@ -1,12 +1,11 @@
 import type { RichTextOrEmpty as RichTextType } from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
-import { markdownBlock } from '@likec4/styles/recipes'
-import type { JsxStyleProps } from '@likec4/styles/types'
+import { classNames } from '../utils/classNames'
+import { Box, type HTMLChakraProps, type SystemStyleObject, useSlotRecipe } from '@chakra-ui/react'
+import { markdownBlock } from '#likec4/style-preset/recipes'
 import { Text } from '@mantine/core'
-import { type ComponentPropsWithoutRef, forwardRef } from 'react'
+import { forwardRef } from 'react'
 
-export type MarkdownProps = Omit<ComponentPropsWithoutRef<'div'>, 'dangerouslySetInnerHTML' | 'children' | 'color'> & {
+export type MarkdownProps = Omit<HTMLChakraProps<'div'>, 'dangerouslySetInnerHTML' | 'children' | 'color'> & {
   value: RichTextType
 
   /**
@@ -24,7 +23,7 @@ export type MarkdownProps = Omit<ComponentPropsWithoutRef<'div'>, 'dangerouslySe
    * Font size for the block
    * @default 'md'
    */
-  fontSize?: (JsxStyleProps['fontSize'] & string) | undefined
+  fontSize?: (SystemStyleObject['fontSize'] & string) | undefined
 
   /**
    * If true, the component will not render anything if the value is empty.
@@ -57,17 +56,19 @@ export const Markdown = forwardRef<HTMLDivElement, MarkdownProps>(({
       ? { dangerouslySetInnerHTML: { __html: value.html } }
       : { children: <p>{value.text}</p> }
     : { children: <Text component="span" fz={'xs'} c="dimmed" style={{ userSelect: 'none' }}>{emptyText}</Text> }
+  const markdownRecipe = useSlotRecipe({ recipe: markdownBlock })
+  const markdownStyles = markdownRecipe({
+    uselikec4palette,
+    value: value.isMarkdown ? 'markdown' : 'plaintext',
+  })
   return (
     <Box
       {...props}
       ref={ref}
-      className={cx(
-        markdownBlock({
-          uselikec4palette,
-          value: value.isMarkdown ? 'markdown' : 'plaintext',
-        }),
+      className={classNames(
         className,
       )}
+      css={markdownStyles.root}
       style={{
         ...style,
         ...(fontSize && {

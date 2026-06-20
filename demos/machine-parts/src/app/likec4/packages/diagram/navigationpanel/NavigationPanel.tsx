@@ -1,5 +1,4 @@
-import { VStack } from '@chakra-ui/react'
-import { hstack } from '@likec4/styles/patterns'
+import { chakra, VStack } from '@chakra-ui/react'
 import {
   Popover,
   PopoverTarget,
@@ -21,6 +20,8 @@ import { NavigationPanelControls } from './NavigationPanelControls'
 import { NavigationPanelDropdown } from './NavigationPanelDropdown'
 import { ActiveWalkthroughControls } from './walkthrough'
 import { WalkthroughPanel } from './walkthrough/WalkthroughPanel'
+
+const MotionDiv = chakra(m.div) as any
 
 export const NavigationPanel = memo(() => {
   const diagram = useDiagram()
@@ -114,23 +115,26 @@ const NavigationPanelPopoverTarget = ({ actor }: { actor: NavigationPanelActorRe
   return (
     <LayoutGroup>
       <PopoverTarget>
-        <m.div
+        <MotionDiv
           layout
           layoutDependency={isActiveWalkthrough}
-          className={hstack({
+          css={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
             layerStyle: 'likec4.panel',
             position: 'relative',
             gap: 'xs',
             cursor: 'pointer',
             pointerEvents: 'all',
             width: '100%',
-          })}
+          }}
           onMouseLeave={() => actor.send({ type: 'breadcrumbs.mouseLeave' })}
         >
           <AnimatePresence>
             {isActiveWalkthrough ? <ActiveWalkthroughControls /> : <NavigationPanelControls />}
           </AnimatePresence>
-        </m.div>
+        </MotionDiv>
       </PopoverTarget>
     </LayoutGroup>
   )

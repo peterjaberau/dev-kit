@@ -1,4 +1,4 @@
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../utils/classNames'
 import { shallowEqual } from 'fast-equals'
 import { memo } from 'react'
 import { BaseXYFlow } from '../base/BaseXYFlow'
@@ -59,7 +59,7 @@ export const ProjectsOverviewXY = memo<ProjectsOverviewXYProps>(({
     <BaseXYFlow<ProjectsOverviewTypes.Node, ProjectsOverviewTypes.Edge>
       nodes={nodes}
       edges={edges}
-      className={cx(
+      className={classNames(
         isActive ? 'initialized' : 'not-initialized',
         'projects-overview',
       )}

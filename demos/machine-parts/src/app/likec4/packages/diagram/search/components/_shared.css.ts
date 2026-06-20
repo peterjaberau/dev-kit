@@ -1,18 +1,18 @@
-import { css, sva } from '@likec4/styles/css'
+import type { SystemStyleObject } from '@chakra-ui/react'
 
 // export const titleColor = '--title-color'
 // export const descriptionColor = '---description-color'
 // export const iconColor = '--icon-color'
 
-const buttonFocused = css.raw({
+const buttonFocused: SystemStyleObject = {
   outline: 'none',
   background: 'mantine.colors.primary[8]',
   borderColor: 'mantine.colors.primary[9]',
-})
+}
 
 const _treenodefocus = '.mantine-Tree-node:focus > .mantine-Tree-label &'
 
-const button = css.raw({
+const button: SystemStyleObject = {
   display: 'flex',
   width: '100%',
   background: 'body',
@@ -51,7 +51,7 @@ const button = css.raw({
       // [descriptionColor]: '{colors.mantine.colors.primary[1]}',
     },
   },
-})
+}
 
 export const focusable = 'likec4-focusable'
 
@@ -59,7 +59,7 @@ const iconSize = {
   ref: 'var(--likec4-icon-size, 24px)',
 }
 
-const icon = css.raw({
+const icon: SystemStyleObject = {
   color: {
     base: 'text.dimmed',
     _light: 'mantine.colors.gray[5]',
@@ -95,9 +95,9 @@ const icon = css.raw({
   // [whenContainerIsNarrow]: {
   //   [iconSize]: '18px',
   // },
-})
+}
 
-const title = css.raw({
+const title: SystemStyleObject = {
   fontSize: '16px',
   fontWeight: 'medium',
   lineHeight: '1.1',
@@ -123,8 +123,8 @@ const title = css.raw({
       _light: 'white',
     },
   },
-})
-const descriptionColor = css.raw({
+}
+const descriptionColor: SystemStyleObject = {
   color: {
     base: 'text.dimmed',
     _groupHover: {
@@ -136,9 +136,10 @@ const descriptionColor = css.raw({
   [_treenodefocus]: {
     color: 'mantine.colors.primary[0]',
   },
-})
+}
 
-const description = css.raw(descriptionColor, {
+const description: SystemStyleObject = {
+  ...descriptionColor,
   marginTop: '1',
   fontSize: '12px',
   lineHeight: '1.4',
@@ -146,9 +147,9 @@ const description = css.raw(descriptionColor, {
   [`:where([data-disabled]) &`]: {
     opacity: 0.85,
   },
-})
+}
 
-export const emptyBoX = css({
+export const emptyBoX: SystemStyleObject = {
   width: '100%',
   height: '100%',
   border: `2px dashed`,
@@ -161,16 +162,12 @@ export const emptyBoX = css({
   color: 'text.dimmed',
   padding: 'md',
   paddingBlock: 'xl',
-})
+}
 
-export const buttonsva = sva({
-  slots: ['root', 'icon', 'title', 'description', 'descriptionColor'],
-  className: 'search-button',
-  base: {
-    root: button,
-    icon,
-    title,
-    description,
-    descriptionColor,
-  },
+export const buttonsva = () => ({
+  root: button,
+  icon,
+  title,
+  description,
+  descriptionColor,
 })

@@ -613,15 +613,13 @@ export const startEditing = (subject: 'node' | 'edge' = 'node') =>
   )
 
 export const sendSynced = () => {
+  //@ts-ignore
   if (import.meta.env.DEV) {
-    console.log('sendSynced')
+    console.log("sendSynced")
   }
-  return machine.sendTo(
-    typedSystem.editorActor,
-    {
-      type: 'view.synched',
-    },
-  )
+  return machine.sendTo(typedSystem.editorActor, {
+    type: "view.synched",
+  })
 }
 
 export const stopEditing = (wasChanged = false) =>

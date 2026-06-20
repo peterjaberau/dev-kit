@@ -3,7 +3,7 @@
 // Copyright (c) 2023-2026 Denis Davydkov
 // Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
-import { css } from '@likec4/styles/css'
+import { css } from '#likec4/style-preset/css'
 
 export const backdropBlur = '--_blur'
 export const backdropOpacity = '--_opacity'

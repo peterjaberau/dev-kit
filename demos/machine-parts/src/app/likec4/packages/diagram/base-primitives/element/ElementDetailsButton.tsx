@@ -1,12 +1,14 @@
-import { css, cx } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
-import { actionBtn } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { Box, chakra, useSlotRecipe } from '@chakra-ui/react'
+import { actionBtn } from '#likec4/style-preset/recipes'
 import { ActionIcon } from '@mantine/core'
 import { IconId } from '@tabler/icons-react'
 import * as m from 'motion/react-m'
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import type { BaseNodeData } from '../../base/types'
 import { stopPropagation } from '../../utils/xyflow'
+
+const ChakraActionIcon = chakra(ActionIcon) as any
 
 type ElementDetailsButtonProps = {
   selected?: boolean
@@ -43,7 +45,7 @@ const variants = {
   },
 }
 
-const container = css({
+const container = {
   position: 'absolute',
   top: '0.5',
   right: '0.5',
@@ -66,7 +68,7 @@ const container = css({
   _print: {
     display: 'none',
   },
-})
+}
 
 export function ElementDetailsButton({
   selected = false,
@@ -87,13 +89,13 @@ export function ElementDetailsButton({
     default:
       variant = 'normal'
   }
+  const actionBtnRecipe = useSlotRecipe({ recipe: actionBtn })
+  const actionBtnStyles = actionBtnRecipe({ variant: 'transparent' })
   return (
-    <Box className={cx(container, 'details-button')}>
-      <ActionIcon
-        className={cx(
-          'nodrag nopan',
-          actionBtn({ variant: 'transparent' }),
-        )}
+    <Box css={container} className={classNames('details-button')}>
+      <ChakraActionIcon
+        className={classNames('nodrag nopan')}
+        css={actionBtnStyles.root}
         component={m.button}
         initial={false}
         variants={variants}
@@ -105,7 +107,7 @@ export function ElementDetailsButton({
         tabIndex={-1}
       >
         {icon ?? <IconId stroke={1.8} style={{ width: '75%' }} />}
-      </ActionIcon>
+      </ChakraActionIcon>
     </Box>
   )
 }

@@ -1,9 +1,8 @@
 import { extractViewTitleFromPath } from '#likec4/core/model'
 import { RichText } from '#likec4/core/types'
-import { css, cx } from '@likec4/styles/css'
+import { classNames } from '../../utils/classNames'
 import { chakra } from "@chakra-ui/react"
 import { Box, HStack } from "@chakra-ui/react"
-import { hstack, vstack } from '@likec4/styles/patterns'
 import {
   type PopoverProps,
   Badge,
@@ -14,7 +13,7 @@ import {
 import { IconId, IconLink } from '@tabler/icons-react'
 import { deepEqual } from 'fast-equals'
 import * as m from 'motion/react-m'
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 import { ElementTag, Markdown } from '../../base-primitives'
 import { Link } from '../../components/Link'
 import { useDiagram, useOnDiagramEvent } from '../../hooks/useDiagram'
@@ -32,6 +31,10 @@ const selector = ({ context }: NavigationPanelActorSnapshot) => {
     links: view.links ?? [],
   }
 }
+
+const ChakraBadge = chakra(Badge) as any
+const ChakraPopoverDropdown = chakra(Popover.Dropdown) as any
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
 
 type ViewDetailsCardData = ReturnType<typeof selector>
 
@@ -61,40 +64,39 @@ export const DetailsControls = (props: PopoverProps) => {
 
 const ViewDetailsCardTrigger = ({ linksCount, onOpen }: { linksCount: number; onOpen: () => void }) => (
   <Popover.Target>
-    <UnstyledButton
+    <ChakraUnstyledButton
       component={m.button}
       layout="position"
       whileTap={{
         scale: 0.95,
         translateY: 1,
       }}
-      onClick={e => {
+      onClick={(e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         onOpen()
       }}
-      className={cx(
-        'group',
-        hstack({
-          gap: '2',
-          paddingInline: '2',
-          paddingBlock: '1',
-          rounded: 'sm',
-          userSelect: 'none',
-          cursor: 'pointer',
-          color: {
-            base: 'likec4.panel.action',
-            _hover: 'likec4.panel.action.hover',
-          },
-          backgroundColor: {
-            _hover: 'likec4.panel.action.bg.hover',
-          },
-          display: {
-            base: 'none',
-            '@/xs': 'flex',
-          },
-        }),
-        ``,
-      )}>
+      className={classNames('group')}
+      css={{
+        display: {
+          base: 'none',
+          '@/xs': 'flex',
+        },
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: '2',
+        paddingInline: '2',
+        paddingBlock: '1',
+        rounded: 'sm',
+        userSelect: 'none',
+        cursor: 'pointer',
+        color: {
+          base: 'likec4.panel.action',
+          _hover: 'likec4.panel.action.hover',
+        },
+        backgroundColor: {
+          _hover: 'likec4.panel.action.bg.hover',
+        },
+      }}>
       <IconId size={16} stroke={1.8} />
       {linksCount > 0 && (
         <HStack gap={'[1px]'}>
@@ -110,7 +112,7 @@ const ViewDetailsCardTrigger = ({ linksCount, onOpen }: { linksCount: number; on
           </Box>
         </HStack>
       )}
-    </UnstyledButton>
+    </ChakraUnstyledButton>
   </Popover.Target>
 )
 
@@ -140,32 +142,33 @@ const ViewDetailsCardDropdown = ({
   useOnDiagramEvent('nodeClick', onClose)
 
   return (
-    <Popover.Dropdown
-      className={cx(
-        'nowheel nopan nodrag',
-        vstack({
-          margin: 'xs',
-          layerStyle: 'likec4.dropdown',
-          gap: 'md',
-          padding: 'md',
-          paddingBottom: 'lg',
-          pointerEvents: 'all',
-          maxWidth: 'calc(100cqw - 52px)',
-          minWidth: '200px',
-          maxHeight: 'calc(100cqh - 100px)',
-          width: 'max-content',
-          cursor: 'default',
-          overflow: 'auto',
-          overscrollBehavior: 'contain',
-          '@/sm': {
-            minWidth: 400,
-            maxWidth: 550,
-          },
-          '@/lg': {
-            maxWidth: 700,
-          },
-        }),
-      )}>
+    <ChakraPopoverDropdown
+      className={classNames('nowheel nopan nodrag')}
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        margin: 'xs',
+        layerStyle: 'likec4.dropdown',
+        gap: 'md',
+        padding: 'md',
+        paddingBottom: 'lg',
+        pointerEvents: 'all',
+        maxWidth: 'calc(100cqw - 52px)',
+        minWidth: '200px',
+        maxHeight: 'calc(100cqh - 100px)',
+        width: 'max-content',
+        cursor: 'default',
+        overflow: 'auto',
+        overscrollBehavior: 'contain',
+        '@/sm': {
+          minWidth: 400,
+          maxWidth: 550,
+        },
+        '@/lg': {
+          maxWidth: 700,
+        },
+      }}>
       <section>
         <Text component="div" fw={500} size="xl" lh={'sm'}>{title}</Text>
         <HStack alignItems={'flex-start'} mt="1">
@@ -185,12 +188,12 @@ const ViewDetailsCardDropdown = ({
         </HStack>
       </section>
       {links.length > 0 && (
-        <section className={hstack({ alignItems: 'baseline' })}>
+        <chakra.section display="flex" flexDirection="row" alignItems="baseline">
           <SectionHeader>Links</SectionHeader>
           <HStack gap="xs" flexWrap="wrap">
             {links.map((link, i) => <Link key={`${i}-${link.url}`} value={link} />)}
           </HStack>
-        </section>
+        </chakra.section>
       )}
       {description.isEmpty && (
         <Text component="div" fw={500} size="xs" c="dimmed" style={{ userSelect: 'none' }}>No description</Text>
@@ -202,13 +205,13 @@ const ViewDetailsCardDropdown = ({
             value={description}
             fontSize="sm"
             emptyText="No description"
-            className={css({
+            css={{
               userSelect: 'all',
-            })}
+            }}
           />
         </section>
       )}
-    </Popover.Dropdown>
+    </ChakraPopoverDropdown>
   )
 }
 
@@ -222,34 +225,34 @@ const ViewBadge = ({
   return (
     <HStack gap="0.5">
       <ViewBadgeLabel>{label}</ViewBadgeLabel>
-      <Badge
+      <ChakraBadge
         size="sm"
         radius="sm"
         variant="light"
         color="gray"
         tt="none"
         fw={500}
-        classNames={{
-          root: css({
-            width: 'max-content',
+        css={{
+          width: 'max-content',
+          overflow: 'visible',
+          px: '1',
+          color: {
+            _dark: 'mantine.colors.gray[4]',
+            _light: 'mantine.colors.gray[8]',
+          },
+          '& .mantine-Badge-label': {
             overflow: 'visible',
-            px: '1',
-            color: {
-              _dark: 'mantine.colors.gray[4]',
-              _light: 'mantine.colors.gray[8]',
-            },
-          }),
-          label: css({
-            overflow: 'visible',
-          }),
-          section: css({
+          },
+        }}
+        styles={{
+          section: {
             opacity: 0.5,
             userSelect: 'none',
-            marginInlineEnd: '0.5',
-          }),
+            marginInlineEnd: 'var(--spacing-0\\.5)',
+          },
         }}>
         {value}
-      </Badge>
+      </ChakraBadge>
     </HStack>
   )
 }

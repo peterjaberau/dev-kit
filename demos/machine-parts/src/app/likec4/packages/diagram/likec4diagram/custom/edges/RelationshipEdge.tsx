@@ -1,5 +1,6 @@
 import type { EdgeId } from '#likec4/core/types'
-import { css, cx as clsx } from '@likec4/styles/css'
+import { classNames as clsx } from '../../../utils/classNames'
+import { chakra } from '@chakra-ui/react'
 import { useRafEffect } from '@react-hookz/web'
 import type { XYPosition } from '@xyflow/react'
 import { EdgeLabelRenderer } from '@xyflow/react'
@@ -27,6 +28,8 @@ import { EdgeDrifts } from './EdgeDrifts'
 import * as edgesCss from './edges.css'
 import { useControlPoints } from './useControlPoints'
 import { useRelationshipEdgePath } from './useRelationshipEdgePath'
+
+const ChakraEdgeContainer = chakra(EdgeContainer) as any
 
 const getEdgeCenter = (path: SVGPathElement) => {
   const dompoint = path.getPointAtLength(path.getTotalLength() * 0.5)
@@ -285,13 +288,13 @@ export const RelationshipEdge = memoEdge<Types.EdgeProps<'relationship'>>((props
 
   return (
     <>
-      <EdgeContainer
+      <ChakraEdgeContainer
         {...props}
-        className={css({
+        css={{
           '& .react-flow__edge-interaction': {
             cursor: enabledEditing && selected ? 'copy' : undefined,
           },
-        })}>
+        }}>
         <EdgePath
           edgeProps={props}
           svgPath={edgePath}
@@ -328,7 +331,7 @@ export const RelationshipEdge = memoEdge<Types.EdgeProps<'relationship'>>((props
             </EdgeLabel>
           </EdgeLabelContainer>
         )}
-      </EdgeContainer>
+      </ChakraEdgeContainer>
       {/* Render control points above edge label  */}
       {enabledEditing && controlPoints.length > 0 && (
         <ControlPoints

@@ -7,7 +7,7 @@ import type { EditorCalls } from './actor/setup'
 import { applyChangesToManualLayout } from './applyChangesToManualLayout'
 import { useOptionalLikeC4Editor } from './LikeC4EditorProvider'
 
-const promisify = <T>(fn: () => T | Promise<T>): Promise<T> => {
+const promisify: any = <T>(fn: () => T | Promise<T>): Promise<T> => {
   return Promise.resolve().then(() => fn())
 }
 
@@ -39,11 +39,12 @@ export function useEditorActorLogic(): EditorActorLogic & {
   const executeChange: EditorCalls.ExecuteChange = useCallbackRef(
     async ({ input }) => {
       if (!port) {
-        console.error('No editor port available for executing change')
-        throw new Error('No editor port')
+        console.error("No editor port available for executing change")
+        throw new Error("No editor port")
       }
+      //@ts-ignore
       if (import.meta.env.DEV) {
-        console.debug('Executing change', { input })
+        console.debug("Executing change", { input })
       }
       const applied = [] as typeof input.changes
       for (const change of input.changes) {
@@ -51,7 +52,7 @@ export function useEditorActorLogic(): EditorActorLogic & {
           await promisify(() => port.handleChange(input.viewId, change))
           applied.push(change)
         } catch (error) {
-          console.error('Failed to execute change', { change, error })
+          console.error("Failed to execute change", { change, error })
         }
       }
       return { requested: input.changes, applied }
@@ -61,19 +62,21 @@ export function useEditorActorLogic(): EditorActorLogic & {
   const applySemanticLayout: EditorCalls.ApplySemanticLayout = useCallbackRef(
     async ({ input }) => {
       if (!port) {
-        console.error('No editor port available for applying semantic layout')
-        throw new Error('No editor port')
+        console.error("No editor port available for applying semantic layout")
+        throw new Error("No editor port")
       }
       if (!port.applySemanticLayout) {
-        console.error('No applySemanticLayout method available on editor port')
-        throw new Error('No applySemanticLayout method')
+        console.error("No applySemanticLayout method available on editor port")
+        throw new Error("No applySemanticLayout method")
       }
+      //@ts-ignore
       if (import.meta.env.DEV) {
-        console.debug('Applying semantic layout', { input })
+        console.debug("Applying semantic layout", { input })
       }
       await port.applySemanticLayout(input.viewId)
+      //@ts-ignore
       if (import.meta.env.DEV) {
-        console.debug('Applied semantic layout', { input })
+        console.debug("Applied semantic layout", { input })
       }
       return {}
     },

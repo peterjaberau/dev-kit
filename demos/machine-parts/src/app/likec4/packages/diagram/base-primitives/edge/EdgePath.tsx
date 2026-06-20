@@ -1,9 +1,10 @@
 import type { DiagramEdge } from '#likec4/core/types'
-import { css, cx } from '@likec4/styles/css'
-import { edgePath } from '@likec4/styles/recipes'
+import { edgePath } from '#likec4/style-preset/recipes'
+import { chakra, useSlotRecipe } from '@chakra-ui/react'
 import { type PointerEventHandler, forwardRef } from 'react'
 import type { UndefinedOnPartialDeep } from 'type-fest'
 import type { BaseEdgePropsWithData } from '../../base/types'
+import { classNames } from '../../utils/classNames'
 import { arrowTypeToMarker, EdgeMarkers } from './EdgeMarkers'
 
 type Data = UndefinedOnPartialDeep<
@@ -64,18 +65,17 @@ export const EdgePath = forwardRef<SVGPathElement, EdgePathProps>(({
     strokeDasharray = '8,10'
   }
 
-  const classes = edgePath()
+  const edgePathRecipe = useSlotRecipe({ recipe: edgePath })
+  const styles = edgePathRecipe()
 
   return (
     <>
       {selectable && (
-        <path
-          className={cx(
+        <chakra.path
+          className={classNames(
             'react-flow__edge-interaction',
-            css({
-              fill: 'none',
-            }),
           )}
+          css={{ fill: 'none' }}
           onPointerDown={onEdgePointerDown}
           d={svgPath}
           style={{
@@ -86,41 +86,40 @@ export const EdgePath = forwardRef<SVGPathElement, EdgePathProps>(({
           }}
         />
       )}
-      <circle
-        className={cx(
+      <chakra.circle
+        className={classNames(
           // This class is queried by RelationshipPopover to position in the middle of the edge
           'likec4-edge-middle-point',
-          classes.middlePoint,
         )}
+        css={styles.middlePoint}
         data-edge-id={id}
         style={{
           offsetPath: `path("${svgPath}")`,
         }}
       />
 
-      <g className={classes.markersCtx} onPointerDown={onEdgePointerDown}>
+      <chakra.g css={styles.markersCtx} onPointerDown={onEdgePointerDown}>
         <defs>
           {MarkerStart && <MarkerStart id={'start' + id} />}
           {MarkerEnd && <MarkerEnd id={'end' + id} />}
         </defs>
-        <path
-          className={cx(
+        <chakra.path
+          className={classNames(
             'react-flow__edge-path',
             'hide-on-reduced-graphics',
-            classes.pathBg,
-            isDragging && css({ display: 'none' }),
           )}
+          css={[styles.pathBg, isDragging ? { display: 'none' } : undefined]}
           d={svgPath}
           style={style}
           strokeLinecap={'round'}
         />
-        <path
+        <chakra.path
           ref={svgPathRef}
-          className={cx(
+          className={classNames(
             'react-flow__edge-path',
-            classes.path,
             selectable && 'react-flow__edge-interaction',
           )}
+          css={styles.path}
           d={svgPath}
           style={style}
           strokeWidth={strokeWidth}
@@ -129,7 +128,7 @@ export const EdgePath = forwardRef<SVGPathElement, EdgePathProps>(({
           markerStart={MarkerStart ? `url(#start${id})` : undefined}
           markerEnd={MarkerEnd ? `url(#end${id})` : undefined}
         />
-      </g>
+      </chakra.g>
     </>
   )
 })

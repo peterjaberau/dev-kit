@@ -1,8 +1,9 @@
 import type { ComputedNodeStyle, MarkdownOrString, NodeId } from '#likec4/core'
 import type { ColorLiteral, LikeC4Styles } from '#likec4/core/styles'
 import { type Color, RichText } from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
-import { elementNodeData } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { elementNodeData } from '#likec4/style-preset/recipes'
+import { Box, chakra, useSlotRecipe } from '@chakra-ui/react'
 import {
   type CSSProperties,
   type DetailedHTMLProps,
@@ -15,6 +16,9 @@ import type { MergeExclusive } from 'type-fest'
 import { IconRenderer } from '../../context/IconRenderer'
 import { useLikeC4Styles } from '../../hooks/useLikeC4Styles'
 import { Markdown } from '../Markdown'
+
+const RootDiv = chakra('div')
+const SlotDiv = chakra('div')
 
 type RequiredData = {
   id: NodeId
@@ -65,18 +69,20 @@ const Root = forwardRef<
     ? styles.nodeSizes(data.style).values.iconSize
     : undefined
   const resolvedIconColor = resolveIconColor(styles, data)
+  const elementNodeDataRecipe = useSlotRecipe({ recipe: elementNodeData })
+  const elementNodeDataStyles = elementNodeDataRecipe({
+    iconPosition: data.style.iconPosition,
+    withIconColor: !!resolvedIconColor,
+  })
   return (
-    <div
+    <RootDiv
       {...props}
       ref={ref}
-      className={cx(
+      className={classNames(
         className,
-        elementNodeData({
-          iconPosition: data.style.iconPosition,
-          withIconColor: !!resolvedIconColor,
-        }),
         'likec4-element',
       )}
+      css={elementNodeDataStyles.root}
       style={{
         ...style,
         ...(iconSize && {
@@ -102,15 +108,24 @@ type IconProps = {
   style?: CSSProperties
 }
 
-const Icon = ({ data, ...props }: IconProps) => <IconRenderer element={data} {...props} />
+const Icon = ({ data, className, ...props }: IconProps) => {
+  const elementNodeDataRecipe = useSlotRecipe({ recipe: elementNodeData })
+  const elementNodeDataStyles = elementNodeDataRecipe()
+  return (
+    <Box css={elementNodeDataStyles.icon} className={className}>
+      <IconRenderer element={data} {...props} />
+    </Box>
+  )
+}
 
 const Content = forwardRef<HTMLDivElement, DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>>((
   { className, ...props },
   ref,
 ) => (
-  <div
+  <SlotDiv
     {...props}
-    className={cx(
+    css={useSlotRecipe({ recipe: elementNodeData })().content}
+    className={classNames(
       className,
       'likec4-element-node-content',
     )}
@@ -130,9 +145,10 @@ const Title = forwardRef<HTMLDivElement, SlotProps>((
   ref,
 ) => {
   return (
-    <div
+    <SlotDiv
       {...props}
-      className={cx(
+      css={useSlotRecipe({ recipe: elementNodeData })().title}
+      className={classNames(
         className,
         'likec4-element-title',
       )}
@@ -140,7 +156,7 @@ const Title = forwardRef<HTMLDivElement, SlotProps>((
       ref={ref}
     >
       {title}
-    </div>
+    </SlotDiv>
   )
 })
 
@@ -151,9 +167,10 @@ const Technology = forwardRef<HTMLDivElement, MergeExclusive<SlotProps, PropsWit
   const text = data?.technology ?? children
   return isTruthy(text)
     ? (
-      <div
+      <SlotDiv
         {...props}
-        className={cx(
+        css={useSlotRecipe({ recipe: elementNodeData })().technology}
+        className={classNames(
           className,
           'likec4-element-technology',
         )}
@@ -161,7 +178,7 @@ const Technology = forwardRef<HTMLDivElement, MergeExclusive<SlotProps, PropsWit
         ref={ref}
       >
         {text}
-      </div>
+      </SlotDiv>
     )
     : null
 })
@@ -180,7 +197,8 @@ const Description = forwardRef<
   return (
     <Markdown
       {...props}
-      className={cx(
+      css={useSlotRecipe({ recipe: elementNodeData })().description}
+      className={classNames(
         className,
         'likec4-element-description',
       )}

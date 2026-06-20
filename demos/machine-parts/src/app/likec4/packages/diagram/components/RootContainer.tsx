@@ -1,4 +1,4 @@
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../utils/classNames'
 import { useStore } from '@nanostores/react'
 import { atom } from 'nanostores'
 import { type PropsWithChildren, useMemo, useRef, useState } from 'react'
@@ -33,7 +33,7 @@ export function RootContainer({
   return (
     <div
       id={id}
-      className={cx('likec4-root', className)}
+      className={classNames('likec4-root', className)}
       ref={ref}
       data-likec4-diagram-panning={isPanning}
       {...(reduceGraphics && {

@@ -292,6 +292,7 @@ const process = machine.createStateConfig({
         },
         onDone: {
           actions: enqueueActions(({ context, event, enqueue }) => {
+            //@ts-ignore
             if (import.meta.env.DEV) {
               console.log('executeChanges onDone', { event })
             }

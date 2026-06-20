@@ -5,8 +5,7 @@
 //
 // Portions of this file have been modified by NVIDIA CORPORATION & AFFILIATES.
 
-import { css } from '@likec4/styles/css'
-import { Box, VStack } from "@chakra-ui/react"
+import { Box, chakra, type SystemStyleObject, VStack } from "@chakra-ui/react"
 import { Grid, GridCol, Group, ScrollArea, Title } from '@mantine/core'
 import { useHotkeys, useMergedRef } from '@mantine/hooks'
 import { useTimeoutEffect } from '@react-hookz/web'
@@ -26,16 +25,19 @@ import type { SearchActorRef, SearchActorSnapshot } from './searchActor'
 import { useSearchContext } from './SearchContext'
 import { XStateSearchAdapter } from './XStateSearchAdapter'
 
-export const dialogCss = css({
+const ChakraGrid = chakra(Grid)
+const ChakraScrollArea = chakra(ScrollArea)
+
+export const dialogCss: SystemStyleObject = {
   backgroundColor: `[rgb(34 34 34 / var(--_opacity, 95%))]`,
   _light: {
     backgroundColor: `[rgb(250 250 250 / var(--_opacity, 95%))]`,
   },
   backdropFilter: 'auto',
   backdropBlur: 'var(--_blur, 10px)',
-})
+}
 
-export const bodyCss = css({
+export const bodyCss: SystemStyleObject = {
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
@@ -49,9 +51,9 @@ export const bodyCss = css({
   paddingRight: 'md',
   paddingBottom: 'sm',
   background: 'transparent',
-})
+}
 
-export const scrollAreaCss = css({
+export const scrollAreaCss: SystemStyleObject = {
   height: [
     '100%',
     '100cqh',
@@ -63,7 +65,7 @@ export const scrollAreaCss = css({
       height: '100%',
     },
   },
-})
+}
 
 const selectIsOpened = (s: SearchActorSnapshot) => {
   try {
@@ -109,7 +111,7 @@ export const Search = memo(({ searchActorRef }: { searchActorRef: SearchActorRef
           backdrop={{
             opacity: 0.9,
           }}
-          classes={{
+          styles={{
             dialog: dialogCss,
             body: bodyCss,
           }}
@@ -168,17 +170,17 @@ export const SearchPanelContent = forwardRef<HTMLDivElement>((_, ref) => {
           <Title component={'div'} order={6} c="dimmed" pl="sm">Views</Title>
         </GridCol>
       </Grid>
-      <Grid
-        className={css({
+      <ChakraGrid
+        css={{
           containerName: 'likec4-search-elements',
           containerType: 'size',
           overflow: 'hidden',
           flexGrow: 1,
-        })}>
+        }}>
         <GridCol span={6}>
-          <ScrollArea
+          <ChakraScrollArea
             type="scroll"
-            className={scrollAreaCss}
+            css={scrollAreaCss}
             pr="xs"
             scrollbars="y">
             <LayoutGroup id="likec4-search-elements">
@@ -186,20 +188,20 @@ export const SearchPanelContent = forwardRef<HTMLDivElement>((_, ref) => {
                 <ElementsColumn />
               </AnimatePresence>
             </LayoutGroup>
-          </ScrollArea>
+          </ChakraScrollArea>
         </GridCol>
         <GridCol span={6}>
-          <ScrollArea
+          <ChakraScrollArea
             type="scroll"
-            className={scrollAreaCss}
+            css={scrollAreaCss}
             pr="xs"
             scrollbars="y">
             <LayoutGroup id="likec4-search-views">
               <ViewsColumn />
             </LayoutGroup>
-          </ScrollArea>
+          </ChakraScrollArea>
         </GridCol>
-      </Grid>
+      </ChakraGrid>
       {pickViewFor && <PickView elementFqn={pickViewFor} />}
     </Box>
   )

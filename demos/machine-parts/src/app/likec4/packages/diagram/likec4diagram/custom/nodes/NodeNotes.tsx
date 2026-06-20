@@ -1,8 +1,8 @@
 import { type scalar, hasProp, RichText } from '#likec4/core'
 import { stringHash } from '#likec4/core/utils'
-import { css, cx } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
-import { nodeNotes } from '@likec4/styles/recipes'
+import { classNames } from '../../../utils/classNames'
+import { Box, chakra, useSlotRecipe } from '@chakra-ui/react'
+import { nodeNotes } from '#likec4/style-preset/recipes'
 import { ScrollAreaAutosize } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { ViewportPortal } from '@xyflow/react'
@@ -13,6 +13,9 @@ import { Markdown } from '../../../base-primitives'
 import type { BaseNodePropsWithData } from '../../../base/types'
 import { useCallbackRef, useOnDiagramEvent } from '../../../hooks'
 import type { Types } from '../../types'
+
+const MotionDiv = chakra(m.div) as any
+const ChakraScrollAreaAutosize = chakra(ScrollAreaAutosize) as any
 
 type RequiredData = Pick<Types.NodeData, 'id' | 'notes' | 'width' | 'height' | 'x' | 'y'>
 
@@ -76,17 +79,19 @@ function NodeNotesInternal({ data }: Pick<NodeNotesProps, 'data'> & {
 
   const hovered = data.hovered ?? false
   const layoutDependency = expanded // || hovered
+  const nodeNotesRecipe = useSlotRecipe({ recipe: nodeNotes })
+  const nodeNotesStyles = nodeNotesRecipe({ opened: expanded })
 
   return (
     <>
       <AnimatePresence>
-        <m.div
+        <MotionDiv
           key={`node-notes-${id}`}
           // layoutDependency={layoutDependency}
-          className={cx(
+          className={classNames(
             'nopan nodrag',
-            nodeNotes({ opened: expanded }),
           )}
+          css={nodeNotesStyles.root}
           variants={variants.root}
           initial={'initial'}
           animate={expanded ? 'expanded' : hovered ? 'hovered' : 'initial'}
@@ -113,15 +118,15 @@ function NodeNotesInternal({ data }: Pick<NodeNotesProps, 'data'> & {
               className={'__paper __paper-front'}
             />
           )}
-        </m.div>
+        </MotionDiv>
         {expanded && (
           <ViewportPortal key={'portal'}>
-            <m.div
+            <MotionDiv
               key={id}
               layout
               layoutDependency={layoutDependency}
               layoutId={id}
-              className={css({
+              css={{
                 position: 'absolute',
                 zIndex: 300,
                 top: '0',
@@ -139,7 +144,7 @@ function NodeNotesInternal({ data }: Pick<NodeNotesProps, 'data'> & {
                 maxHeight: '70cqh',
                 maxWidth: '50cqw',
                 // minHeight: '60cqh',
-              })}
+              }}
               data-likec4-notes={id}
               style={{
                 top: data.y + 20,
@@ -152,23 +157,23 @@ function NodeNotesInternal({ data }: Pick<NodeNotesProps, 'data'> & {
               onClickCapture={stopPropagation}
               onClick={stopPropagation}
             >
-              <ScrollAreaAutosize
+              <ChakraScrollAreaAutosize
                 component={m.div}
-                className={cx(
+                className={classNames(
                   'nowheel',
-                  css({
-                    flex: '1',
-                    padding: 'xs',
-                    paddingRight: 'xxs',
-                  }),
-                )}>
+                )}
+                css={{
+                  flex: '1',
+                  padding: 'xs',
+                  paddingRight: 'xxs',
+                }}>
                 <Markdown
-                  className={css({
+                  css={{
                     paddingRight: 'xxs',
-                  })}
+                  }}
                   value={RichText.from(markdown)} />
-              </ScrollAreaAutosize>
-            </m.div>
+              </ChakraScrollAreaAutosize>
+            </MotionDiv>
           </ViewportPortal>
         )}
       </AnimatePresence>

@@ -1,6 +1,6 @@
-import { cx } from '@likec4/styles/css'
-import { hstack } from '@likec4/styles/patterns'
-import { navigationPanelActionIcon } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { navigationPanelActionIcon } from '#likec4/style-preset/recipes'
+import { chakra, useSlotRecipe } from '@chakra-ui/react'
 import {
   Button,
   HoverCard,
@@ -15,15 +15,22 @@ import {
 } from '@tabler/icons-react'
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m'
-import { Fragment, memo } from 'react'
+import { type MouseEvent, Fragment, memo } from 'react'
 import { useDiagramCompareLayout } from '../../hooks/useDiagramCompareLayout'
 import { useMantinePortalProps } from '../../hooks/useMantinePortalProps'
+
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
 
 export const LayoutWarning = memo(() => {
   const [ctx, { toggleCompare }] = useDiagramCompareLayout()
   const portalProps = useMantinePortalProps()
 
   const { drifts, isActive, isEnabled } = ctx
+  const actionIconRecipe = useSlotRecipe({ recipe: navigationPanelActionIcon })
+  const actionIconStyles = actionIconRecipe({
+    variant: 'filled',
+    type: 'warning',
+  })
 
   return (
     <AnimatePresence propagate>
@@ -39,10 +46,10 @@ export const LayoutWarning = memo(() => {
           }}
           {...portalProps}>
           <HoverCardTarget>
-            <UnstyledButton
+            <ChakraUnstyledButton
               component={m.button}
               layout="position"
-              onClick={e => {
+              onClick={(e: MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation()
                 toggleCompare()
               }}
@@ -50,13 +57,15 @@ export const LayoutWarning = memo(() => {
                 scale: 0.95,
                 translateY: 1,
               }}
-              className={cx(
+              className={classNames(
                 'group',
-                navigationPanelActionIcon({
-                  variant: 'filled',
-                  type: 'warning',
-                }),
-                hstack({
+              )}
+              css={[
+                actionIconStyles.root,
+                {
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                   gap: 'xxs',
                   padding: '1.5',
                   rounded: 'sm',
@@ -64,10 +73,10 @@ export const LayoutWarning = memo(() => {
                   cursor: 'pointer',
                   fontSize: 'xs',
                   fontWeight: 'bold',
-                }),
-              )}>
+                },
+              ]}>
               {isActive ? <>Stop Compare</> : <IconAlertTriangle size={18} />}
-            </UnstyledButton>
+            </ChakraUnstyledButton>
           </HoverCardTarget>
           <HoverCardDropdown p={'0'}>
             <Notification

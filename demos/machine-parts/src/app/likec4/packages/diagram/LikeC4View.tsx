@@ -1,5 +1,5 @@
 import type * as t from '#likec4/core/types'
-import { css, cx } from '@likec4/styles/css'
+import { classNames } from './utils/classNames'
 import { Box } from '@chakra-ui/react'
 import { ActionIcon } from '@mantine/core'
 import { IconX } from '@tabler/icons-react'
@@ -344,14 +344,6 @@ export interface LikeC4BrowserProps {
   children?: ReactNode | undefined
 }
 
-const cssInteractive = css({
-  cursor: 'pointer',
-  ['--mantine-cursor-pointer']: 'pointer',
-  '& :where(.likec4-diagram, .likec4-compound-node, .likec4-element-node)': {
-    cursor: 'pointer',
-  },
-})
-
 /**
  * Ready-to-use component to display embedded LikeC4 view,
  * OnClick allows to browse the model.
@@ -461,7 +453,7 @@ export function LikeC4View<A extends t.aux.Any = t.aux.UnknownLayouted>({
       colorScheme={colorScheme}
       styleNonce={styleNonce}
       keepAspectRatio={keepAspectRatio ? bounds : false}
-      className={cx(
+      className={classNames(
         'likec4-view',
         className,
       )}
@@ -485,9 +477,8 @@ export function LikeC4View<A extends t.aux.Any = t.aux.UnknownLayouted>({
         enableNotes={enableNotes}
         controls={controls}
         reduceGraphics={reduceGraphics}
-        className={cx(
+        className={classNames(
           'likec4-static-view',
-          isBrowserEnabled && cssInteractive,
         )}
         // We may have multiple embedded views on the same page
         // so we don't want enable search and hotkeys

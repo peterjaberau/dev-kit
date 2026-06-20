@@ -176,6 +176,7 @@ const ShadowRootHost = ({ children, ...props }: HTMLAttributes<HTMLDivElement>) 
           }
           host.shadowRoot.adoptedStyleSheets[0]!.replaceSync(styles)
         } catch (error) {
+          //@ts-ignore
           if (import.meta.env.DEV) {
             console.error(error)
           }
@@ -190,6 +191,7 @@ const ShadowRootHost = ({ children, ...props }: HTMLAttributes<HTMLDivElement>) 
         shadowRoot.adoptedStyleSheets = createShadowRootStylesheets(styles)
         return shadowRoot
       } catch (error) {
+        //@ts-ignore
         if (import.meta.env.DEV) {
           console.error(error)
         }

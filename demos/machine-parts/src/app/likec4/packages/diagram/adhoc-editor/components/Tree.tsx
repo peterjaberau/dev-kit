@@ -1,70 +1,81 @@
-import { type RecipeVariantProps, css, cva, cx, sva } from '@likec4/styles/css'
-import { createStyleContext } from '@likec4/styles/jsx'
+import { chakra, createSlotRecipeContext, defineSlotRecipe, type RecipeVariantProps, useSlotRecipe } from "@chakra-ui/react"
+
 import { IconChevronRight } from '@tabler/icons-react'
 import type { MouseEventHandler, PropsWithChildren } from 'react'
 import { IconOrShapeRenderer } from '../../context/IconRenderer'
 import type { TreeNodeData } from '../useElementsTree'
-import { chakra  } from "@chakra-ui/react"
+import { classNames } from '../../utils/classNames'
 
 // const shouldForwardProp = (prop: string, variantKeys: string[]): boolean =>
 //   !variantKeys.includes(prop) && (isValidMotionProp(prop) || !isCssProperty(prop))
 
-const statebtn = cva({
+const stateButtonRecipe = defineSlotRecipe({
+  slots: ['root'],
   base: {
-    border: 'none',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    justifySelf: 'flex-end',
-    fontSize: '[8px]',
-    fontFamily: 'mono',
-    fontWeight: 'bold',
-    letterSpacing: '[0.5px]',
-    marginLeft: '2',
-    // marginRight: '[calc((var(--depth, 1) - 1) * {spacing.4.5} + {spacing.2})]',
-    py: '1',
-    px: '1.5',
-    lineHeight: '1',
-    rounded: 'sm',
-    minWidth: 32,
-    transition: 'normal',
-    _hover: {
-      color: 'text.bright',
+    root: {
+      border: 'none',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      justifySelf: 'flex-end',
+      fontSize: '[8px]',
+      fontFamily: 'mono',
+      fontWeight: 'bold',
+      letterSpacing: '[0.5px]',
+      marginLeft: '2',
+      py: '1',
+      px: '1.5',
+      lineHeight: '1',
+      rounded: 'sm',
+      minWidth: 32,
+      transition: 'normal',
+      _hover: {
+        color: 'text.bright',
+      },
     },
   },
   variants: {
     state: {
       // 'include-explicit' | 'include-implicit' | 'exclude' | 'disabled' | 'not-present'
       ['include-explicit']: {
-        backgroundColor: 'grass.6',
-        color: 'text',
-        // color: 'grass.0',
+        root: {
+          backgroundColor: 'grass.6',
+          color: 'text',
+        },
       },
       ['include-implicit']: {
-        backgroundColor: 'grass.6',
-        color: 'text',
-        // color: 'grass.0',
+        root: {
+          backgroundColor: 'grass.6',
+          color: 'text',
+        },
       },
       exclude: {
-        backgroundColor: 'red.6',
-        color: 'text',
+        root: {
+          backgroundColor: 'red.6',
+          color: 'text',
+        },
       },
       ['disabled']: {
-        // backgroundColor: 'default.disabled',
-        color: 'text.dimmed',
+        root: {
+          color: 'text.dimmed',
+        },
       },
       'not-present': {
-        color: 'text.dimmed',
-        backgroundColor: 'default.hover/50',
+        root: {
+          color: 'text.dimmed',
+          backgroundColor: 'default.hover/50',
+        },
       },
     },
   },
   defaultVariants: {
     state: 'not-present',
   },
-})
+} as any)
 
-const icon = css.raw({
+const StateButtonRoot = chakra('div')
+
+const icon = {
   flex: 0,
   display: 'flex',
   alignItems: 'center',
@@ -109,9 +120,9 @@ const icon = css.raw({
     _groupFocusVisible: 1,
     _groupHover: 1,
   },
-})
+}
 
-const control = css.raw({
+const control = {
   paddingLeft: '[calc((var(--depth, 1) - 1) * {spacing.2} + {spacing.1})]',
   px: '1',
   py: '1',
@@ -163,9 +174,9 @@ const control = css.raw({
     outline: 'none',
     // backgroundColor: 'mantine.colors.primary.lightHover!',
   },
-})
+}
 
-const tree = sva({
+const tree = defineSlotRecipe({
   slots: [
     'branch',
     'item', // leaf
@@ -247,11 +258,13 @@ const tree = sva({
   },
   variants: {},
   defaultVariants: {},
-})
+} as any)
 
 export type TreeVariants = RecipeVariantProps<typeof tree>
 
-const { withRootProvider, withContext } = createStyleContext(tree)
+const { withRootProvider, withContext } = createSlotRecipeContext({
+  recipe: tree,
+})
 
 const Root = withRootProvider('div')
 
@@ -271,23 +284,27 @@ const Control = withContext('div', 'control', {
   },
 })
 
-const ElementState = ({ node, state, onClick, className, ...props }: PropsWithChildren<
-  RecipeVariantProps<typeof statebtn> & {
+type ElementStateValue = 'include-explicit' | 'include-implicit' | 'exclude' | 'disabled' | 'not-present'
+
+const ElementState = ({ node, state = 'not-present', onClick, className, ...props }: PropsWithChildren<
+  {
     node: TreeNodeData
+    state?: ElementStateValue
     className?: string
     onClick?: MouseEventHandler<HTMLElement>
   }
 >) => {
-  const cls = cx(
+  const stateRecipe = useSlotRecipe({ recipe: stateButtonRecipe })
+  const stateStyles = stateRecipe({ state })
+  const cls = classNames(
     className,
     'mantine-active',
-    statebtn({ state }),
   )
 
   return (
-    <div {...props} onClick={onClick} className={cls}>
+    <StateButtonRoot {...props} css={stateStyles.root} onClick={onClick} className={cls}>
       {state}
-    </div>
+    </StateButtonRoot>
   )
 }
 const State = withContext(ElementState, 'state', {

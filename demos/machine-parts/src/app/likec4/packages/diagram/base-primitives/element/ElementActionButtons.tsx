@@ -1,11 +1,15 @@
-import { cx } from '@likec4/styles/css'
-import { actionBtn, actionButtons } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { actionBtn, actionButtons } from '#likec4/style-preset/recipes'
+import { chakra, useSlotRecipe } from '@chakra-ui/react'
 import { ActionIcon } from '@mantine/core'
 import { useId } from '@mantine/hooks'
 import { IconBolt } from '@tabler/icons-react'
 import * as m from 'motion/react-m'
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import { stopPropagation } from '../../utils/xyflow'
+
+const Root = chakra('div')
+const ChakraActionIcon = chakra(ActionIcon) as any
 
 type ElementActionButtonsProps = {
   selected?: boolean
@@ -84,9 +88,13 @@ export function ElementActionButtons({
     default:
       variant = 'normal'
   }
+  const actionButtonsRecipe = useSlotRecipe({ recipe: actionButtons })
+  const actionButtonsStyles = actionButtonsRecipe()
+  const actionBtnRecipe = useSlotRecipe({ recipe: actionBtn })
+  const actionBtnStyles = actionBtnRecipe({})
 
   return (
-    <div className={actionButtons()}>
+    <Root css={actionButtonsStyles.root}>
       <m.div
         layoutRoot
         initial={false}
@@ -94,14 +102,14 @@ export function ElementActionButtons({
         animate={variant}
         layoutDependency={`${isHovered}-${selected}`}
         data-likec4-hovered={isHovered}
-        className={cx('nodrag nopan')}
+        className={classNames('nodrag nopan')}
         onClick={stopPropagation}
       >
         {buttons.map((button, index) => (
-          <ActionIcon
+          <ChakraActionIcon
             component={m.button}
             // layout
-            className={actionBtn({})}
+            css={actionBtnStyles.root}
             key={`${id}-${button.key ?? index}`}
             initial={false}
             whileTap={{ scale: 1 }}
@@ -114,10 +122,10 @@ export function ElementActionButtons({
             onDoubleClick={stopPropagation}
           >
             {button.icon || <IconBolt />}
-          </ActionIcon>
+          </ChakraActionIcon>
         ))}
       </m.div>
-    </div>
+    </Root>
   )
 }
 

@@ -15,8 +15,8 @@ import {
   stringHash,
   toArray,
 } from '#likec4/core/utils'
-import { cx, cx as clsx } from '@likec4/styles/css'
-import { Text as Txt } from "@chakra-ui/react"
+import { classNames, classNames as clsx } from '../../utils/classNames'
+import { Box as ChakraBox, chakra, Text as Txt } from "@chakra-ui/react"
 import {
   type RenderTreeNodePayload,
   ActionIcon,
@@ -30,7 +30,7 @@ import {
 } from '@mantine/core'
 import { IconChevronRight } from '@tabler/icons-react'
 import * as m from 'motion/react-m'
-import { type KeyboardEventHandler, memo, useEffect, useMemo } from 'react'
+import { type KeyboardEventHandler, type MouseEvent, memo, useEffect, useMemo } from 'react'
 import { filter, first, hasAtLeast, last, only, pipe, reduce } from 'remeda'
 import { IconOrShapeRenderer } from '../../context/IconRenderer'
 import { useCallbackRef } from '../../hooks/useCallbackRef'
@@ -41,6 +41,9 @@ import { buttonsva } from './_shared.css'
 import * as styles from './ElementsColumn.css'
 import { centerY, moveFocusToSearchInput, queryAllFocusable, stopAndPrevent } from './utils'
 import { NothingFound } from './ViewsColum'
+
+const ChakraHighlight = chakra(Highlight) as any
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
 
 interface LikeC4ModelTreeNodeData {
   label: string
@@ -238,7 +241,7 @@ function ElementsTree({
       levelOffset={'md'}
       classNames={{
         root: styles.treeRoot,
-        node: cx(styles.focusable, styles.treeNode),
+        node: classNames(styles.focusable, styles.treeNode),
         label: styles.treeLabel,
         subtree: styles.treeSubtree,
       }}
@@ -262,7 +265,7 @@ function ElementTreeNode(
       shape: element.shape,
       icon: element.icon,
     },
-    className: cx(btn.icon, styles.elementIcon),
+    className: styles.elementIcon,
   })
   const key = `@tree.${node.value}`
 
@@ -284,14 +287,15 @@ function ElementTreeNode(
             width: '100%',
           }} />
       </ActionIcon>
-      <UnstyledButton
+      <ChakraUnstyledButton
         component={m.button}
         layout
         tabIndex={-1}
         data-value={element.id}
-        className={clsx(btn.root, 'group', 'likec4-element-button')}
+        className={clsx('group', 'likec4-element-button')}
+        css={btn.root}
         {...viewsCount > 0 && {
-          onClick: (e) => {
+          onClick: (e: MouseEvent<HTMLButtonElement>) => {
             if (!node.hasChildren || expanded) {
               e.stopPropagation()
               handleClick(element)
@@ -299,38 +303,39 @@ function ElementTreeNode(
           },
         }}
       >
-        {elementIcon}
+        <ChakraBox css={btn.icon}>{elementIcon}</ChakraBox>
         <Box style={{ flexGrow: 1 }}>
           <Group gap={'xs'} wrap="nowrap" align="center" className={styles.elementTitleAndId}>
-            <Highlight component="div" highlight={searchTerms} className={btn.title!}>
+            <ChakraHighlight component="div" highlight={searchTerms} css={btn.title}>
               {label}
-            </Highlight>
+            </ChakraHighlight>
             <Tooltip label={element.id} withinPortal={false} fz={'xs'} disabled={!element.id.includes('.')}>
-              <Highlight
+              <ChakraHighlight
                 component="div"
                 highlight={last(searchTerms)}
-                className={cx(styles.elementId, btn.descriptionColor)}>
+                className={styles.elementId}
+                css={btn.descriptionColor}>
                 {nameFromFqn(element.id)}
-              </Highlight>
+              </ChakraHighlight>
             </Tooltip>
           </Group>
-          <Highlight
+          <ChakraHighlight
             component="div"
             highlight={element.summary.nonEmpty ? searchTerms : []}
-            className={btn.description!}
+            css={btn.description}
             lineClamp={1}>
             {element.summary.nonEmpty ? element.summary.text : 'No description'}
-          </Highlight>
+          </ChakraHighlight>
         </Box>
 
-        <Txt as={'div'} className={cx(styles.elementViewsCount, btn.descriptionColor)} textStyle={'xs'}>
+        <Txt as={'div'} className={styles.elementViewsCount} css={btn.descriptionColor} textStyle={'xs'}>
           {viewsCount === 0 ? 'No views' : (
             <>
               {viewsCount} view{viewsCount > 1 ? 's' : ''}
             </>
           )}
         </Txt>
-      </UnstyledButton>
+      </ChakraUnstyledButton>
     </m.div>
   )
 }

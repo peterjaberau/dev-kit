@@ -1,6 +1,4 @@
-import { css } from '@likec4/styles/css'
-import { HStack } from "@chakra-ui/react"
-import { hstack, vstack } from '@likec4/styles/patterns'
+import { chakra, HStack } from "@chakra-ui/react"
 import { Button, Divider } from '@mantine/core'
 import { useIsMounted } from '@react-hookz/web'
 import { type Variants, AnimatePresence } from 'motion/react'
@@ -12,6 +10,8 @@ import { useDiagramCompareLayout } from '../../hooks/useDiagramCompareLayout'
 import { Tooltip } from '../_common'
 import { ComparePanelControls } from './ComparePanelControls'
 import { DriftsSummary } from './DriftsSummary'
+
+const MotionDiv = chakra(m.div) as any
 
 const variants = {
   initial: {
@@ -74,11 +74,14 @@ export const ComparePanel = memo(() => {
     <AnimatePresence>
       {enableCompareWithLatest && (
         <>
-          <m.div
+          <MotionDiv
             key={'ComparePanel'}
             layout="size"
             layoutDependency={ctx.drifts || ctx.layout}
-            className={hstack({
+            css={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
               gap: '2',
               layerStyle: 'likec4.panel',
               position: 'relative',
@@ -86,15 +89,15 @@ export const ComparePanel = memo(() => {
               py: '1',
               pl: '3',
               pointerEvents: 'all',
-            })}
+            }}
             variants={variants}
             initial="initial"
             animate="animate"
             exit="exit"
           >
             <ComparePanelControls />
-          </m.div>
-          <m.div
+          </MotionDiv>
+          <MotionDiv
             key={'ListOfDrifts'}
             layout="size"
             layoutDependency={ctx.drifts || ctx.layout}
@@ -102,7 +105,10 @@ export const ComparePanel = memo(() => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className={vstack({
+            css={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'stretch',
               gap: '4',
               layerStyle: 'likec4.panel',
               position: 'relative',
@@ -114,12 +120,12 @@ export const ComparePanel = memo(() => {
               '@/md': {
                 minWidth: '200px',
               },
-            })}
+            }}
           >
             <DriftsSummary />
             {ctx.canApplyLatest && (
               <>
-                <m.div layout="position" className={css({ flex: '0' })}>
+                <MotionDiv layout="position" css={{ flex: '0' }}>
                   <Divider orientation="horizontal" size={'xs'} mb={'xs'} />
                   <HStack>
                     <Tooltip
@@ -156,10 +162,10 @@ export const ComparePanel = memo(() => {
                       </Tooltip>
                     )}
                   </HStack>
-                </m.div>
+                </MotionDiv>
               </>
             )}
-          </m.div>
+          </MotionDiv>
         </>
       )}
     </AnimatePresence>

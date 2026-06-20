@@ -1,5 +1,5 @@
 import type { Fqn, NodeId } from '#likec4/core'
-import { css } from '@likec4/styles/css'
+import { chakra } from '@chakra-ui/react'
 import {
   type ElementTagsProps,
   CompoundDetailsButton,
@@ -23,6 +23,8 @@ import { NodeDrifts } from './NodeDrifts'
 import { NodeNotes } from './NodeNotes'
 import { CompoundDeploymentToolbar, CompoundElementToolbar } from './toolbar/CompoundToolbar'
 import { DeploymentElementToolbar, ElementToolbar } from './toolbar/ElementToolbar'
+
+const ChakraCompoundNodeContainer = chakra(CompoundNodeContainer) as any
 
 function ElementTags(props: ElementTagsProps) {
   const diagram = useDiagram()
@@ -124,12 +126,12 @@ export function DeploymentNode(props: Types.NodeProps<'deployment'>) {
   )
 }
 
-const compoundHasDrifts = css({
+const compoundHasDrifts = {
   outlineColor: 'likec4.compare.manual.outline',
   outlineWidth: '4px',
   outlineStyle: 'dashed',
   outlineOffset: '1.5',
-})
+}
 
 const hasDrifts = (props: Types.NodeProps) => {
   return props.data.drifts && props.data.drifts.length > 0
@@ -139,8 +141,8 @@ export function CompoundElementNode(props: Types.NodeProps<'compound-element'>) 
   const { enableElementDetails, enableReadOnly, enableCompareWithLatest } = useEnabledFeatures()
   const showDrifts = enableCompareWithLatest && hasDrifts(props)
   return (
-    <CompoundNodeContainer
-      className={showDrifts ? compoundHasDrifts : undefined}
+    <ChakraCompoundNodeContainer
+      css={showDrifts ? compoundHasDrifts : undefined}
       nodeProps={props}
     >
       {enableCompareWithLatest && <NodeDrifts nodeProps={props} />}
@@ -149,7 +151,7 @@ export function CompoundElementNode(props: Types.NodeProps<'compound-element'>) 
       {enableElementDetails && <CompoundDetailsButtonWithHandler {...props} />}
       {!enableReadOnly && <CompoundElementToolbar {...props} />}
       <DefaultHandles direction={props.data.viewLayoutDir} />
-    </CompoundNodeContainer>
+    </ChakraCompoundNodeContainer>
   )
 }
 
@@ -157,8 +159,8 @@ export function CompoundDeploymentNode(props: Types.NodeProps<'compound-deployme
   const { enableElementDetails, enableReadOnly, enableCompareWithLatest } = useEnabledFeatures()
   const showDrifts = enableCompareWithLatest && hasDrifts(props)
   return (
-    <CompoundNodeContainer
-      className={showDrifts ? compoundHasDrifts : undefined}
+    <ChakraCompoundNodeContainer
+      css={showDrifts ? compoundHasDrifts : undefined}
       nodeProps={props}
     >
       {enableCompareWithLatest && <NodeDrifts nodeProps={props} />}
@@ -167,7 +169,7 @@ export function CompoundDeploymentNode(props: Types.NodeProps<'compound-deployme
       {enableElementDetails && <CompoundDetailsButtonWithHandler {...props} />}
       {!enableReadOnly && <CompoundDeploymentToolbar {...props} />}
       <DefaultHandles direction={props.data.viewLayoutDir} />
-    </CompoundNodeContainer>
+    </ChakraCompoundNodeContainer>
   )
 }
 
@@ -175,13 +177,13 @@ export function ViewGroupNode(props: Types.NodeProps<'view-group'>) {
   const { enableCompareWithLatest } = useEnabledFeatures()
   const showDrifts = enableCompareWithLatest && hasDrifts(props)
   return (
-    <CompoundNodeContainer
-      className={showDrifts ? compoundHasDrifts : undefined}
+    <ChakraCompoundNodeContainer
+      css={showDrifts ? compoundHasDrifts : undefined}
       nodeProps={props}
     >
       {enableCompareWithLatest && <NodeDrifts nodeProps={props} />}
       <CompoundTitle {...props} />
       <DefaultHandles direction={props.data.viewLayoutDir} />
-    </CompoundNodeContainer>
+    </ChakraCompoundNodeContainer>
   )
 }

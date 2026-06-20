@@ -1,29 +1,31 @@
 import type { NonEmptyReadonlyArray } from '#likec4/core'
-import { css, cx } from '@likec4/styles/css'
-import { Box, HStack} from "@chakra-ui/react"
-import { hstack } from '@likec4/styles/patterns'
-import { likec4tag } from '@likec4/styles/recipes'
+import { Box, HStack, type HTMLChakraProps, useSlotRecipe } from "@chakra-ui/react"
+import { likec4tag } from '#likec4/style-preset/recipes'
 import { useDebouncedState, useHover } from '@mantine/hooks'
 import { NodeToolbar, Position, useStore } from '@xyflow/react'
 import { deepEqual } from 'fast-equals'
-import { type ComponentPropsWithoutRef, forwardRef, memo, useCallback, useEffect } from 'react'
+import { forwardRef, memo, useCallback, useEffect } from 'react'
 import { hasAtLeast } from 'remeda'
 import type { BaseNodePropsWithData } from '../../base/types'
 import { useCurrentZoomAtLeast } from '../../hooks/useXYFlow'
+import { classNames } from '../../utils/classNames'
 import { stopPropagation } from '../../utils/xyflow'
 
 export type ElementTagProps = {
   tag: string
   cursor?: 'pointer' | 'default'
-} & Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'color'>
+} & Omit<HTMLChakraProps<'div'>, 'children' | 'color'>
 
 export const ElementTag = forwardRef<HTMLDivElement, ElementTagProps>(
   ({ tag, cursor, className, style, ...props }, ref) => {
+    const tagRecipe = useSlotRecipe({ recipe: likec4tag })
+    const tagStyles = tagRecipe()
     return (
       <Box
         ref={ref}
         data-likec4-tag={tag}
-        className={cx(likec4tag(), className)}
+        className={classNames(className)}
+        css={tagStyles.root}
         {...props}
         style={{
           cursor,
@@ -125,39 +127,41 @@ function WithElementTags({
 
   return (
     <>
-      <div
-        ref={tagsBarRef}
-        className={cx(
+      <Box
+        ref={tagsBarRef as any}
+        className={classNames(
           'likec4-element-tags',
-          hstack({
-            pointerEvents: 'all',
-            gap: '1',
-            alignItems: 'flex-end',
-            justifyItems: 'stretch',
-            position: 'absolute',
-            width: '100%',
-            bottom: '0',
-            left: '0',
-            padding: '1',
-            _shapeCylinder: {
-              bottom: '[5px]',
-            },
-            _shapeStorage: {
-              bottom: '[5px]',
-            },
-            _shapeQueue: {
-              bottom: '0',
-              paddingLeft: '[14px]',
-            },
-          }),
         )}
+        css={{
+          display: 'flex',
+          flexDirection: 'row',
+          pointerEvents: 'all',
+          gap: '1',
+          alignItems: 'flex-end',
+          justifyItems: 'stretch',
+          position: 'absolute',
+          width: '100%',
+          bottom: '0',
+          left: '0',
+          padding: '1',
+          _shapeCylinder: {
+            bottom: '[5px]',
+          },
+          _shapeStorage: {
+            bottom: '[5px]',
+          },
+          _shapeQueue: {
+            bottom: '0',
+            paddingLeft: '[14px]',
+          },
+        }}
         onClick={stopPropagation}
       >
         {tags.map((tag) => (
           <Box
             key={id + '#' + tag}
             data-likec4-tag={tag}
-            className={css({
+            css={{
               layerStyle: 'likec4.tag',
               flex: '1',
               display: 'flex',
@@ -171,13 +175,13 @@ function WithElementTags({
                 transitionDelay: '.08s',
               },
               transition: 'fast',
-            })}
+            }}
           />
         ))}
-      </div>
+      </Box>
       <NodeToolbar isVisible={isVisible} align="start" position={Position.Bottom}>
         <HStack
-          ref={tagsToolbarRef}
+          ref={tagsToolbarRef as any}
           css={{
             gap: '0.5',
             alignItems: 'baseline',
@@ -195,14 +199,14 @@ function WithElementTags({
               key={tag}
               tag={tag}
               cursor="pointer"
-              className={css({
+              css={{
                 userSelect: 'none',
                 ...(zoomIsLargeEnough && {
                   fontSize: 'lg',
                   borderRadius: 'sm',
                   px: '1.5', // 6px
                 }),
-              })}
+              }}
               onClick={onTagClick
                 ? ((e) => {
                   e.stopPropagation()

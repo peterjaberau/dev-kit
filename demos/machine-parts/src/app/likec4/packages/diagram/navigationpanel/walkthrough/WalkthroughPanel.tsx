@@ -1,6 +1,5 @@
 import { RichText } from '#likec4/core'
 import { chakra } from "@chakra-ui/react"
-import { vstack } from '@likec4/styles/patterns'
 import {
   ScrollAreaAutosize,
 } from '@mantine/core'
@@ -20,6 +19,8 @@ const SectionHeader = chakra('div', {
     mb: 'xxs',
   },
 })
+
+const MotionDiv = chakra(m.div) as any
 
 function selectWalkthroughNotes(s: DiagramContext) {
   const isActive = isNonNull(s.activeWalkthrough)
@@ -41,9 +42,12 @@ export const WalkthroughPanel = memo(() => {
   return (
     <AnimatePresence>
       {isActive && !notes.isEmpty && (
-        <m.div
+        <MotionDiv
           layout="position"
-          className={vstack({
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
             position: 'relative',
             layerStyle: 'likec4.dropdown',
             gap: 'sm',
@@ -63,7 +67,7 @@ export const WalkthroughPanel = memo(() => {
             '@/lg': {
               maxWidth: 700,
             },
-          })}
+          }}
           initial={{
             opacity: 0,
             translateX: -20,
@@ -85,7 +89,7 @@ export const WalkthroughPanel = memo(() => {
               emptyText="No description"
             />
           </ScrollAreaAutosize>
-        </m.div>
+        </MotionDiv>
       )}
     </AnimatePresence>
   )

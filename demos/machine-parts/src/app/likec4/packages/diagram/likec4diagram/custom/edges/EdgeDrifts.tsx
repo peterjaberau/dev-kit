@@ -1,4 +1,5 @@
-import { css, cx } from '@likec4/styles/css'
+import { chakra } from '@chakra-ui/react'
+import { classNames } from '../../../utils/classNames'
 import type { Types } from '../../types'
 
 export type EdgeDriftsProps = {
@@ -16,20 +17,20 @@ export function EdgeDrifts({
   }
 
   return (
-    <path
-      className={cx(
+    <chakra.path
+      className={classNames(
         'react-flow__edge-path',
-        css({
-          pointerEvents: 'none',
-          stroke: 'likec4.compare.manual.outline',
-          fill: 'none',
-          strokeWidth: {
-            base: '8px',
-            _whenHovered: '12px',
-          },
-          strokeOpacity: 0.5,
-        }),
       )}
+      css={{
+        pointerEvents: 'none',
+        stroke: 'likec4.compare.manual.outline',
+        fill: 'none',
+        strokeWidth: {
+          base: '8px',
+          _whenHovered: '12px',
+        },
+        strokeOpacity: 0.5,
+      }}
       d={svgPath}
       strokeLinecap="round"
     />

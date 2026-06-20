@@ -1,5 +1,4 @@
-import { css } from '@likec4/styles/css'
-import { hstack } from '@likec4/styles/patterns'
+import { chakra } from '@chakra-ui/react'
 import {
   Popover,
   PopoverDropdown,
@@ -24,6 +23,8 @@ import { useMantinePortalProps } from '../../hooks/useMantinePortalProps'
 import { PanelActionIcon } from '../_common'
 import { Tooltip } from './_common'
 
+const ChakraPopoverDropdown = chakra(PopoverDropdown) as any
+
 const Action = ({
   label,
   icon,
@@ -37,12 +38,14 @@ const Action = ({
     <PanelActionIcon
       classNames={{
         root: 'action-icon',
-        icon: css({
+      }}
+      styles={{
+        icon: {
           '& > svg': {
             width: '70%',
             height: '70%',
           },
-        }),
+        },
       }}
       onClick={onClick}>
       {icon}
@@ -70,13 +73,16 @@ export const ManualLayoutToolsButton = memo(() => {
           </PanelActionIcon>
         </Tooltip>
       </PopoverTarget>
-      <PopoverDropdown
-        className={hstack({
+      <ChakraPopoverDropdown
+        css={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
           gap: '0.5',
           layerStyle: 'likec4.panel',
           padding: '1',
           pointerEvents: 'all',
-        })}>
+        }}>
         <TooltipGroup>
           <Action
             label="Align in columns"
@@ -142,7 +148,7 @@ export const ManualLayoutToolsButton = memo(() => {
               diagram.resetEdgeControlPoints()
             }} />
         </TooltipGroup>
-      </PopoverDropdown>
+      </ChakraPopoverDropdown>
     </Popover>
   )
 })

@@ -1,5 +1,5 @@
 import type { ComputedNode, NodeNotation as ElementNotationData } from '#likec4/core'
-import { cx, cx as clsx } from '@likec4/styles/css'
+import { classNames, classNames as clsx } from '../../../utils/classNames'
 import {
   ActionIcon,
   Badge,
@@ -45,7 +45,7 @@ const ElementNotation = ({ value }: { value: ElementNotationData }) => {
       shadow="none"
       px={'xs'}
       py={'sm'}
-      className={cx(
+      className={classNames(
         styles.elementNotation,
       )}
       data-likec4-color={color}
@@ -83,7 +83,7 @@ const ElementNotation = ({ value }: { value: ElementNotationData }) => {
             {value.kinds.map((kind) => (
               <Badge
                 key={kind}
-                className={cx(
+                className={classNames(
                   styles.shapeBadge,
                 )}
                 onMouseEnter={() => {

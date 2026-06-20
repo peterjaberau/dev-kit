@@ -1,8 +1,8 @@
-import { css, cx } from '@likec4/styles/css'
+import { classNames } from '../utils/classNames'
 import {
-  type NavigationPanelActionIconVariant,
   navigationPanelActionIcon,
-} from '@likec4/styles/recipes'
+} from '#likec4/style-preset/recipes'
+import { chakra, type RecipeVariantProps, useSlotRecipe } from '@chakra-ui/react'
 import {
   type ActionIconProps,
   ActionIcon,
@@ -26,22 +26,24 @@ export const Tooltip = MantineTooltip.withProps({
   withinPortal: false,
 })
 
+const ChakraThemeIcon = chakra(ThemeIcon) as any
+
 export const BreadcrumbsSeparator = () => (
-  <ThemeIcon
+  <ChakraThemeIcon
     variant="transparent"
     size={16}
-    className={css({
+    css={{
       display: {
         base: 'none',
         '@/md': 'flex',
       },
       color: {
         base: 'mantine.colors.gray[5]',
-        _dark: 'mantine.colors.dark[3]',
+          _dark: 'mantine.colors.dark[3]',
       },
-    })}>
+    }}>
     <IconChevronRight />
-  </ThemeIcon>
+  </ChakraThemeIcon>
 )
 
 export const Breadcrumbs = MantineBreadcrumbs.withProps({
@@ -50,9 +52,11 @@ export const Breadcrumbs = MantineBreadcrumbs.withProps({
 })
 
 export type PanelActionIconProps =
-  & Partial<NavigationPanelActionIconVariant>
-  & Omit<ActionIconProps, keyof NavigationPanelActionIconVariant>
-  & Omit<HTMLMotionProps<'button'>, keyof NavigationPanelActionIconVariant>
+  & Partial<RecipeVariantProps<typeof navigationPanelActionIcon>>
+  & Omit<ActionIconProps, keyof RecipeVariantProps<typeof navigationPanelActionIcon>>
+  & Omit<HTMLMotionProps<'button'>, keyof RecipeVariantProps<typeof navigationPanelActionIcon>>
+
+const ChakraActionIcon = chakra(ActionIcon) as any
 
 export const PanelActionIcon = forwardRef<HTMLButtonElement, PanelActionIconProps>(({
   variant = 'default',
@@ -60,26 +64,29 @@ export const PanelActionIcon = forwardRef<HTMLButtonElement, PanelActionIconProp
   disabled = false,
   type,
   ...others
-}, ref) => (
-  <ActionIcon
-    size="md"
-    variant="transparent"
-    radius="sm"
-    component={m.button}
-    {...!disabled && {
-      whileHover: {
-        scale: 1.085,
-      },
-      whileTap: {
-        scale: 1,
-        translateY: 1,
-      },
-    }}
-    disabled={disabled}
-    {...others}
-    className={cx(
-      className,
-      navigationPanelActionIcon({ variant, type }),
-    )}
-    ref={ref} />
-))
+}, ref) => {
+  const actionIconRecipe = useSlotRecipe({ recipe: navigationPanelActionIcon })
+  const actionIconStyles = actionIconRecipe({ variant, type })
+
+  return (
+    <ChakraActionIcon
+      size="md"
+      variant="transparent"
+      radius="sm"
+      component={m.button}
+      {...!disabled && {
+        whileHover: {
+          scale: 1.085,
+        },
+        whileTap: {
+          scale: 1,
+          translateY: 1,
+        },
+      }}
+      disabled={disabled}
+      {...others}
+      className={classNames(className)}
+      css={actionIconStyles.root}
+      ref={ref} />
+  )
+})

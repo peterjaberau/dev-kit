@@ -1,4 +1,5 @@
-import { css, cx } from '@likec4/styles/css'
+import { css } from '#likec4/style-preset/css'
+import { classNames } from '../../utils/classNames'
 
 export const treeNode = css({
   [`&[data-level='1']`]: {
@@ -34,9 +35,9 @@ const label = css({
   //   },
 })
 
-export const nodeLabel = cx(label)
+export const nodeLabel = classNames(label)
 
-export const instanceLabel = cx(
+export const instanceLabel = classNames(
   label,
   css({
     cursor: 'pointer',

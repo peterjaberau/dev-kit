@@ -1,24 +1,29 @@
-import { css, cx } from '@likec4/styles/css'
-import { hstack } from '@likec4/styles/patterns'
+import { classNames } from '../../utils/classNames'
+import { chakra } from '@chakra-ui/react'
 import { UnstyledButton } from '@mantine/core'
 import * as m from 'motion/react-m'
+import type { MouseEvent } from 'react'
 import { Logo, LogoIcon } from '../../components/Logo'
 import { useDiagramEventHandlers } from '../../context/DiagramEventHandlers'
 import { useNavigationActor } from '../hooks'
+
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
+const ChakraLogo = chakra(Logo) as any
+const ChakraLogoIcon = chakra(LogoIcon) as any
 
 export const LogoButton = () => {
   const actor = useNavigationActor()
   const { onLogoClick } = useDiagramEventHandlers()
   return (
     <m.div layout="position">
-      <UnstyledButton
+      <ChakraUnstyledButton
         onMouseEnter={() => {
           actor.send({ type: 'breadcrumbs.mouseEnter.root' })
         }}
         onMouseLeave={() => {
           actor.send({ type: 'breadcrumbs.mouseLeave.root' })
         }}
-        onClick={e => {
+        onClick={(e: MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation()
           if (onLogoClick && actor.isOpened()) {
             setTimeout(() => {
@@ -27,37 +32,37 @@ export const LogoButton = () => {
           }
           actor.send({ type: 'breadcrumbs.click.root' })
         }}
-        className={cx(
+        className={classNames(
           'mantine-active',
-          hstack({
-            padding: '0.5',
-            // _active: {
-            //   transform: 'translateY(1px)',
-            // },
-            width: {
-              base: '[20px]',
-              '@/md': '[64px]',
-            },
-          }),
         )}
+        css={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: '0.5',
+          width: {
+            base: '[20px]',
+            '@/md': '[64px]',
+          },
+        }}
       >
-        <Logo
-          className={css({
+        <ChakraLogo
+          css={{
             display: {
               base: 'none',
               '@/md': 'block',
             },
-          })}
+          }}
         />
-        <LogoIcon
-          className={css({
+        <ChakraLogoIcon
+          css={{
             display: {
               base: 'block',
               '@/md': 'none',
             },
-          })}
+          }}
         />
-      </UnstyledButton>
+      </ChakraUnstyledButton>
     </m.div>
   )
 }

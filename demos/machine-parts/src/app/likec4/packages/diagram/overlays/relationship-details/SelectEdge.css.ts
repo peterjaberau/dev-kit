@@ -1,4 +1,5 @@
-import { css, cx } from '@likec4/styles/css'
+import { css } from '#likec4/style-preset/css'
+import { classNames } from '../../utils/classNames'
 
 const edgeEnpoint = css.raw({
   display: 'inline-flex',
@@ -27,7 +28,7 @@ export const edgeTarget = css({
 }, edgeEnpoint)
 
 const edgeLabelclass = 'likec4-edge-label'
-export const edgeLabel = cx(
+export const edgeLabel = classNames(
   edgeLabelclass,
   css({
     display: 'grid',

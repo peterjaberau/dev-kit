@@ -1,11 +1,12 @@
-import { css } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
-import { hstack } from '@likec4/styles/patterns'
+import { Box, chakra } from '@chakra-ui/react'
 import {
   UnstyledButton,
 } from '@mantine/core'
 import { memo } from 'react'
+import type { MouseEvent } from 'react'
 import { useDiagramCompareLayout } from '../../hooks/useDiagramCompareLayout'
+
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
 
 export const LayoutDriftFrame = memo(() => {
   const [{ layout, isActive }, { toggleCompare }] = useDiagramCompareLayout()
@@ -14,7 +15,9 @@ export const LayoutDriftFrame = memo(() => {
 
   return (
     <Box
-      className={hstack({
+      css={{
+        display: 'flex',
+        flexDirection: 'row',
         position: 'absolute',
         top: '0',
         left: '0',
@@ -25,7 +28,7 @@ export const LayoutDriftFrame = memo(() => {
         pointerEvents: 'none',
         alignItems: 'flex-start',
         justifyContent: 'center',
-      })}
+      }}
       style={{
         zIndex: '9999',
         display: !isActive ? 'none' : undefined,
@@ -36,7 +39,7 @@ export const LayoutDriftFrame = memo(() => {
         style={{
           backgroundColor: bgColor,
         }}
-        onClick={(e) => {
+        onClick={(e: MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation()
           toggleCompare()
         }}>
@@ -46,8 +49,8 @@ export const LayoutDriftFrame = memo(() => {
   )
 })
 
-const Btn = UnstyledButton.withProps({
-  className: css({
+const Btn = chakra(ChakraUnstyledButton, {
+  base: {
     fontSize: 'xs',
     fontWeight: 'medium',
     py: '1.5',
@@ -61,5 +64,5 @@ const Btn = UnstyledButton.withProps({
     _active: {
       transform: 'translateY(-3px)',
     },
-  }),
+  },
 })

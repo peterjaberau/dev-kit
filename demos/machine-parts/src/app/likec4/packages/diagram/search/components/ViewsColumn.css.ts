@@ -1,10 +1,11 @@
-import { css, cx } from '@likec4/styles/css'
+import { css } from '#likec4/style-preset/css'
+import { classNames } from '../../utils/classNames'
 
 export { emptyBoX, focusable } from './_shared.css'
 
 const _viewBtn = 'likec4-view-btn'
 
-export const viewButton = cx(
+export const viewButton = classNames(
   css({
     flexWrap: 'nowrap',
     display: 'flex',

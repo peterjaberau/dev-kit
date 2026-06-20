@@ -1,4 +1,4 @@
-import { Box, HStack, Txt, VStack } from '#likec4/styles/jsx'
+import { Box, HStack, Text as Txt, VStack } from '@chakra-ui/react'
 import { ActionIcon, CloseButton, Input } from '@mantine/core'
 import { IconTrash } from '@tabler/icons-react'
 import { AnimatePresence } from 'motion/react'
@@ -40,7 +40,7 @@ export const EditorPanel = () => {
         >
           <HStack p={'2'} gap="4" justifyItems={'stretch'}>
             <Logo style={{ height: 16 }} />
-            <Txt size="sm" fontWeight="medium" flex={'1'}>
+            <Txt textStyle="sm" fontWeight="medium" flex={'1'}>
               Explore
             </Txt>
             <HStack gap="1">

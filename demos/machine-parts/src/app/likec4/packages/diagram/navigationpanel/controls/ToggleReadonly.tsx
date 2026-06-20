@@ -1,13 +1,17 @@
-import { css, cx } from '@likec4/styles/css'
-import { hstack } from '@likec4/styles/patterns'
+import { classNames } from '../../utils/classNames'
+import { chakra } from '@chakra-ui/react'
 import { UnstyledButton } from '@mantine/core'
 import { IconLock, IconLockOpen2 } from '@tabler/icons-react'
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m'
+import type { MouseEvent } from 'react'
 import { isTruthy } from 'remeda'
 import type { DiagramContext } from '../../hooks/useDiagram'
 import { useDiagram, useDiagramContext } from '../../hooks/useDiagram'
 import { deriveToggledFeatures } from '../../likec4diagram/state/machine.setup'
+
+const MotionUnstyledButton = chakra(UnstyledButton) as any
+const MotionDiv = chakra(m.div) as any
 
 const selector = (ctx: DiagramContext) => {
   const toggledFeatures = deriveToggledFeatures(ctx)
@@ -36,12 +40,12 @@ export const ToggleReadonly = () => {
   return (
     <AnimatePresence mode="popLayout">
       {visible && (
-        <UnstyledButton
+        <MotionUnstyledButton
           component={m.button}
           layout="position"
           layoutDependency={isReadOnly}
           disabled={disabled}
-          onClick={e => {
+          onClick={(e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
             !disabled && diagram.toggleFeature('ReadOnly')
           }}
@@ -51,37 +55,40 @@ export const ToggleReadonly = () => {
           whileTap={{
             translateY: 1,
           }}
-          className={cx(
+          className={classNames(
             'group',
-            hstack({
-              gap: '0.5',
-              paddingInline: 'xxs',
-              paddingBlock: 'xxs',
-              userSelect: 'none',
-              layerStyle: 'likec4.panel.action',
-              backgroundColor: {
-                base: 'none',
-                _notDisabled: {
-                  _hover: 'likec4.panel.action.bg.hover',
-                },
+          )}
+          css={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: '0.5',
+            paddingInline: 'xxs',
+            paddingBlock: 'xxs',
+            userSelect: 'none',
+            layerStyle: 'likec4.panel.action',
+            backgroundColor: {
+              base: 'none',
+              _notDisabled: {
+                _hover: 'likec4.panel.action.bg.hover',
               },
-            }),
-          )}>
+            },
+          }}>
           <IconLockOpen2 size={14} stroke={2} style={{ display: isReadOnly ? 'none' : undefined }} />
           <IconLock size={14} stroke={2} style={{ display: !isReadOnly ? 'none' : undefined }} />
-          <m.div
-            className={css({
+          <MotionDiv
+            css={{
               fontSize: '11px',
               fontWeight: 'bold',
               lineHeight: 1,
               opacity: 0.8,
-            })}
+            }}
             style={{
               display: isReadOnly ? 'block' : 'none',
             }}>
             Edit
-          </m.div>
-        </UnstyledButton>
+          </MotionDiv>
+        </MotionUnstyledButton>
       )}
     </AnimatePresence>
   )

@@ -1,4 +1,4 @@
-import { css } from '@likec4/styles/css'
+import { css } from '#likec4/style-preset/css'
 // import { mantine } from '../../../theme-vars'
 
 export const edgeNoteCloseButton = css({

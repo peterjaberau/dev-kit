@@ -1,4 +1,4 @@
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../utils/classNames'
 import { useMantineColorScheme } from '@mantine/core'
 import {
   type ReactFlowProps,
@@ -96,7 +96,7 @@ export function BaseXYFlow<
       colorMode={colorMode}
       nodes={nodes}
       edges={edges}
-      className={cx(
+      className={classNames(
         background === 'transparent' && 'bg-transparent',
         className,
       )}

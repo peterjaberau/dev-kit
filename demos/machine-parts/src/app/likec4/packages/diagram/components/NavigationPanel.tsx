@@ -1,22 +1,26 @@
-import { cx } from '@likec4/styles/css'
-import { createStyleContext, isCssProperty } from '@likec4/styles/jsx'
 import { navigationPanel } from "#likec4/style-preset/slot-recipes"
+import { createSlotRecipeContext, defaultSystem } from "@chakra-ui/react"
 import { type ForwardRefComponent, type HTMLMotionProps, isValidMotionProp } from 'motion/react'
 import * as m from 'motion/react-m'
 import { type HTMLAttributes, forwardRef } from 'react'
 import { Logo as LogoWithText, LogoIcon } from './Logo'
+import { classNames } from '../utils/classNames'
 
-const { withProvider, withContext } = createStyleContext(navigationPanel)
+const { withProvider, withContext } = createSlotRecipeContext({
+  recipe: navigationPanel,
+})
 
 const shouldForwardProp = (prop: string, variantKeys: string[]): boolean =>
-  !variantKeys.includes(prop) && (isValidMotionProp(prop) || !isCssProperty(prop))
+  !variantKeys.includes(prop) && (
+    isValidMotionProp(prop) || !defaultSystem.isValidProperty(prop)
+  )
 
 const LogoButton = forwardRef<HTMLButtonElement, HTMLAttributes<HTMLButtonElement>>(({ className, ...props }, ref) => {
   return (
     <button
       {...props}
       ref={ref}
-      className={cx(
+      className={classNames(
         'mantine-active',
         className,
       )}

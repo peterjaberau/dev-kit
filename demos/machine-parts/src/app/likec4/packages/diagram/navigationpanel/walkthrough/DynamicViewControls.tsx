@@ -1,6 +1,6 @@
 import { invariant } from '#likec4/core'
 import type { DynamicViewDisplayVariant } from '#likec4/core/types'
-import { css } from '@likec4/styles/css'
+import { chakra } from '@chakra-ui/react'
 import { type ButtonProps, Button, SegmentedControl } from '@mantine/core'
 import {
   IconPlayerPlayFilled,
@@ -13,11 +13,13 @@ import { useDiagram, useDiagramContext } from '../../hooks/useDiagram'
 import { Tooltip } from '../_common'
 import { useNavigationActor } from '../hooks'
 
+const ChakraButton = chakra(Button) as any
+
 export const TriggerWalkthroughButton = forwardRef<HTMLButtonElement, ButtonProps & HTMLMotionProps<'button'>>((
   props,
   ref,
 ) => (
-  <Button
+  <ChakraButton
     variant="filled"
     size="xs"
     fw="500"
@@ -29,9 +31,9 @@ export const TriggerWalkthroughButton = forwardRef<HTMLButtonElement, ButtonProp
     }}
     layout="position"
     layoutId={'trigger-dynamic-walkthrough'}
-    className={css({
+    css={{
       flexShrink: 0,
-    })}
+    }}
   />
 ))
 
@@ -64,19 +66,19 @@ function StartWalkthroughButton() {
         size="compact-xs"
         h={26}
         disabled={enableCompareWithLatest}
-        classNames={{
-          label: css({
-            display: {
-              base: 'none',
-              '@/md': 'inherit',
+        styles={{
+          label: {
+            display: 'none',
+            '@media (min-width: 48em)': {
+              display: 'inherit',
             },
-          }),
-          section: css({
-            marginInlineStart: {
-              base: '0',
-              '@/md': '2',
+          },
+          section: {
+            marginInlineStart: 0,
+            '@media (min-width: 48em)': {
+              marginInlineStart: 'var(--spacing-2)',
             },
-          }),
+          },
         }}
         rightSection={<IconPlayerPlayFilled size={10} />}
       >
@@ -99,10 +101,10 @@ const DynamicViewModeSwitcher = forwardRef<HTMLDivElement, {
           invariant(variant === 'diagram' || variant === 'sequence', 'Invalid dynamic view variant')
           onChange(variant)
         }}
-        classNames={{
-          label: css({
+        styles={{
+          label: {
             fontSize: 'xxs',
-          }),
+          },
         }}
         data={[
           {

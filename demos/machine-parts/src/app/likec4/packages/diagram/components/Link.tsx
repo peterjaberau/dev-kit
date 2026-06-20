@@ -1,12 +1,14 @@
 import type { Link as LinkData } from '#likec4/core'
-import { css, cx } from '@likec4/styles/css'
+import { classNames } from '../utils/classNames'
 import { chakra } from '@chakra-ui/react'
 import { type BadgeProps, ActionIcon, Badge, CopyButton } from '@mantine/core'
 import { IconCheck, IconCopy } from '@tabler/icons-react'
-import { forwardRef } from 'react'
+import { forwardRef, type MouseEvent } from 'react'
 import { GithubIcon } from './GithubIcon'
 
 const GITHUB_PREFIX = 'https://github.com/'
+const ChakraActionIcon = chakra(ActionIcon) as any
+const ChakraBadge = chakra(Badge) as any
 
 export const Link = forwardRef<HTMLDivElement, Omit<BadgeProps, 'children' | 'classNames'> & { value: LinkData }>(
   ({ value, className, ...props }, ref) => {
@@ -16,7 +18,7 @@ export const Link = forwardRef<HTMLDivElement, Omit<BadgeProps, 'children' | 'cl
     let isGithub = url.startsWith(GITHUB_PREFIX)
 
     return (
-      <Badge
+      <ChakraBadge
         ref={ref}
         variant="default"
         radius="sm"
@@ -26,58 +28,54 @@ export const Link = forwardRef<HTMLDivElement, Omit<BadgeProps, 'children' | 'cl
         rightSection={
           <CopyButton value={url} timeout={1500}>
             {({ copy, copied }) => (
-              <ActionIcon
-                className={css({
+              <ChakraActionIcon
+                css={{
                   opacity: copied ? 1 : 0.45,
                   transition: "fast",
                   _hover: {
                     opacity: 1,
                   },
-                })}
+                }}
                 tabIndex={-1}
                 size={"20"}
                 variant={copied ? "light" : "transparent"}
                 color={copied ? "teal" : "gray"}
                 data-active={copied}
-                onClick={(e) => {
+                onClick={(e: MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation()
                   e.preventDefault()
                   copy()
                 }}
               >
                 {copied ? <IconCheck /> : <IconCopy stroke={2.5} />}
-              </ActionIcon>
+              </ChakraActionIcon>
             )}
           </CopyButton>
         }
         {...props}
-        className={cx(className, "group")}
-        classNames={{
-          root: css({
-            flexWrap: "nowrap",
-            minHeight: 24,
-            maxWidth: 500,
-            userSelect: "all",
-            pr: "0",
-            backgroundColor: {
-              base: "transparent",
-              _hover: {
-                base: "mantine.colors.gray[1]",
-                _dark: "mantine.colors.dark[5]",
-              },
+        className={classNames(className, "group")}
+        css={{
+          flexWrap: "nowrap",
+          minHeight: 24,
+          maxWidth: 500,
+          userSelect: "all",
+          pr: "0",
+          backgroundColor: {
+            base: "transparent",
+            _hover: {
+              base: "mantine.colors.gray[1]",
+              _dark: "mantine.colors.dark[5]",
             },
-          }),
-          section: css({
-            '&:is([data-position="left"])': {
-              color: "text.dimmed",
-              userSelect: "none",
-              pointerEvents: "none",
-              _groupHover: {
-                color: "[var(--badge-color)]",
-                opacity: 0.7,
-              },
-            },
-          }),
+          },
+          '& [data-position="left"]': {
+            color: "text.dimmed",
+            userSelect: "none",
+            pointerEvents: "none",
+          },
+          '&:hover [data-position="left"]': {
+            color: "[var(--badge-color)]",
+            opacity: 0.7,
+          },
         }}
       >
         <chakra.a
@@ -102,7 +100,7 @@ export const Link = forwardRef<HTMLDivElement, Omit<BadgeProps, 'children' | 'cl
           {isGithub && <GithubIcon height="12" width="12" style={{ verticalAlign: "middle", marginRight: "4px" }} />}
           {isGithub ? url.replace(GITHUB_PREFIX, "") : url}
         </chakra.a>
-      </Badge>
+      </ChakraBadge>
     )
   },
 )

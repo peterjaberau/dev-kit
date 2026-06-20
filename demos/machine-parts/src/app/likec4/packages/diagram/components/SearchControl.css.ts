@@ -1,4 +1,4 @@
-import { css } from '@likec4/styles/css'
+import { css } from '#likec4/style-preset/css'
 
 export const root = css({
   height: '30px',

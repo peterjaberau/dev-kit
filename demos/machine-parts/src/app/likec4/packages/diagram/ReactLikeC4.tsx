@@ -1,5 +1,5 @@
 import type * as t from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
+import { classNames } from './utils/classNames'
 import type { CSSProperties, ReactNode } from 'react'
 import type { JSX } from 'react/jsx-runtime'
 import { ErrorMessage, ViewNotFound } from './components/ViewNotFound'
@@ -114,7 +114,7 @@ export function ReactLikeC4<A extends t.aux.Any = t.aux.UnknownLayouted>({
       colorScheme={colorScheme}
       styleNonce={styleNonce}
       keepAspectRatio={keepAspectRatio ? bounds : false}
-      className={cx(
+      className={classNames(
         'likec4-view',
         className,
       )}

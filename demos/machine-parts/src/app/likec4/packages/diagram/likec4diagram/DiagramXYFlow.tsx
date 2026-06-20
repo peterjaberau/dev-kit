@@ -1,5 +1,5 @@
 import { type EdgeId, type NodeId, nonNullable } from '#likec4/core'
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../utils/classNames'
 import { useDebouncedCallback, useTimeout } from '@mantine/hooks'
 import { useCustomCompareMemo } from '@react-hookz/web'
 import type { OnMove, OnMoveEnd, Viewport } from '@xyflow/system'
@@ -191,7 +191,7 @@ export function LikeC4DiagramXYFlow({
     <BaseXYFlow<Types.AnyNode, Types.AnyEdge>
       nodes={nodes}
       edges={edges}
-      className={cx(initialized ? 'initialized' : 'not-initialized')}
+      className={classNames(initialized ? 'initialized' : 'not-initialized')}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       onNodesChange={useCallbackRef((changes) => {

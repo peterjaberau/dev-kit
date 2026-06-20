@@ -9,10 +9,7 @@ import { autoPlacement, autoUpdate, computePosition, hide, offset, size } from '
 import { nameFromFqn } from '#likec4/core'
 import type { LikeC4Model } from '#likec4/core/model'
 import type { DiagramEdge, DiagramNode, EdgeId, ViewId } from '#likec4/core/types'
-import { css, cx } from '@likec4/styles/css'
-import { Box, HStack, Text as Txt, VStack } from "@chakra-ui/react"
-import {styled } from "@likec4/styles/jsx"
-import { bleed } from '@likec4/styles/patterns'
+import { Box, chakra, HStack, Text as Txt, VStack } from "@chakra-ui/react"
 import {
   ActionIcon,
   Button,
@@ -52,6 +49,9 @@ import { roundDpr } from '../../utils'
 import { findDiagramEdge, findDiagramNode } from '../state/utils'
 import { RelationshipPopoverActorLogic } from './actor'
 import { Endpoint, RelationshipTitle } from './components'
+
+const ChakraScrollAreaAutosize = chakra(ScrollAreaAutosize) as any
+const ChakraText = chakra(Text) as any
 
 function selectDiagramContext(c: DiagramContext) {
   let selected: EdgeId | null = null
@@ -310,7 +310,7 @@ const RelationshipPopoverInternal = ({
   )
 
   return (
-    <ScrollAreaAutosize
+    <ChakraScrollAreaAutosize
       ref={ref}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -324,8 +324,7 @@ const RelationshipPopoverInternal = ({
           minHeight: 40,
         },
       }}
-      className={cx(
-        css({
+      css={{
           layerStyle: 'likec4.dropdown',
           p: '0',
           pointerEvents: {
@@ -337,8 +336,7 @@ const RelationshipPopoverInternal = ({
           left: '0',
           width: 'max-content',
           cursor: 'default',
-        }),
-      )}
+      }}
     >
       <VStack
         css={{
@@ -382,7 +380,7 @@ const RelationshipPopoverInternal = ({
           </>
         )}
       </VStack>
-    </ScrollAreaAutosize>
+    </ChakraScrollAreaAutosize>
   )
 }
 
@@ -486,9 +484,9 @@ const Relationship = forwardRef<
   return (
     <VStack
       ref={ref}
-      className={bleed({
-        block: '2',
-        inline: '2',
+      css={{
+        marginBlock: '-2',
+        marginInline: '-2',
         paddingY: '2.5',
         paddingX: '2',
         gap: '1',
@@ -499,7 +497,7 @@ const Relationship = forwardRef<
             _dark: 'mantine.colors.dark[5]/70',
           },
         },
-      })}
+      }}
     >
       <HStack gap={'0.5'}>
         <TooltipGroup openDelay={200}>
@@ -584,18 +582,18 @@ const Relationship = forwardRef<
       {r.kind && (
         <HStack gap="2">
           <Label>kind</Label>
-          <Text size="xs" className={css({ userSelect: 'all', wordBreak: 'break-word', minWidth: 0 })}>{r.kind}</Text>
+          <ChakraText size="xs" css={{ userSelect: 'all', wordBreak: 'break-word', minWidth: 0 }}>{r.kind}</ChakraText>
         </HStack>
       )}
       {r.technology && (
         <HStack gap="2">
           <Label>technology</Label>
-          <Text
+          <ChakraText
             size="xs"
-            className={css({ userSelect: 'all', wordBreak: 'break-word', minWidth: 0 })}
+            css={{ userSelect: 'all', wordBreak: 'break-word', minWidth: 0 }}
           >
             {r.technology}
-          </Text>
+          </ChakraText>
         </HStack>
       )}
       {r.summary.nonEmpty && (
@@ -628,7 +626,7 @@ const Relationship = forwardRef<
   )
 })
 
-const Label = styled('div', {
+const Label = chakra('div', {
   base: {
     display: 'block',
     fontSize: 'xxs',

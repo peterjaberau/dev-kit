@@ -20,9 +20,12 @@ export function useSetState<T extends object>(
   const setState = useCallback(
     (statePartial: NonEmptyObject<Partial<T>> | ((current: T) => NonEmptyObject<Partial<T>>)) =>
       _setState((current) => {
+        const partial = typeof statePartial === 'function'
+          ? (statePartial as (current: T) => NonEmptyObject<Partial<T>>)(current)
+          : statePartial
         const next = {
           ...current,
-          ...typeof statePartial === 'function' ? statePartial(current) : statePartial,
+          ...partial,
         }
         return equalFnRef.current(current, next) ? current : next
       }),

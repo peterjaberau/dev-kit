@@ -1,6 +1,6 @@
 import { type Color, type ComputedNodeStyle, type ElementShape, ensureSizes } from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
-import { elementNode } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { elementNode } from '#likec4/style-preset/recipes'
 import type { MotionNodeLayoutOptions, MotionStyle, Variants } from 'motion/react'
 import * as m from 'motion/react-m'
 import { type PropsWithChildren, forwardRef } from 'react'
@@ -77,7 +77,8 @@ export const ElementNodeContainer = forwardRef<HTMLDivElement, ElementNodeContai
   return (
     <m.div
       ref={ref}
-      className={cx(
+      className={classNames(
+        //@ts-ignore
         elementNode(),
         'group',
         className,

@@ -1,9 +1,10 @@
-import { cx } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
-import { hstack } from '@likec4/styles/patterns'
+import { classNames } from '../../utils/classNames'
+import { Box, chakra } from '@chakra-ui/react'
 import { Menu, Tooltip, UnstyledButton } from '@mantine/core'
 import { IconChevronDown, IconInfoCircle } from '@tabler/icons-react'
 import { stopPropagation } from '../../utils'
+
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
 
 export function CompareActionsMenu({
   disabled = false,
@@ -24,25 +25,26 @@ export function CompareActionsMenu({
       disabled={disabled}
     >
       <Menu.Target>
-        <UnstyledButton
+        <ChakraUnstyledButton
           disabled={disabled}
-          className={cx(
-            'mantine-active',
-            hstack({
-              gap: '2',
-              py: '1.5',
-              px: '2',
-              lineHeight: '1',
-              textStyle: 'xs',
-              fontWeight: 'medium',
-              layerStyle: 'likec4.panel.action',
-              userSelect: 'none',
-            }),
-          )}
+          className={classNames('mantine-active')}
+          css={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: '2',
+            py: '1.5',
+            px: '2',
+            lineHeight: '1',
+            textStyle: 'xs',
+            fontWeight: 'medium',
+            layerStyle: 'likec4.panel.action',
+            userSelect: 'none',
+          }}
         >
           <Box>Actions</Box>
           <IconChevronDown size={12} stroke={2} opacity={0.7} />
-        </UnstyledButton>
+        </ChakraUnstyledButton>
       </Menu.Target>
 
       <Menu.Dropdown>

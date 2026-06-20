@@ -7,8 +7,8 @@
 
 import type { LikeC4Model } from '#likec4/core/model'
 import { type Fqn, preferSummary } from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
+import { classNames } from '../../utils/classNames'
+import { Box, chakra } from '@chakra-ui/react'
 import {
   type ElementProps,
   type UnstyledButtonProps,
@@ -23,7 +23,7 @@ import {
 } from '@mantine/core'
 import { IconStack2, IconZoomScan } from '@tabler/icons-react'
 import * as m from 'motion/react-m'
-import { memo, useMemo, useRef } from 'react'
+import { type MouseEvent, memo, useMemo, useRef } from 'react'
 import { first } from 'remeda'
 import { useLikeC4Model } from '../../hooks/useLikeC4Model'
 import { useNormalizedSearch } from '../hooks'
@@ -32,8 +32,12 @@ import { buttonsva } from './_shared.css'
 import { centerY, moveFocusToSearchInput, queryAllFocusable } from './utils'
 import * as styles from './ViewsColumn.css'
 
+const ChakraHighlight = chakra(Highlight) as any
+const ChakraThemeIcon = chakra(ThemeIcon) as any
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
+
 export const NothingFound = () => (
-  <Box className={styles.emptyBoX}>
+  <Box css={styles.emptyBoX}>
     Nothing found
   </Box>
 )
@@ -137,12 +141,13 @@ export function ViewButton(
   }
 
   return (
-    <UnstyledButton
+    <ChakraUnstyledButton
       {...props}
-      className={cx(btn.root, 'group', styles.focusable, styles.viewButton, className)}
+      className={classNames('group', styles.focusable, styles.viewButton, className)}
+      css={btn.root}
       data-likec4-view={view.id}
       {...(isCurrentView && !focusOnElement) && { 'data-disabled': true }}
-      onClick={(e) => {
+      onClick={(e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         navigate()
       }}
@@ -159,26 +164,26 @@ export function ViewButton(
           }
         },
       })}>
-      <ThemeIcon variant="transparent" className={btn.icon!}>
+      <ChakraThemeIcon variant="transparent" css={btn.icon}>
         {view.isDeploymentView()
           ? <IconStack2 stroke={1.8} />
           : <IconZoomScan stroke={1.8} />}
-      </ThemeIcon>
+      </ChakraThemeIcon>
       <Box style={{ flexGrow: 1 }}>
         <Group gap={'xs'} wrap="nowrap" align="center">
-          <Highlight component="div" highlight={search} className={btn.title!}>
+          <ChakraHighlight component="div" highlight={search} css={btn.title}>
             {view.titleOrUntitled}
-          </Highlight>
+          </ChakraHighlight>
           {isCurrentView && <Badge size="xs" fz={9} radius={'sm'}>current</Badge>}
         </Group>
-        <Highlight
+        <ChakraHighlight
           highlight={view.description.nonEmpty ? search : ''}
           component="div"
-          className={btn.description!}
+          css={btn.description}
           lineClamp={1}>
           {view.description.text || 'No description'}
-        </Highlight>
+        </ChakraHighlight>
       </Box>
-    </UnstyledButton>
+    </ChakraUnstyledButton>
   )
 }

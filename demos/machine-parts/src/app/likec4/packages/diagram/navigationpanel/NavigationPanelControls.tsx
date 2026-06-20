@@ -1,6 +1,6 @@
 import { extractViewTitleFromPath } from '#likec4/core/model'
-import { css, cx } from '@likec4/styles/css'
-import { hstack } from '@likec4/styles/patterns'
+import { classNames } from '../utils/classNames'
+import { chakra } from '@chakra-ui/react'
 import {
   UnstyledButton,
 } from '@mantine/core'
@@ -8,7 +8,7 @@ import { useSelector } from '@xstate/react'
 import { deepEqual } from 'fast-equals'
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m'
-import { memo } from 'react'
+import { type MouseEvent, memo } from 'react'
 import { useEnabledFeatures } from '../context/DiagramFeatures'
 import { BreadcrumbsSeparator } from './_common'
 import type { NavigationPanelActorSnapshot } from './actor'
@@ -24,6 +24,9 @@ import {
 import { useNavigationActor } from './hooks'
 import { breadcrumbTitle } from './styles.css'
 import { DynamicViewControls } from './walkthrough'
+
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
+const MotionDiv = chakra(m.div) as any
 
 const selectBreadcrumbs = ({ context }: NavigationPanelActorSnapshot) => {
   const view = context.view
@@ -54,93 +57,101 @@ export const NavigationPanelControls = memo(() => {
   } = useSelector(actor.actorRef, selectBreadcrumbs, deepEqual)
 
   const folderBreadcrumbs = folders.flatMap(({ folderPath, title }, i) => [
-    <UnstyledButton
+    <ChakraUnstyledButton
       key={folderPath}
       component={m.button}
-      className={cx(
-        breadcrumbTitle({ dimmed: true, truncate: true }),
+      className={classNames(
         'mantine-active',
-        css({
+      )}
+      css={[
+        breadcrumbTitle({ dimmed: true, truncate: true }),
+        {
           userSelect: 'none',
           maxWidth: '200px',
           display: {
             base: 'none',
             '@/md': 'block',
           },
-        }),
-      )}
+        },
+      ]}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       title={title}
       onMouseEnter={() => actor.send({ type: 'breadcrumbs.mouseEnter.folder', folderPath })}
       onMouseLeave={() => actor.send({ type: 'breadcrumbs.mouseLeave.folder', folderPath })}
-      onClick={e => {
+      onClick={(e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         actor.send({ type: 'breadcrumbs.click.folder', folderPath })
       }}
     >
       {title}
-    </UnstyledButton>,
+    </ChakraUnstyledButton>,
     <BreadcrumbsSeparator key={`separator-${i}`} />,
   ])
 
   const viewBreadcrumb = (
-    <UnstyledButton
+    <ChakraUnstyledButton
       key={'view-title'}
       component={m.button}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={cx(
+      className={classNames(
         'mantine-active',
-        breadcrumbTitle({ truncate: true }),
-        css({
-          userSelect: 'none',
-        }),
       )}
+      css={[
+        breadcrumbTitle({ truncate: true }),
+        { userSelect: 'none' },
+      ]}
       title={viewTitle}
       onMouseEnter={() => actor.send({ type: 'breadcrumbs.mouseEnter.viewtitle' })}
       onMouseLeave={() => actor.send({ type: 'breadcrumbs.mouseLeave.viewtitle' })}
-      onClick={e => {
+      onClick={(e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         actor.send({ type: 'breadcrumbs.click.viewtitle' })
       }}
     >
       {viewTitle}
-    </UnstyledButton>
+    </ChakraUnstyledButton>
   )
 
   return (
     <AnimatePresence propagate mode="popLayout">
       <LogoButton key="logo-button" />
       {enableNavigationButtons && <NavigationButtons key="nav-buttons" />}
-      <m.div
+      <MotionDiv
         key="breadcrumbs"
         layout="position"
-        className={hstack({
+        css={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
           gap: '1',
           flexShrink: 1,
           flexGrow: 1,
           overflow: 'hidden',
-        })}>
+        }}>
         {folderBreadcrumbs}
         {viewBreadcrumb}
-      </m.div>
-      <m.div
+      </MotionDiv>
+      <MotionDiv
         key="actions"
         layout="position"
-        className={hstack({
+        css={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
           gap: '0.5',
           flexGrow: 0,
           _empty: {
             display: 'none',
           },
-        })}>
+        }}>
         <DetailsControls onOpen={() => actor.closeDropdown()} />
         <OpenSource />
         <ToggleReadonly />
-      </m.div>
+      </MotionDiv>
       {enableDynamicViewWalkthrough && isDynamicView && <DynamicViewControls key="dynamic-view-controls" />}
       {enableSearch && !enableCompareWithLatest && <SearchControl key="search-control" />}
       <LayoutWarning key="outdated-manual-layout-warning" />

@@ -15,8 +15,8 @@ import type {
   scalar,
   ViewId,
 } from '#likec4/core/types'
-import { css, cx } from '@likec4/styles/css'
-import { HStack } from "@chakra-ui/react"
+import { classNames } from '../../utils/classNames'
+import { chakra, HStack } from "@chakra-ui/react"
 import {
   type TextProps,
   ActionIcon,
@@ -57,6 +57,8 @@ import type { OnNavigateTo } from '../../LikeC4Diagram.props'
 import { stopPropagation } from '../../utils'
 import * as styles from './ElementDetailsCard.css'
 import { MetadataProvider, MetadataValue } from './MetadataValue'
+
+const ChakraBox = chakra(Box) as any
 import { TabPanelDeployments } from './TabPanelDeployments'
 import { TabPanelRelationships } from './TabPanelRelationships'
 import { TabPanelStructure } from './TabPanelStructure'
@@ -232,7 +234,7 @@ export function ElementDetailsCard({
   return (
     <m.dialog
       ref={ref}
-      className={cx(styles.dialog, RemoveScroll.classNames.fullWidth)}
+      className={classNames(styles.dialog, RemoveScroll.classNames.fullWidth)}
       layout
       initial={{
         [styles.backdropBlur]: '0px',
@@ -597,18 +599,18 @@ function ElementMetata({
     <MetadataProvider>
       <>
         <PropertyLabel style={{ justifySelf: 'end', textAlign: 'right' }}>metadata</PropertyLabel>
-        <Box
-          className={css({
+        <ChakraBox
+          css={{
             display: 'grid',
             gridTemplateColumns: 'min-content 1fr',
             gridAutoRows: 'min-content',
             gap: `[12px 16px]`,
             alignItems: 'baseline',
             justifyItems: 'stretch',
-          })}
+          }}
         >
           {metadataEntries.map(([key, value]) => <MetadataValue key={key} label={key} value={value} />)}
-        </Box>
+        </ChakraBox>
       </>
     </MetadataProvider>
   )

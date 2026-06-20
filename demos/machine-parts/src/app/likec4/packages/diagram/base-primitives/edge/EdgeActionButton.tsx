@@ -1,9 +1,12 @@
-import { cx } from '@likec4/styles/css'
-import { edgeActionBtn } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { edgeActionBtn } from '#likec4/style-preset/recipes'
+import { chakra, useSlotRecipe } from '@chakra-ui/react'
 import { ActionIcon } from '@mantine/core'
 import { IconZoomScan } from '@tabler/icons-react'
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import { stopPropagation } from '../../utils/xyflow'
+
+const ChakraActionIcon = chakra(ActionIcon) as any
 
 type EdgeActionBtnProps = {
   icon?: ReactNode
@@ -11,15 +14,18 @@ type EdgeActionBtnProps = {
 }
 
 export function EdgeActionButton({ icon, onClick }: EdgeActionBtnProps) {
+  const edgeActionBtnRecipe = useSlotRecipe({ recipe: edgeActionBtn })
+  const edgeActionBtnStyles = edgeActionBtnRecipe()
   return (
-    <ActionIcon
-      className={cx('nodrag nopan', edgeActionBtn())}
+    <ChakraActionIcon
+      className={classNames('nodrag nopan')}
+      css={edgeActionBtnStyles.root}
       onPointerDownCapture={stopPropagation}
       onClick={onClick}
       role="button"
       onDoubleClick={stopPropagation}
     >
       {icon ?? <IconZoomScan />}
-    </ActionIcon>
+    </ChakraActionIcon>
   )
 }

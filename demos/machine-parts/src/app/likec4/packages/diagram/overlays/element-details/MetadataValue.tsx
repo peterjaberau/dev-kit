@@ -1,7 +1,11 @@
-import { css } from '@likec4/styles/css'
+import { chakra } from '@chakra-ui/react'
 import { Box, Flex, Stack, Text, Tooltip, UnstyledButton } from '@mantine/core'
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react'
 import { type ReactNode, useEffect, useRef, useState } from 'react'
+
+const ChakraBox = chakra(Box) as any
+const ChakraText = chakra(Text) as any
+const ChakraUnstyledButton = chakra(UnstyledButton) as any
 
 export function MetadataProvider({ children }: { children: ReactNode }) {
   return <>{children}</>
@@ -29,10 +33,10 @@ function TruncatedValue({ value, isExpanded }: { value: string; isExpanded: bool
       w={300}
       withinPortal
     >
-      <Text
+      <ChakraText
         ref={textRef}
         component="div"
-        className={css({
+        css={{
           fontSize: 'sm',
           padding: 'xs',
           userSelect: 'all',
@@ -44,10 +48,10 @@ function TruncatedValue({ value, isExpanded }: { value: string; isExpanded: bool
           wordBreak: isExpanded ? 'break-word' : 'normal',
           minWidth: 0,
           width: '100%',
-        })}
+        }}
       >
         {value}
-      </Text>
+      </ChakraText>
     </Tooltip>
   )
 }
@@ -64,8 +68,8 @@ function MultiValueDisplay({
       <Stack gap="xs">
         {values.map((value, index) => (
           <Flex key={index} align="center" gap="xs">
-            <Text
-              className={css({
+            <ChakraText
+              css={{
                 fontSize: 'xs',
                 color: 'mantine.colors.gray[5]',
                 fontWeight: 'medium',
@@ -73,20 +77,20 @@ function MultiValueDisplay({
                 _dark: {
                   color: 'mantine.colors.dark[3]',
                 },
-              })}
+              }}
             >
               •
-            </Text>
-            <Box
-              className={css({
+            </ChakraText>
+            <ChakraBox
+              css={{
                 minHeight: '32px',
                 display: 'flex',
                 alignItems: 'center',
                 flex: 1,
-              })}
+              }}
             >
               <TruncatedValue value={value} isExpanded={true} />
-            </Box>
+            </ChakraBox>
           </Flex>
         ))}
       </Stack>
@@ -94,8 +98,8 @@ function MultiValueDisplay({
   }
 
   return (
-    <Box
-      className={css({
+    <ChakraBox
+      css={{
         minHeight: '32px',
         display: 'flex',
         alignItems: 'center',
@@ -104,12 +108,12 @@ function MultiValueDisplay({
         flexWrap: 'wrap',
         minWidth: 0, // Allow shrinking
         overflow: 'hidden', // Prevent overflow
-      })}
+      }}
     >
       {values.map((value, index) => (
         <Flex key={index} align="center" gap="xs" style={{ minWidth: 0 }}>
-          <Text
-            className={css({
+          <ChakraText
+            css={{
               fontSize: 'sm',
               padding: '[4px 8px]',
               backgroundColor: 'white',
@@ -128,14 +132,14 @@ function MultiValueDisplay({
                 backgroundColor: 'mantine.colors.dark[9]',
                 borderColor: 'mantine.colors.dark[4]',
               },
-            })}
+            }}
             title={value}
           >
             {value}
-          </Text>
+          </ChakraText>
           {index < values.length - 1 && (
-            <Text
-              className={css({
+            <ChakraText
+              css={{
                 fontSize: 'xs',
                 color: 'mantine.colors.gray[5]',
                 fontWeight: 'medium',
@@ -143,14 +147,14 @@ function MultiValueDisplay({
                 _dark: {
                   color: 'mantine.colors.dark[3]',
                 },
-              })}
+              }}
             >
               •
-            </Text>
+            </ChakraText>
           )}
         </Flex>
       ))}
-    </Box>
+    </ChakraBox>
   )
 }
 
@@ -172,9 +176,9 @@ export function MetadataValue({ label, value }: MetadataValueProps) {
     <>
       {hasMultipleElements
         ? (
-          <UnstyledButton
+          <ChakraUnstyledButton
             onClick={handleToggle}
-            className={css({
+            css={{
               fontSize: 'xs',
               color: 'text.dimmed',
               justifySelf: 'end',
@@ -196,15 +200,15 @@ export function MetadataValue({ label, value }: MetadataValueProps) {
                   color: 'mantine.colors.primary[4]',
                 },
               },
-            })}
+            }}
           >
             <Flex align="center" gap="xs">
               <Text component="span" size="xs" fw={700}>
                 {label}:
               </Text>
-              <Text
+              <ChakraText
                 component="span"
-                className={css({
+                css={{
                   fontSize: 'xs',
                   fontWeight: 'medium',
                   color: 'mantine.colors.gray[6]',
@@ -215,18 +219,18 @@ export function MetadataValue({ label, value }: MetadataValueProps) {
                     color: 'mantine.colors.dark[2]',
                     backgroundColor: 'mantine.colors.dark[6]',
                   },
-                })}
+                }}
               >
                 {elements.length}
-              </Text>
+              </ChakraText>
               {isExpanded ? <IconChevronDown size={12} /> : <IconChevronRight size={12} />}
             </Flex>
-          </UnstyledButton>
+          </ChakraUnstyledButton>
         )
         : (
-          <Text
+          <ChakraText
             component="div"
-            className={css({
+            css={{
               fontSize: 'xs',
               color: 'text.dimmed',
               justifySelf: 'end',
@@ -235,17 +239,17 @@ export function MetadataValue({ label, value }: MetadataValueProps) {
               whiteSpace: 'nowrap',
               padding: '[4px 8px]',
               fontWeight: '[700]',
-            })}
+            }}
           >
             {label}:
-          </Text>
+          </ChakraText>
         )}
 
-      <Box
-        className={css({
+      <ChakraBox
+        css={{
           justifySelf: 'stretch',
           alignSelf: 'start',
-        })}
+        }}
       >
         {hasMultipleElements
           ? (
@@ -255,17 +259,17 @@ export function MetadataValue({ label, value }: MetadataValueProps) {
             />
           )
           : (
-            <Box
-              className={css({
+            <ChakraBox
+              css={{
                 minHeight: '32px',
                 display: 'flex',
                 alignItems: 'center',
-              })}
+              }}
             >
               <TruncatedValue value={elements[0] || ''} isExpanded={isExpanded} />
-            </Box>
+            </ChakraBox>
           )}
-      </Box>
+      </ChakraBox>
     </>
   )
 }

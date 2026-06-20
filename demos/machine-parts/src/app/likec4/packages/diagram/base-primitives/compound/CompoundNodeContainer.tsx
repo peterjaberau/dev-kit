@@ -1,6 +1,7 @@
 import type { Color, ElementStyle } from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
-import { compoundNode } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { compoundNode } from '#likec4/style-preset/recipes'
+import { chakra, useSlotRecipe } from '@chakra-ui/react'
 import type { MotionStyle } from 'motion/react'
 import * as m from 'motion/react-m'
 import type { HTMLAttributes, PropsWithChildren } from 'react'
@@ -8,6 +9,8 @@ import { clamp } from 'remeda'
 import { MAX_COMPOUND_DEPTH } from '../../base/const'
 import type { BaseNode, BaseNodeProps } from '../../base/types'
 import { useLikeC4Styles } from '../../hooks/useLikeC4Styles'
+
+const MotionDiv = chakra(m.div) as any
 
 export type RequiredData = {
   color: Color
@@ -50,7 +53,8 @@ export function CompoundNodeContainer({
     max: 100 - MIN_OPACITY,
   })
 
-  const compoundClass = compoundNode({
+  const compoundRecipe = useSlotRecipe({ recipe: compoundNode })
+  const compoundStyles = compoundRecipe({
     isTransparent,
     inverseColor: opacity < 70,
     borderStyle: data.style.border ?? (isTransparent ? styles.defaults.group.border : 'none'),
@@ -62,11 +66,11 @@ export function CompoundNodeContainer({
   })
 
   return (
-    <m.div
-      className={cx(
-        compoundClass,
+    <MotionDiv
+      className={classNames(
         className,
       )}
+      css={compoundStyles.root}
       initial={false}
       data-likec4-hovered={isHovered}
       data-likec4-color={data.color}
@@ -83,6 +87,6 @@ export function CompoundNodeContainer({
       {...rest as any}
     >
       {children}
-    </m.div>
+    </MotionDiv>
   )
 }

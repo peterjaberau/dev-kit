@@ -1,6 +1,7 @@
 import { nonexhaustive } from '#likec4/core'
 import type { ComputedNodeStyle, ElementShape, ShapeSize } from '#likec4/core/types'
-import { elementShapeRecipe } from '@likec4/styles/recipes'
+import { elementShapeRecipe } from '#likec4/style-preset/recipes'
+import { chakra, useSlotRecipe } from '@chakra-ui/react'
 import { roundDpr } from '../../utils'
 
 function cylinderSVGPath(diameter: number, height: number, tilt = 0.07) {
@@ -367,25 +368,27 @@ export function ElementShape(
 
   const borderStyle = data.style?.border ?? 'none'
   const withBorder = borderStyle !== 'none'
+  const elementShape = useSlotRecipe({ recipe: elementShapeRecipe })
 
   if (data.shape === 'rectangle') {
+    const elementShapeStyles = elementShape({
+      shapetype: 'html',
+      withBorder,
+      withOutline: showSelectionOutline,
+    })
     return (
-      <div
+      <chakra.div
         style={{
           borderStyle,
         }}
-        className={elementShapeRecipe({
-          shapetype: 'html',
-          withBorder,
-          withOutline: showSelectionOutline,
-        })}>
+        css={elementShapeStyles.root}>
         {isMultiple && <div className={'likec4-shape-multiple'} />}
         <div className={'likec4-shape-outline'} />
-      </div>
+      </chakra.div>
     )
   }
 
-  const className = elementShapeRecipe({
+  const elementShapeStyles = elementShape({
     shapetype: 'svg',
     withOutline: showSelectionOutline,
   })
@@ -393,14 +396,14 @@ export function ElementShape(
   return (
     <>
       {isMultiple && (
-        <svg className={className} data-likec4-shape-multiple="true" viewBox={`0 0 ${w} ${h}`}>
+        <chakra.svg css={elementShapeStyles.root} data-likec4-shape-multiple="true" viewBox={`0 0 ${w} ${h}`}>
           <ShapeSvg shape={data.shape} size={data.style?.size} w={w} h={h} />
-        </svg>
+        </chakra.svg>
       )}
-      <svg className={className} viewBox={`0 0 ${w} ${h}`}>
+      <chakra.svg css={elementShapeStyles.root} viewBox={`0 0 ${w} ${h}`}>
         <ShapeSvgOutline shape={data.shape} w={w} h={h} />
         <ShapeSvg shape={data.shape} size={data.style?.size} w={w} h={h} />
-      </svg>
+      </chakra.svg>
     </>
   )
 }

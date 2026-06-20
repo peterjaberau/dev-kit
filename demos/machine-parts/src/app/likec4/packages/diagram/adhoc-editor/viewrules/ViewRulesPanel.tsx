@@ -1,13 +1,13 @@
 import { type ModelExpression, FqnRef, ModelFqnExpr } from '#likec4/core'
-import { cx } from '@likec4/styles/css'
 
 import { chakra, Box } from '@chakra-ui/react'
-import { hstack, txt, vstack } from '@likec4/styles/patterns'
 import { ActionIcon } from '@mantine/core'
 import { IconCirclePlus, IconTrash } from '@tabler/icons-react'
 import { AnimatePresence, LayoutGroup, m } from 'motion/react'
 import { useLikeC4Model } from '../../hooks/useLikeC4Model'
 import type { AdhocRule } from '../state/actor.types'
+
+const MotionDiv = chakra(m.div) as any
 
 export function ViewRulesPanel({
   rules,
@@ -25,9 +25,9 @@ export function ViewRulesPanel({
       </chakra.h4>
       <AnimatePresence mode="popLayout" propagate>
         <LayoutGroup>
-          <m.div layout layoutRoot className={vstack({ gap: "1" })}>
+          <MotionDiv layout layoutRoot css={{ display: 'flex', flexDirection: 'column', gap: '1' }}>
             {rules.map((rule) => (
-              <m.div
+              <MotionDiv
                 layout="position"
                 key={rule.id}
                 onClick={() => {
@@ -47,25 +47,23 @@ export function ViewRulesPanel({
                   scale: 0.95,
                   y: -50,
                 }}
-                className={cx(
-                  hstack({
-                    p: "1",
-                    px: "2",
-                    flexWrap: "nowrap",
-                    rounded: "sm",
-                    colorPalette: "teal",
-                    // colorPalette: rule.type === 'include' ? 'green' : 'red',
-                    gap: "2",
-                    border: "default",
-                    // opacity: rule.enabled ? 1 : 0.5,
-                  }),
-                  // rule.type !== 'include' && css({ colorPalette: 'red' }),
-                )}
+                css={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  p: '1',
+                  px: '2',
+                  flexWrap: 'nowrap',
+                  rounded: 'sm',
+                  colorPalette: 'teal',
+                  gap: '2',
+                  border: 'default',
+                }}
               >
                 <ViewRule key={rule.id} rule={rule} onToggle={() => onToggle(rule)} onDelete={() => onDelete(rule)} />
-              </m.div>
+              </MotionDiv>
             ))}
-          </m.div>
+          </MotionDiv>
         </LayoutGroup>
       </AnimatePresence>
     </Box>
@@ -87,15 +85,20 @@ function ViewRule(
       <PredicatIcon>
         <IconCirclePlus size={14} />
       </PredicatIcon>
-      <m.div
+      <MotionDiv
         layout
         animate={{
           originX: 0,
           scale: rule.enabled ? 1 : 0.9,
         }}
-        className={txt({ flex: 1, truncate: true })}>
+        css={{
+          flex: 1,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}>
         {JSON.stringify(rule.expr)}
-      </m.div>
+      </MotionDiv>
       <ActionIcon
         onClick={(e) => {
           e.stopPropagation()

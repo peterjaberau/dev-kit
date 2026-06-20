@@ -1,5 +1,5 @@
-import { cx } from '@likec4/styles/css'
-import { actionBtn } from '@likec4/styles/recipes'
+import { actionBtn } from '#likec4/style-preset/recipes'
+import { chakra, useSlotRecipe } from '@chakra-ui/react'
 import { ActionIcon } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { IconId } from '@tabler/icons-react'
@@ -7,8 +7,8 @@ import * as m from 'motion/react-m'
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import type { Simplify } from 'type-fest'
 import type { BaseNodeProps } from '../../base/types'
+import { classNames } from '../../utils/classNames'
 import { stopPropagation } from '../../utils/xyflow'
-import { compoundActionBtn } from './actionbtns.css'
 
 type CompoundDetailsButtonProps = Simplify<
   BaseNodeProps & {
@@ -34,6 +34,8 @@ const variants = {
   },
 }
 
+const ChakraActionIcon = chakra(ActionIcon) as any
+
 export function CompoundDetailsButton({
   data: {
     hovered: isHovered = false,
@@ -46,6 +48,8 @@ export function CompoundDetailsButton({
   const isHoverDebounced = debounced[0] && isHovered
 
   const variant: keyof typeof variants = isHoverDebounced ? 'hovered' : 'normal'
+  const actionBtnRecipe = useSlotRecipe({ recipe: actionBtn })
+  const actionBtnStyles = actionBtnRecipe({ variant: 'transparent' })
 
   return (
     <m.div
@@ -57,19 +61,23 @@ export function CompoundDetailsButton({
       className="likec4-compound-details details-button"
       tabIndex={-1}
     >
-      <ActionIcon
-        className={cx(
-          'nodrag nopan',
-          compoundActionBtn({
-            delay: isHovered && !isHoverDebounced,
-          }),
-          actionBtn({ variant: 'transparent' }),
-        )}
+      <ChakraActionIcon
+        className={classNames('nodrag nopan')}
+        css={[
+          {
+            transitionDuration: 'normal',
+            transitionDelay: isHovered && !isHoverDebounced ? '0.2s' : undefined,
+            _hover: {
+              transitionDelay: '0s',
+            },
+          },
+          actionBtnStyles.root,
+        ]}
         tabIndex={-1}
         onClick={onClick}
         onDoubleClick={stopPropagation}>
         {icon ?? <IconId stroke={1.8} style={{ width: '75%' }} />}
-      </ActionIcon>
+      </ChakraActionIcon>
     </m.div>
   )
 }

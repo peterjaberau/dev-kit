@@ -1,4 +1,4 @@
-import { css } from '@likec4/styles/css'
+import { chakra } from '@chakra-ui/react'
 import { Tooltip } from '@mantine/core'
 import { getBezierPath } from '@xyflow/system'
 import {
@@ -13,6 +13,8 @@ import { useEnabledFeatures } from '../../../context'
 import { useDiagram } from '../../../hooks/useDiagram'
 import type { RelationshipsBrowserTypes } from '../_types'
 import { useRelationshipsBrowser } from '../hooks'
+
+const ChakraEdgeLabel = chakra(EdgeLabel) as any
 
 export const RelationshipEdge = memoEdge<RelationshipsBrowserTypes.EdgeProps>((props) => {
   const browser = useRelationshipsBrowser()
@@ -40,11 +42,11 @@ export const RelationshipEdge = memoEdge<RelationshipsBrowserTypes.EdgeProps>((p
     : props
 
   let label = (
-    <EdgeLabel
+    <ChakraEdgeLabel
       edgeProps={edgeProps}
-      className={css({
+      css={{
         transition: 'fast',
-      })}
+      }}
     >
       {enableNavigateTo && navigateTo && (
         <EdgeActionButton
@@ -54,7 +56,7 @@ export const RelationshipEdge = memoEdge<RelationshipsBrowserTypes.EdgeProps>((p
             diagram.navigateTo(navigateTo)
           }} />
       )}
-    </EdgeLabel>
+    </ChakraEdgeLabel>
   )
 
   if (!existsInCurrentView) {

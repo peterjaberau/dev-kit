@@ -1,5 +1,6 @@
-import { cx } from '@likec4/styles/css'
-import { overlay } from '@likec4/styles/recipes'
+import { classNames } from '../../utils/classNames'
+import { overlay } from '#likec4/style-preset/recipes'
+import { chakra, type SystemStyleObject, useSlotRecipe } from '@chakra-ui/react'
 import {
   RemoveScroll,
 } from '@mantine/core'
@@ -20,6 +21,8 @@ import { stopPropagation } from '../../utils'
 const backdropBlur = '--_blur'
 const backdropOpacity = '--_opacity'
 const cssVarLevel = '--_level'
+const MotionDialog = chakra(m.dialog)
+const Body = chakra('div')
 
 export type OverlayProps = PropsWithChildren<{
   fullscreen?: boolean | undefined
@@ -29,6 +32,10 @@ export type OverlayProps = PropsWithChildren<{
   classes?: {
     dialog?: string
     body?: string
+  }
+  styles?: {
+    dialog?: SystemStyleObject
+    body?: SystemStyleObject
   }
   backdrop?: {
     opacity?: number
@@ -50,6 +57,7 @@ export const Overlay = forwardRef<HTMLDialogElement, OverlayProps>(({
   onClose,
   className,
   classes,
+  styles: styleOverrides,
   overlayLevel = 0,
   children,
   fullscreen = false,
@@ -104,7 +112,8 @@ export const Overlay = forwardRef<HTMLDialogElement, OverlayProps>(({
     setOpened(true)
   }, openDelay > 0 ? openDelay : undefined)
 
-  const overlayRecipe = overlay({
+  const overlayRecipe = useSlotRecipe({ recipe: overlay })
+  const overlayStyles = overlayRecipe({
     fullscreen,
     withBackdrop,
   })
@@ -136,19 +145,18 @@ export const Overlay = forwardRef<HTMLDialogElement, OverlayProps>(({
   } satisfies Record<string, TargetAndTransition>), [overlayLevel, targetBackdropOpacity])
 
   return (
-    <m.dialog
+    <MotionDialog
       ref={useMergedRef(
         dialogRef,
         focusTrapRef,
         ref,
       )}
-      className={cx(
+      className={classNames(
         classes?.dialog,
         className,
-        overlayRecipe,
-        // styles.dialog,
         fullscreen && RemoveScroll.classNames.fullWidth,
       )}
+      css={[overlayStyles.dialog, styleOverrides?.dialog]}
       layout
       style={{
         // @ts-ignore
@@ -181,15 +189,16 @@ export const Overlay = forwardRef<HTMLDialogElement, OverlayProps>(({
       }}
     >
       <RemoveScroll forwardProps>
-        <div
-          className={cx(
+        <Body
+          className={classNames(
             classes?.body,
             'likec4-overlay-body',
-          )}>
+          )}
+          css={[overlayStyles.body, styleOverrides?.body]}>
           {opened && <>{children}</>}
-        </div>
+        </Body>
       </RemoveScroll>
-    </m.dialog>
+    </MotionDialog>
   )
 })
 Overlay.displayName = 'Overlay'

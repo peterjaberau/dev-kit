@@ -1,5 +1,5 @@
 import { type DiagramEdge, type DiagramView, invariant, isAncestor, nonNullable } from '#likec4/core'
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../../utils/classNames'
 import { ActionIcon, Group } from '@mantine/core'
 import { useCallbackRef, useStateHistory } from '@mantine/hooks'
 import { IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react'
@@ -141,7 +141,7 @@ const RelationshipDetailsInner = memo(() => {
       id={browser.rootElementId}
       nodes={nodes}
       edges={edges}
-      className={cx(
+      className={classNames(
         initialized ? 'initialized' : 'not-initialized',
         'likec4-relationship-details',
       )}

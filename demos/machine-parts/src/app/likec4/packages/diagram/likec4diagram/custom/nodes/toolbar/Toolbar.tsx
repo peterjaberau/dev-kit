@@ -1,4 +1,4 @@
-import { cx as clsx } from '@likec4/styles/css'
+import { classNames as clsx } from '../../../../utils/classNames'
 import { Box, HStack, VStack } from "@chakra-ui/react"
 import { Paper, Text } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'

@@ -5,14 +5,13 @@
 //
 import type { Color } from '#likec4/core/types'
 import { chakra } from "@chakra-ui/react"
-import { txt } from '@likec4/styles/patterns'
 import type { PropsWithChildren } from 'react'
 
 export const Endpoint = ({ children, likec4color }: PropsWithChildren<{ likec4color: Color }>) => {
   return (
-    <div
+    <chakra.div
       data-likec4-color={likec4color}
-      className={txt({
+      css={{
         size: 'xxs',
         fontWeight: 'medium',
         whiteSpace: 'nowrap',
@@ -30,9 +29,9 @@ export const Endpoint = ({ children, likec4color }: PropsWithChildren<{ likec4co
           _light: 'var(--likec4-palette-hiContrast)',
           _dark: 'var(--likec4-palette-loContrast)',
         },
-      })}>
+      }}>
       {children}
-    </div>
+    </chakra.div>
   )
 }
 

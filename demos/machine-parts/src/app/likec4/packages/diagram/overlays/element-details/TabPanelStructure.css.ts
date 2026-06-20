@@ -1,4 +1,4 @@
-import { css } from '@likec4/styles/css'
+import { css } from '#likec4/style-preset/css'
 
 export const treeNodeLabel = css({
   marginTop: 'sm',

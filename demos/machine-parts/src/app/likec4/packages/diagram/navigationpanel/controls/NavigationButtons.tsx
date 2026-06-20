@@ -1,8 +1,10 @@
-import { hstack } from '@likec4/styles/patterns'
+import { chakra } from '@chakra-ui/react'
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import * as m from 'motion/react-m'
 import { useDiagram, useDiagramContext } from '../../hooks/useDiagram'
 import { PanelActionIcon } from '../_common'
+
+const MotionDiv = chakra(m.div) as any
 
 export const NavigationButtons = () => {
   const diagram = useDiagram()
@@ -14,11 +16,14 @@ export const NavigationButtons = () => {
     hasStepForward: s.navigationHistory.currentIndex < s.navigationHistory.history.length - 1,
   }))
   return (
-    <m.div
+    <MotionDiv
       layout="position"
-      className={hstack({
+      css={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         gap: '0.5',
-      })}>
+      }}>
       <PanelActionIcon
         disabled={!hasStepBack}
         onClick={e => {
@@ -35,6 +40,6 @@ export const NavigationButtons = () => {
         }}>
         <IconArrowRight size={14} />
       </PanelActionIcon>
-    </m.div>
+    </MotionDiv>
   )
 }

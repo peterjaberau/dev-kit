@@ -1,6 +1,5 @@
-import { cx } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
-import { hstack } from '@likec4/styles/patterns'
+import { classNames } from '../../utils/classNames'
+import { Box, chakra } from '@chakra-ui/react'
 import {
   UnstyledButton,
 } from '@mantine/core'
@@ -9,17 +8,20 @@ import {
 } from '@tabler/icons-react'
 import { isMacOs } from '@xyflow/system'
 import * as m from 'motion/react-m'
+import type { MouseEvent } from 'react'
 import { useDiagram } from '../../hooks/useDiagram'
+
+const MotionUnstyledButton = chakra(UnstyledButton) as any
 
 export function SearchControl() {
   const diagram = useDiagram()
   const isMac = isMacOs()
 
   return (
-    <UnstyledButton
+    <MotionUnstyledButton
       component={m.button}
       layout="position"
-      onClick={e => {
+      onClick={(e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         diagram.openSearch()
       }}
@@ -27,20 +29,20 @@ export function SearchControl() {
         scale: 0.95,
         translateY: 1,
       }}
-      className={cx(
-        'group',
-        hstack({
-          gap: 'xxs',
-          paddingInline: 'sm',
-          paddingBlock: 'xxs',
-          userSelect: 'none',
-          layerStyle: 'likec4.panel.action.filled',
-          display: {
-            base: 'none',
-            '@/md': 'flex',
-          },
-        }),
-      )}>
+      className={classNames('group')}
+      css={{
+        display: {
+          base: 'none',
+          '@/md': 'flex',
+        },
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 'xxs',
+        paddingInline: 'sm',
+        paddingBlock: 'xxs',
+        userSelect: 'none',
+        layerStyle: 'likec4.panel.action.filled',
+      }}>
       <IconSearch size={14} stroke={2.5} />
       <Box
         css={{
@@ -52,6 +54,6 @@ export function SearchControl() {
         }}>
         {isMac ? '⌘ + K' : 'Ctrl + K'}
       </Box>
-    </UnstyledButton>
+    </MotionUnstyledButton>
   )
 }

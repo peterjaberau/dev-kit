@@ -1,5 +1,4 @@
-import { css } from '@likec4/styles/css'
-import { Box } from '@chakra-ui/react'
+import { Box, chakra } from '@chakra-ui/react'
 import { Badge, Button, Portal } from '@mantine/core'
 import {
   IconPlayerSkipBackFilled,
@@ -12,6 +11,9 @@ import { isTruthy } from 'remeda'
 import { useMantinePortalProps } from '../../hooks'
 import { useDiagram, useDiagramContext } from '../../hooks/useDiagram'
 import { TriggerWalkthroughButton } from './DynamicViewControls'
+
+const ChakraBadge = chakra(Badge) as any
+const MotionDiv = chakra(m.div) as any
 
 const PrevNextButton = Button.withProps({
   // Button is polymorphic, but we dont want it to inherit the motion props
@@ -96,7 +98,7 @@ export function ActiveWalkthroughControls() {
         Previous
       </PrevNextButton>
 
-      <Badge
+      <ChakraBadge
         key="step-badge"
         component={m.div}
         layout="position"
@@ -106,20 +108,20 @@ export function ActiveWalkthroughControls() {
         variant={isParallel ? 'gradient' : 'transparent'}
         gradient={{ from: 'red', to: 'orange', deg: 90 }}
         rightSection={
-          <m.div
-            className={css({
+          <MotionDiv
+            css={{
               fontSize: 'xxs',
               display: isParallel ? 'block' : 'none',
-            })}>
+            }}>
             parallel
-          </m.div>
+          </MotionDiv>
         }
-        className={css({
+        css={{
           alignItems: 'baseline',
-        })}
+        }}
       >
         {currentStep} / {totalSteps}
-      </Badge>
+      </ChakraBadge>
 
       <PrevNextButton
         key="next"

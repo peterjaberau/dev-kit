@@ -1,4 +1,4 @@
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../utils/classNames'
 import {
   type ElementProps,
   type UnstyledButtonProps,
@@ -15,7 +15,7 @@ interface SearchControlProps extends Omit<UnstyledButtonProps, 'className'>, Ele
 export function SearchControl({ className, ...others }: SearchControlProps) {
   const isMac = isMacOs()
   return (
-    <UnstyledButton {...others} className={cx('group', classes.root, className)}>
+    <UnstyledButton {...others} className={classNames('group', classes.root, className)}>
       <Group gap="xs">
         <IconSearch style={{ width: '15px', height: '15px' }} stroke={2} />
         <Text component="div" className={classes.placeholder}>

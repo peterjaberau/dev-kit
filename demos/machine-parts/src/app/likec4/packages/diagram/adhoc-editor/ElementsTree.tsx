@@ -39,6 +39,7 @@ export const ElementsTree = memo(() => {
           break
         }
         case 'ArrowUp': {
+          //@ts-ignore
           if (import.meta.env.DEV) {
             console.log('ArrowUp', {
               selected: api.selectedValue,
@@ -49,6 +50,7 @@ export const ElementsTree = memo(() => {
           break
         }
         default: {
+          //@ts-ignore
           if (import.meta.env.DEV) {
             console.log(e.key)
           }

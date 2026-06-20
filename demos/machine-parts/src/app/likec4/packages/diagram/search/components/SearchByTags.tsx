@@ -1,4 +1,3 @@
-import { css } from '@likec4/styles/css'
 import { HStack } from "@chakra-ui/react"
 import { Button } from '@mantine/core'
 import { IconX } from '@tabler/icons-react'
@@ -58,10 +57,10 @@ export function SearchByTags() {
           <ElementTag
             key={tag}
             tag={tag}
-            className={css({
+            css={{
               userSelect: 'none',
               cursor: 'pointer',
-            })}
+            }}
             onClick={(e) => {
               e.stopPropagation()
               setSearch(`#${tag}`)

@@ -1,5 +1,5 @@
 import type { Any, UnknownLayouted } from '#likec4/core/types'
-import { cx } from '@likec4/styles/css'
+import { classNames } from './utils/classNames'
 import type { JSX } from 'react/jsx-runtime'
 import { LikeC4Diagram } from './LikeC4Diagram'
 import type { LikeC4DiagramProperties } from './LikeC4Diagram.props'
@@ -43,7 +43,7 @@ export function StaticLikeC4Diagram<A extends Any = UnknownLayouted>({
   return (
     <LikeC4Diagram
       view={view}
-      className={cx(className, 'likec4-static-view')}
+      className={classNames(className, 'likec4-static-view')}
       fitView={fitView}
       fitViewPadding={fitViewPadding}
       pannable={false}

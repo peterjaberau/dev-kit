@@ -1,5 +1,4 @@
 import type { Fqn } from '#likec4/core/types'
-import { css } from '@likec4/styles/css'
 import { Box } from '@chakra-ui/react'
 import { Handle, Position } from '@xyflow/react'
 import { isTruthy } from 'remeda'
@@ -30,7 +29,7 @@ const ActorStepPort = ({
     <>
       <Box
         data-likec4-color={data.color}
-        className={css({
+        css={{
           position: 'absolute',
           backgroundColor: 'var(--likec4-palette-fill)',
           rounded: 'xs',
@@ -43,7 +42,7 @@ const ActorStepPort = ({
           translateX: '-1/2',
           translateY: '-1/2',
           translate: 'auto',
-        })}
+        }}
         style={{
           top: p.cy,
           left: p.cx,
@@ -87,7 +86,7 @@ export function SequenceActorNode(props: Types.NodeProps<'seq-actor'>) {
     <>
       <Box
         data-likec4-color={'gray'}
-        className={css({
+        css={{
           position: 'absolute',
           rounded: 'xs',
           top: '1',
@@ -95,7 +94,7 @@ export function SequenceActorNode(props: Types.NodeProps<'seq-actor'>) {
           transition: 'fast',
           translateX: '-1/2',
           translate: 'auto',
-        })}
+        }}
         style={{
           backgroundColor: 'var(--likec4-palette-stroke)',
           opacity: isHovered ? 0.6 : 0.4,

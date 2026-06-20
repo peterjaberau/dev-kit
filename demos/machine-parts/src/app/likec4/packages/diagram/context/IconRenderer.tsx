@@ -1,5 +1,5 @@
 import type { ElementShape } from '#likec4/core'
-import { cx as clsx } from '@likec4/styles/css'
+import { classNames as clsx } from '../utils/classNames'
 import {
   type IconProps,
   IconBrowser,
@@ -150,7 +150,7 @@ const ShapeIcons = {
   [key in ElementShape]: ForwardRefExoticComponent<
     IconProps & RefAttributes<SVGSVGElement>
   >
-}
+} | any
 
 export function IconOrShapeRenderer({
   element,

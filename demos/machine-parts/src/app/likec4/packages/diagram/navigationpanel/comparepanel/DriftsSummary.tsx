@@ -10,12 +10,13 @@ import { deepEqual } from 'fast-equals'
 
 import { chakra } from "@chakra-ui/react"
 import { Text as Txt } from "@chakra-ui/react"
-import { vstack } from '@likec4/styles/patterns'
 import { useDebouncedCallback } from '@mantine/hooks'
 import { type Variants, AnimatePresence, m, stagger } from 'motion/react'
 import type { MouseEvent, MouseEventHandler } from 'react'
 import { filter, hasAtLeast, map, pipe } from 'remeda'
 import { selectDiagramActorContext, useCallbackRef, useDiagram, useDiagramSnapshot } from '../../hooks'
+
+const MotionDiv = chakra(m.div) as any
 
 const hasDrifts = <
   E extends {
@@ -131,7 +132,7 @@ export function DriftsSummary() {
 
   return (
     <AnimatePresence>
-      <m.div
+      <MotionDiv
         key={`drifts-summary`}
         layout="size"
         variants={variants}
@@ -139,36 +140,39 @@ export function DriftsSummary() {
         animate="animate"
         exit="exit"
         layoutDependency={selected}
-        className={vstack({
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
           mx: '[calc({spacing.2} * -1)]',
           px: '2',
           flex: '1',
           height: '100%',
           overflow: 'scroll',
           gap: '4',
-        })}
+        }}
       >
         {hasAtLeast(view, 1) && <ViewDrifts drifts={view} />}
         {nodes.length > 0 && (
           <m.div key={`nodes-drifts`} layout>
             <SectionHeader>Elements:</SectionHeader>
-            <div className={vstack({ mt: '2', gap: '2' })}>
+            <MotionDiv css={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', mt: '2', gap: '2' }}>
               {map(
                 nodes,
                 (node) => <NodeDrifts key={node.id} {...node} {...handlers} />,
               )}
-            </div>
+            </MotionDiv>
           </m.div>
         )}
         {edges.length > 0 && (
           <m.div key={`edges-drifts`} layout>
             <SectionHeader>Relationships:</SectionHeader>
-            <div className={vstack({ mt: '2', gap: '2' })}>
+            <MotionDiv css={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', mt: '2', gap: '2' }}>
               {map(edges, (edge) => <EdgeDrifts key={edge.edgeId} {...edge} {...handlers} />)}
-            </div>
+            </MotionDiv>
           </m.div>
         )}
-      </m.div>
+      </MotionDiv>
     </AnimatePresence>
   )
 }
@@ -176,17 +180,20 @@ export function DriftsSummary() {
 function ViewDrifts({ drifts }: { drifts: NonEmptyReadonlyArray<LayoutedViewDriftReason> }) {
   return (
     <>
-      <m.div
+      <MotionDiv
         key={`view-drifts-header`}
         layout="position"
-        className={vstack({
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
           gap: '2',
-        })}>
+        }}>
         <SectionHeader>View drifts (summary):</SectionHeader>
         <DriftsGroup key={`view-drifts`}>
           {map(drifts, (drift) => <DriftLabel key={drift}>{drift}</DriftLabel>)}
         </DriftsGroup>
-      </m.div>
+      </MotionDiv>
     </>
   )
 }
@@ -249,7 +256,10 @@ function EdgeDrifts({ edgeId, drifts, ...handlers }: {
 }
 
 const DriftsGroup = chakra(m.div, {
-  base: vstack.raw({
+  base: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     gap: '1',
     px: '3',
     py: '2',
@@ -261,7 +271,7 @@ const DriftsGroup = chakra(m.div, {
       backgroundColor: 'likec4.compare.manual/20',
       borderColor: 'likec4.compare.manual.outline/25',
     },
-  }),
+  },
 }, {
   defaultProps: {
     className: 'group',

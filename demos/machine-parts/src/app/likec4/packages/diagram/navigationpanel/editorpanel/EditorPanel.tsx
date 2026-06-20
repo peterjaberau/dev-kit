@@ -1,4 +1,4 @@
-import { vstack } from '@likec4/styles/patterns'
+import { chakra } from '@chakra-ui/react'
 import { TooltipGroup } from '@mantine/core'
 import { type Variants, AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m'
@@ -8,6 +8,8 @@ import { CenterCamera } from './CenterCamera'
 import { ChangeAutoLayoutButton } from './ChangeAutoLayoutButton'
 import { ManualLayoutToolsButton } from './ManualLayoutToolsButton'
 import { ToggleReadonly } from './ToggleReadonly'
+
+const MotionDiv = chakra(m.div) as any
 
 const variants: Variants = {
   hidden: {
@@ -36,16 +38,19 @@ export function EditorPanel() {
   return (
     <AnimatePresence propagate>
       {!enableReadOnly && (
-        <m.div
+        <MotionDiv
           layout="position"
-          className={vstack({
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
             gap: 'xs',
             layerStyle: 'likec4.panel',
             position: 'relative',
             cursor: 'pointer',
             padding: 'xxs',
             pointerEvents: 'all',
-          })}
+          }}
           initial="hidden"
           animate="visible"
           exit="exit"
@@ -58,7 +63,7 @@ export function EditorPanel() {
             <ToggleReadonly />
             <ApplySemanticLayout visible={showAiSemanticLayoutButton} />
           </TooltipGroup>
-        </m.div>
+        </MotionDiv>
       )}
     </AnimatePresence>
   )

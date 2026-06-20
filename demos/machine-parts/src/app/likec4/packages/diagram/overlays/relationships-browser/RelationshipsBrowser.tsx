@@ -1,4 +1,4 @@
-import { cx } from '@likec4/styles/css'
+import { classNames } from '../../utils/classNames'
 import { ActionIcon, Group, Tooltip as MantineTooltip } from '@mantine/core'
 import { useClipboard, useStateHistory } from '@mantine/hooks'
 import { IconAlertTriangle, IconCheck, IconChevronLeft, IconChevronRight, IconLink, IconX } from '@tabler/icons-react'
@@ -89,7 +89,7 @@ const RelationshipsBrowserXYFlow = memo(() => {
       id={browser.rootElementId}
       nodes={nodes}
       edges={edges}
-      className={cx(
+      className={classNames(
         isActive ? 'initialized' : 'not-initialized',
         'relationships-browser',
       )}
