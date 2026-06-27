@@ -4,5 +4,6 @@ export const defaultSelectedId = "line-a/drive/encoder";
 
 export type TreeViewExampleProps = {
   expandOnNodeClick: boolean;
+  fullNodeHighlight: boolean;
   fullRowHighlight: boolean;
 };

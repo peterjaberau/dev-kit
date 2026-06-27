@@ -15,7 +15,7 @@ import type { TreeViewExampleProps } from "./shared";
 export const TreeViewControlledProviderCompositionExample = (
   props: TreeViewExampleProps,
 ) => {
-  const { expandOnNodeClick, fullRowHighlight } = props;
+  const { expandOnNodeClick, fullNodeHighlight, fullRowHighlight } = props;
   const [expandedIds, setExpandedIds] = useState(
     () => new Set(defaultExpandedIds),
   );
@@ -34,6 +34,7 @@ export const TreeViewControlledProviderCompositionExample = (
       value={treeView}
       expandOnNodeClick={expandOnNodeClick}
       fullRowHighlight={fullRowHighlight}
+      fullNodeHighlight={fullNodeHighlight}
     >
       <TreeView.Label>Controlled composition provider</TreeView.Label>
       <TreeViewControlledStateBar />

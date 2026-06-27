@@ -9,7 +9,7 @@ import type { TreeViewExampleProps } from "./shared";
 export const TreeViewContextCustomCompositionExample = (
   props: TreeViewExampleProps,
 ) => {
-  const { expandOnNodeClick, fullRowHighlight } = props;
+  const { expandOnNodeClick, fullNodeHighlight, fullRowHighlight } = props;
 
   return (
     <TreeView.Root
@@ -17,6 +17,7 @@ export const TreeViewContextCustomCompositionExample = (
       defaultExpandedIds={defaultExpandedIds}
       defaultSelectedId={defaultSelectedId}
       fullRowHighlight={fullRowHighlight}
+      fullNodeHighlight={fullNodeHighlight}
       expandOnNodeClick={expandOnNodeClick}
     >
       <TreeView.Label>Composition context reader</TreeView.Label>

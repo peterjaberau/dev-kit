@@ -60,7 +60,12 @@ export const treeViewRecipe = defineSlotRecipe({
       color: "fg",
       contentVisibility: "auto",
       containIntrinsicSize: "auto 2rem",
+      position: "relative",
       outline: "none",
+      "& > [data-slot]": {
+        position: "relative",
+        zIndex: 1,
+      },
       _focusVisible: {
         outline: "2px solid",
         outlineColor: "colorPalette.focusRing",
@@ -216,6 +221,10 @@ export const treeViewRecipe = defineSlotRecipe({
         },
       },
     },
+    fullNodeHighlight: {
+      true: {},
+      false: {},
+    },
     expandOnNodeClick: {
       true: {
         node: {
@@ -233,6 +242,57 @@ export const treeViewRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     fullRowHighlight: true,
+    fullNodeHighlight: false,
     expandOnNodeClick: false,
   },
+  compoundVariants: [
+    {
+      fullNodeHighlight: true,
+      fullRowHighlight: true,
+      css: {
+        node: {
+          "&[data-branch=true]::before": {
+            content: "\"\"",
+            gridColumn: "1 / -1",
+            gridRow: "1 / -1",
+            alignSelf: "stretch",
+            borderRadius: "sm",
+            pointerEvents: "none",
+            zIndex: 0,
+          },
+          "&[data-branch=true]:hover:not(:has(> [data-slot=node-child]:hover))::before":
+            {
+              bg: "bg.subtle",
+            },
+          "&[data-branch=true][data-selected]::before": {
+            bg: "colorPalette.subtle",
+          },
+        },
+      },
+    },
+    {
+      fullNodeHighlight: true,
+      fullRowHighlight: false,
+      css: {
+        node: {
+          "&[data-branch=true]::before": {
+            content: "\"\"",
+            gridColumn: "2 / -1",
+            gridRow: "1 / -1",
+            alignSelf: "stretch",
+            borderRadius: "sm",
+            pointerEvents: "none",
+            zIndex: 0,
+          },
+          "&[data-branch=true]:hover:not(:has(> [data-slot=node-child]:hover))::before":
+            {
+              bg: "bg.subtle",
+            },
+          "&[data-branch=true][data-selected]::before": {
+            bg: "colorPalette.subtle",
+          },
+        },
+      },
+    },
+  ],
 });

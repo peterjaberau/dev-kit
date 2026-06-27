@@ -9,7 +9,7 @@ import type { TreeViewExampleProps } from "./shared";
 export const TreeViewControlledProviderJsonExample = (
   props: TreeViewExampleProps,
 ) => {
-  const { expandOnNodeClick, fullRowHighlight } = props;
+  const { expandOnNodeClick, fullNodeHighlight, fullRowHighlight } = props;
   const [expandedIds, setExpandedIds] = useState(
     () => new Set(defaultExpandedIds),
   );
@@ -28,6 +28,7 @@ export const TreeViewControlledProviderJsonExample = (
       value={treeView}
       expandOnNodeClick={expandOnNodeClick}
       fullRowHighlight={fullRowHighlight}
+      fullNodeHighlight={fullNodeHighlight}
     >
       <TreeView.Label>Controlled JSON provider</TreeView.Label>
       <TreeViewControlledStateBar />

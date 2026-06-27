@@ -23,6 +23,12 @@ const treeViewControllerPayloads = {
         defaultValue: false,
       },
       {
+        id: "fullNodeHighlight",
+        label: "Full node highlight",
+        type: "boolean",
+        defaultValue: false,
+      },
+      {
         id: "expandOnNodeClick",
         label: "Expand on node click",
         type: "boolean",
@@ -42,6 +48,12 @@ const treeViewControllerPayloads = {
         defaultValue: true,
       },
       {
+        id: "fullNodeHighlight",
+        label: "Full node highlight",
+        type: "boolean",
+        defaultValue: false,
+      },
+      {
         id: "expandOnNodeClick",
         label: "Expand on node click",
         type: "boolean",
@@ -57,6 +69,12 @@ const treeViewControllerPayloads = {
       {
         id: "fullRowHighlight",
         label: "Full row highlight",
+        type: "boolean",
+        defaultValue: false,
+      },
+      {
+        id: "fullNodeHighlight",
+        label: "Full node highlight",
         type: "boolean",
         defaultValue: false,
       },
@@ -80,6 +98,12 @@ const treeViewControllerPayloads = {
         defaultValue: false,
       },
       {
+        id: "fullNodeHighlight",
+        label: "Full node highlight",
+        type: "boolean",
+        defaultValue: false,
+      },
+      {
         id: "expandOnNodeClick",
         label: "Expand on node click",
         type: "boolean",
@@ -97,6 +121,12 @@ const treeViewControllerPayloads = {
         label: "Full row highlight",
         type: "boolean",
         defaultValue: true,
+      },
+      {
+        id: "fullNodeHighlight",
+        label: "Full node highlight",
+        type: "boolean",
+        defaultValue: false,
       },
       {
         id: "expandOnNodeClick",
@@ -118,6 +148,12 @@ const treeViewControllerPayloads = {
         defaultValue: false,
       },
       {
+        id: "fullNodeHighlight",
+        label: "Full node highlight",
+        type: "boolean",
+        defaultValue: false,
+      },
+      {
         id: "expandOnNodeClick",
         label: "Expand on node click",
         type: "boolean",
@@ -129,6 +165,7 @@ const treeViewControllerPayloads = {
 
 const getTreeViewProps = (values: Record<string, boolean>) => ({
   fullRowHighlight: values.fullRowHighlight ?? false,
+  fullNodeHighlight: values.fullNodeHighlight ?? false,
   expandOnNodeClick: values.expandOnNodeClick ?? false,
 })
 
