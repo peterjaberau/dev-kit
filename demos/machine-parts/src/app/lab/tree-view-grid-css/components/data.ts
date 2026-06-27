@@ -1,10 +1,4 @@
-export type TreeViewDataNode = {
-  id: string;
-  label: string;
-  meta?: string;
-  kind?: string;
-  children?: TreeViewDataNode[];
-};
+import type { TreeViewDataNode } from "./tree-view/treeview-types";
 
 export const machinePartTree: TreeViewDataNode[] = [
   {

@@ -13,6 +13,7 @@ type BooleanControllerItem = {
 
 export type ControllerPayload = {
   controls: readonly BooleanControllerItem[]
+  description?: string
   title: string
 }
 
@@ -38,6 +39,12 @@ export const Controller = (props: ControllerProps) => {
       <chakra.h2 color="fg.muted" fontSize="xs" fontWeight="semibold" letterSpacing="0" textTransform="uppercase">
         {payload.title}
       </chakra.h2>
+
+      {payload.description ? (
+        <chakra.p color="fg.subtle" fontSize="sm" lineHeight="1.45">
+          {payload.description}
+        </chakra.p>
+      ) : null}
 
       <chakra.div
         display="flex"
