@@ -1,5 +1,4 @@
-import { css } from '#likec4/styles/css'
-import { HStack, Text as Txt, VStack } from '@chakra-ui/react'
+import { chakra, HStack, Text as Txt, VStack } from '@chakra-ui/react'
 import {
   ActionIcon,
   Badge,
@@ -19,6 +18,9 @@ import { ChatInput } from './ChatInput'
 import { ChatMessages } from './ChatMessage'
 import { SemanticLayoutLog } from './SemanticLayoutLog'
 import { useChat } from './useChat'
+
+const ChakraFloatingWindow = chakra(FloatingWindow) as any
+const ChakraScrollAreaAutosize = chakra(ScrollAreaAutosize) as any
 
 type Position = { left?: number; top?: number; right?: number; bottom?: number }
 
@@ -64,15 +66,15 @@ export default function AIChatComponent() {
     <>
       <AnimatePresence>
         {!isCollapsed && (
-          <FloatingWindow
+          <ChakraFloatingWindow
             w={300}
             pos="fixed"
-            className={css({
+            css={{
               rounded: 'md',
               padding: 'xs',
               shadow: 'md',
               layerStyle: 'likec4.panel',
-            })}
+            }}
             constrainToViewport
             constrainOffset={8}
             excludeDragHandleSelector=".chat-input"
@@ -80,7 +82,7 @@ export default function AIChatComponent() {
             onPositionChange={onPositionChange}
           >
             <AIChatWindowContent onClose={() => setCollapsed(true)} />
-          </FloatingWindow>
+          </ChakraFloatingWindow>
         )}
         {isCollapsed && (
           <m.div
@@ -143,22 +145,22 @@ function AIChatWindowContent({ onClose }: { onClose: () => void }) {
               onClose()
             }} />
         </HStack>
-        <ScrollAreaAutosize
+        <ChakraScrollAreaAutosize
           scrollbars="y"
           w="100%"
           flex={1}
           mih={250}
           mah={350}
-          classNames={{
-            content: css({
+          styles={{
+            content: {
               display: 'contents',
-            }),
+            },
           }}>
           <VStack>
             <ChatMessages />
             <div ref={scrollAnchorRef} style={{ height: 2 }}></div>
           </VStack>
-        </ScrollAreaAutosize>
+        </ChakraScrollAreaAutosize>
         <ChatInput />
       </VStack>
     </ChatContext>

@@ -135,7 +135,8 @@
     "ts-graphviz": "^3.0.7",
     "unstorage": "^1.17.5",
     "which": "^5.0.0",
-    "word-wrap": "^1.2.5"
+    "word-wrap": "^1.2.5",
+    "@tanstack/ai-react-ui": "^0.8.9"
   },
   "devDependencies": {
     "@types/which": "^3.0.4",

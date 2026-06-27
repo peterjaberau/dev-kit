@@ -46,7 +46,7 @@ export const OverviewSearch = memo(() => {
               backdrop={{
                 opacity: 0.9,
               }}
-              classes={{
+              styles={{
                 dialog: searchDialogCss,
                 body: searchBodyCss,
               }}

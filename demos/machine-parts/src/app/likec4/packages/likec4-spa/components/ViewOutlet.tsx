@@ -1,6 +1,6 @@
-import { styled } from '#likec4/styles/jsx'
+import { chakra } from '@chakra-ui/react'
 
-export const ViewOutlet = styled('div', {
+export const ViewOutlet = chakra('div', {
   base: {
     padding: '0',
     margin: '0',

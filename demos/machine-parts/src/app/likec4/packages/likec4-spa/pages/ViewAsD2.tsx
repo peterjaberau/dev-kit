@@ -1,10 +1,14 @@
-import { Box } from "@chakra-ui/react"
+import { Box, chakra } from "@chakra-ui/react"
 import { Button, Code, ScrollArea } from '@mantine/core'
 import { useAsync } from '@react-hookz/web'
 import { krokiD2SvgUrl } from 'likec4:app-config'
 import { Group, Panel, Separator } from 'react-resizable-panels'
 import { CopyToClipboard } from '../components/CopyToClipboard'
 import * as styles from './styles.css'
+
+const ChakraCode = chakra(Code) as any
+const ChakraGroup = chakra(Group) as any
+const ChakraScrollArea = chakra(ScrollArea) as any
 
 const fetchFromKroki = async (d2: string) => {
   const res = await fetch(krokiD2SvgUrl, {
@@ -28,23 +32,23 @@ export function ViewAsD2({ d2Source }: { d2Source: string }) {
   const [krokiSvg, { execute }] = useAsync(fetchFromKroki, null)
   return (
     <>
-      <Group
-        className={styles.viewWithTopPadding}
+      <ChakraGroup
+        css={styles.viewWithTopPadding}
         orientation="horizontal">
         <Panel>
-          <ScrollArea
-            className={styles.cssScrollArea}
+          <ChakraScrollArea
+            css={styles.cssScrollArea}
             p={5}
             styles={{
               viewport: {
                 borderRadius: 6,
               },
             }}>
-            <Code block className={styles.cssCodeBlock}>
+            <ChakraCode block css={styles.cssCodeBlock}>
               {d2Source}
-            </Code>
+            </ChakraCode>
             <CopyToClipboard text={d2Source} />
-          </ScrollArea>
+          </ChakraScrollArea>
         </Panel>
         <Separator
           style={{
@@ -65,7 +69,7 @@ export function ViewAsD2({ d2Source }: { d2Source: string }) {
               </>
             )}
             {krokiSvg.status === 'success' && (
-              <Box className={styles.svgContainer}>
+              <Box css={styles.svgContainer}>
                 {!krokiSvg.result
                   ? <Box>Empty result</Box>
                   : <div dangerouslySetInnerHTML={{ __html: krokiSvg.result }}></div>}
@@ -73,7 +77,7 @@ export function ViewAsD2({ d2Source }: { d2Source: string }) {
             )}
           </ScrollArea>
         </Panel>
-      </Group>
+      </ChakraGroup>
     </>
   )
 }

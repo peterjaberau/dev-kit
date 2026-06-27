@@ -1,26 +1,31 @@
+import { chakra } from '@chakra-ui/react'
 import { Code, ScrollArea } from '@mantine/core'
 import { Group, Panel, Separator } from 'react-resizable-panels'
 import { CopyToClipboard } from '../components/CopyToClipboard'
 import * as styles from './styles.css'
 
+const ChakraCode = chakra(Code) as any
+const ChakraGroup = chakra(Group) as any
+const ChakraScrollArea = chakra(ScrollArea) as any
+
 export function ViewAsDot({ dot, dotSvg }: { dot: string; dotSvg: string }) {
   return (
     <>
-      <Group className={styles.viewWithTopPadding}>
+      <ChakraGroup css={styles.viewWithTopPadding}>
         <Panel>
-          <ScrollArea
-            className={styles.cssScrollArea}
+          <ChakraScrollArea
+            css={styles.cssScrollArea}
             p={5}
             styles={{
               viewport: {
                 borderRadius: 6,
               },
             }}>
-            <Code block className={styles.cssCodeBlock}>
+            <ChakraCode block css={styles.cssCodeBlock}>
               {dot}
-            </Code>
+            </ChakraCode>
             <CopyToClipboard text={dot} />
-          </ScrollArea>
+          </ChakraScrollArea>
         </Panel>
         <Separator
           style={{
@@ -28,10 +33,10 @@ export function ViewAsDot({ dot, dotSvg }: { dot: string; dotSvg: string }) {
           }} />
         <Panel>
           <ScrollArea h={'100%'}>
-            <div className={styles.svgContainer} dangerouslySetInnerHTML={{ __html: dotSvg }}></div>
+            <chakra.div css={styles.svgContainer} dangerouslySetInnerHTML={{ __html: dotSvg }}></chakra.div>
           </ScrollArea>
         </Panel>
-      </Group>
+      </ChakraGroup>
     </>
   )
 }

@@ -1,14 +1,14 @@
-import { css } from '#likec4/styles/css'
+import type { SystemStyleObject } from '@chakra-ui/react'
 
-export const dimmed = css({
+export const dimmed: SystemStyleObject = {
   color: 'text.dimmed',
-})
+}
 
-export const header = css({
+export const header: SystemStyleObject = {
   // background: 'var(--color-surface)',
-})
+}
 
-export const previewBg = css({
+export const previewBg: SystemStyleObject = {
   position: 'relative',
   overflow: 'hidden',
   padding: '0',
@@ -26,10 +26,10 @@ export const previewBg = css({
     bottom: '0',
     zIndex: '1',
   },
-})
+}
 
-export const cardLink = css({
+export const cardLink: SystemStyleObject = {
   position: 'absolute',
   inset: '0',
   zIndex: 5,
-})
+}

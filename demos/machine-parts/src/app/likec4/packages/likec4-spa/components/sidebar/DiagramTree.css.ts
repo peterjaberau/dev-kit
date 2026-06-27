@@ -1,6 +1,6 @@
-import { css } from '#likec4/styles/css'
+import type { SystemStyleObject } from '@chakra-ui/react'
 
-export const navsidebar = css({
+export const navsidebar: SystemStyleObject = {
   backdropFilter: 'blur(6px)',
   transition: 'transform 0.21s cubic-bezier(0.4,0,0.2,1)',
   transform: 'translateX(-100%)',
@@ -20,9 +20,9 @@ export const navsidebar = css({
   '&[data-opened=\'true\']': {
     transform: 'translateX(0)',
   },
-})
+}
 
-export const trigger = css({
+export const trigger: SystemStyleObject = {
   cursor: 'pointer',
   _before: {
     transitionProperty: 'all',
@@ -46,8 +46,8 @@ export const trigger = css({
   '&[data-opened=\'true\']': {
     visibility: 'hidden',
   },
-})
+}
 
-export const diagramPreview = css({
+export const diagramPreview: SystemStyleObject = {
   pointerEvents: 'none',
-})
+}

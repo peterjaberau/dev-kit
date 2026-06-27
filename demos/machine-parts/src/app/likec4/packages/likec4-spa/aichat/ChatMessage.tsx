@@ -1,18 +1,19 @@
 import { RichText } from '#likec4/core'
 import { Markdown } from '#likec4/diagram/custom'
-import { css } from '#likec4/styles/css'
-import { Text as Txt } from '@chakra-ui/react'
+import { chakra, Text as Txt } from '@chakra-ui/react'
 import { Notification } from '@mantine/core'
 import {
   ChatMessage as TanstackChatMessage,
 } from '@tanstack/ai-react-ui'
 import { type TypedUIMessage, useChatContext } from './ChatContext'
 
+const ChakraTanstackChatMessage = chakra(TanstackChatMessage) as any
+
 export function ChatMessages() {
   const { messages, error } = useChatContext()
   return (
     <>
-      {messages.map((message) => <ChatMessage message={message} key={message.id} />)}
+      {messages.map((message: TypedUIMessage) => <ChatMessage message={message} key={message.id} />)}
       {error && (
         <Notification
           styles={{
@@ -40,18 +41,21 @@ export function ChatMessages() {
 export const ChatMessage = ({ message }: { message: TypedUIMessage }) => {
   const role = message.role
   return (
-    <TanstackChatMessage
+    <ChakraTanstackChatMessage
       message={message}
-      userClassName={css({
-        color: 'text.bright',
-        alignSelf: 'flex-end',
-        paddingInline: '2',
-        paddingBlock: '1',
-        marginInlineEnd: '2',
-        rounded: 'sm',
-        backgroundColor: 'default.hover',
-        whiteSpace: 'pre-wrap',
-      })}
+      userClassName="likec4-ai-user-message"
+      css={{
+        '& .likec4-ai-user-message': {
+          color: 'text.bright',
+          alignSelf: 'flex-end',
+          paddingInline: '2',
+          paddingBlock: '1',
+          marginInlineEnd: '2',
+          rounded: 'sm',
+          backgroundColor: 'default.hover',
+          whiteSpace: 'pre-wrap',
+        },
+      }}
       textPartRenderer={role === 'user' ? UserMessageTextPart : MarkdownTextPart} />
   )
 }

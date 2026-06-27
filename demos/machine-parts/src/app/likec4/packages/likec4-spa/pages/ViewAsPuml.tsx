@@ -1,10 +1,14 @@
-import { Box } from "@chakra-ui/react"
+import { Box, chakra } from "@chakra-ui/react"
 import { Button, Code, ScrollArea } from '@mantine/core'
 import { useAsync } from '@react-hookz/web'
-import { krokiPumlSvgUrl } from 'likec4:app-config'
+import { krokiPumlSvgUrl } from '../../config/app-config'
 import { Group, Panel, Separator } from 'react-resizable-panels'
 import { CopyToClipboard } from '../components/CopyToClipboard'
 import * as styles from './styles.css'
+
+const ChakraCode = chakra(Code) as any
+const ChakraGroup = chakra(Group) as any
+const ChakraScrollArea = chakra(ScrollArea) as any
 
 const fetchFromKroki = async (puml: string) => {
   const res = await fetch(krokiPumlSvgUrl, {
@@ -26,23 +30,23 @@ export function ViewAsPuml({ pumlSource }: { pumlSource: string }) {
 
   return (
     <>
-      <Group
-        className={styles.viewWithTopPadding}
+      <ChakraGroup
+        css={styles.viewWithTopPadding}
         orientation="horizontal">
         <Panel>
-          <ScrollArea
-            className={styles.cssScrollArea}
+          <ChakraScrollArea
+            css={styles.cssScrollArea}
             p={5}
             styles={{
               viewport: {
                 borderRadius: 6,
               },
             }}>
-            <Code block className={styles.cssCodeBlock}>
+            <ChakraCode block css={styles.cssCodeBlock}>
               {pumlSource}
-            </Code>
+            </ChakraCode>
             <CopyToClipboard text={pumlSource} />
-          </ScrollArea>
+          </ChakraScrollArea>
         </Panel>
         <Separator
           style={{
@@ -63,7 +67,7 @@ export function ViewAsPuml({ pumlSource }: { pumlSource: string }) {
               </>
             )}
             {krokiSvg.status === 'success' && (
-              <Box className={styles.svgContainer}>
+              <Box css={styles.svgContainer}>
                 {!krokiSvg.result
                   ? <Box>Empty result</Box>
                   : <div dangerouslySetInnerHTML={{ __html: krokiSvg.result }}></div>}
@@ -71,7 +75,7 @@ export function ViewAsPuml({ pumlSource }: { pumlSource: string }) {
             )}
           </ScrollArea>
         </Panel>
-      </Group>
+      </ChakraGroup>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { cx as clsx } from '#likec4/styles/css'
+import { clsx } from 'clsx'
 import {
   type ElementProps,
   type UnstyledButtonProps,

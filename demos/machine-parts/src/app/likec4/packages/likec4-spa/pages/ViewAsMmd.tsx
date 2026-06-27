@@ -1,10 +1,14 @@
-import { Box } from "@chakra-ui/react"
+import { Box, chakra } from "@chakra-ui/react"
 import { Code, ScrollArea, useMantineColorScheme } from '@mantine/core'
 import { useAsync } from '@react-hookz/web'
 import { useEffect } from 'react'
 import { Group, Panel, Separator } from 'react-resizable-panels'
 import { CopyToClipboard } from '../components/CopyToClipboard'
 import * as styles from './styles.css'
+
+const ChakraCode = chakra(Code) as any
+const ChakraGroup = chakra(Group) as any
+const ChakraScrollArea = chakra(ScrollArea) as any
 
 const renderSvg = async (viewId: string, diagram: string, theme: 'light' | 'dark') => {
   // @ts-ignore
@@ -28,23 +32,23 @@ export function ViewAsMmd({ viewId, mmdSource }: { viewId: string; mmdSource: st
 
   return (
     <>
-      <Group
-        className={styles.viewWithTopPadding}
+      <ChakraGroup
+        css={styles.viewWithTopPadding}
         orientation="horizontal">
         <Panel>
-          <ScrollArea
-            className={styles.cssScrollArea}
+          <ChakraScrollArea
+            css={styles.cssScrollArea}
             p={5}
             styles={{
               viewport: {
                 borderRadius: 6,
               },
             }}>
-            <Code block className={styles.cssCodeBlock}>
+            <ChakraCode block css={styles.cssCodeBlock}>
               {mmdSource}
-            </Code>
+            </ChakraCode>
             <CopyToClipboard text={mmdSource} />
-          </ScrollArea>
+          </ChakraScrollArea>
         </Panel>
         <Separator
           style={{
@@ -53,11 +57,11 @@ export function ViewAsMmd({ viewId, mmdSource }: { viewId: string; mmdSource: st
         <Panel>
           <ScrollArea h={'100%'}>
             {mmdSvg.result && (
-              <Box className={styles.svgContainer} dangerouslySetInnerHTML={{ __html: mmdSvg.result }} />
+              <Box css={styles.svgContainer} dangerouslySetInnerHTML={{ __html: mmdSvg.result }} />
             )}
           </ScrollArea>
         </Panel>
-      </Group>
+      </ChakraGroup>
     </>
   )
 }

@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react'
 import type { DiagramView } from '#likec4/core/types'
 import { RichText } from '#likec4/core/types'
 import { Markdown, NavigationPanel } from '#likec4/diagram/custom'
-import { css } from '#likec4/styles/css'
+import { chakra } from '@chakra-ui/react'
 import { Box, Burger, Card, Container, Group, SimpleGrid, Text } from '@mantine/core'
 import { useDocumentTitle, useInViewport } from '@mantine/hooks'
 import { pageTitle } from 'likec4:app-config'
@@ -27,6 +27,11 @@ import { SidebarDrawerOps } from '../../components/sidebar/state'
 import { filterLandingPageViews } from '../../filterLandingPageViews'
 import { useCurrentProject, useLikeC4Views } from '../../hooks'
 import * as styles from './index.css'
+
+const ChakraBox = chakra(Box) as any
+const ChakraLink = chakra(Link) as any
+const ChakraMarkdown = chakra(Markdown) as any
+const ChakraNavigationPanel = NavigationPanel as any
 
 export const Route = createFileRoute('/_single/single-index')({
   component: RouteComponent,
@@ -40,8 +45,8 @@ function RouteComponent() {
   return (
     <Container size={'xl'}>
       <SidebarDrawer />
-      <div
-        className={css({
+      <chakra.div
+        css={{
           containerName: 'likec4-root',
           containerType: 'inline-size',
           display: 'flex',
@@ -54,27 +59,27 @@ function RouteComponent() {
           zIndex: '10',
           backgroundColor: 'likec4.panel.bg/85',
           backdropFilter: 'blur(8px)',
-        })}
+        }}
       >
-        <NavigationPanel.Root css={{ position: 'relative', width: 'max-content', margin: '0' }}>
-          <NavigationPanel.Body>
+        <ChakraNavigationPanel.Root css={{ position: 'relative', width: 'max-content', margin: '0' }}>
+          <ChakraNavigationPanel.Body>
             <div style={{ width: 0, height: 36 }} aria-hidden />
             <Burger size="sm" onClick={SidebarDrawerOps.open} aria-label="Toggle navigation" />
-            <NavigationPanel.Logo
+            <ChakraNavigationPanel.Logo
               css={{ flexShrink: 0 }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             />
             <OverviewSearch />
-          </NavigationPanel.Body>
-        </NavigationPanel.Root>
-        <NavigationPanel.Root panelPosition="right" css={{ position: 'relative', margin: '0' }}>
-          <NavigationPanel.Body>
+          </ChakraNavigationPanel.Body>
+        </ChakraNavigationPanel.Root>
+        <ChakraNavigationPanel.Root panelPosition="right" css={{ position: 'relative', margin: '0' }}>
+          <ChakraNavigationPanel.Body>
             <div style={{ display: 'flex', alignItems: 'center', minHeight: 36 }}>
               <ColorSchemeToggle />
             </div>
-          </NavigationPanel.Body>
-        </NavigationPanel.Root>
-      </div>
+          </ChakraNavigationPanel.Body>
+        </ChakraNavigationPanel.Root>
+      </chakra.div>
       <SimpleGrid
         p={{ base: 'md', sm: 'md' }}
         pt={{ base: 'sm', sm: 'sm' }}
@@ -108,7 +113,7 @@ function ViewCard({ view }: { view: DiagramView }) {
       className="group"
       withBorder>
       <Card.Section>
-        <Box className={styles.previewBg} style={{ height: 200 }}>
+        <ChakraBox css={styles.previewBg} style={{ height: 200 }}>
           {visible && (
             <StaticLikeC4Diagram
               background={'transparent'}
@@ -118,18 +123,18 @@ function ViewCard({ view }: { view: DiagramView }) {
               reduceGraphics
             />
           )}
-        </Box>
+        </ChakraBox>
       </Card.Section>
 
       <Group justify="space-between" mt="md">
         <Text fw={500}>{view.title ?? view.id}</Text>
       </Group>
 
-      <Markdown
+      <ChakraMarkdown
         value={RichText.from(view.description)}
         textScale={0.75}
         emptyText="No description"
-        className={css({
+        css={{
           lineClamp: 3,
           mt: '1',
           transition: 'fast',
@@ -137,9 +142,9 @@ function ViewCard({ view }: { view: DiagramView }) {
             base: 0.8,
             _groupHover: 1,
           },
-        })}
+        }}
       />
-      <Link to={'/view/$viewId/'} params={{ viewId: view.id }} search className={styles.cardLink}></Link>
+      <ChakraLink to={'/view/$viewId/'} params={{ viewId: view.id }} search css={styles.cardLink}></ChakraLink>
     </Card>
   )
 }
