@@ -1,49 +1,41 @@
-"use client";
+"use client"
 
-import { chakra } from "@chakra-ui/react";
-import { useState } from "react";
-import type React from "react";
+import { chakra } from "@chakra-ui/react"
+import { useState } from "react"
+import type React from "react"
 
 type BooleanControllerItem = {
-  defaultValue: boolean;
-  id: string;
-  label: string;
-  type: "boolean";
-};
+  defaultValue: boolean
+  id: string
+  label: string
+  type: "boolean"
+}
 
 export type ControllerPayload = {
-  controls: readonly BooleanControllerItem[];
-  title: string;
-};
+  controls: readonly BooleanControllerItem[]
+  title: string
+}
 
-type ControllerValues = Record<string, boolean>;
+type ControllerValues = Record<string, boolean>
 
 type ControllerProps = {
-  payload: ControllerPayload;
-  render: (values: ControllerValues) => React.ReactNode;
-};
+  payload: ControllerPayload
+  render: (values: ControllerValues) => React.ReactNode
+}
 
 export const Controller = (props: ControllerProps) => {
-  const { payload, render } = props;
+  const { payload, render } = props
   const [values, setValues] = useState(() =>
-    Object.fromEntries(
-      payload.controls.map((control) => [control.id, control.defaultValue]),
-    ),
-  );
+    Object.fromEntries(payload.controls.map((control) => [control.id, control.defaultValue])),
+  )
 
   const setValue = (id: string, checked: boolean) => {
-    setValues((current) => ({ ...current, [id]: checked }));
-  };
+    setValues((current) => ({ ...current, [id]: checked }))
+  }
 
   return (
     <chakra.section display="flex" flexDirection="column" gap="3" minW="0">
-      <chakra.h2
-        color="fg.muted"
-        fontSize="xs"
-        fontWeight="semibold"
-        letterSpacing="0"
-        textTransform="uppercase"
-      >
+      <chakra.h2 color="fg.muted" fontSize="xs" fontWeight="semibold" letterSpacing="0" textTransform="uppercase">
         {payload.title}
       </chakra.h2>
 
@@ -58,13 +50,7 @@ export const Controller = (props: ControllerProps) => {
         borderRadius="lg"
         shadow="xs"
       >
-        <chakra.h3
-          color="fg.muted"
-          fontSize="xs"
-          fontWeight="semibold"
-          letterSpacing="0"
-          textTransform="uppercase"
-        >
+        <chakra.h3 color="fg.muted" fontSize="xs" fontWeight="semibold" letterSpacing="0" textTransform="uppercase">
           TreeView props
         </chakra.h3>
 
@@ -80,17 +66,17 @@ export const Controller = (props: ControllerProps) => {
 
       {render(values)}
     </chakra.section>
-  );
-};
+  )
+}
 
 type ControllerCheckboxProps = {
-  checked: boolean;
-  label: string;
-  onCheckedChange: (checked: boolean) => void;
-};
+  checked: boolean
+  label: string
+  onCheckedChange: (checked: boolean) => void
+}
 
 const ControllerCheckbox = (props: ControllerCheckboxProps) => {
-  const { checked, label, onCheckedChange } = props;
+  const { checked, label, onCheckedChange } = props
 
   return (
     <chakra.label
@@ -111,5 +97,5 @@ const ControllerCheckbox = (props: ControllerCheckboxProps) => {
       />
       <chakra.span>{label}</chakra.span>
     </chakra.label>
-  );
-};
+  )
+}

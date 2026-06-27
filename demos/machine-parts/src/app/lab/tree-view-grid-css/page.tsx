@@ -83,17 +83,26 @@ export default function TreeViewGridCssPage() {
           gap: "1.5rem",
         }}
       >
-        <Controller payload={treeViewControllerPayloads.controlled}>
-          {(values) => <TreeViewControlledExample {...getTreeViewProps(values)} />}
-        </Controller>
+        <Controller
+          payload={treeViewControllerPayloads.controlled}
+          render={(values) => (
+            <TreeViewControlledExample {...getTreeViewProps(values)} />
+          )}
+        />
 
-        <Controller payload={treeViewControllerPayloads.uncontrolled}>
-          {(values) => <TreeViewUncontrolledRootExample {...getTreeViewProps(values)} />}
-        </Controller>
+        <Controller
+          payload={treeViewControllerPayloads.uncontrolled}
+          render={(values) => (
+            <TreeViewUncontrolledRootExample {...getTreeViewProps(values)} />
+          )}
+        />
 
-        <Controller payload={treeViewControllerPayloads.context}>
-          {(values) => <TreeViewContextStateExample {...getTreeViewProps(values)} />}
-        </Controller>
+        <Controller
+          payload={treeViewControllerPayloads.context}
+          render={(values) => (
+            <TreeViewContextStateExample {...getTreeViewProps(values)} />
+          )}
+        />
       </div>
     </main>
   )
