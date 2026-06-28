@@ -1,11 +1,22 @@
 import {
   memo,
-  useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type KeyboardEvent,
 } from 'react';
+import {
+  draggable,
+  dropTargetForElements,
+  monitorForElements,
+} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
+import {
+  attachInstruction,
+  extractInstruction,
+  type Instruction,
+} from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 import {
   Accordion,
   Box,
@@ -25,15 +36,16 @@ import {
   GripVertical,
   MoreVertical,
 } from 'lucide-react';
-import {
-  type DraggablePanelProps,
-  type LineIndicatorProps,
-  type Tree,
-} from "./types"
+import { Tree, TreeItem, LineIndicatorProps, DraggablePanelProps } from "./types"
 import { initialData } from './data'
-import { moveItem } from './utils'
-import { useNestedPanelDragAndDrop } from "./drag-and-drop/use-nested-panel-drag-and-drop"
-import { useNestedTreeDropMonitor } from "./drag-and-drop/use-nested-tree-drop-monitor"
+import { EXPAND_ON_HOVER_TIME } from './constants'
+import { findNodeLocation, findItem, removeItem, insertChild, insertBefore, insertAfter, moveItem, getDescendantIds } from './utils'
+
+
+
+
+
+
 
 const LineIndicator = ({ position }: LineIndicatorProps) => {
   return (
@@ -52,6 +64,8 @@ const LineIndicator = ({ position }: LineIndicatorProps) => {
   );
 };
 
+
+
 const DraggablePanel = memo(function DraggablePanel({
   children,
   id,
@@ -65,38 +79,19 @@ const DraggablePanel = memo(function DraggablePanel({
   isFirst,
   isLast,
 }: DraggablePanelProps) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const expandTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+
   const buttonId = `${id}-button`;
 
   const [isExpanded, setIsExpanded] = useState(true);
+  const [instruction, setInstruction] = useState<Instruction | null>(null);
 
   const hasChildren = useMemo(() => {
     return !!children?.length;
   }, [children]);
-
-  const getDragPreviewPieces = useCallback(
-    () => ({
-      elemBefore: <GripVertical size={16} />,
-      content: (
-        <Text as="span" textStyle="sm" fontWeight="medium">
-          {title}
-        </Text>
-      ),
-    }),
-    [title]
-  );
-
-  const { dragPreview, instruction, isDragging, ref } = useNestedPanelDragAndDrop({
-    children,
-    getDragPreviewPieces,
-    hasChildren,
-    id,
-    index,
-    isBlocked,
-    isExpanded,
-    level,
-    setIsExpanded,
-    title,
-  });
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     const target = e.currentTarget;
@@ -176,12 +171,107 @@ const DraggablePanel = memo(function DraggablePanel({
     if (hasChildren) setIsExpanded(true);
   }, [hasChildren]);
 
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const cancelExpand = () => {
+      clearTimeout(expandTimeout.current);
+      expandTimeout.current = undefined;
+    };
+
+    const reset = () => {
+      setInstruction(null);
+      cancelExpand();
+    };
+
+    /*
+     * `draggable` enables the dragging of an element.
+     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element/about#draggable
+     *
+     * `dropTargetForElements` makes an element a drop target.
+     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element/about#drop-target-for-elements
+     *
+     * `combine` is a utility that enables both behaviors.
+     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/utilities#combine
+     */
+    const cleanup = combine(
+      draggable({
+        element: el,
+        getInitialData: () => ({
+          id,
+          index,
+          descendantIds: getDescendantIds({ id, children, title }),
+        }),
+      }),
+      dropTargetForElements({
+        element: el,
+        getData: ({ input, element }) =>
+          attachInstruction(
+            { id, index, level },
+            {
+              input,
+              element,
+              operations: {
+                combine: isBlocked ? 'not-available' : 'available',
+                'reorder-before': 'available',
+                'reorder-after': 'available',
+              },
+            }
+          ),
+        canDrop: ({ source }) => {
+          const descendantIds = source.data.descendantIds as string[];
+          return !descendantIds.includes(id);
+        },
+        onDrag: ({ self, location }) => {
+          const newInstruction = extractInstruction(self.data);
+          const isInnerMost =
+            location.current.dropTargets[0]?.element === self.element;
+          const isNesting = newInstruction?.operation === 'combine';
+
+          /*
+           * When you hover over a deeply nested child, you are technically
+           * hovering over its parent and grandparent too. Without this check
+           * you would see group and line indicators for the entire tree branch.
+           * We only update the `instruction` state if the element is innermost.
+           */
+          if (isInnerMost) {
+            const newInstruction = extractInstruction(self.data);
+            setInstruction(newInstruction);
+
+            if (
+              isNesting &&
+              hasChildren &&
+              !isExpanded &&
+              !expandTimeout.current
+            ) {
+              expandTimeout.current = setTimeout(() => {
+                setIsExpanded(true);
+                expandTimeout.current = undefined;
+              }, EXPAND_ON_HOVER_TIME);
+            } else if (!isNesting) {
+              cancelExpand();
+            }
+          } else {
+            reset();
+          }
+        },
+        onDragLeave: reset,
+        onDrop: reset,
+      })
+    );
+
+    return () => {
+      cleanup();
+      cancelExpand();
+    };
+  }, [id, index, children, level, title, isExpanded, isBlocked]);
+
   return (
     <Box as="li" position="relative" listStyleType="none">
       {instruction?.operation === 'reorder-before' && (
         <LineIndicator position="top" />
       )}
-      {dragPreview}
       <Card.Root
         ref={ref}
         size="sm"
@@ -195,8 +285,7 @@ const DraggablePanel = memo(function DraggablePanel({
             : 'none'
         }
         overflow="visible"
-        opacity={isDragging ? 0.45 : 1}
-        transition="border-color 120ms ease, box-shadow 120ms ease, opacity 120ms ease"
+        transition="border-color 120ms ease, box-shadow 120ms ease"
       >
         <Accordion.Root
           collapsible
@@ -339,18 +428,71 @@ const DraggablePanel = memo(function DraggablePanel({
           </Accordion.Item>
         </Accordion.Root>
       </Card.Root>
-      {/*{instruction?.operation === 'reorder-after' && (*/}
-      {/*  <LineIndicator position="bottom" />*/}
-      {/*)}*/}
+      {instruction?.operation === 'reorder-after' && (
+        <LineIndicator position="bottom" />
+      )}
     </Box>
   );
 });
 
-export function NestedDragDropDemo() {
+export function NestedDragDropBkDemo() {
   const [items, setItems] = useState<Tree>(initialData);
   const [activeId, setActiveId] = useState<string>(initialData[0]!.id);
 
-  useNestedTreeDropMonitor({ setItems });
+  useEffect(() => {
+    /*
+     * Monitors listen to all events for a draggable entity.
+     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/monitors
+     */
+    return monitorForElements({
+      onDrop({ source, location }) {
+        /**
+         * The inner-most drop target. We look from the deepest possible
+         * drop target upwards.
+         * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/drop-targets#nested-drop-targets
+         */
+        const target = location.current.dropTargets[0];
+
+        if (!target) return;
+
+        const sourceId = source.data.id as string;
+        const targetId = target.data.id as string;
+
+        if (sourceId === targetId) return;
+
+        const instruction: Instruction | null = extractInstruction(target.data);
+
+        if (!instruction) return;
+        if (instruction.blocked) return;
+
+        const itemToMove = findItem(items, sourceId);
+        if (!itemToMove) return;
+
+        let updatedTree = removeItem(items, sourceId);
+
+        /*
+         * `@atlaskit/pragmatic-drag-and-drop-hitbox` calculates the user intent.
+         * We can get that user intent using `extractInstruction`.
+         *
+         * The type of operation can be:
+         * - `combine` - it means that the user is hovering over the center of a drop target.
+         * - `reorder-before` - it means that the user is hovering close to the upper edge of a drop target.
+         * - `reorder-after` - it means that the user is hovering close to the lower edge of a drop target.
+         *
+         * See: https://atlassian.design/components/pragmatic-drag-and-drop/optional-packages/hitbox/about
+         */
+        if (instruction.operation === 'combine') {
+          updatedTree = insertChild(updatedTree, targetId, itemToMove);
+        } else if (instruction.operation === 'reorder-before') {
+          updatedTree = insertBefore(updatedTree, targetId, itemToMove);
+        } else if (instruction.operation === 'reorder-after') {
+          updatedTree = insertAfter(updatedTree, targetId, itemToMove);
+        }
+
+        setItems(updatedTree);
+      },
+    });
+  }, [items]);
 
   const handleMove = (
     id: string,
@@ -373,4 +515,4 @@ export function NestedDragDropDemo() {
   ))
 }
 
-export default NestedDragDropDemo;
+export default NestedDragDropBkDemo
