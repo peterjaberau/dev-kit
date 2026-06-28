@@ -1,6 +1,5 @@
 "use client"
 import { ReactElement, ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import invariant from "tiny-invariant"
 import { type Instruction } from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 import {
   draggable,

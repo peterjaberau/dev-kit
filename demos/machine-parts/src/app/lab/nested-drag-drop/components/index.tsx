@@ -1,22 +1,12 @@
 import {
   memo,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
   type KeyboardEvent,
 } from 'react';
-import {
-  draggable,
-  dropTargetForElements,
-  monitorForElements,
-} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
-import {
-  attachInstruction,
-  extractInstruction,
-  type Instruction,
-} from "@atlaskit/pragmatic-drag-and-drop-hitbox/list-item"
 import {
   Accordion,
   Box,
@@ -25,6 +15,7 @@ import {
   Icon,
   IconButton,
   Menu,
+  mergeRefs,
   Portal,
   Text,
 } from '@chakra-ui/react';
@@ -36,34 +27,15 @@ import {
   GripVertical,
   MoreVertical,
 } from 'lucide-react';
-import { Tree, TreeItem, LineIndicatorProps, DraggablePanelProps } from "./types"
+import { type DraggablePanelProps, type Tree } from "./types"
 import { initialData } from './data'
 import { EXPAND_ON_HOVER_TIME } from './constants'
-import { findNodeLocation, findItem, removeItem, insertChild, insertBefore, insertAfter, moveItem, getDescendantIds } from './utils'
-
-
-
-
-
-
-
-const LineIndicator = ({ position }: LineIndicatorProps) => {
-  return (
-    <Box
-      position="absolute"
-      insetX="0"
-      top={position === 'top' ? '-2' : 'auto'}
-      bottom={position === 'bottom' ? '-2' : 'auto'}
-      h="0.5"
-      bg="teal.solid"
-      borderRadius="full"
-      pointerEvents="none"
-      transform={position === 'top' ? 'translateY(-50%)' : 'translateY(50%)'}
-      zIndex="1"
-    />
-  );
-};
-
+import {
+  moveItem,
+  getDescendantIds,
+} from './utils'
+import { useNodeItemDragAndDrop } from "./drag-and-drop/use-node-item-drag-and-drop"
+import { useNestedTreeDropMonitor } from "./drag-and-drop/use-nested-tree-drop-monitor"
 
 
 const DraggablePanel = memo(function DraggablePanel({
@@ -79,7 +51,6 @@ const DraggablePanel = memo(function DraggablePanel({
   isFirst,
   isLast,
 }: DraggablePanelProps) {
-  const ref = useRef<HTMLDivElement | null>(null);
   const expandTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
@@ -87,11 +58,55 @@ const DraggablePanel = memo(function DraggablePanel({
   const buttonId = `${id}-button`;
 
   const [isExpanded, setIsExpanded] = useState(true);
-  const [instruction, setInstruction] = useState<Instruction | null>(null);
 
   const hasChildren = useMemo(() => {
     return !!children?.length;
   }, [children]);
+
+  const dragAndDropConfig = useMemo<
+    Parameters<typeof useNodeItemDragAndDrop>[0]
+  >(
+    () => ({
+      draggable: {
+        getInitialData: () => ({
+          id,
+          index,
+          descendantIds: getDescendantIds({ id, children, title }),
+        }),
+        getDragPreviewPieces: () => ({
+          elemBefore: <GripVertical size={16} />,
+          content: (
+            <Text as="span" textStyle="sm" fontWeight="medium">
+              {title}
+            </Text>
+          ),
+        }),
+      },
+      dropTarget: {
+        getData: () => ({ id, index, level }),
+        getOperations: () => ({
+          combine: isBlocked ? 'not-available' : 'available',
+          'reorder-before': 'available',
+          'reorder-after': 'available',
+        }),
+        canDrop: ({ source }) => {
+          const descendantIds = source.data.descendantIds as string[];
+          return !descendantIds.includes(id);
+        },
+      },
+    }),
+    [children, id, index, isBlocked, level, title]
+  );
+
+  const dragAndDrop = useNodeItemDragAndDrop(dragAndDropConfig);
+
+  const instruction =
+    dragAndDrop.state.type === 'is-over' ? dragAndDrop.state.instruction : null;
+
+  const cancelExpand = useCallback(() => {
+    clearTimeout(expandTimeout.current);
+    expandTimeout.current = undefined;
+  }, []);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     const target = e.currentTarget;
@@ -172,118 +187,31 @@ const DraggablePanel = memo(function DraggablePanel({
   }, [hasChildren]);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const isNesting = instruction?.operation === 'combine';
 
-    const cancelExpand = () => {
-      clearTimeout(expandTimeout.current);
-      expandTimeout.current = undefined;
-    };
-
-    const reset = () => {
-      setInstruction(null);
+    if (isNesting && hasChildren && !isExpanded && !expandTimeout.current) {
+      expandTimeout.current = setTimeout(() => {
+        setIsExpanded(true);
+        expandTimeout.current = undefined;
+      }, EXPAND_ON_HOVER_TIME);
+    } else if (!isNesting) {
       cancelExpand();
-    };
+    }
+  }, [cancelExpand, hasChildren, instruction?.operation, isExpanded]);
 
-    /*
-     * `draggable` enables the dragging of an element.
-     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element/about#draggable
-     *
-     * `dropTargetForElements` makes an element a drop target.
-     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/adapters/element/about#drop-target-for-elements
-     *
-     * `combine` is a utility that enables both behaviors.
-     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/utilities#combine
-     */
-    const cleanup = combine(
-      draggable({
-        element: el,
-        getInitialData: () => ({
-          id,
-          index,
-          descendantIds: getDescendantIds({ id, children, title }),
-        }),
-      }),
-      dropTargetForElements({
-        element: el,
-        getData: ({ input, element }) =>
-          attachInstruction(
-            { id, index, level },
-            {
-              input,
-              element,
-              operations: {
-                combine: isBlocked ? 'not-available' : 'available',
-                'reorder-before': 'available',
-                'reorder-after': 'available',
-              },
-            }
-          ),
-        canDrop: ({ source }) => {
-          const descendantIds = source.data.descendantIds as string[];
-          return !descendantIds.includes(id);
-        },
-        onDrag: ({ self, location }) => {
-          const newInstruction = extractInstruction(self.data);
-          const isInnerMost =
-            location.current.dropTargets[0]?.element === self.element;
-          const isNesting = newInstruction?.operation === 'combine';
-
-          /*
-           * When you hover over a deeply nested child, you are technically
-           * hovering over its parent and grandparent too. Without this check
-           * you would see group and line indicators for the entire tree branch.
-           * We only update the `instruction` state if the element is innermost.
-           */
-          if (isInnerMost) {
-            const newInstruction = extractInstruction(self.data);
-            setInstruction(newInstruction);
-
-            if (
-              isNesting &&
-              hasChildren &&
-              !isExpanded &&
-              !expandTimeout.current
-            ) {
-              expandTimeout.current = setTimeout(() => {
-                setIsExpanded(true);
-                expandTimeout.current = undefined;
-              }, EXPAND_ON_HOVER_TIME);
-            } else if (!isNesting) {
-              cancelExpand();
-            }
-          } else {
-            reset();
-          }
-        },
-        onDragLeave: reset,
-        onDrop: reset,
-      })
-    );
-
-    return () => {
-      cleanup();
-      cancelExpand();
-    };
-  }, [id, index, children, level, title, isExpanded, isBlocked]);
+  useEffect(() => cancelExpand, [cancelExpand]);
 
   return (
     <Box as="li" position="relative" listStyleType="none">
-      {instruction?.operation === 'reorder-before' && (
-        <LineIndicator position="top" />
-      )}
+      {instruction?.operation === "reorder-before" && dragAndDrop.dropIndicator}
+      {/*{dragAndDrop.dropIndicator}*/}
+      {dragAndDrop.dragPreview}
       <Card.Root
-        ref={ref}
+        ref={mergeRefs(dragAndDrop.draggableAnchorRef, dragAndDrop.dropTargetRef)}
         size="sm"
-        variant={level % 2 ? 'outline' : 'subtle'}
-        borderColor={
-          instruction?.operation === 'combine' ? 'teal.solid' : 'border'
-        }
-        boxShadow={
-          instruction?.operation === 'combine'
-            ? 'inset 0 0 0 1px var(--chakra-colors-teal-solid)'
-            : 'none'
-        }
+        variant={level % 2 ? "outline" : "subtle"}
+        borderColor={instruction?.operation === "combine" ? "teal.solid" : "border"}
+        boxShadow={instruction?.operation === "combine" ? "inset 0 0 0 1px var(--chakra-colors-teal-solid)" : "none"}
         overflow="visible"
         transition="border-color 120ms ease, box-shadow 120ms ease"
       >
@@ -291,12 +219,13 @@ const DraggablePanel = memo(function DraggablePanel({
           collapsible
           value={hasChildren && isExpanded ? [id] : []}
           onValueChange={(details) => {
-            if (hasChildren) setIsExpanded(details.value.includes(id));
+            if (hasChildren) setIsExpanded(details.value.includes(id))
           }}
         >
           <Accordion.Item value={id} borderBottomWidth="0">
             <HStack gap="1" px="2" py="1.5">
               <Accordion.ItemTrigger
+                ref={dragAndDrop.draggableButtonRef}
                 id={buttonId}
                 data-item
                 onKeyDown={handleKeyDown}
@@ -307,84 +236,50 @@ const DraggablePanel = memo(function DraggablePanel({
                 p="1"
                 borderRadius="md"
                 _hover={{
-                  bg: 'bg.muted',
-                  '& .drag-handle': { color: 'fg' },
+                  bg: "bg.muted",
+                  "& .drag-handle": { color: "fg" },
                 }}
               >
                 <HStack gap="1.5" minW="0" flex="1">
-                  <Icon
-                    className="drag-handle"
-                    color="fg.muted"
-                    boxSize="4"
-                    flexShrink="0"
-                  >
+                  <Icon className="drag-handle" color="fg.muted" boxSize="4" flexShrink="0">
                     <GripVertical />
                   </Icon>
                   {hasChildren ? (
                     <Icon color="fg.muted" boxSize="4" flexShrink="0">
-                      {isExpanded ? (
-                        <ChevronDown />
-                      ) : (
-                        <ChevronRight />
-                      )}
+                      {isExpanded ? <ChevronDown /> : <ChevronRight />}
                     </Icon>
                   ) : (
                     <Box boxSize="4" flexShrink="0" />
                   )}
-                  <Text
-                    as="span"
-                    textStyle="sm"
-                    fontWeight="medium"
-                    truncate
-                  >
+                  <Text as="span" textStyle="sm" fontWeight="medium" truncate>
                     {title}
                   </Text>
                 </HStack>
               </Accordion.ItemTrigger>
 
-              <Menu.Root positioning={{ placement: 'bottom-end' }}>
+              <Menu.Root positioning={{ placement: "bottom-end" }}>
                 <Menu.Trigger asChild>
-                  <IconButton
-                    aria-label="More actions"
-                    variant="ghost"
-                    size="xs"
-                  >
+                  <IconButton aria-label="More actions" variant="ghost" size="xs">
                     <MoreVertical />
                   </IconButton>
                 </Menu.Trigger>
                 <Portal>
                   <Menu.Positioner>
                     <Menu.Content minW="36">
-                      <Menu.Item
-                        value="move-up"
-                        disabled={isFirst}
-                        onSelect={() => onMove(id, 'up')}
-                      >
+                      <Menu.Item value="move-up" disabled={isFirst} onSelect={() => onMove(id, "up")}>
                         <ChevronUp />
                         Move up
                       </Menu.Item>
-                      <Menu.Item
-                        value="move-down"
-                        disabled={isLast}
-                        onSelect={() => onMove(id, 'down')}
-                      >
+                      <Menu.Item value="move-down" disabled={isLast} onSelect={() => onMove(id, "down")}>
                         <ChevronDown />
                         Move down
                       </Menu.Item>
                       <Menu.Separator />
-                      <Menu.Item
-                        value="indent"
-                        disabled={isFirst}
-                        onSelect={() => onMove(id, 'indent')}
-                      >
+                      <Menu.Item value="indent" disabled={isFirst} onSelect={() => onMove(id, "indent")}>
                         <ChevronRight />
                         Indent
                       </Menu.Item>
-                      <Menu.Item
-                        value="outdent"
-                        disabled={level === 0}
-                        onSelect={() => onMove(id, 'outdent')}
-                      >
+                      <Menu.Item value="outdent" disabled={level === 0} onSelect={() => onMove(id, "outdent")}>
                         <ChevronLeft />
                         Outdent
                       </Menu.Item>
@@ -428,71 +323,16 @@ const DraggablePanel = memo(function DraggablePanel({
           </Accordion.Item>
         </Accordion.Root>
       </Card.Root>
-      {instruction?.operation === 'reorder-after' && (
-        <LineIndicator position="bottom" />
-      )}
+      {instruction?.operation === "reorder-after" && dragAndDrop.dropIndicator}
     </Box>
-  );
+  )
 });
 
 export function NestedDragDropDemo() {
   const [items, setItems] = useState<Tree>(initialData);
   const [activeId, setActiveId] = useState<string>(initialData[0]!.id);
 
-  useEffect(() => {
-    /*
-     * Monitors listen to all events for a draggable entity.
-     * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/monitors
-     */
-    return monitorForElements({
-      onDrop({ source, location }) {
-        /**
-         * The inner-most drop target. We look from the deepest possible
-         * drop target upwards.
-         * See: https://atlassian.design/components/pragmatic-drag-and-drop/core-package/drop-targets#nested-drop-targets
-         */
-        const target = location.current.dropTargets[0];
-
-        if (!target) return;
-
-        const sourceId = source.data.id as string;
-        const targetId = target.data.id as string;
-
-        if (sourceId === targetId) return;
-
-        const instruction: Instruction | null = extractInstruction(target.data);
-
-        if (!instruction) return;
-        if (instruction.blocked) return;
-
-        const itemToMove = findItem(items, sourceId);
-        if (!itemToMove) return;
-
-        let updatedTree = removeItem(items, sourceId);
-
-        /*
-         * `@atlaskit/pragmatic-drag-and-drop-hitbox` calculates the user intent.
-         * We can get that user intent using `extractInstruction`.
-         *
-         * The type of operation can be:
-         * - `combine` - it means that the user is hovering over the center of a drop target.
-         * - `reorder-before` - it means that the user is hovering close to the upper edge of a drop target.
-         * - `reorder-after` - it means that the user is hovering close to the lower edge of a drop target.
-         *
-         * See: https://atlassian.design/components/pragmatic-drag-and-drop/optional-packages/hitbox/about
-         */
-        if (instruction.operation === 'combine') {
-          updatedTree = insertChild(updatedTree, targetId, itemToMove);
-        } else if (instruction.operation === 'reorder-before') {
-          updatedTree = insertBefore(updatedTree, targetId, itemToMove);
-        } else if (instruction.operation === 'reorder-after') {
-          updatedTree = insertAfter(updatedTree, targetId, itemToMove);
-        }
-
-        setItems(updatedTree);
-      },
-    });
-  }, [items]);
+  useNestedTreeDropMonitor({ setItems });
 
   const handleMove = (
     id: string,
