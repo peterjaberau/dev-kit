@@ -114,7 +114,7 @@ const treeViewControllerPayloads = {
   compositionUncontrolled: {
     title: "Uncontrolled composition root",
     description:
-      "Rows are custom JSX using Node, NodeStart, NodeContent, and NodeEnd; Root owns internal state.",
+      "Rows are custom JSX using Node, ItemStart, ItemContent, and ItemEnd; Root owns internal state.",
     controls: [
       {
         id: "fullRowHighlight",

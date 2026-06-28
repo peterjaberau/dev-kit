@@ -7,10 +7,11 @@ export const treeViewRecipe = defineSlotRecipe({
     "label",
     "tree",
     "node",
-    "nodeIndent",
-    "nodeStart",
-    "nodeContent",
-    "nodeEnd",
+    "item",
+    "itemIndent",
+    "itemStart",
+    "itemContent",
+    "itemEnd",
     "nodeChild",
     "toggle",
     "icon",
@@ -47,20 +48,15 @@ export const treeViewRecipe = defineSlotRecipe({
       outline: "none",
     },
     node: {
-      "--node-indent-width": "max(8px, calc(var(--level) * 8px))",
-      display: "grid",
-      gridTemplateColumns:
-        "var(--node-indent-width) var(--tree-start-width) minmax(0, 1fr) auto",
-      gridTemplateAreas: `
-        "node-indent node-start node-content node-end"
-        ". node-child node-child node-child"
-      `,
-      alignItems: "center",
-      minH: 8,
+      "--item-indent-width": "max(8px, calc(var(--level) * 8px))",
+      display: "flex",
+      flexDirection: "column",
+      gap: 0.5,
       color: "fg",
       contentVisibility: "auto",
       containIntrinsicSize: "auto 2rem",
       position: "relative",
+      isolation: "isolate",
       outline: "none",
       "& > [data-slot]": {
         position: "relative",
@@ -72,22 +68,37 @@ export const treeViewRecipe = defineSlotRecipe({
         outlineOffset: "2px",
       },
     },
-    nodeIndent: {
-      gridArea: "node-indent",
+    item: {
+      display: "grid",
+      gridTemplateColumns:
+        "var(--item-indent-width) var(--tree-start-width) minmax(0, 1fr) auto",
+      gridTemplateAreas: `
+        "item-indent item-start item-content item-end"
+      `,
+      alignItems: "center",
+      minH: 8,
+      position: "relative",
+      "& > [data-slot]": {
+        position: "relative",
+        zIndex: 1,
+      },
+    },
+    itemIndent: {
+      gridArea: "item-indent",
       alignSelf: "stretch",
       w: "full",
       minH: 8,
       minW: 0,
     },
-    nodeStart: {
-      gridArea: "node-start",
+    itemStart: {
+      gridArea: "item-start",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       minH: 8,
     },
-    nodeContent: {
-      gridArea: "node-content",
+    itemContent: {
+      gridArea: "item-content",
       display: "flex",
       alignItems: "center",
       gap: 2,
@@ -96,8 +107,8 @@ export const treeViewRecipe = defineSlotRecipe({
       ps: 2,
       cursor: "default",
     },
-    nodeEnd: {
-      gridArea: "node-end",
+    itemEnd: {
+      gridArea: "item-end",
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-end",
@@ -105,11 +116,10 @@ export const treeViewRecipe = defineSlotRecipe({
       pe: 2,
     },
     nodeChild: {
-      gridArea: "node-child",
       display: "flex",
       flexDirection: "column",
       gap: 0.5,
-      mt: 0.5,
+      ms: "var(--item-indent-width)",
     },
     toggle: {
       display: "inline-flex",
@@ -167,18 +177,18 @@ export const treeViewRecipe = defineSlotRecipe({
     fullRowHighlight: {
       true: {
         node: {
-          "&:hover:not(:has(> [data-slot=node-child]:hover)) > :is([data-slot=node-indent], [data-slot=node-start], [data-slot=node-content], [data-slot=node-end])":
+          "&:hover:not(:has(> [data-slot=node-child]:hover)) > [data-slot=item] > :is([data-slot=item-indent], [data-slot=item-start], [data-slot=item-content], [data-slot=item-end])":
             {
               bg: "bg.subtle",
             },
-          "&[data-selected] > :is([data-slot=node-indent], [data-slot=node-start], [data-slot=node-content], [data-slot=node-end])":
+          "&[data-selected] > [data-slot=item] > :is([data-slot=item-indent], [data-slot=item-start], [data-slot=item-content], [data-slot=item-end])":
             {
               bg: "colorPalette.subtle",
             },
-          "& > [data-slot=node-indent]": {
+          "& > [data-slot=item] > [data-slot=item-indent]": {
             borderStartRadius: "sm",
           },
-          "& > [data-slot=node-end]": {
+          "& > [data-slot=item] > [data-slot=item-end]": {
             borderEndRadius: "sm",
           },
           "&[data-selected]": {
@@ -188,31 +198,31 @@ export const treeViewRecipe = defineSlotRecipe({
       },
       false: {
         node: {
-          "&:hover:not(:has(> [data-slot=node-child]:hover)) > :is([data-slot=node-content], [data-slot=node-end])":
+          "&:hover:not(:has(> [data-slot=node-child]:hover)) > [data-slot=item] > :is([data-slot=item-content], [data-slot=item-end])":
             {
               bg: "bg.subtle",
             },
-          "&[data-selected] > :is([data-slot=node-content], [data-slot=node-end])":
+          "&[data-selected] > [data-slot=item] > :is([data-slot=item-content], [data-slot=item-end])":
             {
               bg: "colorPalette.subtle",
             },
-          "&[data-branch=true]:hover:not(:has(> [data-slot=node-child]:hover)) > [data-slot=node-start]":
+          "&[data-branch=true]:hover:not(:has(> [data-slot=node-child]:hover)) > [data-slot=item] > [data-slot=item-start]":
             {
               bg: "bg.subtle",
             },
-          "&[data-branch=true][data-selected] > [data-slot=node-start]": {
+          "&[data-branch=true][data-selected] > [data-slot=item] > [data-slot=item-start]": {
             bg: "colorPalette.subtle",
           },
-          "& > [data-slot=node-content]": {
+          "& > [data-slot=item] > [data-slot=item-content]": {
             borderStartRadius: "sm",
           },
-          "&[data-branch=true] > [data-slot=node-start]": {
+          "&[data-branch=true] > [data-slot=item] > [data-slot=item-start]": {
             borderStartRadius: "sm",
           },
-          "&[data-branch=true] > [data-slot=node-content]": {
+          "&[data-branch=true] > [data-slot=item] > [data-slot=item-content]": {
             borderStartRadius: "0",
           },
-          "& > [data-slot=node-end]": {
+          "& > [data-slot=item] > [data-slot=item-end]": {
             borderEndRadius: "sm",
           },
           "&[data-selected]": {
@@ -231,7 +241,7 @@ export const treeViewRecipe = defineSlotRecipe({
           "&[data-branch=true]": {
             cursor: "pointer",
           },
-          "&[data-branch=true] > :is([data-slot=node-content], [data-slot=node-end])":
+          "&[data-branch=true] > [data-slot=item] > :is([data-slot=item-content], [data-slot=item-end])":
             {
               cursor: "pointer",
             },
@@ -253,9 +263,8 @@ export const treeViewRecipe = defineSlotRecipe({
         node: {
           "&[data-branch=true]::before": {
             content: "\"\"",
-            gridColumn: "1 / -1",
-            gridRow: "1 / -1",
-            alignSelf: "stretch",
+            position: "absolute",
+            inset: 0,
             borderRadius: "sm",
             pointerEvents: "none",
             zIndex: 0,
@@ -277,9 +286,10 @@ export const treeViewRecipe = defineSlotRecipe({
         node: {
           "&[data-branch=true]::before": {
             content: "\"\"",
-            gridColumn: "2 / -1",
-            gridRow: "1 / -1",
-            alignSelf: "stretch",
+            position: "absolute",
+            insetBlock: 0,
+            insetInlineStart: "var(--item-indent-width)",
+            insetInlineEnd: 0,
             borderRadius: "sm",
             pointerEvents: "none",
             zIndex: 0,

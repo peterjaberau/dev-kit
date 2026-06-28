@@ -3,39 +3,44 @@
 ```typescript jsx
 <TreeView.Root>
   <TreeView.Label />
+
   <TreeView.Tree>
     <TreeView.Node>
-      <TreeView.NodeIndent />
+      <TreeView.Item>
+        <TreeView.ItemIndent />
 
-      <TreeView.NodeStart>
-        <TreeView.Toggle />
-      </TreeView.NodeStart>
+        <TreeView.ItemStart>
+          <TreeView.Toggle />
+        </TreeView.ItemStart>
 
-      <TreeView.NodeContent>
-        <TreeView.Icon />
-        <TreeView.Text />
-      </TreeView.NodeContent>
+        <TreeView.ItemContent>
+          <TreeView.Icon />
+          <TreeView.Text />
+        </TreeView.ItemContent>
 
-      <TreeView.NodeEnd>
-        <TreeView.Meta />
-      </TreeView.NodeEnd>
+        <TreeView.ItemEnd>
+          <TreeView.Meta />
+        </TreeView.ItemEnd>
+      </TreeView.Item>
 
       <TreeView.NodeChild>
         <TreeView.Node>
-          <TreeView.NodeIndent />
+          <TreeView.Item>
+            <TreeView.ItemIndent />
 
-          <TreeView.NodeStart>
-            <TreeView.Toggle />
-          </TreeView.NodeStart>
+            <TreeView.ItemStart>
+              <TreeView.Toggle />
+            </TreeView.ItemStart>
 
-          <TreeView.NodeContent>
-            <TreeView.Icon />
-            <TreeView.Text />
-          </TreeView.NodeContent>
+            <TreeView.ItemContent>
+              <TreeView.Icon />
+              <TreeView.Text />
+            </TreeView.ItemContent>
 
-          <TreeView.NodeEnd>
-            <TreeView.Meta />
-          </TreeView.NodeEnd>
+            <TreeView.ItemEnd>
+              <TreeView.Meta />
+            </TreeView.ItemEnd>
+          </TreeView.Item>
         </TreeView.Node>
       </TreeView.NodeChild>
     </TreeView.Node>
@@ -47,47 +52,51 @@
 # Controlled/provider
 
 ```typescript jsx
-<TreeView.Root>
+<TreeView.RootProvider>
   <TreeView.Label />
 
   <TreeView.Tree>
     <TreeView.Node>
-      <TreeView.NodeIndent />
+      <TreeView.Item>
+        <TreeView.ItemIndent />
 
-      <TreeView.NodeStart>
-        <TreeView.Toggle />
-      </TreeView.NodeStart>
+        <TreeView.ItemStart>
+          <TreeView.Toggle />
+        </TreeView.ItemStart>
 
-      <TreeView.NodeContent>
-        <TreeView.Icon />
-        <TreeView.Text />
-      </TreeView.NodeContent>
+        <TreeView.ItemContent>
+          <TreeView.Icon />
+          <TreeView.Text />
+        </TreeView.ItemContent>
 
-      <TreeView.NodeEnd>
-        <TreeView.Meta />
-      </TreeView.NodeEnd>
+        <TreeView.ItemEnd>
+          <TreeView.Meta />
+        </TreeView.ItemEnd>
+      </TreeView.Item>
 
       <TreeView.NodeChild>
         <TreeView.Node>
-          <TreeView.NodeIndent />
+          <TreeView.Item>
+            <TreeView.ItemIndent />
 
-          <TreeView.NodeStart>
-            <TreeView.Toggle />
-          </TreeView.NodeStart>
+            <TreeView.ItemStart>
+              <TreeView.Toggle />
+            </TreeView.ItemStart>
 
-          <TreeView.NodeContent>
-            <TreeView.Icon />
-            <TreeView.Text />
-          </TreeView.NodeContent>
+            <TreeView.ItemContent>
+              <TreeView.Icon />
+              <TreeView.Text />
+            </TreeView.ItemContent>
 
-          <TreeView.NodeEnd>
-            <TreeView.Meta />
-          </TreeView.NodeEnd>
+            <TreeView.ItemEnd>
+              <TreeView.Meta />
+            </TreeView.ItemEnd>
+          </TreeView.Item>
         </TreeView.Node>
       </TreeView.NodeChild>
     </TreeView.Node>
   </TreeView.Tree>
-</TreeView.Root>
+</TreeView.RootProvider>
 ```
 
 
@@ -98,23 +107,35 @@
   <TreeView.Label>Machine parts</TreeView.Label>
   <TreeView.JsonTree />
 </TreeView.Root>
-```
 
+// internally renders
+<TreeView.Tree>
+  <TreeView.Node>
+    <TreeView.Item>
+      <TreeView.ItemIndent />
+      <TreeView.ItemStart>
+        <TreeView.Toggle />
+      </TreeView.ItemStart>
+      <TreeView.ItemContent />
+      <TreeView.ItemEnd />
+    </TreeView.Item>
 
-# Convenience wrapper version:
-```typescript jsx
+    <TreeView.NodeChild />
+  </TreeView.Node>
+</TreeView.Tree>
+
+// convenience wrapper version
 <TreeView.View
   label="Machine parts"
   nodes={nodes}
 />
 ```
 
-# JSON/data-driven - controlled/provider
 
+# Convenience wrapper version:
 ```typescript jsx
-<TreeView.RootProvider>
-  <TreeView.Label />
-
+<TreeView.RootProvider value={treeView}>
+  <TreeView.Label>Machine parts</TreeView.Label>
   <TreeView.JsonTree />
 </TreeView.RootProvider>
 ```
