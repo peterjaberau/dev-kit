@@ -43,6 +43,8 @@
       "#utils": ["./src/utils"],
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
+      "#atlaskit-modules/*": ["./src/modules/atlaskit/*"],
+      "#atlaskit-modules": ["./src/modules/atlaskit"],
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
       "#app/*": ["./src/app/*"],
