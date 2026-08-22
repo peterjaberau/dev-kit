@@ -1,6 +1,28 @@
 "use client"
-import DraggablePanelAppShell from "./components/draggable-panel-appshell"
+import AppShell from "./module"
 
 export default function Page() {
-  return <DraggablePanelAppShell />
+  return (
+    <AppShell
+      data={[]}
+      config={{
+        header: {},
+        leftSidebar: {},
+        leftPanel: {
+          isExpanded: true,
+          isPinned: true,
+        },
+        rightPanel: {
+          isExpanded: true,
+          isPinned: true,
+        },
+        rightSidebar: {},
+        bottomPanel: {
+          isExpanded: true,
+          isPinned: true,
+        },
+        statusBar: {},
+      }}
+    />
+  )
 }

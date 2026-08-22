@@ -3,18 +3,20 @@ import { useState } from "react"
 import { Flexbox } from "react-layout-kit"
 import { Button, HStack, Flex, IconButton, Text } from "@chakra-ui/react"
 import { LuFolder as IconFolder, LuFolderOpen as IconFolderOpen } from "react-icons/lu"
-
 import { DraggablePanel } from "@dev-kit/components"
+import { useAppShell } from "../providers"
 
-function DraggablePanelAppShell() {
-  const [expandLeft, setExpandLeft] = useState(true)
-  const [pinLeft, setPinLeft] = useState(true)
+function AppShell() {
+  const {
+    appShellConfig,
+    expandLeftPanel,
+    expandRightPanel,
+    expandBottomPanel,
+    pinLeftPanel,
+    pinRightPanel,
+    pinBottomPanel
+  } = useAppShell()
 
-  const [expandRight, setExpandRight] = useState(true)
-  const [pinRight, setPinRight] = useState(true)
-
-  const [expandBottom, setExpandBottom] = useState(true)
-  const [pinBottom, setPinBottom] = useState(true)
 
   return (
     <Flexbox direction={"vertical"} height={"100%"} style={{ position: "relative" }} width={"100%"}>
@@ -38,8 +40,15 @@ function DraggablePanelAppShell() {
             gap: 2,
           }}
         >
-          <Button onClick={() => setExpandLeft(!expandLeft)} size="xs" variant={expandLeft ? "subtle" : "ghost"}>
-            {expandLeft ? <IconFolderOpen /> : <IconFolder />} Left Panel
+          <Button
+            onClick={expandLeftPanel}
+            size="xs"
+            variant={appShellConfig.leftPanel.isExpanded ? "subtle" : "ghost"}
+          >
+            {appShellConfig.leftPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />} Left Expand
+          </Button>
+          <Button onClick={pinLeftPanel} size="xs" variant={appShellConfig.leftPanel.isPinned ? "subtle" : "ghost"}>
+            {appShellConfig.leftPanel.isPinned ? <IconFolderOpen /> : <IconFolder />} Left Pin
           </Button>
         </Flex>
         {/* Header - center */}
@@ -55,8 +64,15 @@ function DraggablePanelAppShell() {
             gap: 2,
           }}
         >
-          <Button onClick={() => setExpandBottom(!expandBottom)} size="xs" variant={expandBottom ? "subtle" : "ghost"}>
-            {expandBottom ? <IconFolderOpen /> : <IconFolder />} Bottom Panel
+          <Button
+            onClick={expandBottomPanel}
+            size="xs"
+            variant={appShellConfig.bottomPanel.isExpanded ? "subtle" : "ghost"}
+          >
+            {appShellConfig.bottomPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />} Bottom Panel
+          </Button>
+          <Button onClick={pinBottomPanel} size="xs" variant={appShellConfig.bottomPanel.isPinned ? "subtle" : "ghost"}>
+            {appShellConfig.bottomPanel.isPinned ? <IconFolderOpen /> : <IconFolder />} Bottom Pin
           </Button>
         </Flex>
 
@@ -68,8 +84,15 @@ function DraggablePanelAppShell() {
             gap: 2,
           }}
         >
-          <Button onClick={() => setExpandRight(!expandRight)} size="xs" variant={expandRight ? "subtle" : "ghost"}>
-            {expandRight ? <IconFolderOpen /> : <IconFolder />} Right Panel
+          <Button
+            onClick={expandRightPanel}
+            size="xs"
+            variant={appShellConfig.rightPanel.isExpanded ? "subtle" : "ghost"}
+          >
+            {appShellConfig.rightPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />} Right Expand
+          </Button>
+          <Button onClick={pinRightPanel} size="xs" variant={appShellConfig.rightPanel.isPinned ? "subtle" : "ghost"}>
+            {appShellConfig.rightPanel.isPinned ? <IconFolderOpen /> : <IconFolder />} Right Pin
           </Button>
         </Flex>
       </Flex>
@@ -102,8 +125,12 @@ function DraggablePanelAppShell() {
               gap: 2,
             }}
           >
-            <IconButton onClick={() => setExpandLeft(!expandLeft)} size="xs" variant={expandLeft ? "subtle" : "ghost"}>
-              {expandLeft ? <IconFolderOpen /> : <IconFolder />}
+            <IconButton
+              onClick={expandLeftPanel}
+              size="xs"
+              variant={appShellConfig.leftPanel.isExpanded ? "subtle" : "ghost"}
+            >
+              {appShellConfig.leftPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />}
             </IconButton>
             <IconButton size="xs" variant="ghost" disabled>
               <IconFolder />
@@ -149,24 +176,24 @@ function DraggablePanelAppShell() {
 
         {/* left draggable panel */}
         <DraggablePanel
-          expand={expandLeft}
-          mode={pinLeft ? "fixed" : "float"}
+          expand={appShellConfig.leftPanel.isExpanded}
+          mode={appShellConfig.leftPanel.isPinned ? "fixed" : "float"}
           css={
-            !pinLeft && {
+            !appShellConfig.leftPanel.isPinned && {
               left: "50px",
             }
           }
           showHandleHighlight={true}
-          pin={pinLeft}
+          pin={appShellConfig.leftPanel.isPinned}
           placement="left"
-          onExpandChange={setExpandLeft}
+          onExpandChange={expandLeftPanel}
         >
           <DraggablePanel.Container style={{ flex: 1 }}>
             <DraggablePanel.Header
-              pin={pinLeft}
+              pin={appShellConfig.leftPanel.isPinned}
               position="left"
-              setExpand={setExpandLeft}
-              setPin={setPinLeft}
+              setExpand={expandLeftPanel}
+              setPin={pinLeftPanel}
               title="Header Left"
             />
             <DraggablePanel.Body>
@@ -198,18 +225,18 @@ function DraggablePanelAppShell() {
           </Flexbox>
           <DraggablePanel
             showHandleHighlight={true}
-            expand={expandBottom}
-            mode={pinBottom ? "fixed" : "float"}
-            pin={pinBottom}
+            expand={appShellConfig.bottomPanel.isExpanded}
+            mode={appShellConfig.bottomPanel.isPinned ? "fixed" : "float"}
+            pin={appShellConfig.bottomPanel.isPinned}
             placement="bottom"
-            onExpandChange={setExpandBottom}
+            onExpandChange={expandBottomPanel}
           >
             <DraggablePanel.Container style={{ flex: 1 }}>
               <DraggablePanel.Header
-                pin={pinBottom}
+                pin={appShellConfig.bottomPanel.isPinned}
                 position="right"
-                setExpand={setExpandBottom}
-                setPin={setPinBottom}
+                setExpand={expandBottomPanel}
+                setPin={pinBottomPanel}
                 title="Header Bottom"
               />
               <DraggablePanel.Body>
@@ -226,23 +253,23 @@ function DraggablePanelAppShell() {
         {/* right draggable panel */}
         <DraggablePanel
           showHandleHighlight={true}
-          expand={expandRight}
-          mode={pinRight ? "fixed" : "float"}
-          pin={pinRight}
+          expand={appShellConfig.rightPanel.isExpanded}
+          mode={appShellConfig.rightPanel.isPinned ? "fixed" : "float"}
+          pin={appShellConfig.rightPanel.isPinned}
           css={
-            !pinRight && {
+            !appShellConfig.rightPanel.isPinned && {
               right: "50px",
             }
           }
           placement="right"
-          onExpandChange={setExpandRight}
+          onExpandChange={expandRightPanel}
         >
           <DraggablePanel.Container style={{ flex: 1 }}>
             <DraggablePanel.Header
-              pin={pinRight}
+              pin={appShellConfig.rightPanel.isPinned}
               position="right"
-              setExpand={setExpandRight}
-              setPin={setPinRight}
+              setExpand={expandRightPanel}
+              setPin={pinRightPanel}
               title="Header Right"
             />
             <DraggablePanel.Body>DraggablePanel Right</DraggablePanel.Body>
@@ -271,11 +298,11 @@ function DraggablePanelAppShell() {
             }}
           >
             <IconButton
-              onClick={() => setExpandRight(!expandRight)}
+              onClick={expandRightPanel}
               size="xs"
-              variant={expandRight ? "subtle" : "ghost"}
+              variant={appShellConfig.rightPanel.isExpanded ? "subtle" : "ghost"}
             >
-              {expandRight ? <IconFolderOpen /> : <IconFolder />}
+              {appShellConfig.rightPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />}
             </IconButton>
           </Flex>
           {/* Left Sidebar - center */}
@@ -337,8 +364,8 @@ function DraggablePanelAppShell() {
             gap: 2,
           }}
         >
-          <Button onClick={() => setExpandLeft(!expandLeft)} size="xs" variant={expandLeft ? "subtle" : "ghost"}>
-            {expandLeft ? <IconFolderOpen /> : <IconFolder />} Left Panel
+          <Button onClick={expandLeftPanel} size="xs" variant={appShellConfig.leftPanel.isExpanded ? "subtle" : "ghost"}>
+            {appShellConfig.leftPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />} Left Panel
           </Button>
         </Flex>
         {/* Header - center */}
@@ -354,8 +381,8 @@ function DraggablePanelAppShell() {
             gap: 2,
           }}
         >
-          <Button onClick={() => setExpandBottom(!expandBottom)} size="xs" variant={expandBottom ? "subtle" : "ghost"}>
-            {expandBottom ? <IconFolderOpen /> : <IconFolder />} Bottom Panel
+          <Button onClick={expandBottomPanel} size="xs" variant={appShellConfig.bottomPanel.isExpanded ? "subtle" : "ghost"}>
+            {appShellConfig.bottomPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />} Bottom Panel
           </Button>
         </Flex>
 
@@ -367,8 +394,8 @@ function DraggablePanelAppShell() {
             gap: 2,
           }}
         >
-          <Button onClick={() => setExpandRight(!expandRight)} size="xs" variant={expandRight ? "subtle" : "ghost"}>
-            {expandRight ? <IconFolderOpen /> : <IconFolder />} Right Panel
+          <Button onClick={expandRightPanel} size="xs" variant={appShellConfig.rightPanel.isExpanded ? "subtle" : "ghost"}>
+            {appShellConfig.rightPanel.isExpanded ? <IconFolderOpen /> : <IconFolder />} Right Panel
           </Button>
         </Flex>
       </Flex>
@@ -376,4 +403,4 @@ function DraggablePanelAppShell() {
   )
 }
 
-export default DraggablePanelAppShell
+export default AppShell
