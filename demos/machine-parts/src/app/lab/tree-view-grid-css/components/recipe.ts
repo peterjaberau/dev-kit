@@ -112,6 +112,7 @@ export const treeViewRecipe = defineSlotRecipe({
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-end",
+      gap: 2,
       minH: 8,
       pe: 2,
     },

@@ -45,6 +45,9 @@
       "#modules": ["./src/modules"],
       "#atlaskit-modules/*": ["./src/modules/atlaskit/*"],
       "#atlaskit-modules": ["./src/modules/atlaskit"],
+
+      "#zeugma-panels/*": ["./src/app/lab/zeugma-panels/*"],
+      "#zeugma-panels": ["./src/app/lab/zeugma-panels"],
       "#components/*": ["./src/components/*"],
       "#components": ["./src/components"],
       "#app/*": ["./src/app/*"],

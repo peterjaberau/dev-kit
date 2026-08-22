@@ -42,6 +42,8 @@ export const useTreeView = <TNode extends TreeViewDataNode>(
   const isBranch = (node: TNode) => Boolean(node.children?.length);
   const isExpanded = (node: TNode) => expandedIds.has(node.id);
   const isSelected = (node: TNode) => selectedId === node.id;
+  const isTopLevelNode = (node: TNode) =>
+    nodes.some((topLevelNode) => topLevelNode.id === node.id);
 
   const selectNode = (node: TNode) => setSelectedId(node.id);
 
@@ -67,6 +69,7 @@ export const useTreeView = <TNode extends TreeViewDataNode>(
     isBranch,
     isExpanded,
     isSelected,
+    isTopLevelNode,
     selectNode,
     toggleNode,
     getNodeProps: ({ node, level }) => ({

@@ -96,6 +96,7 @@ export const DraggablePanel = memo<DraggablePanelProps>(
     styles: customStyles,
     classNames,
     dir,
+    css,
   }) => {
     const ref = useRef<HTMLDivElement>(null)
     const isHovering = useHover(ref)
@@ -299,7 +300,10 @@ export const DraggablePanel = memo<DraggablePanelProps>(
       return (
         <chakra.div
           data-part={"draggable-panel-root"}
-          css={stylesFromRecipe.root}
+          css={{
+            ...stylesFromRecipe.root,
+            ...css,
+          }}
           className={className}
           style={cssVariables}
         >
@@ -315,7 +319,11 @@ export const DraggablePanel = memo<DraggablePanelProps>(
         ref={ref}
         style={cssVariables}
         className={className}
-        css={stylesFromRecipe.root}
+        css={{
+          ...stylesFromRecipe.root,
+          ...css
+        }
+      }
       >
         {destroyOnClose ? isExpand && inner : inner}
       </chakra.div>

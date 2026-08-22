@@ -43,13 +43,13 @@ export interface DraggablePanelProps extends DivProps {
    */
   showBorder?: boolean
   showHandleHighlight?: boolean
-  showHandleWhenCollapsed?: boolean
   showHandleWideArea?: boolean
   size?: Partial<Size>
   styles?: {
     content?: CSSProperties
     handle?: CSSProperties
-  }
+  },
+  css?: any
 }
 
 export interface DraggablePanelHeaderProps extends Omit<DivProps, "children"> {

@@ -46,6 +46,7 @@ export type TreeViewApi<TNode extends TreeViewDataNode = TreeViewDataNode> = {
   isBranch: (node: TNode) => boolean;
   isExpanded: (node: TNode) => boolean;
   isSelected: (node: TNode) => boolean;
+  isTopLevelNode: (node: TNode) => boolean;
   selectNode: (node: TNode) => void;
   toggleNode: (node: TNode) => void;
   getNodeProps: (details: {

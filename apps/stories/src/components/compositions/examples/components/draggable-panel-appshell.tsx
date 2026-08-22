@@ -84,7 +84,6 @@ export function DraggablePanelAppShell() {
         <DraggablePanel
           expand={expandLeft}
           mode={pinLeft ? "fixed" : "float"}
-          showHandleWhenCollapsed={true}
           showHandleHighlight={true}
           pin={pinLeft}
           placement="left"
@@ -125,7 +124,6 @@ export function DraggablePanelAppShell() {
             content
           </Flexbox>
           <DraggablePanel
-            showHandleWhenCollapsed={true}
             showHandleHighlight={true}
             expand={expandBottom}
             mode={pinBottom ? "fixed" : "float"}
@@ -153,7 +151,6 @@ export function DraggablePanelAppShell() {
         </Flexbox>
 
         <DraggablePanel
-          showHandleWhenCollapsed={true}
           showHandleHighlight={true}
           expand={expandRight}
           mode={pinRight ? "fixed" : "float"}
