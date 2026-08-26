@@ -1,0 +1,27 @@
+{
+  "name": "@dev-kit/dockview-demo",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3055",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@dev-kit/components": "workspace:*",
+    "@dev-kit/icons": "workspace:*",
+    "next": "^16.3.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "next-themes": "npm:@teispace/next-themes@^3.0.0",
+    "react-rnd": "^10.5.2",
+    "react-use": "17.6.0",
+    "react-use-measure": "^2.1.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "typescript": "^5.8.3",
+    "@types/node": "^20.0.0"
+  }
+}

@@ -1,0 +1,51 @@
+export const dockViewCssVariables = {
+  "--dv-paneview-active-outline-color": "dodgerblue",
+  "--dv-tabs-and-actions-container-font-size": "13px",
+  "--dv-tabs-and-actions-container-height": "38px",
+  "--dv-drag-over-background-color": "#53595d80",
+  "--dv-drag-over-border-color": "transparent",
+  "--dv-tabs-container-scrollbar-color": "#888",
+  "--dv-icon-hover-background-color": "#5a5d5e4f",
+  "--dv-floating-box-shadow": "8px 8px 8px 0px #53595d80",
+  "--dv-overlay-z-index": 999,
+  // "--dv-tab-font-size": "inherit",
+  // "--dv-border-radius": "0px",
+  // "--dv-tab-margin": 0,
+  "--dv-sash-color": "#cfd1d3",
+  "--dv-active-sash-color": "#babbbb",
+  "--dv-active-sash-transition-duration": ".1s",
+  "--dv-active-sash-transition-delay": "0.5s",
+
+  "--dv-scrollbar-background-color": "#00000040",
+  "--dv-tabs-and-actions-container-background-color": "colors.bg.panel",
+  "--dv-tab-divider-color": "transparent",
+  "--dv-separator-border": "#transparent",
+  "--dv-paneview-header-border-color": "#333",
+
+  "--dv-group-view-background-color": "colors.transparent",
+
+  // "--dv-activegroup-visiblepanel-tab-background-color": "#f0f1f2",
+  "--dv-activegroup-hiddenpanel-tab-background-color": "#fcfcfc",
+  "--dv-activegroup-visiblepanel-tab-color": "#333",
+  "--dv-activegroup-hiddenpanel-tab-color": "#333",
+
+  "--dv-inactivegroup-visiblepanel-tab-background-color": "#f0f1f2",
+  "--dv-inactivegroup-hiddenpanel-tab-background-color": "#fcfcfc",
+  "--dv-inactivegroup-visiblepanel-tab-color": "#333",
+  "--dv-inactivegroup-hiddenpanel-tab-color": "#333",
+
+  "--dv-groupview-border-radius": "radii.none",
+
+  "--dv-groupview-tabs-and-actions-container-tab-hover-background-color": "#e4e5e6",
+  "--dv-groupview-content-container-background-color": "#fcfcfc",
+  "--dv-groupview-active-group-border": "1px solid",
+  "--dv-groupview-active-group-border-color": "#80808059",
+  "--dv-groupview-inactive-group-border": "1px solid",
+  "--dv-groupview-inactive-group-border-color": "#0000",
+
+  height: "100vh",
+  position: "relative",
+  background: "bg.emphasized",
+  flex: 1,
+  p: 2,
+}
