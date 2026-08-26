@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @custom-variant dark (&:where(.dark, .dark *));
+@variant light (&:where([data-theme='light'], [data-theme='light'] *));
 
 @custom-variant dark (&:is(.dark *));
 
@@ -61,7 +62,101 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+@theme {
+  --color-site-bg: var(--site-bg);
+  --color-site-fg: var(--site-fg);
+  --color-site-fg-soft: var(--site-fg-soft);
+  --color-site-muted: var(--site-muted);
+  --color-site-border: var(--site-border);
+  --color-site-surface: var(--site-surface);
+  --color-site-surface-2: var(--site-surface-2);
+  --color-site-shell-bg: var(--site-shell-bg);
+  --color-site-accent: var(--site-accent);
+  --color-site-workspace-accent: var(--site-workspace-accent);
+  --color-site-link-hover: var(--site-link-hover);
+  --color-site-nav-hover-border: var(--site-nav-hover-border);
+  --color-site-overlay: var(--site-overlay);
+  --color-site-overlay-soft: var(--site-overlay-soft);
+  --color-site-overlay-weak: var(--site-overlay-weak);
+  --color-site-sidebar-bg: var(--site-sidebar-bg);
+  --color-site-sidebar-border: var(--site-sidebar-border);
+  --color-site-shell-border: var(--site-shell-border);
+  --color-site-chrome-bg: var(--site-chrome-bg);
+  --color-site-chrome-bg-hover: var(--site-chrome-bg-hover);
+  --color-site-chrome-border: var(--site-chrome-border);
+  --color-site-chrome-fg: var(--site-chrome-fg);
+  --color-site-button-primary-bg: var(--site-button-primary-bg);
+  --color-site-button-primary-fg: var(--site-button-primary-fg);
+  --color-site-success-fg: var(--site-success-fg);
+  --color-site-success-border: var(--site-success-border);
+  --color-site-success-bg: var(--site-success-bg);
+  --color-site-danger-fg: var(--site-danger-fg);
+  --color-site-danger-border: var(--site-danger-border);
+  --color-site-danger-bg: var(--site-danger-bg);
+  --font-site: var(--site-font);
+  --font-mono: var(--site-mono);
+}
+
 :root {
+  /*tilery*/
+  color-scheme: light;
+  --site-bg: #0e0f12;
+  --site-fg: #d9dde3;
+  --site-fg-soft: #b8bec8;
+  --site-muted: #9aa1ab;
+  --site-border: #2a2d33;
+  --site-surface: #16181c;
+  --site-surface-2: #1a1c20;
+  --site-shell-bg: #08090b;
+  --site-accent: #a3e635;
+  --site-workspace-accent: #a3e635;
+  --site-link-hover: #bef264;
+
+  --site-overlay: rgba(255, 255, 255, 0.06);
+  --site-overlay-soft: rgba(255, 255, 255, 0.04);
+  --site-overlay-weak: rgba(255, 255, 255, 0.02);
+  --site-sidebar-bg: rgba(255, 255, 255, 0.04);
+  --site-sidebar-border: rgba(255, 255, 255, 0.06);
+  --site-shell-border: rgba(255, 255, 255, 0.1);
+  --site-nav-hover-border: rgba(163, 230, 53, 0.56);
+  --site-shadow: 0 28px 100px rgba(0, 0, 0, 0.34);
+
+  --site-button-primary-bg: #f2f5fa;
+  --site-button-primary-fg: #050608;
+
+  --site-chrome-bg: #20242b;
+  --site-chrome-bg-hover: #272d36;
+  --site-chrome-border: #3a404a;
+  --site-chrome-fg: #c4cad4;
+
+  --site-success-fg: #b8f5d0;
+  --site-success-border: #377a55;
+  --site-success-bg: #1d3528;
+  --site-danger-fg: #ffd1d1;
+  --site-danger-border: #8d4b4b;
+  --site-danger-bg: #3a2528;
+
+  --site-fade-rgb: 22 24 28;
+
+  --site-nav-height: 48px;
+  --site-sidebar-width: 248px;
+  --site-font:
+          'Mona Sans Variable', 'Mona Sans', system-ui, -apple-system, sans-serif;
+  --site-mono: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+
+  --home-workspace-glow: color-mix(
+          in srgb,
+          var(--site-workspace-accent),
+          transparent 62%
+  );
+  --home-workspace-glow-soft: color-mix(
+          in srgb,
+          var(--site-workspace-accent),
+          transparent 84%
+  );
+
+  /*app*/
+
 
   --bg-app: #fcfcfd;
   --bg-sidebar: #f4f4f5;
@@ -157,13 +252,23 @@
 }
 
 @layer base {
-  * {
+  *,
+  *::before,
+  *::after {
     @apply border-border outline-ring/50;
 
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: rgba(100, 100, 100, 0.3) transparent;
+    margin: 0;
+    padding: 0;
   }
+
+  button {
+    border: none;
+    font: inherit;
+  }
+
   body {
     @apply bg-background text-foreground;
 
@@ -178,6 +283,57 @@
   }
 }
 
+[data-theme='light'] {
+  color-scheme: light;
+
+  --site-bg: #ffffff;
+  --site-fg: #1b1f24;
+  --site-fg-soft: #3c4450;
+  --site-muted: #5a626d;
+  --site-border: #e2e5ea;
+  --site-surface: #f3f4f6;
+  --site-surface-2: #e9ebef;
+  --site-shell-bg: #eef0f3;
+  --site-accent: #4d7c0f;
+  --site-link-hover: #3f6212;
+
+  --site-overlay: rgba(15, 23, 42, 0.07);
+  --site-overlay-soft: rgba(15, 23, 42, 0.045);
+  --site-overlay-weak: rgba(15, 23, 42, 0.025);
+  --site-sidebar-bg: #ffffff;
+  --site-sidebar-border: rgba(15, 23, 42, 0.12);
+  --site-shell-border: rgba(15, 23, 42, 0.1);
+  --site-nav-hover-border: rgba(77, 124, 15, 0.5);
+  --site-shadow: 0 24px 70px rgba(15, 23, 42, 0.14);
+
+  --site-button-primary-bg: #14171b;
+  --site-button-primary-fg: #f6f7f9;
+
+  --site-chrome-bg: #ffffff;
+  --site-chrome-bg-hover: #eef0f3;
+  --site-chrome-border: #d4d9e0;
+  --site-chrome-fg: #46505f;
+
+  --site-success-fg: #146c43;
+  --site-success-border: #9cd9b5;
+  --site-success-bg: #e3f6ea;
+  --site-danger-fg: #b42318;
+  --site-danger-border: #f0b4b0;
+  --site-danger-bg: #fdeceb;
+
+  --site-fade-rgb: 243 244 246;
+
+  --home-workspace-glow: color-mix(
+          in srgb,
+          var(--site-workspace-accent),
+          transparent 74%
+  );
+  --home-workspace-glow-soft: color-mix(
+          in srgb,
+          var(--site-workspace-accent),
+          transparent 90%
+  );
+}
 
 
 

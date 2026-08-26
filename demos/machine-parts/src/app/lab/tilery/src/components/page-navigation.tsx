@@ -1,0 +1,47 @@
+import Link from 'next/link';
+import type { SiteNavigationItem } from '../content/navigation';
+import { cn } from '../lib/cn';
+
+const linkClass =
+  'grid gap-1 min-h-16 px-4 py-3.5 content-center border border-site-border rounded-lg text-site-fg bg-site-overlay-weak no-underline hover:border-site-nav-hover-border hover:bg-site-overlay-soft hover:no-underline';
+
+export function PageNavigation({
+  previous,
+  next,
+  className,
+}: {
+  previous: SiteNavigationItem | null;
+  next: SiteNavigationItem | null;
+  className?: string;
+}) {
+  if (!previous && !next) return null;
+
+  return (
+    <nav
+      className={cn('grid grid-cols-2 gap-3.5 mt-13', className)}
+      aria-label="Page navigation">
+      {previous ? (
+        <Link href={previous.href} className={linkClass}>
+          <span className="text-site-muted text-xs font-normal">
+            Previous page
+          </span>
+          <span className="text-site-fg text-base font-medium leading-tight break-anywhere max-lg:truncate">
+            {previous.label}
+          </span>
+        </Link>
+      ) : (
+        <span />
+      )}
+      {next ? (
+        <Link href={next.href} className={cn(linkClass, 'text-right')}>
+          <span className="text-site-muted text-xs font-normal">Next page</span>
+          <span className="text-site-fg text-base font-medium leading-tight break-anywhere max-lg:truncate">
+            {next.label}
+          </span>
+        </Link>
+      ) : (
+        <span />
+      )}
+    </nav>
+  );
+}

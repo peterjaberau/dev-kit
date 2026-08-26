@@ -43,6 +43,8 @@
       "#utils": ["./src/utils"],
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
+      "#tilery/*": ["./src/modules/tilery/*"],
+      "#tilery": ["./src/modules/tilery"],
       "#atlaskit-modules/*": ["./src/modules/atlaskit/*"],
       "#atlaskit-modules": ["./src/modules/atlaskit"],
 
