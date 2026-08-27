@@ -9,7 +9,7 @@ import {
   IDockviewPanelHeaderProps,
   themeReplit,
 } from "#dockview"
-import { DockViewPanels } from "./components/dock-view-panels"
+import { DockViewPanels, DockViewPluginPanels } from "./components/dock-view-panels"
 import React, { useEffect } from "react"
 import { LuX } from "react-icons/lu"
 
@@ -72,7 +72,8 @@ const Index = (props: { theme?: string }) => {
           }}
         >
           <DockviewReact
-            components={DockViewPanels}
+            // components={DockViewPanels}
+            components={DockViewPluginPanels}
             defaultTabComponent={headerComponents.default}
             rightHeaderActionsComponent={RightHeaderActions}
             leftHeaderActionsComponent={LeftHeaderActions}
