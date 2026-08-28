@@ -29,6 +29,8 @@
     "paths": {
       "@/*": ["./*"],
       "~/*": ["./public/*"],
+      "#view/*": ["./src/modules/view/*"],
+      "#view": ["./src/modules/view"],
       "#modules/*": ["./src/modules/*"],
       "#modules": ["./src/modules"],
       "#plugins/*": ["./src/plugins/*"],
