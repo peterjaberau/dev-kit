@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react"
-import { Box, Flex, HStack, Icon as ChakraIcon, Text } from "@chakra-ui/react"
+import { Box, Flex, HStack, Icon as ChakraIcon, Text, ClientOnly } from "@chakra-ui/react"
 import { View } from "#view/react"
 import { usePointerDrag } from "./use-pointer-drag"
 import { RegistryTree, RegistryViewer } from "#plugins/registry-manager-plugin/view"
@@ -39,6 +39,7 @@ export function PlaygroundApp() {
 
 
   return (
+    <ClientOnly>
       <Flex minW="0" minH="0" flex="1" align="center" justify="center" overflow="hidden">
         <Flex
           position="relative"
@@ -51,12 +52,7 @@ export function PlaygroundApp() {
           borderWidth="1px"
           borderColor="border"
         >
-          <Box
-            minH="0"
-            minW="0"
-            flex="1"
-            style={runtime.theme}
-          >
+          <Box minH="0" minW="0" flex="1" style={runtime.theme}>
             <View
               ref={setController as any}
               initialLayout={config.layout}
@@ -79,5 +75,6 @@ export function PlaygroundApp() {
           </Box>
         </Flex>
       </Flex>
+    </ClientOnly>
   )
 }
