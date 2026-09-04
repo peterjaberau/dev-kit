@@ -7,17 +7,19 @@ export const WrapperWithScrollArea = ({
   children: React.ReactNode
 }) => {
   return (
-    <Card.Root size={"sm"} h="100%" w="full" display="flex" flexDirection="column">
-      <Card.Body
-        p={0}
-        flex="1"
-        display="flex"
-        overflow="hidden"
-
-        css={{
-          backgroundColor: "transparent"
-        }}
-      >
+    <Card.Root
+      data-name="wrapper-with-scroll-area"
+      size={"sm"}
+      h="100%"
+      w="full"
+      display="flex"
+      flexDirection="column"
+      css={{
+        backgroundColor: "transparent",
+        border: "none",
+      }}
+    >
+      <Card.Body p={0} flex="1" display="flex" overflow="hidden">
         <Flex
           css={{
             px: 0,
@@ -26,8 +28,13 @@ export const WrapperWithScrollArea = ({
             flexGrow: 1,
           }}
         >
-          <ScrollArea>
-            <Stack  minH={'100%'} justifyContent={"start"} alignItems={"center"} w={"full"} p={4}>
+          <ScrollArea
+            css={{
+              backgroundColor: "transparent",
+              border: "none",
+            }}
+          >
+            <Stack minH={"100%"} justifyContent={"start"} alignItems={"center"} w={"full"} p={1}>
               {children}
             </Stack>
           </ScrollArea>

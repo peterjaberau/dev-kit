@@ -10,23 +10,29 @@ import {
 import { Box, Flex, HStack, Icon as ChakraIcon, Text } from "@chakra-ui/react"
 import { View } from "#view/react"
 import { usePointerDrag } from "./use-pointer-drag"
-import { RegistryTree } from "#plugins/registry-manager-plugin/view"
+import { RegistryTree, RegistryViewer } from "#plugins/registry-manager-plugin/view"
+
 import {
-  RiCodeSLine,
-  RiFileTextLine,
-  RiFolder3Line,
-  RiLayoutLine,
-  RiPulseLine,
-  RiTerminalBoxLine,
-  RiSearch2Line
-} from "react-icons/ri"
-import {
-  PG_DEFAULT_LAYOUT,
-  PG_KIND_LABEL,
-  PG_TAB_KINDS,
+  initialConfig,
   PG_THEMES,
   collectPanels,
 } from "./playground-data"
+
+function renderTabHeader(tab: any) {
+  return <Text as="span">{tab.data.title}</Text>
+}
+
+function renderTabContent(tab: any) {
+  const data = tab.data ?? {}
+  const componentId = data.inputs?.componentId
+
+  return componentId ? (
+    <RegistryViewer componentId={componentId} title={data.title} />
+  ) : (
+    <RegistryTree withCardWrapper={false} actionType="select" />
+  )
+}
+
 
 export function PlaygroundApp() {
   const controllerRef = useRef<any | null>(null)
@@ -34,7 +40,6 @@ export function PlaygroundApp() {
   const seqRef = useRef(0)
 
   const [mounted, setMounted] = useState(false)
-  const [browserUrl, setBrowserUrl] = useState("")
   const stageRef = useRef<HTMLDivElement>(null)
   const browserRef = useRef<HTMLDivElement>(null)
   const [frameSize, setFrameSize] = useState<{
@@ -42,30 +47,9 @@ export function PlaygroundApp() {
     height: number
   } | null>(null)
   const [snapshot, setSnapshot] = useState<any | null>(null)
-  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null)
-  const [selectedTabId, setSelectedTabId] = useState<string | null>(null)
-  const [global, setGlobal] = useState<any>({
-    resizable: true,
-    showActionsButton: true,
-    showNewTabButton: true,
-    resizeHandleHitSize: 24,
-    minSize: 10,
-  })
-  const [themeId, setThemeId] = useState("light")
+  const [themeId, setThemeId] = useState(initialConfig.options.themeId)
 
-  const uid = useCallback((prefix: string) => {
-    idRef.current += 1
-    return `${prefix}-${idRef.current}`
-  }, [])
 
-  const makeTab = useCallback((): any => {
-    seqRef.current += 1
-    const kind: any = PG_TAB_KINDS[seqRef.current % PG_TAB_KINDS.length]
-    return {
-      id: uid("tab"),
-      data: { title: `${PG_KIND_LABEL[kind]} ${seqRef.current}`, kind },
-    }
-  }, [uid])
 
   const refresh = useCallback(() => {
     const controller = controllerRef.current
@@ -74,47 +58,12 @@ export function PlaygroundApp() {
 
   useEffect(() => {
     setMounted(true)
-    setBrowserUrl(window.location.host + window.location.pathname)
   }, [])
+
   useEffect(() => {
     if (mounted) refresh()
   }, [mounted, refresh])
 
-  const panels: any[] = useMemo(() => (snapshot ? collectPanels(snapshot) : []), [snapshot])
-
-  useEffect(() => {
-    setSelectedPanelId((current) => {
-      if (panels.length === 0) return null
-      return current && panels.some((p) => p.id === current) ? current : panels[0].id
-    })
-  }, [panels])
-  useEffect(() => {
-    const panel = panels.find((p) => p.id === selectedPanelId)
-    setSelectedTabId((current) => {
-      if (!panel) return null
-      return current && panel.tabs.some((t: any) => t.id === current) ? current : (panel.tabs[0]?.id ?? null)
-    })
-  }, [panels, selectedPanelId])
-
-  const onActiveTabChange = useCallback(
-    (event: any) => {
-      const change = event.changes.find((c: any) => c.tabId) ?? event.changes[0]
-      if (change?.tabId) {
-        setSelectedPanelId(change.panelId)
-        setSelectedTabId(change.tabId)
-      }
-      console.log({
-        type: "activeTab",
-        detail: event.changes.map((c: any) => `${c.panelId}: ${c.previousTabId ?? "∅"} → ${c.tabId ?? "∅"}`).join(", "),
-      })
-      refresh()
-    },
-    [refresh],
-  )
-
-  const handleNewTab = useCallback<any>(() => makeTab(), [makeTab])
-
-  const themeStyle = useMemo<any>(() => PG_THEMES.find((t) => t.id === themeId)?.style ?? {}, [themeId])
 
   const resizeContextRef = useRef<{
     direction: "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw"
@@ -156,7 +105,6 @@ export function PlaygroundApp() {
 
   return (
     <>
-
       <Flex ref={stageRef} minW="0" minH="0" flex="1" align="center" justify="center" overflow="hidden">
         <Flex
           ref={browserRef}
@@ -187,54 +135,68 @@ export function PlaygroundApp() {
                 fontSize: "var(--chakra-font-sizes-sm)",
               },
             }}
-            style={themeStyle}
+            style={{
+              ...PG_THEMES.find((t) => t.id === initialConfig.options.themeId)?.style,
+            }}
           >
             {mounted ? (
               <View
                 ref={controllerRef as any}
-                initialLayout={PG_DEFAULT_LAYOUT}
-                resizable={global.resizable}
-                minSize={global.minSize}
-                resizeHandleHitSize={global.resizeHandleHitSize}
-                showActionsButton={global.showActionsButton}
-                showNewTabButton={global.showNewTabButton}
-                onNewTab={handleNewTab}
+                initialLayout={initialConfig.layout}
+                resizable={initialConfig.global.resizable}
+                minSize={initialConfig.global.minSize}
+                resizeHandleHitSize={initialConfig.global.resizeHandleHitSize}
+                showActionsButton={initialConfig.global.showActionsButton}
+                showNewTabButton={initialConfig.global.showNewTabButton}
+                onNewTab={() => {
+                  idRef.current += 1
+                  seqRef.current += 1
+                  return {
+                    id: `${initialConfig.options.makeTabPrefix.id}-${idRef.current}`,
+                    data: { title: initialConfig.options.makeTabPrefix.title + ` ${seqRef.current}` },
+                  }
+                }}
                 onChange={refresh}
-                onActiveTabChange={onActiveTabChange}
+                onActiveTabChange={(e: any) =>
+                  console.log({
+                    type: "activeTab",
+                    detail: e,
+                  })
+                }
                 onPanelSplit={(e: any) =>
                   console.log({
                     type: "panelSplit",
-                    detail: `${e.splitPanelId} ${e.direction} → ${e.createdPanelId}`,
+                    detail: e,
                   })
                 }
                 onTabsMove={(e: any) =>
                   console.log({
                     type: "tabsMove",
-                    detail: e.tabs.map((t: any) => `${t.id} → ${t.panelId}`).join(", "),
+                    detail: e,
                   })
                 }
                 onTabsOpen={(e: any) =>
                   console.log({
                     type: "tabsOpen",
-                    detail: e.tabs.map((t: any) => t.id).join(", "),
+                    detail: e,
                   })
                 }
                 onTabsClose={(e: any) =>
                   console.log({
                     type: "tabsClose",
-                    detail: e.tabs.map((t: any) => t.id).join(", "),
+                    detail: e,
                   })
                 }
                 onPanelsOpen={(e: any) =>
                   console.log({
                     type: "panelsOpen",
-                    detail: e.panels.map((p: any) => p.id).join(", "),
+                    detail: e,
                   })
                 }
                 onPanelsClose={(e: any) =>
                   console.log({
                     type: "panelsClose",
-                    detail: e.panels.map((p: any) => p.id).join(", "),
+                    detail: e,
                   })
                 }
                 renderTabHeader={renderTabHeader}
@@ -344,128 +306,5 @@ export function PlaygroundApp() {
   )
 }
 
-const KIND_ICON: any = {
-  editor: RiCodeSLine,
-  terminal: RiTerminalBoxLine,
-  output: RiPulseLine,
-  files: RiFolder3Line,
-  preview: RiLayoutLine,
-  notes: RiFileTextLine,
-  search: RiSearch2Line,
-}
 
-function renderTabHeader(tab: any) {
-  const KindIcon = tab.data.kind ? KIND_ICON[tab.data.kind] : KIND_ICON["preview"]
-  return (
-    <HStack as="span" display="inline-flex" gap="2">
-      <ChakraIcon fontSize="sm" opacity="0.78" aria-hidden="true">
-        <KindIcon />
-      </ChakraIcon>
-      <Text as="span">{tab.data.title}</Text>
-    </HStack>
-  )
-}
 
-function renderTabContent(tab: any) {
-  return <div style={contentStyle}>{tabSample(tab.data)}</div>
-}
-
-const contentStyle: any = {
-  height: "100%",
-  padding: 16,
-  overflow: "auto",
-  color: "var(--view-tab-fg, #9aa1ab)",
-  fontSize: 14,
-  lineHeight: 1.5,
-}
-
-const mono: any = {
-  margin: 0,
-  padding: 0,
-  border: 0,
-  borderRadius: 0,
-  background: "none",
-  color: "inherit",
-  fontFamily: "var(--site-mono)",
-  fontSize: 12.5,
-  lineHeight: 1.6,
-  whiteSpace: "pre-wrap",
-}
-
-function tabSample({ kind, title }: any) {
-  switch (kind) {
-    case "editor":
-      return (
-        <pre style={mono}>
-          {/\.css$/i.test(title)
-            ? `.workspace {
-  display: grid;
-  height: 100%;
-  background: #0e0f12;
-}
-
-.panel {
-  border-radius: 6px;
-  border: 1px solid #2a2d33;
-}
-
-.panel[data-active='true'] {
-  color: #f3f4f7;
-}`
-            : `import { View } from '@viewjs/react';
-
-export function App() {
-  return <View initialLayout={layout} />;
-}`}
-        </pre>
-      )
-    case "terminal":
-      return <pre style={mono}>{"$ pnpm dev\nready in 312ms\n› local http://localhost:3000"}</pre>
-    case "output":
-      return <pre style={mono}>{"[info] build started\n[info] compiled 42 modules\n[done] no errors"}</pre>
-    case "files":
-      return <pre style={mono}>{"src/\n  app/\n  components/\n  index.ts\npackage.json"}</pre>
-    case "preview":
-      return (
-        <div style={{ display: "grid", gap: 8 }}>
-          <div
-            style={{
-              width: 90,
-              height: 10,
-              borderRadius: 999,
-              background: "var(--view-accent, #3884ff)",
-            }}
-          />
-          <div
-            style={{
-              width: "100%",
-              height: 8,
-              borderRadius: 999,
-              background: "currentColor",
-              opacity: 0.25,
-            }}
-          />
-          <div
-            style={{
-              width: "70%",
-              height: 8,
-              borderRadius: 999,
-              background: "currentColor",
-              opacity: 0.25,
-            }}
-          />
-        </div>
-      )
-    case "search":
-      return (
-        <div>
-          search content
-        </div>
-      )
-    case "notes":
-    default:
-      return (
-        <RegistryTree baseUrl={"/lab/registry"} />
-      )
-  }
-}

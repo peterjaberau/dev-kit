@@ -62,49 +62,49 @@ export interface RegistryTreeProps {
   withCardWrapper?: boolean
 }
 
-export default function Index({ actionType = "navigate", baseUrl, withCardWrapper=true }: RegistryTreeProps) {
+export default function Index({ actionType = "navigate", baseUrl, withCardWrapper = true }: RegistryTreeProps) {
   const store = useTreeView({
     collection,
   })
 
-  return (
-    <CardWithScrollArea title={"Registry"}>
-      <TreeView.RootProvider value={store}>
-        <TreeView.Tree>
-          <TreeView.Node
-            render={({ node, nodeState }) =>
-              node.children ? (
-                <TreeView.BranchControl>
-                  <TreeView.BranchText>{node.name}</TreeView.BranchText>
-                  <TreeView.BranchIndicator>
-                    <LuChevronRight />
-                  </TreeView.BranchIndicator>
-                </TreeView.BranchControl>
-              ) : (
-                <TreeView.Item asChild>
-                  {actionType === "navigate" && (
-                    <NextLink href={`${baseUrl}/${node.path!}`}>
-                      <LuFile />
-                      <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
-                        {node.displayName ?? node.name}
-                      </TreeView.ItemText>
-                    </NextLink>
-                  )}
+  const tree = (
+    <TreeView.RootProvider value={store} data-name="registry-tree-root">
+      <TreeView.Tree>
+        <TreeView.Node
+          render={({ node }) =>
+            node.children ? (
+              <TreeView.BranchControl>
+                <TreeView.BranchText>{node.name}</TreeView.BranchText>
+                <TreeView.BranchIndicator>
+                  <LuChevronRight />
+                </TreeView.BranchIndicator>
+              </TreeView.BranchControl>
+            ) : actionType === "navigate" ? (
+              <TreeView.Item asChild>
+                <NextLink href={`${baseUrl}/${node.path!}`}>
+                  <LuFile />
+                  <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
+                    {node.displayName ?? node.name}
+                  </TreeView.ItemText>
+                </NextLink>
+              </TreeView.Item>
+            ) : (
+              <TreeView.Item>
+                <LuFile />
+                <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
+                  {node.displayName ?? node.name}
+                </TreeView.ItemText>
+              </TreeView.Item>
+            )
+          }
+        />
+      </TreeView.Tree>
+    </TreeView.RootProvider>
+  )
 
-                  {actionType === "select" && (
-                    <>
-                      <LuFile />
-                      <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
-                        {node.displayName ?? node.name}
-                      </TreeView.ItemText>
-                    </>
-                  )}
-                </TreeView.Item>
-              )
-            }
-          />
-        </TreeView.Tree>
-      </TreeView.RootProvider>
-    </CardWithScrollArea>
+  return withCardWrapper ? (
+    <CardWithScrollArea title="Registry">{tree}</CardWithScrollArea>
+  ) : (
+    <WrapperWithScrollArea>{tree}</WrapperWithScrollArea>
   )
 }

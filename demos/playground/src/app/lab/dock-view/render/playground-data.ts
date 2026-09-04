@@ -1,15 +1,124 @@
-// Shared, pure (no-JSX) data + helpers for the Playground page: the tab data
-// shape, the default layout, swappable layout presets, theme presets, and the
-// snapshot-walking helpers the inspector uses to read and patch panel config.
-//
-// Why snapshot helpers? Tab behavior (closable/draggable) is runtime-settable
-// via tab.setBehavior(), but panel behavior (resizable/draggable/droppable) and
-// min/max size are init-only — there is no setPanelBehavior on the controller.
-// To toggle them at runtime we round-trip through getLayout() -> patch the panel
-// node -> setLayout(). Snapshots preserve ids, so every panel/tab we create gets
-// an explicit id and these lookups stay stable.
-
-
+export const initialConfig: any = {
+  layout: {
+    type: "root",
+    main: {
+      type: "group",
+      direction: "horizontal",
+      children: [
+        {
+          type: "panel",
+          id: "editor-a",
+          size: 58,
+          tabs: [
+            { id: "index-ts", data: { title: "index.ts" } },
+            { id: "router-ts", data: { title: "router.ts" } },
+          ],
+        },
+        {
+          type: "panel",
+          id: "editor-b",
+          size: 42,
+          tabs: [
+            {
+              id: "field",
+              data: {
+                title: "Field",
+                inputs: {
+                  componentId: "forms-field",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    edges: {
+      left: {
+        type: "edgePanel",
+        id: "left-tools",
+        size: 22,
+        minSize: 14,
+        maxSize: 34,
+        tabs: [
+          {
+            id: "registry",
+            data: { title: "Registry" },
+            closable: false,
+          },
+          {
+            id: "button",
+            data: {
+              title: "Button",
+              inputs: {
+                componentId: "components-button",
+              },
+            },
+          },
+        ],
+      },
+      right: {
+        type: "edgePanel",
+        id: "right-tools",
+        size: 18,
+        minSize: 12,
+        maxSize: 28,
+        tabs: [
+          {
+            id: "popover",
+            data: {
+              title: "Popover",
+              inputs: {
+                componentId: "components-popover",
+              },
+            },
+          },
+        ],
+      },
+      bottom: {
+        type: "edgePanel",
+        id: "bottom-tools",
+        size: 28,
+        minSize: 18,
+        maxSize: 42,
+        tabs: [
+          {
+            id: "checkbox",
+            data: {
+              title: "Checkbox",
+              inputs: {
+                componentId: "forms-checkbox",
+              },
+            },
+            closable: false,
+          },
+          {
+            id: "slider",
+            data: {
+              title: "Slider",
+              inputs: {
+                componentId: "forms-slider",
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+  global: {
+    resizable: true,
+    showActionsButton: true,
+    showNewTabButton: true,
+    resizeHandleHitSize: 24,
+    minSize: 10,
+  },
+  options: {
+    themeId: "light",
+    makeTabPrefix: {
+      id: "tab",
+      title: "Tab",
+    },
+  },
+}
 
 export const PG_TAB_KINDS: string[] = ["editor", "terminal", "output", "files", "preview", "search", "notes"]
 
@@ -214,15 +323,25 @@ const edgeLayout: any = {
         id: "editor-a",
         size: 58,
         tabs: [
-          { id: "index-ts", data: { title: "index.ts", kind: "editor" } },
-          { id: "router-ts", data: { title: "router.ts", kind: "editor" } },
+          { id: "index-ts", data: { title: "index.ts" } },
+          { id: "router-ts", data: { title: "router.ts" } },
         ],
       },
       {
         type: "panel",
         id: "editor-b",
         size: 42,
-        tabs: [{ id: "preview", data: { title: "Preview", kind: "preview" } }],
+        tabs: [
+          {
+            id: "field",
+            data: {
+              title: "Field",
+              inputs: {
+                componentId: "forms-field",
+              },
+            },
+          },
+        ],
       },
     ],
   },
@@ -235,11 +354,19 @@ const edgeLayout: any = {
       maxSize: 34,
       tabs: [
         {
-          id: "files",
+          id: "registry",
           data: { title: "Registry" },
           closable: false,
         },
-        { id: "search", data: { title: "Search", kind: "search" } },
+        {
+          id: "button",
+          data: {
+            title: "Button",
+            inputs: {
+              componentId: "components-button",
+            },
+          },
+        },
       ],
     },
     right: {
@@ -248,7 +375,17 @@ const edgeLayout: any = {
       size: 18,
       minSize: 12,
       maxSize: 28,
-      tabs: [{ id: "notes", data: { title: "Notes", kind: "notes" } }],
+      tabs: [
+        {
+          id: "popover",
+          data: {
+            title: "Popover",
+            inputs: {
+              componentId: "components-popover",
+            },
+          },
+        },
+      ],
     },
     bottom: {
       type: "edgePanel",
@@ -258,11 +395,24 @@ const edgeLayout: any = {
       maxSize: 42,
       tabs: [
         {
-          id: "terminal",
-          data: { title: "Terminal", kind: "terminal" },
+          id: "checkbox",
+          data: {
+            title: "Checkbox",
+            inputs: {
+              componentId: "forms-checkbox",
+            },
+          },
           closable: false,
         },
-        { id: "output", data: { title: "Output", kind: "output" } },
+        {
+          id: "slider",
+          data: {
+            title: "Slider",
+            inputs: {
+              componentId: "forms-slider",
+            },
+          },
+        },
       ],
     },
   },
