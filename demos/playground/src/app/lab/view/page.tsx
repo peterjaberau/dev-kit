@@ -1,10 +1,11 @@
 "use client"
-import { PlaygroundApp } from './src/app/playground/playground-app';
+import { Flex } from "@chakra-ui/react"
+import { PlaygroundApp } from "./src/app/playground/playground-app"
 
 export default function PlaygroundPage() {
   return (
-    <div className="playground-page m-0 max-w-none p-2.5 h-dvh min-h-0 flex gap-2.5 bg-site-bg max-lg:flex-col">
+    <Flex m="0" maxW="none" p="2.5" h="100dvh" minH="0" gap="2.5" bg="bg" direction={{ base: "column", lg: "row" }}>
       <PlaygroundApp />
-    </div>
-  );
+    </Flex>
+  )
 }

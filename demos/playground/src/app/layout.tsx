@@ -1,6 +1,6 @@
 import "react18-json-view/src/style.css"
 import { Provider as ChakraProvider } from "./provider"
-import { DebuggerTrigger } from "#components/ui-common/debugger/debugger-trigger"
+// import { DebuggerTrigger } from "#components/ui-common/debugger/debugger-trigger"
 import { Suspense } from "react"
 
 export default function RootLayout({
@@ -10,13 +10,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning style={{ overflow: "hidden" }}>
-      <body >
-        <Suspense>
+      <body>
           <ChakraProvider>
             {children}
-            <DebuggerTrigger />
+            {/*<DebuggerTrigger />*/}
           </ChakraProvider>
-        </Suspense>
       </body>
     </html>
   )

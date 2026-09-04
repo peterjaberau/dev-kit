@@ -9,38 +9,9 @@
 // node -> setLayout(). Snapshots preserve ids, so every panel/tab we create gets
 // an explicit id and these lookups stay stable.
 
-import type { CSSProperties } from 'react';
-import type {
-  ViewDockedLayoutSnapshot,
-  ViewEdge,
-  ViewEdgePanelSnapshot,
-  ViewFloatingPanelSnapshot,
-  ViewInitialLayout,
-  ViewLayoutSnapshot,
-  ViewPanelSnapshot,
-  ViewRootSnapshot,
-  ViewSize,
-} from '#view/react';
 
-// ---------------------------------------------------------------------------
-// Tab data
-// ---------------------------------------------------------------------------
 
-export type PgTabKind =
-  | 'editor'
-  | 'terminal'
-  | 'files'
-  | 'preview'
-  | 'notes'
-  | 'output';
-
-export type PgTabData = {
-  title: string;
-  kind: PgTabKind;
-};
-
-/** Order new tabs cycle through when the user clicks "Add tab". */
-export const PG_TAB_KINDS: PgTabKind[] = [
+export const PG_TAB_KINDS: string[] = [
   'editor',
   'terminal',
   'notes',
@@ -49,7 +20,7 @@ export const PG_TAB_KINDS: PgTabKind[] = [
   'output',
 ];
 
-export const PG_KIND_LABEL: Record<PgTabKind, string> | any = {
+export const PG_KIND_LABEL: any = {
   editor: 'Editor',
   terminal: 'Terminal',
   files: 'Files',
@@ -62,9 +33,7 @@ export const PG_KIND_LABEL: Record<PgTabKind, string> | any = {
 // Layouts + presets
 // ---------------------------------------------------------------------------
 
-type Layout = ViewInitialLayout<PgTabData>;
-
-const defaultLayout: Layout = {
+const defaultLayout: any = {
   type: 'group',
   direction: 'horizontal',
   children: [
@@ -105,7 +74,7 @@ const defaultLayout: Layout = {
   ],
 };
 
-const ideLayout: Layout = {
+const ideLayout: any = {
   type: 'root',
   edges: {
     left: {
@@ -153,7 +122,7 @@ const ideLayout: Layout = {
   },
 };
 
-const dashboardLayout: Layout = {
+const dashboardLayout: any = {
   type: 'group',
   direction: 'vertical',
   children: [
@@ -204,7 +173,7 @@ const dashboardLayout: Layout = {
   ],
 };
 
-const floatingLayout: Layout = {
+const floatingLayout: any = {
   type: 'root',
   main: {
     type: 'group',
@@ -239,11 +208,10 @@ const floatingLayout: Layout = {
   ],
 };
 
-export type PgPreset = { id: string; label: string; layout: Layout };
 
 export const PG_DEFAULT_LAYOUT = defaultLayout;
 
-export const PG_PRESETS: PgPreset[] = [
+export const PG_PRESETS: any[] = [
   { id: 'default', label: 'Default', layout: defaultLayout },
   { id: 'ide', label: 'IDE + edges', layout: ideLayout },
   { id: 'dashboard', label: 'Dashboard', layout: dashboardLayout },
@@ -254,11 +222,8 @@ export const PG_PRESETS: PgPreset[] = [
 // Theme presets (reused from the Themes example; proven --view-* sets)
 // ---------------------------------------------------------------------------
 
-export type PgThemeStyle = CSSProperties & Record<`--${string}`, string>;
 
-export type PgTheme = { id: string; label: string; style: PgThemeStyle };
-
-const pageAccentVars = {
+const pageAccentVars: any = {
   '--view-accent': 'var(--site-workspace-accent)',
   '--view-drop-bg':
     'color-mix(in srgb, var(--site-workspace-accent), transparent 84%)',
@@ -266,9 +231,9 @@ const pageAccentVars = {
     'color-mix(in srgb, var(--site-workspace-accent), transparent 42%)',
   '--view-resize-handle-active-bg':
     'color-mix(in srgb, var(--site-workspace-accent), transparent 40%)',
-} satisfies Record<`--${string}`, string>;
+};
 
-export const PG_THEMES: PgTheme[] = [
+export const PG_THEMES: any[] = [
   {
     id: 'default',
     label: 'Default',
@@ -356,158 +321,107 @@ export const PG_THEMES: PgTheme[] = [
 // Snapshot helpers
 // ---------------------------------------------------------------------------
 
-type Snapshot = ViewLayoutSnapshot<PgTabData>;
-type AnyPanelSnapshot =
-  | ViewPanelSnapshot<PgTabData>
-  | ViewEdgePanelSnapshot<PgTabData>
-  | ViewFloatingPanelSnapshot<PgTabData>;
 
 /** Flattened, inspector-friendly view of one panel from a snapshot. */
-export type PgPanelEntry = {
-  id: string;
-  container: 'tiled' | 'edge' | 'floating';
-  kindLabel: string;
-  resizable: boolean;
-  draggable: boolean;
-  droppable: boolean;
-  fullScreen: boolean;
-  poppedOut: boolean;
-  minSize?: ViewSize;
-  maxSize?: ViewSize;
-  tabs: Array<{
-    id: string;
-    title: string;
-    kind: PgTabKind;
-    closable: boolean;
-    draggable: boolean;
-  }>;
-};
 
-function isRoot(snapshot: Snapshot): snapshot is ViewRootSnapshot<PgTabData> {
+function isRoot(snapshot: any) {
   return (snapshot as { type?: string }).type === 'root';
 }
 
-function toEntry(
-  node: AnyPanelSnapshot,
-  container: PgPanelEntry['container'],
-  kindLabel: string,
-): PgPanelEntry {
+function toEntry(node: any, container: any, kindLabel: string): any {
   return {
-    id: node.id ?? '',
+    id: node.id ?? "",
     container,
     kindLabel,
     resizable: node.resizable,
     draggable: node.draggable,
     droppable: node.droppable,
     fullScreen: node.fullScreen ?? false,
-    poppedOut:
-      container === 'floating' &&
-      !!(node as ViewFloatingPanelSnapshot<PgTabData>).popout,
+    poppedOut: container === "floating" && !!node.popout,
     minSize: node.minSize,
     maxSize: node.maxSize,
     tabs: node.tabs
-      .filter((tab) => typeof tab.id === 'string')
-      .map((tab) => ({
+      .filter((tab: any) => typeof tab.id === "string")
+      .map((tab: any) => ({
         id: tab.id as string,
         title: tab.data.title,
         kind: tab.data.kind,
         closable: tab.closable,
         draggable: tab.draggable,
       })),
-  };
+  }
 }
 
-function walkDocked(
-  node: ViewDockedLayoutSnapshot<PgTabData>,
-  out: PgPanelEntry[],
-): void {
-  if (node.type === 'panel') {
-    out.push(toEntry(node, 'tiled', 'Tiled'));
-  } else if (node.type === 'group') {
-    for (const child of node.children) walkDocked(child, out);
+function walkDocked(node: any, out: any[]): void {
+  if (node.type === "panel") {
+    out.push(toEntry(node, "tiled", "Tiled"))
+  } else if (node.type === "group") {
+    for (const child of node.children) walkDocked(child, out)
   }
 }
 
 /** All panels in a snapshot as flat entries: main tree, then edges, then floating. */
-export function collectPanels(snapshot: Snapshot): PgPanelEntry[] {
-  const out: PgPanelEntry[] = [];
+export function collectPanels(snapshot: any): any[] {
+  const out: any[] = []
   if (isRoot(snapshot)) {
-    walkDocked(snapshot.main, out);
+    walkDocked(snapshot.main, out)
     if (snapshot.edges) {
-      for (const side of Object.keys(snapshot.edges) as ViewEdge[]) {
-        const panel = snapshot.edges[side];
-        if (panel) out.push(toEntry(panel, 'edge', `Edge · ${side}`));
+      for (const side of Object.keys(snapshot.edges) as any[]) {
+        const panel = snapshot.edges[side]
+        if (panel) out.push(toEntry(panel, "edge", `Edge · ${side}`))
       }
     }
     for (const panel of snapshot.floating) {
-      out.push(toEntry(panel, 'floating', 'Floating'));
+      out.push(toEntry(panel, "floating", "Floating"))
     }
   } else {
-    walkDocked(snapshot, out);
+    walkDocked(snapshot, out)
   }
-  return out.filter((entry) => entry.id !== '');
+  return out.filter((entry) => entry.id !== "")
 }
 
-function findDocked(
-  node: ViewDockedLayoutSnapshot<PgTabData>,
-  id: string,
-): AnyPanelSnapshot | null {
-  if (node.type === 'panel') return node.id === id ? node : null;
-  if (node.type === 'group') {
+function findDocked(node: any, id: string): any | null {
+  if (node.type === "panel") return node.id === id ? node : null
+  if (node.type === "group") {
     for (const child of node.children) {
-      const found = findDocked(child, id);
-      if (found) return found;
+      const found = findDocked(child, id)
+      if (found) return found
     }
   }
-  return null;
+  return null
 }
 
 /** Locate a mutable panel node in a snapshot by id (or null). */
-export function findPanelNode(
-  snapshot: Snapshot,
-  id: string,
-): AnyPanelSnapshot | null {
+export function findPanelNode(snapshot: any, id: string): any | null {
   if (isRoot(snapshot)) {
-    const main = findDocked(snapshot.main, id);
-    if (main) return main;
+    const main = findDocked(snapshot.main, id)
+    if (main) return main
     if (snapshot.edges) {
-      for (const side of Object.keys(snapshot.edges) as ViewEdge[]) {
-        const panel = snapshot.edges[side];
-        if (panel?.id === id) return panel;
+      for (const side of Object.keys(snapshot.edges) as any[]) {
+        const panel = snapshot.edges[side]
+        if (panel?.id === id) return panel
       }
     }
-    return snapshot.floating.find((panel) => panel.id === id) ?? null;
+    return snapshot.floating.find((panel: any) => panel.id === id) ?? null
   }
-  return findDocked(snapshot, id);
+  return findDocked(snapshot, id)
 }
 
-export type PgPanelPatch = {
-  resizable?: boolean;
-  draggable?: boolean;
-  droppable?: boolean;
-  // `null` clears the constraint; a value sets it; omitted leaves it alone.
-  minSize?: ViewSize | null;
-  maxSize?: ViewSize | null;
-};
 
 /** Mutate a snapshot in place, patching one panel's behavior/size. Returns true if found. */
-export function patchPanelInSnapshot(
-  snapshot: Snapshot,
-  id: string,
-  patch: PgPanelPatch,
-): boolean {
-  const node = findPanelNode(snapshot, id);
-  if (!node) return false;
-  if (patch.resizable !== undefined) node.resizable = patch.resizable;
-  if (patch.draggable !== undefined) node.draggable = patch.draggable;
-  if (patch.droppable !== undefined) node.droppable = patch.droppable;
+export function patchPanelInSnapshot(snapshot: any, id: string, patch: any): boolean {
+  const node = findPanelNode(snapshot, id)
+  if (!node) return false
+  if (patch.resizable !== undefined) node.resizable = patch.resizable
+  if (patch.draggable !== undefined) node.draggable = patch.draggable
+  if (patch.droppable !== undefined) node.droppable = patch.droppable
   if (patch.minSize !== undefined) {
-    if (patch.minSize === null) delete node.minSize;
-    else node.minSize = patch.minSize;
+    if (patch.minSize === null) delete node.minSize
+    else node.minSize = patch.minSize
   }
   if (patch.maxSize !== undefined) {
-    if (patch.maxSize === null) delete node.maxSize;
-    else node.maxSize = patch.maxSize;
+    if (patch.maxSize === null) delete node.maxSize
+    else node.maxSize = patch.maxSize
   }
-  return true;
+  return true
 }

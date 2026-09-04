@@ -3,15 +3,11 @@
 import { useEffect, useState, type RefObject } from 'react';
 import NextLink from 'next/link';
 import { Box, HStack, Link, List, Stack, Text } from '@chakra-ui/react';
-import type { ViewController, ViewDirection, ViewTabBehaviorUpdate, ViewTabInit } from "#view/react"
 import {
   PG_DEFAULT_LAYOUT,
   PG_PRESETS,
   PG_THEMES,
   patchPanelInSnapshot,
-  type PgPanelEntry,
-  type PgPanelPatch,
-  type PgTabData,
 } from './playground-data';
 import {
   InspectorAccordion as AccordionRoot,
@@ -25,19 +21,10 @@ import {
   InspectorSwitch as SwitchInput,
 } from './playground-inspector-controls';
 
-export type PgGlobalProps = {
-  resizable: boolean;
-  showActionsButton: boolean;
-  showNewTabButton: boolean;
-  resizeHandleHitSize: number;
-  minSize: number;
-};
-
-export type PgEvent = { id: number; type: string; detail: string };
 
 const STORAGE_KEY = 'view-playground-layout';
 
-const DIRECTIONS: Array<{ value: ViewDirection; label: string }> = [
+const DIRECTIONS: any[] = [
   { value: 'right', label: 'Right' },
   { value: 'left', label: 'Left' },
   { value: 'bottom', label: 'Down' },
@@ -45,22 +32,22 @@ const DIRECTIONS: Array<{ value: ViewDirection; label: string }> = [
 ];
 
 type Props = {
-  controllerRef: RefObject<ViewController | null>;
-  panels: PgPanelEntry[];
-  selectedPanelId: string | null;
-  selectedTabId: string | null;
-  onSelectPanel: (id: string) => void;
-  onSelectTab: (id: string) => void;
-  uid: (prefix: string) => string;
-  makeTab: () => ViewTabInit<PgTabData>;
-  global: PgGlobalProps;
-  onGlobalChange: (patch: Partial<PgGlobalProps>) => void;
-  themeId: string;
-  onThemeChange: (id: string) => void;
-  events: PgEvent[];
-  onClearEvents: () => void;
-  onResetFrame: () => void;
-};
+  controllerRef: RefObject<any>
+  panels: any[]
+  selectedPanelId: string | null
+  selectedTabId: string | null
+  onSelectPanel: (id: string) => void
+  onSelectTab: (id: string) => void
+  uid: (prefix: string) => string
+  makeTab: () => any
+  global: any
+  onGlobalChange: (patch: any) => void
+  themeId: string
+  onThemeChange: (id: string) => void
+  events: any[]
+  onClearEvents: () => void
+  onResetFrame: () => void
+}
 
 export function PlaygroundInspector({
   controllerRef,
@@ -79,7 +66,7 @@ export function PlaygroundInspector({
   onClearEvents,
   onResetFrame,
 }: Props) {
-  const [splitDir, setSplitDir] = useState<ViewDirection>('right');
+  const [splitDir, setSplitDir] = useState<any>("right")
   const [presetId, setPresetId] = useState('');
   const [copied, setCopied] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
@@ -90,26 +77,26 @@ export function PlaygroundInspector({
   const view = () => controllerRef.current;
 
   const panel = panels.find((p) => p.id === selectedPanelId) ?? null;
-  const tab = panel?.tabs.find((t) => t.id === selectedTabId) ?? null;
+  const tab = panel?.tabs.find((t: any) => t.id === selectedTabId) ?? null
 
   const panelOptions = panels.map((p) => ({
     value: p.id,
     label: `${p.tabs[0]?.title ?? p.id} · ${p.kindLabel}`,
   }));
-  const tabOptions = (panel?.tabs ?? []).map((t) => ({
+  const tabOptions = (panel?.tabs ?? []).map((t: any) => ({
     value: t.id,
     label: t.title,
-  }));
+  }))
   const moveTargets = panels
     .filter((p) => p.id !== selectedPanelId)
     .map((p) => ({ value: p.id, label: `${p.tabs[0]?.title ?? p.id}` }));
 
-  const patchPanel = (patch: PgPanelPatch) => {
-    const t = view();
-    if (!t || !selectedPanelId) return;
-    const snap = t.getLayout<PgTabData>();
-    if (patchPanelInSnapshot(snap, selectedPanelId, patch)) t.setLayout(snap);
-  };
+  const patchPanel = (patch: any) => {
+    const t = view()
+    if (!t || !selectedPanelId) return
+    const snap: any = t.getLayout()
+    if (patchPanelInSnapshot(snap, selectedPanelId, patch)) t.setLayout(snap)
+  }
 
   const addTab = () => {
     if (!selectedPanelId) return;
@@ -194,9 +181,9 @@ export function PlaygroundInspector({
   };
 
   const tabLocked = tab ? !tab.closable && !tab.draggable : false;
-  const setTabBehavior = (next: ViewTabBehaviorUpdate) => {
-    if (selectedTabId) view()?.getTab(selectedTabId)?.setBehavior(next);
-  };
+  const setTabBehavior = (next: any) => {
+    if (selectedTabId) view()?.getTab(selectedTabId)?.setBehavior(next)
+  }
   const renameTab = (title: string) => {
     if (selectedTabId && tab) {
       view()?.getTab(selectedTabId)?.setData({ title, kind: tab.kind });
@@ -240,9 +227,9 @@ export function PlaygroundInspector({
     <Box
       as="aside"
       flexShrink="0"
-      width={{ base: '80', lgDown: 'full' }}
-      height={{ base: 'full', lgDown: 'auto' }}
-      maxHeight={{ lgDown: '44vh' }}
+      width={{ base: "80", lgDown: "full" }}
+      height={{ base: "full", lgDown: "auto" }}
+      maxHeight={{ lgDown: "44vh" }}
       display="flex"
       flexDirection="column"
       overflow="hidden"
@@ -251,15 +238,11 @@ export function PlaygroundInspector({
       borderRadius="lg"
       bg="bg.panel"
       color="fg"
-      aria-label="Playground controls">
+      aria-label="Playground controls"
+    >
       <Box as="header" px="4" py="3" borderBottomWidth="1px" borderColor="border.muted">
         <HStack justify="space-between" gap="3">
-          <Link
-            asChild
-            color="fg"
-            fontSize="sm"
-            fontWeight="bold"
-            textDecoration="none">
+          <Link asChild color="fg" fontSize="sm" fontWeight="bold" textDecoration="none">
             <NextLink href="/">View</NextLink>
           </Link>
           <Button variant="subtle" size="compact" tone="danger" onClick={reset}>
@@ -269,7 +252,7 @@ export function PlaygroundInspector({
       </Box>
 
       <Box flex="1" minHeight="0" overflowY="auto">
-        <AccordionRoot defaultOpen={['workspace', 'panel', 'tab']}>
+        <AccordionRoot defaultOpen={["workspace", "panel", "tab"]}>
           <AccordionItem value="workspace" title="Workspace">
             <Field
               label="Preset"
@@ -291,26 +274,17 @@ export function PlaygroundInspector({
               <Button variant="subtle" size="compact" onClick={saveLayout}>
                 Save
               </Button>
-              <Button
-                variant="subtle"
-                size="compact"
-                onClick={restoreLayout}
-                disabled={!hasSaved}>
+              <Button variant="subtle" size="compact" onClick={restoreLayout} disabled={!hasSaved}>
                 Restore
               </Button>
               <Button variant="subtle" size="compact" onClick={exportLayout}>
-                {copied ? 'Copied!' : 'Export JSON'}
+                {copied ? "Copied!" : "Export JSON"}
               </Button>
             </ButtonGroup>
             <Field
               label="Resizable"
               hint="All dividers"
-              control={
-                <SwitchInput
-                  checked={global.resizable}
-                  onChange={(v) => onGlobalChange({ resizable: v })}
-                />
-              }
+              control={<SwitchInput checked={global.resizable} onChange={(v) => onGlobalChange({ resizable: v })} />}
             />
             <Field
               label="Action menu button"
@@ -335,9 +309,7 @@ export function PlaygroundInspector({
               control={
                 <NumberInput
                   value={global.resizeHandleHitSize}
-                  onChange={(v) =>
-                    onGlobalChange({ resizeHandleHitSize: v ?? 24 })
-                  }
+                  onChange={(v) => onGlobalChange({ resizeHandleHitSize: v ?? 24 })}
                   ariaLabel="Handle hit size (px)"
                 />
               }
@@ -379,7 +351,7 @@ export function PlaygroundInspector({
                   label="Panel"
                   control={
                     <Select
-                      value={selectedPanelId ?? ''}
+                      value={selectedPanelId ?? ""}
                       onChange={onSelectPanel}
                       options={panelOptions}
                       ariaLabel="Panel"
@@ -391,10 +363,7 @@ export function PlaygroundInspector({
                     <Field
                       label="Add tab"
                       control={
-                        <Button
-                          variant="subtle"
-                          size="compact"
-                          onClick={addTab}>
+                        <Button variant="subtle" size="compact" onClick={addTab}>
                           Add tab
                         </Button>
                       }
@@ -406,13 +375,10 @@ export function PlaygroundInspector({
                           <Select
                             ariaLabel="Split direction"
                             value={splitDir}
-                            onChange={(v) => setSplitDir(v as ViewDirection)}
+                            onChange={(v) => setSplitDir(v as any)}
                             options={DIRECTIONS}
                           />
-                          <Button
-                            variant="subtle"
-                            size="compact"
-                            onClick={splitPanel}>
+                          <Button variant="subtle" size="compact" onClick={splitPanel}>
                             Split
                           </Button>
                         </HStack>
@@ -420,41 +386,22 @@ export function PlaygroundInspector({
                     />
                     <Field
                       label="Resizable"
-                      control={
-                        <SwitchInput
-                          checked={panel.resizable}
-                          onChange={(v) => patchPanel({ resizable: v })}
-                        />
-                      }
+                      control={<SwitchInput checked={panel.resizable} onChange={(v) => patchPanel({ resizable: v })} />}
                     />
                     <Field
                       label="Draggable"
-                      control={
-                        <SwitchInput
-                          checked={panel.draggable}
-                          onChange={(v) => patchPanel({ draggable: v })}
-                        />
-                      }
+                      control={<SwitchInput checked={panel.draggable} onChange={(v) => patchPanel({ draggable: v })} />}
                     />
                     <Field
                       label="Droppable"
-                      control={
-                        <SwitchInput
-                          checked={panel.droppable}
-                          onChange={(v) => patchPanel({ droppable: v })}
-                        />
-                      }
+                      control={<SwitchInput checked={panel.droppable} onChange={(v) => patchPanel({ droppable: v })} />}
                     />
                     <Field
                       label="Locked"
                       hint="Resize + drag + drop off"
                       control={
                         <SwitchInput
-                          checked={
-                            !panel.resizable &&
-                            !panel.draggable &&
-                            !panel.droppable
-                          }
+                          checked={!panel.resizable && !panel.draggable && !panel.droppable}
                           onChange={(v) =>
                             patchPanel({
                               resizable: !v,
@@ -469,11 +416,7 @@ export function PlaygroundInspector({
                       label="Min size %"
                       control={
                         <NumberInput
-                          value={
-                            typeof panel.minSize === 'number'
-                              ? panel.minSize
-                              : ''
-                          }
+                          value={typeof panel.minSize === "number" ? panel.minSize : ""}
                           placeholder="auto"
                           onChange={(v) => patchPanel({ minSize: v })}
                           ariaLabel="Min size %"
@@ -484,11 +427,7 @@ export function PlaygroundInspector({
                       label="Max size %"
                       control={
                         <NumberInput
-                          value={
-                            typeof panel.maxSize === 'number'
-                              ? panel.maxSize
-                              : ''
-                          }
+                          value={typeof panel.maxSize === "number" ? panel.maxSize : ""}
                           placeholder="auto"
                           onChange={(v) => patchPanel({ maxSize: v })}
                           ariaLabel="Max size %"
@@ -496,39 +435,29 @@ export function PlaygroundInspector({
                       }
                     />
                     <ButtonGroup>
-                      <Button
-                        variant="subtle"
-                        size="compact"
-                        active={panel.fullScreen}
-                        onClick={toggleMaximize}>
-                        {panel.fullScreen ? 'Restore' : 'Maximize'}
+                      <Button variant="subtle" size="compact" active={panel.fullScreen} onClick={toggleMaximize}>
+                        {panel.fullScreen ? "Restore" : "Maximize"}
                       </Button>
                       <Button
                         variant="subtle"
                         size="compact"
-                        active={panel.container === 'floating'}
-                        onClick={toggleFloat}>
-                        {panel.container === 'floating' ? 'Dock' : 'Float'}
+                        active={panel.container === "floating"}
+                        onClick={toggleFloat}
+                      >
+                        {panel.container === "floating" ? "Dock" : "Float"}
                       </Button>
-                      <Button
-                        variant="subtle"
-                        size="compact"
-                        active={panel.poppedOut}
-                        onClick={togglePopout}>
-                        {panel.poppedOut ? 'Return' : 'Pop out'}
+                      <Button variant="subtle" size="compact" active={panel.poppedOut} onClick={togglePopout}>
+                        {panel.poppedOut ? "Return" : "Pop out"}
                       </Button>
                       <Button
                         variant="subtle"
                         size="compact"
                         onClick={focusPanel}
-                        disabled={panel.container !== 'floating'}>
+                        disabled={panel.container !== "floating"}
+                      >
                         Focus
                       </Button>
-                      <Button
-                        variant="subtle"
-                        size="compact"
-                        tone="danger"
-                        onClick={removePanel}>
+                      <Button variant="subtle" size="compact" tone="danger" onClick={removePanel}>
                         Remove panel
                       </Button>
                     </ButtonGroup>
@@ -548,37 +477,20 @@ export function PlaygroundInspector({
                 <Field
                   label="Tab"
                   control={
-                    <Select
-                      value={selectedTabId ?? ''}
-                      onChange={onSelectTab}
-                      options={tabOptions}
-                      ariaLabel="Tab"
-                    />
+                    <Select value={selectedTabId ?? ""} onChange={onSelectTab} options={tabOptions} ariaLabel="Tab" />
                   }
                 />
                 {tab ? (
                   <>
-                    <RenameField
-                      key={tab.id}
-                      initialTitle={tab.title}
-                      onRename={renameTab}
-                    />
+                    <RenameField key={tab.id} initialTitle={tab.title} onRename={renameTab} />
                     <Field
                       label="Closable"
-                      control={
-                        <SwitchInput
-                          checked={tab.closable}
-                          onChange={(v) => setTabBehavior({ closable: v })}
-                        />
-                      }
+                      control={<SwitchInput checked={tab.closable} onChange={(v) => setTabBehavior({ closable: v })} />}
                     />
                     <Field
                       label="Draggable"
                       control={
-                        <SwitchInput
-                          checked={tab.draggable}
-                          onChange={(v) => setTabBehavior({ draggable: v })}
-                        />
+                        <SwitchInput checked={tab.draggable} onChange={(v) => setTabBehavior({ draggable: v })} />
                       }
                     />
                     <Field
@@ -587,13 +499,7 @@ export function PlaygroundInspector({
                       control={
                         <SwitchInput
                           checked={tabLocked}
-                          onChange={(v) =>
-                            setTabBehavior(
-                              v
-                                ? { locked: true }
-                                : { closable: true, draggable: true },
-                            )
-                          }
+                          onChange={(v) => setTabBehavior(v ? { locked: true } : { closable: true, draggable: true })}
                         />
                       }
                     />
@@ -612,16 +518,10 @@ export function PlaygroundInspector({
                       />
                     ) : null}
                     <ButtonGroup>
-                      <Button
-                        variant="subtle"
-                        size="compact"
-                        onClick={floatTab}>
+                      <Button variant="subtle" size="compact" onClick={floatTab}>
                         Float tab
                       </Button>
-                      <Button
-                        variant="subtle"
-                        size="compact"
-                        onClick={popoutTab}>
+                      <Button variant="subtle" size="compact" onClick={popoutTab}>
                         Pop out tab
                       </Button>
                       <Button
@@ -629,7 +529,8 @@ export function PlaygroundInspector({
                         size="compact"
                         tone="danger"
                         onClick={removeTab}
-                        disabled={!tab.closable}>
+                        disabled={!tab.closable}
+                      >
                         Close tab
                       </Button>
                     </ButtonGroup>
@@ -641,12 +542,10 @@ export function PlaygroundInspector({
 
           <AccordionItem value="activity" title="Activity">
             <HStack justify="space-between">
-              <Text fontSize="xs" color="fg.muted">Recent events</Text>
-              <Button
-                variant="subtle"
-                size="compact"
-                onClick={onClearEvents}
-                disabled={events.length === 0}>
+              <Text fontSize="xs" color="fg.muted">
+                Recent events
+              </Text>
+              <Button variant="subtle" size="compact" onClick={onClearEvents} disabled={events.length === 0}>
                 Clear
               </Button>
             </HStack>
@@ -664,7 +563,8 @@ export function PlaygroundInspector({
                     gap="0.5"
                     pb="2"
                     borderBottomWidth="1px"
-                    borderColor="border.muted">
+                    borderColor="border.muted"
+                  >
                     <Text as="span" fontFamily="mono" fontSize="xs" color="colorPalette.fg">
                       {event.type}
                     </Text>
@@ -679,7 +579,7 @@ export function PlaygroundInspector({
         </AccordionRoot>
       </Box>
     </Box>
-  );
+  )
 }
 
 function RenameField({

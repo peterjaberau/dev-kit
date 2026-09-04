@@ -6,7 +6,6 @@ import {
   createSystem,
 } from '@chakra-ui/react';
 import { ThemeProvider } from 'next-themes';
-import ActorsApp from "#modules/dockview/actors"
 
 
 const themeConfig: any = defineConfig({
@@ -21,7 +20,7 @@ export const Provider = (props: { children: React.ReactNode }) => {
   return (
     <ChakraProvider value={theme}>
       <ThemeProvider attribute="class" disableTransitionOnChange>
-        <ActorsApp>{props.children}</ActorsApp>
+        {props.children}
       </ThemeProvider>
     </ChakraProvider>
   )

@@ -3,10 +3,9 @@ import NextLink from "next/link"
 
 import { registryNames } from "#registry"
 import { createTreeCollection } from "@chakra-ui/react"
-import { SimpleGrid, GridItem, TreeView } from "@chakra-ui/react"
+import { SimpleGrid, GridItem, TreeView, useTreeView } from "@chakra-ui/react"
 import { LuChevronRight, LuFile } from "react-icons/lu"
 import { CardWithScrollArea } from "../components/card-with-scroll-area"
-import { useDockViewPanel } from "#modules/dockview/actors/selectors"
 import { useState } from "react"
 
 interface RegistryNode {
@@ -55,48 +54,20 @@ const collection = createTreeCollection<RegistryNode>({
   rootNode: buildRegistryTree(registryNames),
 })
 
-export default function Index(props: any) {
-  const { panelViewScopeContext, panelViewScopedContext, sendToPanelView } = useDockViewPanel({
-    panelId: props.api.id,
+export default function Index() {
+
+  const store = useTreeView({
+    collection,
   })
 
-  const {
-    // collection: initialCollection,
-    defaultExpanded,
-    expandedValue,
-    selectedValue,
-    filter,
-  }: any = panelViewScopeContext
-
-  const [internalCollection, setInternalCollection] = useState(collection)
-  const [expanded, setExpanded] = useState<string[]>(["panels"])
-
-
-  console.log(internalCollection)
 
   return (
     <CardWithScrollArea title={"Registry"}>
-      <TreeView.Root
-        defaultExpandedValue={["panels"]}
-        collection={internalCollection}
-        expandedValue={expanded}
-        selectedValue={selectedValue}
-        onExpandedChange={(details: any) => setExpanded(details.expandedValue)}
-        onSelectionChange={(details: any) => {
-          const selectedNode: any = collection.findNode(details.selectedValue[0])
-          const isBranch = collection.isBranchNode(selectedNode)
-          if (isBranch) {
-            // Prevent selecting branches
-            return
-          }
-          // sendToDynamicPanelLab({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
-          sendToPanelView({ type: "SELECTION_CHANGE", payload: { selectedValue: details.selectedValue } })
-        }}
-      >
+      <TreeView.RootProvider value={store}>
         <TreeView.Tree>
           <TreeView.Node
             render={({ node, nodeState }) =>
-              nodeState.isBranch ? (
+              node.children ? (
                 <TreeView.BranchControl>
                   <TreeView.BranchText>{node.name}</TreeView.BranchText>
                   <TreeView.BranchIndicator>
@@ -105,18 +76,18 @@ export default function Index(props: any) {
                 </TreeView.BranchControl>
               ) : (
                 <TreeView.Item asChild>
-                  {/*<NextLink href={node.href!}>*/}
-                    <LuFile />
-                    <TreeView.ItemText fontWeight={node.name === selectedValue ? "bold" : "normal"}>
-                      {node.displayName ?? node.name}
-                    </TreeView.ItemText>
-                  {/*</NextLink>*/}
+                  <NextLink href={node.href!}>
+                  <LuFile />
+                  <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
+                    {node.displayName ?? node.name}
+                  </TreeView.ItemText>
+                  </NextLink>
                 </TreeView.Item>
               )
             }
           />
         </TreeView.Tree>
-      </TreeView.Root>
+      </TreeView.RootProvider>
     </CardWithScrollArea>
   )
 }
