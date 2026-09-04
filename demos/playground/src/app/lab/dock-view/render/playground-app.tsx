@@ -3,7 +3,6 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react"
@@ -11,12 +10,7 @@ import { Box, Flex, HStack, Icon as ChakraIcon, Text } from "@chakra-ui/react"
 import { View } from "#view/react"
 import { usePointerDrag } from "./use-pointer-drag"
 import { RegistryTree, RegistryViewer } from "#plugins/registry-manager-plugin/view"
-
-import {
-  initialConfig,
-  PG_THEMES,
-  collectPanels,
-} from "./playground-data"
+import { usePlayground } from "./playground-provider"
 
 function renderTabHeader(tab: any) {
   return <Text as="span">{tab.data.title}</Text>
@@ -35,30 +29,43 @@ function renderTabContent(tab: any) {
 
 
 export function PlaygroundApp() {
-  const controllerRef = useRef<any | null>(null)
-  const idRef = useRef(0)
-  const seqRef = useRef(0)
-
-  const [mounted, setMounted] = useState(false)
+  const { playgroundRef, sendToPlayground, config, runtime } = usePlayground()
+  const mounted = runtime.variables?.mounted ?? false
   const stageRef = useRef<HTMLDivElement>(null)
   const browserRef = useRef<HTMLDivElement>(null)
   const [frameSize, setFrameSize] = useState<{
     width: number
     height: number
   } | null>(null)
-  const [snapshot, setSnapshot] = useState<any | null>(null)
-  const [themeId, setThemeId] = useState(initialConfig.options.themeId)
-
-
 
   const refresh = useCallback(() => {
-    const controller = controllerRef.current
-    if (controller) setSnapshot(controller.getLayout())
-  }, [])
+    sendToPlayground({ type: "onChange" })
+  }, [sendToPlayground])
+
+  const setController = useCallback(
+    (controllerRef: any) => {
+      sendToPlayground({ type: "onSetController", controllerRef })
+    },
+    [sendToPlayground],
+  )
+
+  const handleNewTab = useCallback(() => {
+    const context = playgroundRef.getSnapshot().context
+    const { id, seq } = context.runtime.variables
+    const nextId = id + 1
+    const nextSeq = seq + 1
+
+    sendToPlayground({ type: "onNewTab" })
+
+    return {
+      id: `${context.config.options.makeTabPrefix.id}-${nextId}`,
+      data: { title: `${context.config.options.makeTabPrefix.title} ${nextSeq}` },
+    }
+  }, [playgroundRef, sendToPlayground])
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    sendToPlayground({ type: "onMount" })
+  }, [sendToPlayground])
 
   useEffect(() => {
     if (mounted) refresh()
@@ -135,70 +142,26 @@ export function PlaygroundApp() {
                 fontSize: "var(--chakra-font-sizes-sm)",
               },
             }}
-            style={{
-              ...PG_THEMES.find((t) => t.id === initialConfig.options.themeId)?.style,
-            }}
+            style={runtime.theme}
           >
             {mounted ? (
               <View
-                ref={controllerRef as any}
-                initialLayout={initialConfig.layout}
-                resizable={initialConfig.global.resizable}
-                minSize={initialConfig.global.minSize}
-                resizeHandleHitSize={initialConfig.global.resizeHandleHitSize}
-                showActionsButton={initialConfig.global.showActionsButton}
-                showNewTabButton={initialConfig.global.showNewTabButton}
-                onNewTab={() => {
-                  idRef.current += 1
-                  seqRef.current += 1
-                  return {
-                    id: `${initialConfig.options.makeTabPrefix.id}-${idRef.current}`,
-                    data: { title: initialConfig.options.makeTabPrefix.title + ` ${seqRef.current}` },
-                  }
-                }}
+                ref={setController as any}
+                initialLayout={config.layout}
+                resizable={config.global.resizable}
+                minSize={config.global.minSize}
+                resizeHandleHitSize={config.global.resizeHandleHitSize}
+                showActionsButton={config.global.showActionsButton}
+                showNewTabButton={config.global.showNewTabButton}
+                onNewTab={handleNewTab}
                 onChange={refresh}
-                onActiveTabChange={(e: any) =>
-                  console.log({
-                    type: "activeTab",
-                    detail: e,
-                  })
-                }
-                onPanelSplit={(e: any) =>
-                  console.log({
-                    type: "panelSplit",
-                    detail: e,
-                  })
-                }
-                onTabsMove={(e: any) =>
-                  console.log({
-                    type: "tabsMove",
-                    detail: e,
-                  })
-                }
-                onTabsOpen={(e: any) =>
-                  console.log({
-                    type: "tabsOpen",
-                    detail: e,
-                  })
-                }
-                onTabsClose={(e: any) =>
-                  console.log({
-                    type: "tabsClose",
-                    detail: e,
-                  })
-                }
-                onPanelsOpen={(e: any) =>
-                  console.log({
-                    type: "panelsOpen",
-                    detail: e,
-                  })
-                }
-                onPanelsClose={(e: any) =>
-                  console.log({
-                    type: "panelsClose",
-                    detail: e,
-                  })
-                }
+                onActiveTabChange={(detail: any) => sendToPlayground({ type: "onActiveTabChange", detail })}
+                onPanelSplit={(detail: any) => sendToPlayground({ type: "onPanelSplit", detail })}
+                onTabsMove={(detail: any) => sendToPlayground({ type: "onTabsMove", detail })}
+                onTabsOpen={(detail: any) => sendToPlayground({ type: "onTabsOpen", detail })}
+                onTabsClose={(detail: any) => sendToPlayground({ type: "onTabsClose", detail })}
+                onPanelsOpen={(detail: any) => sendToPlayground({ type: "onPanelsOpen", detail })}
+                onPanelsClose={(detail: any) => sendToPlayground({ type: "onPanelsClose", detail })}
                 renderTabHeader={renderTabHeader}
                 renderTabContent={renderTabContent}
               />
@@ -305,6 +268,5 @@ export function PlaygroundApp() {
     </>
   )
 }
-
 
 
