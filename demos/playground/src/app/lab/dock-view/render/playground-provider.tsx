@@ -1,10 +1,13 @@
 "use client"
-import React from "react"
-import { assign, setup } from "xstate"
+import { assign, enqueueActions, setup } from "xstate"
 import { createActorContext, useSelector } from "@xstate/react"
 
 export const playgroundMachine = setup({
   actions: {
+    handleLogEvent: ({ event }) => {
+      console.log({ type: event?.type })
+    },
+
     handleSetController: assign(({ context, event }: any) => ({
       refs: {
         ...context.refs,
@@ -27,42 +30,28 @@ export const playgroundMachine = setup({
         },
       }),
     }),
-    handleNewTab: assign({
-      runtime: ({ context }: any) => {
-        const id = context.runtime.variables.id + 1
-        const seq = context.runtime.variables.seq + 1
-        const prefix = context.config.options.makeTabPrefix
+    handleNewTab: enqueueActions(({ context, event, enqueue }: any) => {
+      const id = context.runtime.variables.id + 1
+      const seq = context.runtime.variables.seq + 1
+      const prefix = context.config.options.makeTabPrefix
+      const tab = {
+        id: `${prefix.id}-${id}`,
+        data: { title: `${prefix.title} ${seq}` },
+      }
 
-        return {
+      enqueue.assign({
+        runtime: () => ({
           ...context.runtime,
           variables: {
             ...context.runtime.variables,
             id,
             seq,
-            newTab: {
-              id: `${prefix.id}-${id}`,
-              data: { title: `${prefix.title} ${seq}` },
-            },
           },
-        }
-      },
+        }),
+      })
+      enqueue(() => event.panel?.appendTab(tab))
     }),
-    handleChange: assign({
-      runtime: ({ context }: any) => ({
-        ...context.runtime,
-        variables: {
-          ...context.runtime.variables,
-          snapshot: context.refs.controllerRef?.getLayout() ?? context.runtime.variables.snapshot,
-        },
-      }),
-    }),
-    handleActiveTabChange: ({ event }: any) => console.log({ type: "activeTab", detail: event.detail }),
-    handlePanelSplit: ({ event }: any) => console.log({ type: "panelSplit", detail: event.detail }),
-    handleTabsMove: ({ event }: any) => console.log({ type: "tabsMove", detail: event.detail }),
-    handleTabsOpen: ({ event }: any) => console.log({ type: "tabsOpen", detail: event.detail }),
-    handleTabsClose: ({ event }: any) => console.log({ type: "tabsClose", detail: event.detail }),
-    handlePanelsOpen: ({ event }: any) => console.log({ type: "panelsOpen", detail: event.detail }),
-    handlePanelsClose: ({ event }: any) => console.log({ type: "panelsClose", detail: event.detail }),
+
   },
   actors: {},
 }).createMachine({
@@ -305,7 +294,6 @@ export const playgroundMachine = setup({
         variables: {
           id: 0,
           seq: 0,
-          newTab: null,
           snapshot: null,
           mounted: false,
         },
@@ -323,17 +311,17 @@ export const playgroundMachine = setup({
   states: {
     idle: {
       on: {
-        onSetController: { actions: "handleSetController" },
-        onMount: { actions: "handleMount" },
-        onNewTab: { actions: "handleNewTab" },
-        onChange: { actions: "handleChange" },
-        onActiveTabChange: { actions: "handleActiveTabChange" },
-        onPanelSplit: { actions: "handlePanelSplit" },
-        onTabsMove: { actions: "handleTabsMove" },
-        onTabsOpen: { actions: "handleTabsOpen" },
-        onTabsClose: { actions: "handleTabsClose" },
-        onPanelsOpen: { actions: "handlePanelsOpen" },
-        onPanelsClose: { actions: "handlePanelsClose" },
+        onSetController: { actions: ["handleSetController"] },
+        onMount: { actions: ["handleMount"] },
+        onNewTab: { actions: ["handleNewTab", "handleLogEvent"] },
+        onChange: { actions: "handleLogEvent" },
+        onActiveTabChange: { actions: "handleLogEvent" },
+        onPanelSplit: { actions: "handleLogEvent" },
+        onTabsMove: { actions: "handleLogEvent" },
+        onTabsOpen: { actions: "handleLogEvent" },
+        onTabsClose: { actions: "handleLogEvent" },
+        onPanelsOpen: { actions: "handleLogEvent" },
+        onPanelsClose: { actions: "handleLogEvent" },
       },
     },
   },
@@ -358,8 +346,8 @@ export function usePlayground() {
   const playgroundRef = PlaygroundContext.useActorRef()
   const sendToPlayground = playgroundRef.send
 
-  const playgroundState: any = useSelector(playgroundRef, (state) => state)
-  const playgroundContext = playgroundState.context
+  const playgroundContext: any = useSelector(playgroundRef, (state: any) => state.context)
+  const playgroundState = playgroundRef.getSnapshot()
 
   const playgroundId = playgroundRef?.id
 
@@ -367,26 +355,6 @@ export function usePlayground() {
   const config = playgroundContext?.config || {}
   const refs = playgroundContext?.refs || {}
   const runtime = playgroundContext?.runtime || {}
-
-  const viewCallbacks = React.useMemo(() => {
-    const createNewTab = () => {
-      sendToPlayground({ type: "onNewTab" })
-      return playgroundRef.getSnapshot().context.runtime.variables.newTab
-    }
-
-    return {
-      setController: (controllerRef: any) => sendToPlayground({ type: "onSetController", controllerRef }),
-      createNewTab,
-      handleChange: () => sendToPlayground({ type: "onChange" }),
-      handleActiveTabChange: (detail: any) => sendToPlayground({ type: "onActiveTabChange", detail }),
-      handlePanelSplit: (detail: any) => sendToPlayground({ type: "onPanelSplit", detail }),
-      handleTabsMove: (detail: any) => sendToPlayground({ type: "onTabsMove", detail }),
-      handleTabsOpen: (detail: any) => sendToPlayground({ type: "onTabsOpen", detail }),
-      handleTabsClose: (detail: any) => sendToPlayground({ type: "onTabsClose", detail }),
-      handlePanelsOpen: (detail: any) => sendToPlayground({ type: "onPanelsOpen", detail }),
-      handlePanelsClose: (detail: any) => sendToPlayground({ type: "onPanelsClose", detail }),
-    }
-  }, [playgroundRef, sendToPlayground])
 
   return {
     playgroundId,
@@ -398,6 +366,5 @@ export function usePlayground() {
     config,
     refs,
     runtime,
-    viewCallbacks,
   }
 }

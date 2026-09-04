@@ -1,3 +1,4 @@
+"use client"
 import { Card, Flex, HStack, Stack } from "@chakra-ui/react"
 import { ScrollArea } from "./scoll-area"
 
