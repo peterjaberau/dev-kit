@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -29,7 +28,7 @@ function renderTabContent(tab: any) {
 
 
 export function PlaygroundApp() {
-  const { playgroundRef, sendToPlayground, config, runtime } = usePlayground()
+  const { sendToPlayground, viewCallbacks, config, runtime } = usePlayground()
   const mounted = runtime.variables?.mounted ?? false
   const stageRef = useRef<HTMLDivElement>(null)
   const browserRef = useRef<HTMLDivElement>(null)
@@ -38,38 +37,9 @@ export function PlaygroundApp() {
     height: number
   } | null>(null)
 
-  const refresh = useCallback(() => {
-    sendToPlayground({ type: "onChange" })
-  }, [sendToPlayground])
-
-  const setController = useCallback(
-    (controllerRef: any) => {
-      sendToPlayground({ type: "onSetController", controllerRef })
-    },
-    [sendToPlayground],
-  )
-
-  const handleNewTab = useCallback(() => {
-    const context = playgroundRef.getSnapshot().context
-    const { id, seq } = context.runtime.variables
-    const nextId = id + 1
-    const nextSeq = seq + 1
-
-    sendToPlayground({ type: "onNewTab" })
-
-    return {
-      id: `${context.config.options.makeTabPrefix.id}-${nextId}`,
-      data: { title: `${context.config.options.makeTabPrefix.title} ${nextSeq}` },
-    }
-  }, [playgroundRef, sendToPlayground])
-
   useEffect(() => {
     sendToPlayground({ type: "onMount" })
   }, [sendToPlayground])
-
-  useEffect(() => {
-    if (mounted) refresh()
-  }, [mounted, refresh])
 
 
   const resizeContextRef = useRef<{
@@ -94,21 +64,18 @@ export function PlaygroundApp() {
     },
   })
 
-  const startResize = useCallback(
-    (event: any, direction: "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw") => {
-      event.preventDefault()
-      const browser = browserRef.current
-      if (!browser) return
-      const initialRect = browser.getBoundingClientRect()
-      resizeContextRef.current = {
-        direction,
-        initialWidth: initialRect.width,
-        initialHeight: initialRect.height,
-      }
-      startDrag(event.currentTarget, event.pointerId)
-    },
-    [startDrag],
-  )
+  const startResize = (event: any, direction: "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw") => {
+    event.preventDefault()
+    const browser = browserRef.current
+    if (!browser) return
+    const initialRect = browser.getBoundingClientRect()
+    resizeContextRef.current = {
+      direction,
+      initialWidth: initialRect.width,
+      initialHeight: initialRect.height,
+    }
+    startDrag(event.currentTarget, event.pointerId)
+  }
 
   return (
     <>
@@ -146,22 +113,22 @@ export function PlaygroundApp() {
           >
             {mounted ? (
               <View
-                ref={setController as any}
+                ref={viewCallbacks.setController as any}
                 initialLayout={config.layout}
                 resizable={config.global.resizable}
                 minSize={config.global.minSize}
                 resizeHandleHitSize={config.global.resizeHandleHitSize}
                 showActionsButton={config.global.showActionsButton}
                 showNewTabButton={config.global.showNewTabButton}
-                onNewTab={handleNewTab}
-                onChange={refresh}
-                onActiveTabChange={(detail: any) => sendToPlayground({ type: "onActiveTabChange", detail })}
-                onPanelSplit={(detail: any) => sendToPlayground({ type: "onPanelSplit", detail })}
-                onTabsMove={(detail: any) => sendToPlayground({ type: "onTabsMove", detail })}
-                onTabsOpen={(detail: any) => sendToPlayground({ type: "onTabsOpen", detail })}
-                onTabsClose={(detail: any) => sendToPlayground({ type: "onTabsClose", detail })}
-                onPanelsOpen={(detail: any) => sendToPlayground({ type: "onPanelsOpen", detail })}
-                onPanelsClose={(detail: any) => sendToPlayground({ type: "onPanelsClose", detail })}
+                onNewTab={viewCallbacks.createNewTab}
+                onChange={viewCallbacks.handleChange}
+                onActiveTabChange={viewCallbacks.handleActiveTabChange}
+                onPanelSplit={viewCallbacks.handlePanelSplit}
+                onTabsMove={viewCallbacks.handleTabsMove}
+                onTabsOpen={viewCallbacks.handleTabsOpen}
+                onTabsClose={viewCallbacks.handleTabsClose}
+                onPanelsOpen={viewCallbacks.handlePanelsOpen}
+                onPanelsClose={viewCallbacks.handlePanelsClose}
                 renderTabHeader={renderTabHeader}
                 renderTabContent={renderTabContent}
               />
@@ -268,5 +235,3 @@ export function PlaygroundApp() {
     </>
   )
 }
-
-

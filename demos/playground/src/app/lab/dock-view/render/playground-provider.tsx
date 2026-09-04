@@ -5,12 +5,19 @@ import { createActorContext, useSelector } from "@xstate/react"
 
 export const playgroundMachine = setup({
   actions: {
-    handleSetController: assign({
-      refs: ({ context, event }: any) => ({
+    handleSetController: assign(({ context, event }: any) => ({
+      refs: {
         ...context.refs,
         controllerRef: event.controllerRef,
-      }),
-    }),
+      },
+      runtime: {
+        ...context.runtime,
+        variables: {
+          ...context.runtime.variables,
+          snapshot: event.controllerRef?.getLayout() ?? context.runtime.variables.snapshot,
+        },
+      },
+    })),
     handleMount: assign({
       runtime: ({ context }: any) => ({
         ...context.runtime,
@@ -21,14 +28,24 @@ export const playgroundMachine = setup({
       }),
     }),
     handleNewTab: assign({
-      runtime: ({ context }: any) => ({
-        ...context.runtime,
-        variables: {
-          ...context.runtime.variables,
-          id: context.runtime.variables.id + 1,
-          seq: context.runtime.variables.seq + 1,
-        },
-      }),
+      runtime: ({ context }: any) => {
+        const id = context.runtime.variables.id + 1
+        const seq = context.runtime.variables.seq + 1
+        const prefix = context.config.options.makeTabPrefix
+
+        return {
+          ...context.runtime,
+          variables: {
+            ...context.runtime.variables,
+            id,
+            seq,
+            newTab: {
+              id: `${prefix.id}-${id}`,
+              data: { title: `${prefix.title} ${seq}` },
+            },
+          },
+        }
+      },
     }),
     handleChange: assign({
       runtime: ({ context }: any) => ({
@@ -288,6 +305,7 @@ export const playgroundMachine = setup({
         variables: {
           id: 0,
           seq: 0,
+          newTab: null,
           snapshot: null,
           mounted: false,
         },
@@ -336,7 +354,6 @@ export const PlaygroundProvider = (props: any) => {
   )
 }
 
-
 export function usePlayground() {
   const playgroundRef = PlaygroundContext.useActorRef()
   const sendToPlayground = playgroundRef.send
@@ -351,6 +368,25 @@ export function usePlayground() {
   const refs = playgroundContext?.refs || {}
   const runtime = playgroundContext?.runtime || {}
 
+  const viewCallbacks = React.useMemo(() => {
+    const createNewTab = () => {
+      sendToPlayground({ type: "onNewTab" })
+      return playgroundRef.getSnapshot().context.runtime.variables.newTab
+    }
+
+    return {
+      setController: (controllerRef: any) => sendToPlayground({ type: "onSetController", controllerRef }),
+      createNewTab,
+      handleChange: () => sendToPlayground({ type: "onChange" }),
+      handleActiveTabChange: (detail: any) => sendToPlayground({ type: "onActiveTabChange", detail }),
+      handlePanelSplit: (detail: any) => sendToPlayground({ type: "onPanelSplit", detail }),
+      handleTabsMove: (detail: any) => sendToPlayground({ type: "onTabsMove", detail }),
+      handleTabsOpen: (detail: any) => sendToPlayground({ type: "onTabsOpen", detail }),
+      handleTabsClose: (detail: any) => sendToPlayground({ type: "onTabsClose", detail }),
+      handlePanelsOpen: (detail: any) => sendToPlayground({ type: "onPanelsOpen", detail }),
+      handlePanelsClose: (detail: any) => sendToPlayground({ type: "onPanelsClose", detail }),
+    }
+  }, [playgroundRef, sendToPlayground])
 
   return {
     playgroundId,
@@ -362,5 +398,6 @@ export function usePlayground() {
     config,
     refs,
     runtime,
+    viewCallbacks,
   }
 }
