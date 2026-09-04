@@ -3,15 +3,14 @@ import NextLink from "next/link"
 
 import { registryNames } from "#registry"
 import { createTreeCollection } from "@chakra-ui/react"
-import { SimpleGrid, GridItem, TreeView, useTreeView } from "@chakra-ui/react"
+import { TreeView, useTreeView } from "@chakra-ui/react"
 import { LuChevronRight, LuFile } from "react-icons/lu"
 import { CardWithScrollArea } from "../components/card-with-scroll-area"
-import { useState } from "react"
 
 interface RegistryNode {
   id: string
   name: string
-  href?: string
+  path?: string
   displayName?: string
   children?: RegistryNode[]
 }
@@ -37,7 +36,7 @@ const buildRegistryTree = (names: string[]) => {
       id: fullName,
       name: fullName,
       displayName: suffix,
-      href: `./${fullName}`,
+      path: encodeURIComponent(fullName),
     })
   })
 
@@ -54,12 +53,10 @@ const collection = createTreeCollection<RegistryNode>({
   rootNode: buildRegistryTree(registryNames),
 })
 
-export default function Index() {
-
+export default function Index({ baseUrl  }: { baseUrl: string }) {
   const store = useTreeView({
     collection,
   })
-
 
   return (
     <CardWithScrollArea title={"Registry"}>
@@ -76,11 +73,11 @@ export default function Index() {
                 </TreeView.BranchControl>
               ) : (
                 <TreeView.Item asChild>
-                  <NextLink href={node.href!}>
-                  <LuFile />
-                  <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
-                    {node.displayName ?? node.name}
-                  </TreeView.ItemText>
+                  <NextLink href={`${baseUrl}/${node.path!}`}>
+                    <LuFile />
+                    <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
+                      {node.displayName ?? node.name}
+                    </TreeView.ItemText>
                   </NextLink>
                 </TreeView.Item>
               )
