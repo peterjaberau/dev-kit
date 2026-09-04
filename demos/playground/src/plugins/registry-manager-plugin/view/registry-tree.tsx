@@ -1,7 +1,7 @@
 "use client"
 import NextLink from "next/link"
 
-import { registryNames } from "#registry"
+import { registryNames, registryPluginPrefixes } from "#registry"
 import { createTreeCollection } from "@chakra-ui/react"
 import { TreeView, useTreeView } from "@chakra-ui/react"
 import { LuChevronRight, LuFile } from "react-icons/lu"
@@ -15,12 +15,14 @@ interface RegistryNode {
   children?: RegistryNode[]
 }
 
-const buildRegistryTree = (names: string[]) => {
+const buildRegistryTree = (names: string[], prefixes: string[]) => {
   const groups: Record<string, RegistryNode> = {}
 
   names.forEach((fullName) => {
-    const parts = fullName.split("-")
-    const groupKey: any = parts.length >= 2 ? `${parts[0]}-${parts[1]}` : parts[0]
+    const prefix = prefixes
+      .filter((candidate) => fullName.startsWith(candidate))
+      .sort((a, b) => b.length - a.length)[0]
+    const groupKey = prefix ? prefix.replace(/-$/, "") : "other"
 
     if (!groups[groupKey]) {
       groups[groupKey] = {
@@ -30,7 +32,7 @@ const buildRegistryTree = (names: string[]) => {
       }
     }
 
-    const suffix = fullName.startsWith(groupKey + "-") ? fullName.slice(groupKey.length + 1) : fullName
+    const suffix = prefix ? fullName.slice(prefix.length) : fullName
 
     groups[groupKey].children!.push({
       id: fullName,
@@ -50,10 +52,10 @@ const buildRegistryTree = (names: string[]) => {
 const collection = createTreeCollection<RegistryNode>({
   nodeToValue: (node) => node.id,
   nodeToString: (node) => node.name,
-  rootNode: buildRegistryTree(registryNames),
+  rootNode: buildRegistryTree(registryNames, registryPluginPrefixes),
 })
 
-export default function Index({ baseUrl  }: { baseUrl: string }) {
+export default function Index({ baseUrl }: { baseUrl: string }) {
   const store = useTreeView({
     collection,
   })

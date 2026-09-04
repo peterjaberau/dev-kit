@@ -6,16 +6,19 @@ import { registerComponentsPlugin } from "#plugins/components-plugin"
 import { registerFormsPlugin } from "#plugins/forms-plugin"
 import { registerRegistryManagerPlugin } from "#plugins/registry-manager-plugin"
 
+const registeredPlugins = [registerComponentsPlugin, registerFormsPlugin, registerRegistryManagerPlugin]
+
+export const registryPluginPrefixes = registeredPlugins.map(({ prefix }) => prefix)
+
 export const makeRegistry = (loaders: any, prefix: string) =>
   Object.fromEntries(
     Object.entries(loaders).map(([key, loader]: any) => [`${prefix}${key}`, dynamic(loader, { ssr: false })]),
   )
 
-const registry = {
-  ...makeRegistry(registerComponentsPlugin.loaders, registerComponentsPlugin.prefix),
-  ...makeRegistry(registerFormsPlugin.loaders, registerFormsPlugin.prefix),
-  ...makeRegistry(registerRegistryManagerPlugin.loaders, registerRegistryManagerPlugin.prefix),
-}
+const registry = Object.assign(
+  {},
+  ...registeredPlugins.map(({ loaders, prefix }) => makeRegistry(loaders, prefix)),
+)
 
 export const registryComponentsObj = (id: any) => {
   const getComponentMeta = registry[id]
@@ -47,4 +50,3 @@ export const ComponentRenderer = (props: { id: string; withCache?: boolean; [key
 
 export const getRegistryNamesFromRegistry = (registry: Record<string, any>): string[] => Object.keys(registry)
 export const registryNames: any = getRegistryNamesFromRegistry(registry)
-
