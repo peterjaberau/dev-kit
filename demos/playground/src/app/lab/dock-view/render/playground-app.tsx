@@ -10,6 +10,7 @@ import {
 import { Box, Flex, HStack, Icon as ChakraIcon, Text } from "@chakra-ui/react"
 import { View } from "#view/react"
 import { usePointerDrag } from "./use-pointer-drag"
+import { RegistryTree } from "#plugins/registry-manager-plugin/view"
 import {
   RiCodeSLine,
   RiFileTextLine,
@@ -17,6 +18,7 @@ import {
   RiLayoutLine,
   RiPulseLine,
   RiTerminalBoxLine,
+  RiSearch2Line
 } from "react-icons/ri"
 import {
   PG_DEFAULT_LAYOUT,
@@ -163,8 +165,8 @@ export function PlaygroundApp() {
           h={{ base: "full", lg: "min(660px, 100%)" }}
           maxH="full"
           minH="18rem"
-          w={{ base: "full", lg: "min(980px, 100%)" }}
-          minW="24rem"
+          w={{ base: "full", lg: "min(1240px, 100%)" }}
+          minW="48rem"
           maxW="full"
           overflow="hidden"
           borderWidth="1px"
@@ -345,14 +347,15 @@ export function PlaygroundApp() {
 const KIND_ICON: any = {
   editor: RiCodeSLine,
   terminal: RiTerminalBoxLine,
+  output: RiPulseLine,
   files: RiFolder3Line,
   preview: RiLayoutLine,
   notes: RiFileTextLine,
-  output: RiPulseLine,
+  search: RiSearch2Line,
 }
 
 function renderTabHeader(tab: any) {
-  const KindIcon = KIND_ICON[tab.data.kind]
+  const KindIcon = tab.data.kind ? KIND_ICON[tab.data.kind] : KIND_ICON["preview"]
   return (
     <HStack as="span" display="inline-flex" gap="2">
       <ChakraIcon fontSize="sm" opacity="0.78" aria-hidden="true">
@@ -453,12 +456,16 @@ export function App() {
           />
         </div>
       )
+    case "search":
+      return (
+        <div>
+          search content
+        </div>
+      )
     case "notes":
     default:
       return (
-        <p style={{ margin: 0 }}>
-          {title} — a draggable, splittable surface. Use the inspector to lock, float, pop out, or rearrange this panel.
-        </p>
+        <RegistryTree baseUrl={"/lab/registry"} />
       )
   }
 }

@@ -6,6 +6,7 @@ import { createTreeCollection } from "@chakra-ui/react"
 import { TreeView, useTreeView } from "@chakra-ui/react"
 import { LuChevronRight, LuFile } from "react-icons/lu"
 import { CardWithScrollArea } from "../components/card-with-scroll-area"
+import { WrapperWithScrollArea } from "../components/wrapper-with-scroll-area"
 
 interface RegistryNode {
   id: string
@@ -55,7 +56,13 @@ const collection = createTreeCollection<RegistryNode>({
   rootNode: buildRegistryTree(registryNames, registryPluginPrefixes),
 })
 
-export default function Index({ baseUrl }: { baseUrl: string }) {
+export interface RegistryTreeProps {
+  actionType?: "navigate" | "select"
+  baseUrl?: string
+  withCardWrapper?: boolean
+}
+
+export default function Index({ actionType = "navigate", baseUrl, withCardWrapper=true }: RegistryTreeProps) {
   const store = useTreeView({
     collection,
   })
@@ -75,12 +82,23 @@ export default function Index({ baseUrl }: { baseUrl: string }) {
                 </TreeView.BranchControl>
               ) : (
                 <TreeView.Item asChild>
-                  <NextLink href={`${baseUrl}/${node.path!}`}>
-                    <LuFile />
-                    <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
-                      {node.displayName ?? node.name}
-                    </TreeView.ItemText>
-                  </NextLink>
+                  {actionType === "navigate" && (
+                    <NextLink href={`${baseUrl}/${node.path!}`}>
+                      <LuFile />
+                      <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
+                        {node.displayName ?? node.name}
+                      </TreeView.ItemText>
+                    </NextLink>
+                  )}
+
+                  {actionType === "select" && (
+                    <>
+                      <LuFile />
+                      <TreeView.ItemText fontWeight={store.selectedValue === node.id ? "bold" : "normal"}>
+                        {node.displayName ?? node.name}
+                      </TreeView.ItemText>
+                    </>
+                  )}
                 </TreeView.Item>
               )
             }

@@ -11,23 +11,17 @@
 
 
 
-export const PG_TAB_KINDS: string[] = [
-  'editor',
-  'terminal',
-  'notes',
-  'preview',
-  'files',
-  'output',
-];
+export const PG_TAB_KINDS: string[] = ["editor", "terminal", "output", "files", "preview", "search", "notes"]
 
 export const PG_KIND_LABEL: any = {
-  editor: 'Editor',
-  terminal: 'Terminal',
-  files: 'Files',
-  preview: 'Preview',
-  notes: 'Notes',
-  output: 'Output',
-} as any;
+  editor: "Editor",
+  terminal: "Terminal",
+  output: "Output",
+  files: "Files",
+  preview: "Preview",
+  search: "Search",
+  notes: "Notes",
+} as any
 
 // ---------------------------------------------------------------------------
 // Layouts + presets
@@ -209,7 +203,75 @@ const floatingLayout: any = {
 };
 
 
-export const PG_DEFAULT_LAYOUT = defaultLayout;
+const edgeLayout: any = {
+  type: "root",
+  main: {
+    type: "group",
+    direction: "horizontal",
+    children: [
+      {
+        type: "panel",
+        id: "editor-a",
+        size: 58,
+        tabs: [
+          { id: "index-ts", data: { title: "index.ts", kind: "editor" } },
+          { id: "router-ts", data: { title: "router.ts", kind: "editor" } },
+        ],
+      },
+      {
+        type: "panel",
+        id: "editor-b",
+        size: 42,
+        tabs: [{ id: "preview", data: { title: "Preview", kind: "preview" } }],
+      },
+    ],
+  },
+  edges: {
+    left: {
+      type: "edgePanel",
+      id: "left-tools",
+      size: 22,
+      minSize: 14,
+      maxSize: 34,
+      tabs: [
+        {
+          id: "files",
+          data: { title: "Registry" },
+          closable: false,
+        },
+        { id: "search", data: { title: "Search", kind: "search" } },
+      ],
+    },
+    right: {
+      type: "edgePanel",
+      id: "right-tools",
+      size: 18,
+      minSize: 12,
+      maxSize: 28,
+      tabs: [{ id: "notes", data: { title: "Notes", kind: "notes" } }],
+    },
+    bottom: {
+      type: "edgePanel",
+      id: "bottom-tools",
+      size: 28,
+      minSize: 18,
+      maxSize: 42,
+      tabs: [
+        {
+          id: "terminal",
+          data: { title: "Terminal", kind: "terminal" },
+          closable: false,
+        },
+        { id: "output", data: { title: "Output", kind: "output" } },
+      ],
+    },
+  },
+}
+
+
+// export const PG_DEFAULT_LAYOUT = defaultLayout;
+
+export const PG_DEFAULT_LAYOUT = edgeLayout;
 
 export const PG_PRESETS: any[] = [
   { id: 'default', label: 'Default', layout: defaultLayout },
