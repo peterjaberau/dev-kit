@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@xstate/store": "^3.15.0",
+    "react-map-gl": "^8.1.3",
     "@dev-kit/components": "workspace:*",
     "@dev-kit/icons": "workspace:*",
     "next": "^16.3.3",
@@ -19,6 +21,7 @@
     "react-use-measure": "^2.1.7"
   },
   "devDependencies": {
+    "@types/react-map-gl": "^6.1.10",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "typescript": "^5.8.3",

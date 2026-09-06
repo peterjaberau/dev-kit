@@ -35,6 +35,8 @@
       "#modules": ["./src/modules"],
       "#plugins/*": ["./src/plugins/*"],
       "#plugins": ["./src/plugins"],
+      "#adaptive-view/*": ["./src/modules/adaptive-view/*"],
+      "#adaptive-view": ["./src/modules/adaptive-view"],
       "#registry/*": ["./src/registry/*"],
       "#registry": ["./src/registry"],
       "#views/*": ["./src/views/*"],
