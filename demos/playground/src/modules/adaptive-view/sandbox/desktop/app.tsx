@@ -758,7 +758,7 @@ const DockviewDemo = (props: DockviewDemoProps) => {
     // import above registers. Memoized so the prop only reaches `updateOptions`
     // when the mode actually changes.
     const overflow = React.useMemo(
-        () => ({ mode: tabOverflowMode }),
+        () => ({ mode: tabOverflowMode, mru: false, search: true }),
         [tabOverflowMode]
     );
 

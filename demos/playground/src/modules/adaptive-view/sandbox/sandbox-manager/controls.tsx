@@ -21,7 +21,7 @@ const Icon = (props: {
 
 const groupControlsComponents: Record<string, React.FC> = {
     panel_1: () => {
-        return <Icon icon="file_download" />;
+        return <Icon icon="download" />;
     },
 };
 
@@ -162,7 +162,7 @@ export const PrefixHeaderControls = (props: IDockviewHeaderActionsProps | any) =
                 color: 'var(--dv-activegroup-visiblepanel-tab-color)',
             }}
         >
-            <Icon icon="Menu" />
+            <Icon icon="menu" />
         </div>
     );
 };
