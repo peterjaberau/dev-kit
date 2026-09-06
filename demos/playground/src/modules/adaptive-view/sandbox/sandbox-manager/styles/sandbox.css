@@ -1,0 +1,167 @@
+/* The demo chrome puts a permanent accent outline on every button/input.
+ * The layout manager styles its own controls via the kit, so strip that leaked
+ * outline here and use a clean focus-visible ring for keyboard users instead. */
+.sandbox .dv-layout-manager-panel button,
+.sandbox .dv-layout-manager-panel input,
+.sandbox .dv-layout-manager-panel select,
+.sandbox .dv-layout-manager-panel input:focus,
+.sandbox .dv-layout-manager-panel select:focus {
+    outline: none !important;
+}
+
+.sandbox .dv-layout-manager-panel button:focus-visible,
+.sandbox .dv-layout-manager-panel select:focus-visible,
+.sandbox .dv-layout-manager-panel input[type='text']:focus-visible,
+.sandbox .dv-layout-manager-panel input[type='color']:focus-visible {
+    outline: 2px solid var(--ifm-color-primary, #5d94f4) !important;
+    outline-offset: 1px;
+}
+
+.sandbox {
+    --demo-btn-bg: #1c254a;
+    --demo-btn-bg-hover: #222e62;
+    --demo-btn-color: #ffffff;
+    --demo-accent: #4c65d4;
+    --demo-accent-selected: #4864dc;
+}
+
+.sandbox.sandbox--light {
+    --demo-btn-bg: #e9edfb;
+    --demo-btn-bg-hover: #dbe1f7;
+    --demo-btn-color: #1c254a;
+    --ifm-background-surface-color: #ffffff;
+    --ifm-background-color: #f5f7fb;
+    --ifm-hover-overlay: rgba(28, 37, 74, 0.06);
+    --ifm-toc-border-color: #d8deea;
+    --ifm-heading-color: #172033;
+    --ifm-font-color-base: #344054;
+    --ifm-color-content-secondary: #667085;
+    --ifm-color-emphasis-300: #cbd3e1;
+    --ifm-color-emphasis-500: #7b8496;
+    --dv-border: #d8deea;
+    --dv-border-strong: #bcc6d7;
+    --dv-accent-soft: rgba(76, 101, 212, 0.12);
+    --dv-accent-soft-hover: rgba(76, 101, 212, 0.2);
+    --dv-shadow-sm: 0 1px 2px rgba(31, 42, 68, 0.08);
+    --dv-shadow-md: 0 4px 14px rgba(31, 42, 68, 0.12);
+    --dv-shadow-lg: 0 20px 44px -14px rgba(31, 42, 68, 0.24);
+}
+
+.sandbox.dv-theme-animating,
+.sandbox.dv-theme-animating * {
+    transition: background-color 0.3s ease, color 0.3s ease,
+        border-color 0.3s ease, outline-color 0.3s ease, fill 0.3s ease;
+}
+
+.sandbox .group-control .action {
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.sandbox .group-control .action:hover {
+    border-radius: 2px;
+    color: var(--dv-activegroup-visiblepanel-tab-color);
+    background-color: var(--dv-icon-hover-background-color);
+}
+
+.sandbox .data-table table {
+    font-size: 11px;
+}
+
+.sandbox .data-table table th {
+    padding: 0px 8px;
+}
+
+.sandbox button:not(.dv-default-tab-action) {
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--demo-btn-bg);
+        color: var(--demo-btn-color);
+        border: none;
+        cursor: pointer;
+    outline: 1px solid var(--demo-accent);
+}
+
+.sandbox button:not(.dv-default-tab-action):focus {
+    outline: 1px solid var(--demo-accent) !important;
+}
+
+.sandbox button:not(.dv-default-tab-action):hover {
+    background-color: var(--demo-btn-bg-hover);
+}
+
+.sandbox input {
+        outline: 1px solid var(--demo-accent);
+        border: none;
+        margin: 0px;
+    height: 25px;
+}
+
+.sandbox input:focus {
+    outline: 1px solid var(--demo-accent) !important;
+}
+
+.sandbox .action-container {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 4px;
+    overflow: auto;
+}
+
+.sandbox .action-container .action-row {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+    margin-bottom: 4px;
+}
+
+.sandbox .action-container .text-button,
+.sandbox .action-container .button-action {
+    margin: 0px 4px;
+}
+
+.sandbox .action-container .button-action .selected {
+    background-color: var(--demo-accent-selected);
+}
+
+.sandbox .action-container .button-group button {
+    margin-right: 0px;
+}
+
+.sandbox .action-container .demo-button {
+            min-width: 50px;
+            padding: 0px 2px;
+            border-radius: 0px;
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+    outline: 1px solid var(--demo-accent);
+}
+
+.sandbox .action-container .demo-icon-button {
+            outline: 1px solid var(--demo-accent);
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            border-radius: 0px;
+            padding: 0px 4px;
+            border: none;
+    cursor: pointer;
+}
+
+.sandbox .action-container .demo-icon-button:disabled {
+    color: gray;
+    cursor: help;
+}
+
+.sandbox .action-container .demo-icon-button span {
+    font-size: 16px;
+}
