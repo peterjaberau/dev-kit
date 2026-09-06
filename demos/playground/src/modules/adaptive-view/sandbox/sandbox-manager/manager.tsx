@@ -1,27 +1,33 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
-import AdaptiveViewDesktopSandbox from '../desktop';
-import AdvaptiveViewMobileSandbox from '../mobile';
-import { ControlsContent } from '../components/settingsModal';
+import {
+    ControlsContent,
+    type ControlsContentProps,
+} from '../components/settingsModal';
 import {
     useSandboxManagerSelector,
     useSandboxManagerStore,
 } from './provider';
-import { sandboxThemes, SandboxVariant } from './store';
+import { sandboxThemes } from './store';
 import { buildEffectiveLayoutManagerTheme } from './layoutManagerTheme';
 import { LayoutManager } from './layoutManager';
 import './styles/dockview.css';
 import './styles/manager.css';
 import './styles/sandbox.css';
 
-export interface SandboxManagerProps {
-    variant: SandboxVariant;
+export interface SandboxManagerRenderProps {
+    theme: ReturnType<typeof buildEffectiveLayoutManagerTheme>;
+    onReady: () => void;
+    renderControls: (controls: ControlsContentProps) => React.ReactNode;
 }
 
-export default function SandboxManager({ variant }: SandboxManagerProps) {
+export interface SandboxManagerProps {
+    children: (props: SandboxManagerRenderProps) => React.ReactNode;
+}
+
+export default function SandboxManager({ children }: SandboxManagerProps) {
     const store = useSandboxManagerStore();
     const pathname = usePathname();
     const router = useRouter();
@@ -41,13 +47,6 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
         [theme, layoutManagerTheme]
     );
     const urlLayoutProfileId = searchParams.get('layout');
-    const query = searchParams.toString();
-    const desktopHref = `/lab/adaptive-view/desktop${query ? `?${query}` : ''}`;
-    const mobileHref = `/lab/adaptive-view/mobile${query ? `?${query}` : ''}`;
-
-    React.useEffect(() => {
-        store.trigger.setVariant({ variant });
-    }, [store, variant]);
 
     React.useEffect(() => {
         const currentProfileId =
@@ -123,32 +122,6 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
             data-color-scheme={theme.colorScheme ?? 'dark'}
         >
             <header className="adaptive-sandbox-manager__toolbar">
-                <nav
-                    className="adaptive-sandbox-manager__variants"
-                    aria-label="Sandbox viewport"
-                >
-                    <Link
-                        href={desktopHref}
-                        className={variant === 'desktop' ? 'is-active' : ''}
-                        aria-current={variant === 'desktop' ? 'page' : undefined}
-                        onClick={() =>
-                            store.trigger.prepareVariant({ variant: 'desktop' })
-                        }
-                    >
-                        Desktop
-                    </Link>
-                    <Link
-                        href={mobileHref}
-                        className={variant === 'mobile' ? 'is-active' : ''}
-                        aria-current={variant === 'mobile' ? 'page' : undefined}
-                        onClick={() =>
-                            store.trigger.prepareVariant({ variant: 'mobile' })
-                        }
-                    >
-                        Mobile
-                    </Link>
-                </nav>
-
                 <div className="adaptive-sandbox-manager__actions">
                     <label>
                         <span>Theme</span>
@@ -171,16 +144,14 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
                         </select>
                     </label>
 
-                    {variant === 'desktop' && (
-                        <button
-                            type="button"
-                            className={layoutManagerOpen ? 'is-active' : ''}
-                            aria-pressed={layoutManagerOpen}
-                            onClick={() => store.trigger.toggleLayoutManager()}
-                        >
-                            Controls &amp; Theme
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        className={layoutManagerOpen ? 'is-active' : ''}
+                        aria-pressed={layoutManagerOpen}
+                        onClick={() => store.trigger.toggleLayoutManager()}
+                    >
+                        Controls &amp; Theme
+                    </button>
                 </div>
             </header>
 
@@ -188,38 +159,29 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
                 ref={frameRef}
                 className="adaptive-sandbox-manager__frame"
             >
-                {variant === 'desktop' ? (
-                    <AdaptiveViewDesktopSandbox
-                        theme={effectiveTheme}
-                        onReady={markReady}
-                        renderControls={(controls) => (
-                            <LayoutManager
-                                open={layoutManagerOpen}
-                                onClose={() => store.trigger.closeLayoutManager()}
-                                state={layoutManagerTheme}
-                                onChange={(patch) =>
-                                    store.trigger.updateLayoutManagerTheme({
-                                        patch,
-                                    })
-                                }
-                                onCssChange={(patch) =>
-                                    store.trigger.updateThemeCss({ patch })
-                                }
-                                onReset={() =>
-                                    store.trigger.resetLayoutManagerTheme()
-                                }
-                                baseTheme={theme}
-                                containerEl={frameRef.current}
-                                controls={<ControlsContent {...controls} />}
-                            />
-                        )}
-                    />
-                ) : (
-                    <AdvaptiveViewMobileSandbox
-                        theme={effectiveTheme}
-                        onReady={markReady}
-                    />
-                )}
+                {children({
+                    theme: effectiveTheme,
+                    onReady: markReady,
+                    renderControls: (controls) => (
+                        <LayoutManager
+                            open={layoutManagerOpen}
+                            onClose={() => store.trigger.closeLayoutManager()}
+                            state={layoutManagerTheme}
+                            onChange={(patch) =>
+                                store.trigger.updateLayoutManagerTheme({ patch })
+                            }
+                            onCssChange={(patch) =>
+                                store.trigger.updateThemeCss({ patch })
+                            }
+                            onReset={() =>
+                                store.trigger.resetLayoutManagerTheme()
+                            }
+                            baseTheme={theme}
+                            containerEl={frameRef.current}
+                            controls={<ControlsContent {...controls} />}
+                        />
+                    ),
+                })}
 
                 <div
                     className={`adaptive-sandbox-manager__loader${

@@ -1,5 +1,5 @@
-import SandboxManager from '#adaptive-view/sandbox/sandbox-manager/manager';
+import AdaptiveViewDesktopSandbox from '#adaptive-view/sandbox/desktop';
 
 export default function DesktopAdaptiveViewPage() {
-    return <SandboxManager variant="desktop" />;
+    return <AdaptiveViewDesktopSandbox />;
 }

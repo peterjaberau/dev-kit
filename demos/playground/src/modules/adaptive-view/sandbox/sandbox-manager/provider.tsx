@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useSelector } from '@xstate/store/react';
 import {
     createSandboxManagerStore,
+    SandboxManagerStoreInput,
     SandboxManagerStore,
 } from './store';
 
@@ -13,8 +14,9 @@ const SandboxManagerStoreContext = React.createContext<
 
 export function SandboxManagerProvider({
     children,
-}: React.PropsWithChildren) {
-    const [store] = React.useState(createSandboxManagerStore);
+    input,
+}: React.PropsWithChildren<{ input?: SandboxManagerStoreInput }>) {
+    const [store] = React.useState(() => createSandboxManagerStore(input));
 
     return (
         <SandboxManagerStoreContext.Provider value={store}>

@@ -10,8 +10,6 @@ import {
     LayoutManagerThemeCssOverrides,
 } from './layoutManagerTheme';
 
-export type SandboxVariant = 'desktop' | 'mobile';
-
 export interface SandboxThemeOption {
     label: string;
     theme: DockviewTheme;
@@ -27,7 +25,6 @@ export const sandboxThemes: readonly SandboxThemeOption[] =
     LAYOUT_MANAGER_BUILTIN_THEMES;
 
 interface SandboxManagerContext {
-    variant: SandboxVariant;
     theme: DockviewTheme;
     layoutManagerTheme: LayoutManagerThemeState;
     layoutManagerOpen: boolean;
@@ -37,42 +34,28 @@ interface SandboxManagerContext {
     layoutRevision: number;
 }
 
-const initialContext: SandboxManagerContext = {
-    variant: 'desktop',
-    theme: themeGithubLightSpaced,
-    layoutManagerTheme: getInitialStateFromLayoutManagerTheme(
-        themeGithubLightSpaced
-    ),
-    layoutManagerOpen: false,
-    ready: false,
-    layoutProfiles: [],
-    selectedLayoutProfileId: null,
-    layoutRevision: 0,
-};
+export interface SandboxManagerStoreInput {
+    initialTheme?: DockviewTheme;
+    layoutProfiles?: readonly SandboxLayoutProfile[];
+}
 
-export function createSandboxManagerStore() {
+export function createSandboxManagerStore(
+    input: SandboxManagerStoreInput = {}
+) {
+    const theme = input.initialTheme ?? themeGithubLightSpaced;
+    const context: SandboxManagerContext = {
+        theme,
+        layoutManagerTheme: getInitialStateFromLayoutManagerTheme(theme),
+        layoutManagerOpen: false,
+        ready: false,
+        layoutProfiles: input.layoutProfiles ?? [],
+        selectedLayoutProfileId: null,
+        layoutRevision: 0,
+    };
+
     return createStore({
-        context: initialContext,
+        context,
         on: {
-            setVariant: (
-                context,
-                event: { variant: SandboxVariant }
-            ): SandboxManagerContext => ({
-                ...context,
-                variant: event.variant,
-                layoutManagerOpen:
-                    event.variant === 'desktop' && context.layoutManagerOpen,
-            }),
-            prepareVariant: (
-                context,
-                event: { variant: SandboxVariant }
-            ): SandboxManagerContext => ({
-                ...context,
-                variant: event.variant,
-                layoutManagerOpen:
-                    event.variant === 'desktop' && context.layoutManagerOpen,
-                ready: false,
-            }),
             selectTheme: (
                 context,
                 event: { themeName: string }
@@ -129,13 +112,6 @@ export function createSandboxManagerStore() {
                 layoutManagerTheme: getInitialStateFromLayoutManagerTheme(
                     context.theme
                 ),
-            }),
-            setLayoutProfiles: (
-                context,
-                event: { profiles: readonly SandboxLayoutProfile[] }
-            ): SandboxManagerContext => ({
-                ...context,
-                layoutProfiles: event.profiles,
             }),
             selectLayoutProfile: (
                 context,

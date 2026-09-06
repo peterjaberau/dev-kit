@@ -126,7 +126,7 @@
     display: flex;
     flex: 0 0 44px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 16px;
     padding: 0 12px;
     border-bottom: 1px solid var(--manager-border);
@@ -135,7 +135,6 @@
     font: 500 13px/1.2 Inter, system-ui, sans-serif;
 }
 
-.adaptive-sandbox-manager__variants,
 .adaptive-sandbox-manager__actions,
 .adaptive-sandbox-manager__actions label {
     display: flex;
@@ -143,13 +142,6 @@
     gap: 8px;
 }
 
-.adaptive-sandbox-manager__variants {
-    padding: 3px;
-    border: 1px solid var(--manager-border);
-    border-radius: 7px;
-}
-
-.adaptive-sandbox-manager__variants a,
 .adaptive-sandbox-manager__actions button {
     border: 0;
     border-radius: 5px;
@@ -157,11 +149,6 @@
     color: var(--manager-muted);
     cursor: pointer;
     font: inherit;
-    text-decoration: none;
-}
-
-.adaptive-sandbox-manager__variants a {
-    padding: 4px 9px;
 }
 
 .adaptive-sandbox-manager__actions button {
@@ -169,12 +156,10 @@
     border: 1px solid var(--manager-border);
 }
 
-.adaptive-sandbox-manager__variants a:hover,
 .adaptive-sandbox-manager__actions button:hover {
     color: var(--manager-text);
 }
 
-.adaptive-sandbox-manager__variants a.is-active,
 .adaptive-sandbox-manager__actions button.is-active {
     background: var(--manager-accent);
     color: #fff;
