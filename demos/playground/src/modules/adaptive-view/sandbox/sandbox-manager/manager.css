@@ -1,0 +1,187 @@
+.adaptive-sandbox-manager {
+    --manager-bg: #11131a;
+    --manager-surface: #191c25;
+    --manager-border: rgba(255, 255, 255, 0.14);
+    --manager-text: #f7f8fb;
+    --manager-muted: #a9afbd;
+    --manager-accent: #5d94f4;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--manager-bg);
+    color: var(--manager-text);
+}
+
+/* The original Docusaurus shell supplied this globally. Material Symbols use
+   ligature text, so without the font Next.js renders names such as
+   "expand_more" instead of their icons. */
+.adaptive-sandbox-manager .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+.adaptive-sandbox-manager[data-color-scheme='light'] {
+    --manager-bg: #f4f6fa;
+    --manager-surface: #ffffff;
+    --manager-border: rgba(25, 32, 46, 0.16);
+    --manager-text: #1b2230;
+    --manager-muted: #687184;
+}
+
+.adaptive-sandbox-manager__toolbar {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    flex: 0 0 44px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--manager-border);
+    background: var(--manager-surface);
+    color: var(--manager-text);
+    font: 500 13px/1.2 Inter, system-ui, sans-serif;
+}
+
+.adaptive-sandbox-manager__variants,
+.adaptive-sandbox-manager__actions,
+.adaptive-sandbox-manager__actions label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.adaptive-sandbox-manager__variants {
+    padding: 3px;
+    border: 1px solid var(--manager-border);
+    border-radius: 7px;
+}
+
+.adaptive-sandbox-manager__variants a,
+.adaptive-sandbox-manager__actions button {
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--manager-muted);
+    cursor: pointer;
+    font: inherit;
+    text-decoration: none;
+}
+
+.adaptive-sandbox-manager__variants a {
+    padding: 4px 9px;
+}
+
+.adaptive-sandbox-manager__actions button {
+    padding: 7px 10px;
+    border: 1px solid var(--manager-border);
+}
+
+.adaptive-sandbox-manager__variants a:hover,
+.adaptive-sandbox-manager__actions button:hover {
+    color: var(--manager-text);
+}
+
+.adaptive-sandbox-manager__variants a.is-active,
+.adaptive-sandbox-manager__actions button.is-active {
+    background: var(--manager-accent);
+    color: #fff;
+}
+
+.adaptive-sandbox-manager__actions label > span {
+    color: var(--manager-muted);
+}
+
+.adaptive-sandbox-manager__actions select {
+    min-width: 150px;
+    padding: 6px 28px 6px 8px;
+    border: 1px solid var(--manager-border);
+    border-radius: 6px;
+    background: var(--manager-bg);
+    color: var(--manager-text);
+    font: inherit;
+}
+
+.adaptive-sandbox-manager__frame {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.adaptive-sandbox-manager__loader {
+    position: absolute;
+    z-index: 30;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--manager-bg);
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+}
+
+.adaptive-sandbox-manager__loader.is-ready {
+    opacity: 0;
+}
+
+.adaptive-sandbox-manager__loader span {
+    width: 34px;
+    height: 34px;
+    border: 3px solid var(--manager-border);
+    border-top-color: var(--manager-accent);
+    border-radius: 50%;
+    animation: adaptive-sandbox-manager-spin 700ms linear infinite;
+}
+
+@keyframes adaptive-sandbox-manager-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .adaptive-sandbox-manager__toolbar {
+        flex-basis: 50px;
+        padding: 0 8px;
+    }
+
+    .adaptive-sandbox-manager__actions label > span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+
+    .adaptive-sandbox-manager__actions select {
+        min-width: 120px;
+        max-width: 42vw;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .adaptive-sandbox-manager__loader {
+        transition: none;
+    }
+
+    .adaptive-sandbox-manager__loader span {
+        animation: none;
+    }
+}
