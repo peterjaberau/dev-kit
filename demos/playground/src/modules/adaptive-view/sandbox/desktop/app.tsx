@@ -29,7 +29,7 @@ import {
     LeftControls,
     PrefixHeaderControls,
     RightControls,
-} from '../sandbox-manager/controls';
+} from '../components/headerActions';
 import { Table, usePanelApiMetadata } from '../sandbox-manager/debugPanel';
 import { OrdersPanel } from './ordersPanel';
 import { OrderBookPanel } from './orderBookPanel';
@@ -48,11 +48,11 @@ import { CorrelationPanel } from './correlationPanel';
 import { VolSurfacePanel } from './volSurfacePanel';
 import { MONO, VisibilityGate } from './panelKit';
 import {
-    PanelColorsContext,
-    DARK_COLORS,
-    LIGHT_COLORS,
-    usePanelColors,
-} from '../sandbox-manager/panelTheme';
+    SandboxColorsContext,
+    SANDBOX_DARK_COLORS,
+    SANDBOX_LIGHT_COLORS,
+    useSandboxColors,
+} from '../sandbox-manager/sandboxTheme';
 import type { ControlsContentProps } from '../components/settingsModal';
 
 export const ApiContext = React.createContext<DockviewApi | undefined>(
@@ -92,7 +92,7 @@ const components = {
     default: (props: IDockviewPanelProps) => {
         const isDebug = React.useContext(DebugContext);
         const metadata = usePanelApiMetadata(props.api);
-        const c = usePanelColors();
+        const c = useSandboxColors();
 
         if (isDebug) {
             return (
@@ -202,7 +202,7 @@ const components = {
         );
     },
     fixedPlaceholder: (props: IDockviewPanelProps) => {
-        const c = usePanelColors();
+        const c = useSandboxColors();
         return (
             <div
                 style={{
@@ -723,9 +723,9 @@ const DockviewDemo = (props: DockviewDemoProps) => {
 
     const effectiveTheme = props.theme ?? themeAbyss;
 
-    const panelColors = React.useMemo(
+    const sandboxColors = React.useMemo(
         () =>
-            effectiveTheme.colorScheme === 'light' ? LIGHT_COLORS : DARK_COLORS,
+            effectiveTheme.colorScheme === 'light' ? SANDBOX_LIGHT_COLORS : SANDBOX_DARK_COLORS,
         [effectiveTheme]
     );
 
@@ -973,7 +973,7 @@ const DockviewDemo = (props: DockviewDemoProps) => {
                         visibility: layoutReady ? 'visible' : 'hidden',
                     }}
                 >
-                    <PanelColorsContext.Provider value={panelColors}>
+                    <SandboxColorsContext.Provider value={sandboxColors}>
                         <MarketProvider>
                             <ApiContext.Provider value={api}>
                                 <DebugContext.Provider value={debug}>
@@ -1029,7 +1029,7 @@ const DockviewDemo = (props: DockviewDemoProps) => {
                                 </DebugContext.Provider>
                             </ApiContext.Provider>
                         </MarketProvider>
-                    </PanelColorsContext.Provider>
+                    </SandboxColorsContext.Provider>
                 </div>
 
                 {showLogs && (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 import { PanelShell, PanelHeader, heatColor, useTick, tnum } from './panelKit';
 
 const TENORS = ['1W', '2W', '1M', '2M', '3M', '6M', '1Y'];
@@ -16,7 +16,7 @@ function iv(tenorIdx: number, deltaIdx: number, tick: number): number {
 }
 
 export const VolSurfacePanel: React.FC = () => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const tick = useTick(1500);
 
     const values = TENORS.map((_, t) => DELTAS.map((__, d) => iv(t, d, tick)));

@@ -1,30 +1,14 @@
 import { createStore } from '@xstate/store';
 import {
     DockviewTheme,
-    themeAbyss,
-    themeAbyssSpaced,
-    themeCatppuccinMocha,
-    themeCatppuccinMochaSpaced,
-    themeDark,
-    themeDracula,
-    themeGithubDark,
-    themeGithubDarkSpaced,
-    themeGithubLight,
     themeGithubLightSpaced,
-    themeLight,
-    themeLightSpaced,
-    themeMonokai,
-    themeNord,
-    themeNordSpaced,
-    themeSolarizedLight,
-    themeSolarizedLightSpaced,
-    themeVisualStudio,
 } from '#adaptive-view/react';
 import {
-    getInitialStateFromTheme,
-    ThemeBuilderState,
-    ThemeCssOverrides,
-} from './themeBuilder';
+    getInitialStateFromLayoutManagerTheme,
+    LAYOUT_MANAGER_BUILTIN_THEMES,
+    LayoutManagerThemeState,
+    LayoutManagerThemeCssOverrides,
+} from './layoutManagerTheme';
 
 export type SandboxVariant = 'desktop' | 'mobile';
 
@@ -39,38 +23,14 @@ export interface SandboxLayoutProfile {
     data: unknown;
 }
 
-export const sandboxThemes: readonly SandboxThemeOption[] = [
-    { label: 'Dark', theme: themeDark },
-    { label: 'Light', theme: themeLight },
-    { label: 'Visual Studio', theme: themeVisualStudio },
-    { label: 'Abyss', theme: themeAbyss },
-    { label: 'Dracula', theme: themeDracula },
-    { label: 'Light Spaced', theme: themeLightSpaced },
-    { label: 'Abyss Spaced', theme: themeAbyssSpaced },
-    { label: 'Nord', theme: themeNord },
-    { label: 'Nord Spaced', theme: themeNordSpaced },
-    { label: 'Catppuccin Mocha', theme: themeCatppuccinMocha },
-    {
-        label: 'Catppuccin Mocha Spaced',
-        theme: themeCatppuccinMochaSpaced,
-    },
-    { label: 'Monokai', theme: themeMonokai },
-    { label: 'Solarized Light', theme: themeSolarizedLight },
-    {
-        label: 'Solarized Light Spaced',
-        theme: themeSolarizedLightSpaced,
-    },
-    { label: 'GitHub Dark', theme: themeGithubDark },
-    { label: 'GitHub Dark Spaced', theme: themeGithubDarkSpaced },
-    { label: 'GitHub Light', theme: themeGithubLight },
-    { label: 'GitHub Light Spaced', theme: themeGithubLightSpaced },
-];
+export const sandboxThemes: readonly SandboxThemeOption[] =
+    LAYOUT_MANAGER_BUILTIN_THEMES;
 
 interface SandboxManagerContext {
     variant: SandboxVariant;
     theme: DockviewTheme;
-    themeBuilder: ThemeBuilderState;
-    controlsOpen: boolean;
+    layoutManagerTheme: LayoutManagerThemeState;
+    layoutManagerOpen: boolean;
     ready: boolean;
     layoutProfiles: readonly SandboxLayoutProfile[];
     selectedLayoutProfileId: string | null;
@@ -80,8 +40,10 @@ interface SandboxManagerContext {
 const initialContext: SandboxManagerContext = {
     variant: 'desktop',
     theme: themeGithubLightSpaced,
-    themeBuilder: getInitialStateFromTheme(themeGithubLightSpaced),
-    controlsOpen: false,
+    layoutManagerTheme: getInitialStateFromLayoutManagerTheme(
+        themeGithubLightSpaced
+    ),
+    layoutManagerOpen: false,
     ready: false,
     layoutProfiles: [],
     selectedLayoutProfileId: null,
@@ -98,8 +60,8 @@ export function createSandboxManagerStore() {
             ): SandboxManagerContext => ({
                 ...context,
                 variant: event.variant,
-                controlsOpen:
-                    event.variant === 'desktop' && context.controlsOpen,
+                layoutManagerOpen:
+                    event.variant === 'desktop' && context.layoutManagerOpen,
             }),
             prepareVariant: (
                 context,
@@ -107,8 +69,8 @@ export function createSandboxManagerStore() {
             ): SandboxManagerContext => ({
                 ...context,
                 variant: event.variant,
-                controlsOpen:
-                    event.variant === 'desktop' && context.controlsOpen,
+                layoutManagerOpen:
+                    event.variant === 'desktop' && context.layoutManagerOpen,
                 ready: false,
             }),
             selectTheme: (
@@ -120,41 +82,53 @@ export function createSandboxManagerStore() {
                     sandboxThemes.find(
                         ({ theme }) => theme.name === event.themeName
                     )?.theme ?? context.theme,
-                themeBuilder: getInitialStateFromTheme(
+                layoutManagerTheme: getInitialStateFromLayoutManagerTheme(
                     sandboxThemes.find(
                         ({ theme }) => theme.name === event.themeName
                     )?.theme ?? context.theme
                 ),
             }),
-            updateThemeBuilder: (
+            updateLayoutManagerTheme: (
                 context,
-                event: { patch: Partial<ThemeBuilderState> }
+                event: { patch: Partial<LayoutManagerThemeState> }
             ): SandboxManagerContext => ({
                 ...context,
-                themeBuilder: { ...context.themeBuilder, ...event.patch },
+                layoutManagerTheme: {
+                    ...context.layoutManagerTheme,
+                    ...event.patch,
+                },
             }),
             updateThemeCss: (
                 context,
-                event: { patch: Partial<ThemeCssOverrides> }
+                event: { patch: Partial<LayoutManagerThemeCssOverrides> }
             ): SandboxManagerContext => {
-                const cssOverrides = { ...context.themeBuilder.cssOverrides };
+                const cssOverrides = {
+                    ...context.layoutManagerTheme.cssOverrides,
+                };
 
                 for (const [key, value] of Object.entries(event.patch)) {
                     if (value === undefined || value === '') {
-                        delete cssOverrides[key as keyof ThemeCssOverrides];
+                        delete cssOverrides[
+                            key as keyof LayoutManagerThemeCssOverrides
+                        ];
                     } else {
-                        cssOverrides[key as keyof ThemeCssOverrides] = value;
+                        cssOverrides[key as keyof LayoutManagerThemeCssOverrides] = value;
                     }
                 }
 
                 return {
                     ...context,
-                    themeBuilder: { ...context.themeBuilder, cssOverrides },
+                    layoutManagerTheme: {
+                        ...context.layoutManagerTheme,
+                        cssOverrides,
+                    },
                 };
             },
-            resetThemeBuilder: (context): SandboxManagerContext => ({
+            resetLayoutManagerTheme: (context): SandboxManagerContext => ({
                 ...context,
-                themeBuilder: getInitialStateFromTheme(context.theme),
+                layoutManagerTheme: getInitialStateFromLayoutManagerTheme(
+                    context.theme
+                ),
             }),
             setLayoutProfiles: (
                 context,
@@ -171,13 +145,13 @@ export function createSandboxManagerStore() {
                 selectedLayoutProfileId: event.profileId,
                 layoutRevision: context.layoutRevision + 1,
             }),
-            toggleControls: (context): SandboxManagerContext => ({
+            toggleLayoutManager: (context): SandboxManagerContext => ({
                 ...context,
-                controlsOpen: !context.controlsOpen,
+                layoutManagerOpen: !context.layoutManagerOpen,
             }),
-            closeControls: (context): SandboxManagerContext => ({
+            closeLayoutManager: (context): SandboxManagerContext => ({
                 ...context,
-                controlsOpen: false,
+                layoutManagerOpen: false,
             }),
             markReady: (context): SandboxManagerContext => ({
                 ...context,

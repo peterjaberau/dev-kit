@@ -6,7 +6,7 @@ import {
     themeAbyss,
     themeLight,
 } from '#adaptive-view/react';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 import { MONO, UI } from './panelKit';
 import { ThemeContext } from './app';
 
@@ -75,7 +75,7 @@ const BigQuote: React.FC<{
     frac: number;
     color: string;
 }> = ({ value, decimals, frac, color }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const { head, pips } = splitQuote(value, decimals);
     return (
         <div
@@ -101,7 +101,7 @@ const BigQuote: React.FC<{
 };
 
 const FxTile: React.FC<{ pair: Pair; quote: Quote }> = ({ pair, quote }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const dirColor = quote.dir > 0 ? c.green : c.red;
     const label: React.CSSProperties = { fontSize: 10, color: c.textMuted, fontFamily: UI };
     const foot: React.CSSProperties = {
@@ -232,7 +232,7 @@ const FxTile: React.FC<{ pair: Pair; quote: Quote }> = ({ pair, quote }) => {
 const FxCategoryPanel: React.FC<IDockviewPanelProps<{ categoryId: string }>> = (
     props
 ) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const quotes = React.useContext(FxQuotesContext);
     const cat = CATEGORIES.find((x) => x.id === props.params.categoryId);
     if (!cat) {
@@ -270,7 +270,7 @@ const FxCategoryPanel: React.FC<IDockviewPanelProps<{ categoryId: string }>> = (
 const nestedComponents = { fxcat: FxCategoryPanel };
 
 export const FxTilesPanel: React.FC = () => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     // Use the parent demo's live theme so the nested dockview follows the theme
     // picker / builder exactly (not only a light/dark approximation).
     const parentTheme = React.useContext(ThemeContext);

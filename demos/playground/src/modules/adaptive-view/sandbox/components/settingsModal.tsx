@@ -3,8 +3,8 @@ import * as React from 'react';
 import { GridActions } from './gridActions';
 import { PanelActions } from './panelActions';
 import { GroupActions } from './groupActions';
-import { SB } from '../sandbox-manager/sidebarTheme';
-import { Card, Switch, Btn } from '../sandbox-manager/sidebarKit';
+import { LM } from '../sandbox-manager/layoutManagerTheme';
+import { Card, Switch, Btn } from '../sandbox-manager/layoutManagerKit';
 
 const Kbd = (props: { children: React.ReactNode }) => (
     <kbd
@@ -12,13 +12,13 @@ const Kbd = (props: { children: React.ReactNode }) => (
             display: 'inline-block',
             padding: '1px 6px',
             fontSize: 10,
-            fontFamily: SB.mono,
+            fontFamily: LM.mono,
             lineHeight: '16px',
-            border: `1px solid ${SB.border}`,
+            border: `1px solid ${LM.border}`,
             borderBottomWidth: 2,
             borderRadius: 4,
-            background: SB.surface,
-            color: SB.muted,
+            background: LM.surface,
+            color: LM.muted,
             whiteSpace: 'nowrap',
         }}
     >
@@ -53,8 +53,8 @@ const KeyboardShortcuts = () => (
                     gap: 8,
                     padding: '4px 0',
                     fontSize: 11.5,
-                    color: SB.text,
-                    fontFamily: SB.ui,
+                    color: LM.text,
+                    fontFamily: LM.ui,
                 }}
             >
                 <span>{row.label}</span>

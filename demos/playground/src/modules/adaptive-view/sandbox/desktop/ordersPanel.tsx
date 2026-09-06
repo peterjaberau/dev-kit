@@ -4,7 +4,7 @@ import {
     useMarketDispatch,
     WATCHLIST_TICKERS,
 } from './marketContext';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 import {
     PanelShell,
     PanelHeader,
@@ -110,7 +110,7 @@ const watchlistSet = new Set<string>(WATCHLIST_TICKERS);
 const COLS = '46px 62px 34px 1fr 1fr 74px 68px 60px';
 
 export const OrdersPanel: React.FC = () => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const { selectedTicker } = useMarket();
     const dispatch = useMarketDispatch();
 

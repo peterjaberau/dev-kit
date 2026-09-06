@@ -19,10 +19,10 @@
     background: transparent;
 }
 
-/* "Controls & Theme" side panel.
+/* "Controls & Theme" layout manager.
  * Custom range slider (thin track with an accent fill + a clean thumb), input
  * focus ring, and the panel slide-in. Pseudo-elements / keyframes can't be inline. */
-.dv-sb-slider {
+.dv-layout-manager-slider {
     -webkit-appearance: none;
     appearance: none;
     height: 5px;
@@ -35,7 +35,7 @@
         var(--dv-border, rgba(255, 255, 255, 0.14)) var(--fill, 0%) 100%
     );
 }
-.dv-sb-slider::-webkit-slider-thumb {
+.dv-layout-manager-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 14px;
@@ -46,7 +46,7 @@
     box-shadow: var(--dv-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.4));
     cursor: pointer;
 }
-.dv-sb-slider::-moz-range-thumb {
+.dv-layout-manager-slider::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border: 2px solid var(--ifm-background-surface-color, #14141d);
@@ -55,18 +55,18 @@
     box-shadow: var(--dv-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.4));
     cursor: pointer;
 }
-.dv-sb-slider:focus-visible::-webkit-slider-thumb {
+.dv-layout-manager-slider:focus-visible::-webkit-slider-thumb {
     outline: 2px solid var(--ifm-color-primary, #5d94f4);
     outline-offset: 2px;
 }
 
-.dv-sb-input:focus {
+.dv-layout-manager-input:focus {
     border-color: var(--ifm-color-primary, #5d94f4) !important;
     box-shadow: 0 0 0 3px
         color-mix(in srgb, var(--ifm-color-primary, #5d94f4) 18%, transparent);
 }
 
-.dv-sb-panel {
+.dv-layout-manager-panel {
     animation: dvSbSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes dvSbSlideIn {
@@ -80,30 +80,30 @@
     }
 }
 @media (prefers-reduced-motion: reduce) {
-    .dv-sb-panel {
+    .dv-layout-manager-panel {
         animation: none;
     }
-    .dv-sb-slider::-webkit-slider-thumb,
-    .dv-sb-slider::-moz-range-thumb {
+    .dv-layout-manager-slider::-webkit-slider-thumb,
+    .dv-layout-manager-slider::-moz-range-thumb {
         transition: none;
     }
 }
 
 /* The demo chrome puts a permanent accent outline on every button/input.
- * The side panel styles its own controls via the kit, so strip that leaked
+ * The layout manager styles its own controls via the kit, so strip that leaked
  * outline here and use a clean focus-visible ring for keyboard users instead. */
-.dockview-demo .dv-sb-panel button,
-.dockview-demo .dv-sb-panel input,
-.dockview-demo .dv-sb-panel select,
-.dockview-demo .dv-sb-panel input:focus,
-.dockview-demo .dv-sb-panel select:focus {
+.dockview-demo .dv-layout-manager-panel button,
+.dockview-demo .dv-layout-manager-panel input,
+.dockview-demo .dv-layout-manager-panel select,
+.dockview-demo .dv-layout-manager-panel input:focus,
+.dockview-demo .dv-layout-manager-panel select:focus {
     outline: none !important;
 }
 
-.dockview-demo .dv-sb-panel button:focus-visible,
-.dockview-demo .dv-sb-panel select:focus-visible,
-.dockview-demo .dv-sb-panel input[type='text']:focus-visible,
-.dockview-demo .dv-sb-panel input[type='color']:focus-visible {
+.dockview-demo .dv-layout-manager-panel button:focus-visible,
+.dockview-demo .dv-layout-manager-panel select:focus-visible,
+.dockview-demo .dv-layout-manager-panel input[type='text']:focus-visible,
+.dockview-demo .dv-layout-manager-panel input[type='color']:focus-visible {
     outline: 2px solid var(--ifm-color-primary, #5d94f4) !important;
     outline-offset: 1px;
 }

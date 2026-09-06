@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 
 // Shared building blocks so every trading panel reads as one system: dense,
 // monospace, layered surfaces with stat tiles, chips, tick flashes and micro
-// charts. All are theme-aware through usePanelColors().
+// charts. All are theme-aware through useSandboxColors().
 
 // Numeric/tabular data uses IBM Plex Mono (an institutional fintech face,
 // loaded in app.scss); labels and prose use a neutral grotesk sans. The
@@ -146,7 +146,7 @@ export const PanelShell: React.FC<{
     children: React.ReactNode;
     alt?: boolean;
 }> = ({ children, alt }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <div
             style={{
@@ -183,7 +183,7 @@ export const PanelHeader: React.FC<{
     children: React.ReactNode;
     pad?: string;
 }> = ({ children, pad = '9px 12px 8px' }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <div
             style={{
@@ -205,7 +205,7 @@ export const SectionLabel: React.FC<{
     children: React.ReactNode;
     right?: React.ReactNode;
 }> = ({ children, right }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <div
             style={{
@@ -235,7 +235,7 @@ export const StatStrip: React.FC<{ children: React.ReactNode; cols?: number }> =
     children,
     cols,
 }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <div
             style={{
@@ -260,7 +260,7 @@ export const Stat: React.FC<{
     color?: string;
     title?: string;
 }> = ({ label, value, color, title }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <div
             title={title}
@@ -305,7 +305,7 @@ export const Chip: React.FC<{
     tone?: 'green' | 'red' | 'blue' | 'yellow' | 'neutral';
     solid?: boolean;
 }> = ({ children, tone = 'neutral', solid }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const map = {
         green: [c.green, c.greenBg],
         red: [c.red, c.redBg],
@@ -347,7 +347,7 @@ export const MiniBar: React.FC<{
     height?: number;
     track?: boolean;
 }> = ({ pct, color, height = 4, track = true }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <div
             style={{
@@ -381,7 +381,7 @@ export const RangeBar: React.FC<{
     value: number;
     color: string;
 }> = ({ low, high, value, color }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const pct =
         high > low ? ((value - low) / (high - low)) * 100 : 50;
     return (

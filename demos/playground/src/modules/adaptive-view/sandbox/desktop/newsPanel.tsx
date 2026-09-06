@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 import { PanelShell, PanelHeader, Chip, tnum } from './panelKit';
 
 type Tone = 'green' | 'red' | 'neutral';
@@ -30,7 +30,7 @@ const HEADLINES: Headline[] = [
 ];
 
 export const NewsPanel: React.FC = () => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <PanelShell>
             <PanelHeader pad="8px 12px 7px">

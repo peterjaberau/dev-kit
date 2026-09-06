@@ -6,8 +6,8 @@ import {
     useSandboxManagerStore,
 } from '../sandbox-manager/provider';
 import type { SandboxLayoutProfile } from '../sandbox-manager/store';
-import { SB } from '../sandbox-manager/sidebarTheme';
-import { Btn, IconBtn } from '../sandbox-manager/sidebarKit';
+import { LM } from '../sandbox-manager/layoutManagerTheme';
+import { Btn, IconBtn } from '../sandbox-manager/layoutManagerKit';
 
 const Row = (props: {
     label?: string;
@@ -29,8 +29,8 @@ const Row = (props: {
                 style={{
                     flex: 1,
                     fontSize: 12,
-                    color: SB.text,
-                    fontFamily: SB.ui,
+                    color: LM.text,
+                    fontFamily: LM.ui,
                 }}
             >
                 {props.label}
@@ -85,9 +85,9 @@ const EdgeGroupToggles = (props: { api: DockviewApi }) => {
             <div
                 style={{
                     display: 'flex',
-                    background: SB.surface,
-                    borderRadius: SB.radiusSm,
-                    border: `1px solid ${SB.border}`,
+                    background: LM.surface,
+                    borderRadius: LM.radiusSm,
+                    border: `1px solid ${LM.border}`,
                     padding: 3,
                     gap: 3,
                 }}
@@ -100,13 +100,13 @@ const EdgeGroupToggles = (props: { api: DockviewApi }) => {
                             padding: '3px 9px',
                             fontSize: 11,
                             fontWeight: active[pos] ? 600 : 500,
-                            fontFamily: SB.ui,
+                            fontFamily: LM.ui,
                             border: 'none',
                             borderRadius: 5,
                             cursor: 'pointer',
-                            background: active[pos] ? SB.accent : 'transparent',
-                            color: active[pos] ? SB.accentContrast : SB.muted,
-                            boxShadow: active[pos] ? SB.glow : 'none',
+                            background: active[pos] ? LM.accent : 'transparent',
+                            color: active[pos] ? LM.accentContrast : LM.muted,
+                            boxShadow: active[pos] ? LM.glow : 'none',
                             transition: 'background 0.12s, color 0.12s',
                         }}
                     >
@@ -184,13 +184,13 @@ const PopoverComponent = (props: {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%,-50%)',
-                    background: SB.bg,
-                    border: `1px solid ${SB.border}`,
-                    borderRadius: SB.radius,
-                    color: SB.text,
-                    fontFamily: SB.ui,
+                    background: LM.bg,
+                    border: `1px solid ${LM.border}`,
+                    borderRadius: LM.radius,
+                    color: LM.text,
+                    fontFamily: LM.ui,
                     padding: 16,
-                    boxShadow: SB.shadowLg,
+                    boxShadow: LM.shadowLg,
                 }}
             >
                 <props.component close={props.close} />
@@ -303,10 +303,10 @@ export const GridActions = (props: { api?: DockviewApi }) => {
                                     zIndex: 100,
                                     minWidth: 170,
                                     padding: 5,
-                                    border: `1px solid ${SB.border}`,
-                                    borderRadius: SB.radiusSm,
-                                    background: SB.bg,
-                                    boxShadow: SB.shadowMd,
+                                    border: `1px solid ${LM.border}`,
+                                    borderRadius: LM.radiusSm,
+                                    background: LM.bg,
+                                    boxShadow: LM.shadowMd,
                                 }}
                             >
                                 {layoutProfiles.map((profile) => (
@@ -328,9 +328,9 @@ export const GridActions = (props: { api?: DockviewApi }) => {
                                             border: 0,
                                             borderRadius: 5,
                                             background: 'transparent',
-                                            color: SB.text,
+                                            color: LM.text,
                                             cursor: 'pointer',
-                                            fontFamily: SB.ui,
+                                            fontFamily: LM.ui,
                                             fontSize: 12,
                                             textAlign: 'left',
                                         }}

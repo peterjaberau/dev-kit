@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMarket, Trade } from './marketContext';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 import {
     PanelShell,
     PanelHeader,
@@ -45,7 +45,7 @@ const BookRow: React.FC<{
     maxSize: number;
     side: 'ask' | 'bid';
 }> = ({ level, maxTotal, maxSize, side }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const depthPct = Math.min((level.total / maxTotal) * 100, 100);
     const sizePct = Math.min((level.size / maxSize) * 100, 100);
     const color = side === 'ask' ? c.red : c.green;
@@ -102,7 +102,7 @@ const BookRow: React.FC<{
 // Memoised: the tape prepends new trades, so existing rows keep the same
 // `trade` reference and skip re-rendering on each tick.
 const TradeRow: React.FC<{ trade: Trade }> = React.memo(({ trade }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const [flash, setFlash] = React.useState(true);
     React.useEffect(() => {
         const t = setTimeout(() => setFlash(false), 400);
@@ -136,7 +136,7 @@ const TradeRow: React.FC<{ trade: Trade }> = React.memo(({ trade }) => {
 });
 
 export const OrderBookPanel: React.FC = () => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const { selectedTicker, prices, histories, trades } = useMarket();
     const mid = prices[selectedTicker] ?? 0;
     const history = histories[selectedTicker] ?? [mid];

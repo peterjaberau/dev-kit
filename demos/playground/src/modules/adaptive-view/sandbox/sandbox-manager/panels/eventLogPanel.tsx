@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DockviewApi } from '#adaptive-view/react';
-import { usePanelColors } from '../panelTheme';
+import { useSandboxColors } from '../sandboxTheme';
 
 type LogEntry = {
     id: number;
@@ -25,7 +25,7 @@ const categoryColor = (cat: LogEntry['category']) => {
 };
 
 export const EventLogPanel: React.FC<{ api: DockviewApi }> = ({ api }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const [entries, setEntries] = React.useState<LogEntry[]>([]);
 
     React.useEffect(() => {

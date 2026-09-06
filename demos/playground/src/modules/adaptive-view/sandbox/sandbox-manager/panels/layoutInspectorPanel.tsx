@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { DockviewApi } from '#adaptive-view/react';
-import { usePanelColors } from '../panelTheme';
+import { useSandboxColors } from '../sandboxTheme';
 
 export const LayoutInspectorPanel: React.FC<{ api: DockviewApi }> = ({
     api,
 }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const [json, setJson] = React.useState<string>('');
     const [copied, setCopied] = React.useState(false);
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { IDockviewPanelProps } from '#adaptive-view/react';
 import { usePanelApiMetadata } from '../debugPanel';
-import { usePanelColors } from '../panelTheme';
+import { useSandboxColors } from '../sandboxTheme';
 
 const ValueDisplay: React.FC<{ value: unknown }> = ({ value }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     if (value === undefined || value === null) {
         return <span style={{ color: c.textFaint }}>—</span>;
     }
@@ -37,7 +37,7 @@ const ValueDisplay: React.FC<{ value: unknown }> = ({ value }) => {
 };
 
 const CountBadge: React.FC<{ count: number }> = ({ count }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     return (
         <span
             style={{
@@ -60,7 +60,7 @@ const CountBadge: React.FC<{ count: number }> = ({ count }) => {
 };
 
 export const PanelDebugPanel: React.FC<IDockviewPanelProps> = (props) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const metadata = usePanelApiMetadata(props.api);
 
     const rows: {

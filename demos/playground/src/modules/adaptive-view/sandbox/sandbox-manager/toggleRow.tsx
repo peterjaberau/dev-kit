@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Segmented } from './sidebarKit';
+import { Segmented } from './layoutManagerKit';
 
 // Labelled segmented toggle used by the theme builder. Thin wrapper over the
 // shared kit `Segmented` so every toggle reads identically across both tabs.

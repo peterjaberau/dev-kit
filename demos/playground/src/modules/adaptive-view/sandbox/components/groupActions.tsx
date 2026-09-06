@@ -5,17 +5,17 @@ import {
     DockviewHeaderPosition,
 } from '#adaptive-view/react';
 import * as React from 'react';
-import { SB } from '../sandbox-manager/sidebarTheme';
-import { IconBtn } from '../sandbox-manager/sidebarKit';
+import { LM } from '../sandbox-manager/layoutManagerTheme';
+import { IconBtn } from '../sandbox-manager/layoutManagerKit';
 
 const selectStyle: React.CSSProperties = {
     padding: '5px 8px',
     fontSize: 11,
-    fontFamily: SB.ui,
-    border: `1px solid ${SB.border}`,
-    borderRadius: SB.radiusSm,
-    background: SB.surface,
-    color: SB.text,
+    fontFamily: LM.ui,
+    border: `1px solid ${LM.border}`,
+    borderRadius: LM.radiusSm,
+    background: LM.surface,
+    color: LM.text,
     cursor: 'pointer',
     outline: 'none',
 };
@@ -100,12 +100,12 @@ const GroupAction = (props: {
                         padding: '5px 10px',
                         fontSize: 11.5,
                         fontWeight: isActive ? 600 : 500,
-                        fontFamily: SB.ui,
-                        border: `1px solid ${isActive ? SB.accent : SB.border}`,
-                        borderRadius: SB.radiusSm,
-                        background: isActive ? SB.accent : SB.surface,
-                        color: isActive ? SB.accentContrast : SB.text,
-                        boxShadow: isActive ? SB.glow : 'none',
+                        fontFamily: LM.ui,
+                        border: `1px solid ${isActive ? LM.accent : LM.border}`,
+                        borderRadius: LM.radiusSm,
+                        background: isActive ? LM.accent : LM.surface,
+                        color: isActive ? LM.accentContrast : LM.text,
+                        boxShadow: isActive ? LM.glow : 'none',
                         cursor: 'pointer',
                         textAlign: 'left',
                         overflow: 'hidden',
@@ -184,14 +184,14 @@ const GroupAction = (props: {
                 <span
                     style={{
                         fontSize: 12,
-                        color: SB.text,
-                        fontFamily: SB.ui,
+                        color: LM.text,
+                        fontFamily: LM.ui,
                     }}
                 >
                     Header
                 </span>
                 <select
-                    className="dv-sb-input"
+                    className="dv-layout-manager-input"
                     style={selectStyle}
                     value={headerPosition}
                     onChange={(e) => {

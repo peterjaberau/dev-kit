@@ -1,7 +1,7 @@
 import { DockviewApi, IDockviewPanel } from '#adaptive-view/react';
 import * as React from 'react';
-import { SB } from '../sandbox-manager/sidebarTheme';
-import { IconBtn } from '../sandbox-manager/sidebarKit';
+import { LM } from '../sandbox-manager/layoutManagerTheme';
+import { IconBtn } from '../sandbox-manager/layoutManagerKit';
 
 const PanelAction = (props: {
     panels: string[];
@@ -68,12 +68,12 @@ const PanelAction = (props: {
                     padding: '5px 10px',
                     fontSize: 11.5,
                     fontWeight: isActive ? 600 : 500,
-                    fontFamily: SB.ui,
-                    border: `1px solid ${isActive ? SB.accent : SB.border}`,
-                    borderRadius: SB.radiusSm,
-                    background: isActive ? SB.accent : SB.surface,
-                    color: isActive ? SB.accentContrast : SB.text,
-                    boxShadow: isActive ? SB.glow : 'none',
+                    fontFamily: LM.ui,
+                    border: `1px solid ${isActive ? LM.accent : LM.border}`,
+                    borderRadius: LM.radiusSm,
+                    background: isActive ? LM.accent : LM.surface,
+                    color: isActive ? LM.accentContrast : LM.text,
+                    boxShadow: isActive ? LM.glow : 'none',
                     cursor: 'pointer',
                     textAlign: 'left',
                     overflow: 'hidden',
@@ -112,7 +112,7 @@ const PanelAction = (props: {
                     className="material-symbols-outlined"
                     style={{
                         fontSize: 16,
-                        color: visible ? SB.muted : SB.faint,
+                        color: visible ? LM.muted : LM.faint,
                         display: 'flex',
                         alignItems: 'center',
                         padding: '0 2px',

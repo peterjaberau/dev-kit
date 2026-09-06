@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMarket } from './marketContext';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 import {
     PanelShell,
     PanelHeader,
@@ -60,7 +60,7 @@ function useSize() {
 }
 
 export const ChartPanel: React.FC = () => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const { selectedTicker, prices, histories } = useMarket();
     const price = prices[selectedTicker] ?? 0;
     const history = histories[selectedTicker] ?? [price];

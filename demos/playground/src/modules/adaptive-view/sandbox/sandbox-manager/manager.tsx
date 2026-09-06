@@ -11,8 +11,8 @@ import {
     useSandboxManagerStore,
 } from './provider';
 import { sandboxThemes, SandboxVariant } from './store';
-import { buildEffectiveTheme } from './themeBuilder';
-import { Sidebar } from './themeBuilderPanel';
+import { buildEffectiveLayoutManagerTheme } from './layoutManagerTheme';
+import { LayoutManager } from './layoutManager';
 import './manager.css';
 
 export interface SandboxManagerProps {
@@ -26,8 +26,8 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
     const searchParams = useSearchParams();
     const {
         theme,
-        themeBuilder,
-        controlsOpen,
+        layoutManagerTheme,
+        layoutManagerOpen,
         ready,
         selectedLayoutProfileId,
     } = useSandboxManagerSelector((snapshot) => snapshot.context);
@@ -35,8 +35,8 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
     const frameRef = React.useRef<HTMLElement>(null);
     const previousCssOverrideKeys = React.useRef<string[]>([]);
     const effectiveTheme = React.useMemo(
-        () => buildEffectiveTheme(theme, themeBuilder),
-        [theme, themeBuilder]
+        () => buildEffectiveLayoutManagerTheme(theme, layoutManagerTheme),
+        [theme, layoutManagerTheme]
     );
     const urlLayoutProfileId = searchParams.get('layout');
     const query = searchParams.toString();
@@ -95,21 +95,21 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
         }
 
         for (const key of previousCssOverrideKeys.current) {
-            if (!(key in themeBuilder.cssOverrides)) {
+            if (!(key in layoutManagerTheme.cssOverrides)) {
                 dockviewRoot.style.removeProperty(key);
             }
         }
         for (const [key, value] of Object.entries(
-            themeBuilder.cssOverrides
+            layoutManagerTheme.cssOverrides
         )) {
             if (value !== undefined) {
                 dockviewRoot.style.setProperty(key, value);
             }
         }
         previousCssOverrideKeys.current = Object.keys(
-            themeBuilder.cssOverrides
+            layoutManagerTheme.cssOverrides
         );
-    }, [themeBuilder.cssOverrides, effectiveTheme]);
+    }, [layoutManagerTheme.cssOverrides, effectiveTheme]);
 
     const markReady = React.useCallback(() => {
         store.trigger.markReady();
@@ -172,9 +172,9 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
                     {variant === 'desktop' && (
                         <button
                             type="button"
-                            className={controlsOpen ? 'is-active' : ''}
-                            aria-pressed={controlsOpen}
-                            onClick={() => store.trigger.toggleControls()}
+                            className={layoutManagerOpen ? 'is-active' : ''}
+                            aria-pressed={layoutManagerOpen}
+                            onClick={() => store.trigger.toggleLayoutManager()}
                         >
                             Controls &amp; Theme
                         </button>
@@ -191,18 +191,20 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
                         theme={effectiveTheme}
                         onReady={markReady}
                         renderControls={(controls) => (
-                            <Sidebar
-                                open={controlsOpen}
-                                onClose={() => store.trigger.closeControls()}
-                                state={themeBuilder}
+                            <LayoutManager
+                                open={layoutManagerOpen}
+                                onClose={() => store.trigger.closeLayoutManager()}
+                                state={layoutManagerTheme}
                                 onChange={(patch) =>
-                                    store.trigger.updateThemeBuilder({ patch })
+                                    store.trigger.updateLayoutManagerTheme({
+                                        patch,
+                                    })
                                 }
                                 onCssChange={(patch) =>
                                     store.trigger.updateThemeCss({ patch })
                                 }
                                 onReset={() =>
-                                    store.trigger.resetThemeBuilder()
+                                    store.trigger.resetLayoutManagerTheme()
                                 }
                                 baseTheme={theme}
                                 containerEl={frameRef.current}

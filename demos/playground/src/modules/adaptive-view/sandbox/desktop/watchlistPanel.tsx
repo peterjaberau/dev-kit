@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMarket, useMarketDispatch, WATCHLIST_TICKERS } from './marketContext';
-import { usePanelColors } from '../sandbox-manager/panelTheme';
+import { useSandboxColors } from '../sandbox-manager/sandboxTheme';
 import {
     PanelShell,
     PanelHeader,
@@ -24,7 +24,7 @@ const META: Record<string, { name: string; vol: number }> = {
 };
 
 const WatchRow: React.FC<{ ticker: string }> = ({ ticker }) => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const { selectedTicker, prices, histories } = useMarket();
     const dispatch = useMarketDispatch();
 
@@ -165,7 +165,7 @@ const WatchRow: React.FC<{ ticker: string }> = ({ ticker }) => {
 };
 
 export const WatchlistPanel: React.FC = () => {
-    const c = usePanelColors();
+    const c = useSandboxColors();
     const { prices, histories } = useMarket();
 
     let adv = 0;
