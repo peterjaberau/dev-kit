@@ -1,14 +1,15 @@
 'use client';
 
 import './styles.css';
-import '#adaptive-view/styles/dockview.css';
 
-import App, { AppProps } from './app';
+import AdvaptiveViewMobile, { AdvaptiveViewMobileProps } from './app';
 
-export default function MobileAdaptiveViewSandbox(props: AppProps) {
+export default function AdvaptiveViewMobileSandbox(
+    props: AdvaptiveViewMobileProps
+) {
     return (
         <div className="app" style={{ height: '100%', width: '100%' }}>
-            <App {...props} />
+            <AdvaptiveViewMobile {...props} />
         </div>
     );
 }

@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
-import DesktopAdaptiveViewSandbox from '../desktop';
-import MobileAdaptiveViewSandbox from '../mobile';
+import AdaptiveViewDesktopSandbox from '../desktop';
+import AdvaptiveViewMobileSandbox from '../mobile';
 import { ControlsContent } from '../components/settingsModal';
 import {
     useSandboxManagerSelector,
@@ -13,7 +13,9 @@ import {
 import { sandboxThemes, SandboxVariant } from './store';
 import { buildEffectiveLayoutManagerTheme } from './layoutManagerTheme';
 import { LayoutManager } from './layoutManager';
-import './manager.css';
+import './styles/dockview.css';
+import './styles/manager.css';
+import './styles/sandbox.css';
 
 export interface SandboxManagerProps {
     variant: SandboxVariant;
@@ -187,7 +189,7 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
                 className="adaptive-sandbox-manager__frame"
             >
                 {variant === 'desktop' ? (
-                    <DesktopAdaptiveViewSandbox
+                    <AdaptiveViewDesktopSandbox
                         theme={effectiveTheme}
                         onReady={markReady}
                         renderControls={(controls) => (
@@ -213,7 +215,7 @@ export default function SandboxManager({ variant }: SandboxManagerProps) {
                         )}
                     />
                 ) : (
-                    <MobileAdaptiveViewSandbox
+                    <AdvaptiveViewMobileSandbox
                         theme={effectiveTheme}
                         onReady={markReady}
                     />

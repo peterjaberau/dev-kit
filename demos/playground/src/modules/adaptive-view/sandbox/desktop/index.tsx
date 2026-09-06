@@ -1,16 +1,15 @@
 'use client';
 
 import './styles.css';
-import '#adaptive-view/styles/dockview.css';
 
-import App, { DockviewDemoProps } from './app';
+import AdvaptiveViewDesktop, { AdvaptiveViewDesktopProp } from './app';
 
-export default function DesktopAdaptiveViewSandbox(
-    props: DockviewDemoProps
+export default function AdaptiveViewDesktopSandbox(
+    props: AdvaptiveViewDesktopProp
 ) {
     return (
         <div className="app" style={{ height: '100%', width: '100%' }}>
-            <App {...props} />
+            <AdvaptiveViewDesktop {...props} />
         </div>
     );
 }

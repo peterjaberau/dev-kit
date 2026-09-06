@@ -448,12 +448,12 @@ const components = {
     search: SearchPanel,
 };
 
-export interface AppProps {
+export interface AdvaptiveViewMobileProps {
     theme?: DockviewTheme;
     onReady?: () => void;
 }
 
-const App: React.FC<AppProps> = (props) => {
+const AdvaptiveViewMobile: React.FC<AdvaptiveViewMobileProps> = (props) => {
     const [api, setApi] = React.useState<DockviewApi>();
 
     const onReady = (event: DockviewReadyEvent) => {
@@ -697,4 +697,4 @@ const App: React.FC<AppProps> = (props) => {
     );
 };
 
-export default App;
+export default AdvaptiveViewMobile;

@@ -17,7 +17,6 @@ import {
 import '#adaptive-view/enterprise';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import './app.css';
 import { setupEdgeGroups } from '../sandbox-manager/defaultLayout';
 import { loadDockviewLayout } from '../sandbox-manager/utils';
 import {
@@ -31,22 +30,23 @@ import {
     RightControls,
 } from '../components/headerActions';
 import { Table, usePanelApiMetadata } from '../sandbox-manager/debugPanel';
-import { OrdersPanel } from './ordersPanel';
-import { OrderBookPanel } from './orderBookPanel';
 import { EventLogPanel } from '../sandbox-manager/panels/eventLogPanel';
 import { LayoutInspectorPanel } from '../sandbox-manager/panels/layoutInspectorPanel';
 import { PanelDebugPanel } from '../sandbox-manager/panels/panelDebugPanel';
-import { MarketProvider } from './marketContext';
-import { WatchlistPanel } from './watchlistPanel';
-import { PriceAlertPanel } from './priceAlertPanel';
-import { PositionSummaryPanel } from './positionSummaryPanel';
-import { ChartPanel } from './chartPanel';
-import { NewsPanel } from './newsPanel';
-import { FxTilesPanel } from './fxTilesPanel';
-import { SignalsPanel } from './signalsPanel';
-import { CorrelationPanel } from './correlationPanel';
-import { VolSurfacePanel } from './volSurfacePanel';
-import { MONO, VisibilityGate } from './panelKit';
+import { MarketProvider } from './providers/marketProvider';
+import { ChartPanel } from './panels/chartPanel';
+import { CorrelationPanel } from './panels/correlationPanel';
+import { FxTilesPanel } from './panels/fxTilesPanel';
+import { NewsPanel } from './panels/newsPanel';
+import { OrderBookPanel } from './panels/orderBookPanel';
+import { OrdersPanel } from './panels/ordersPanel';
+import { PositionSummaryPanel } from './panels/positionSummaryPanel';
+import { PriceAlertPanel } from './panels/priceAlertPanel';
+import { SignalsPanel } from './panels/signalsPanel';
+import { VolSurfacePanel } from './panels/volSurfacePanel';
+import { WatchlistPanel } from './panels/watchlistPanel';
+import { PanelRenderer } from '../components/panelRenderer';
+import { MONO } from './constants';
 import {
     SandboxColorsContext,
     SANDBOX_DARK_COLORS,
@@ -272,50 +272,50 @@ const components = {
     // static so they don't need gating.
     orders: () => <OrdersPanel />,
     orderbook: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <OrderBookPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     watchlist: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <WatchlistPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     pricealert: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <PriceAlertPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     positionsummary: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <PositionSummaryPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     chart: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <ChartPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     news: () => <NewsPanel />,
     fxtiles: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <FxTilesPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     signals: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <SignalsPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     correlation: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <CorrelationPanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     volsurface: (props: IDockviewPanelProps) => (
-        <VisibilityGate api={props.api}>
+        <PanelRenderer api={props.api}>
             <VolSurfacePanel />
-        </VisibilityGate>
+        </PanelRenderer>
     ),
     eventlog: () => {
         const api = React.useContext(ApiContext);
@@ -558,13 +558,13 @@ export const ThemeContext = React.createContext<DockviewTheme | undefined>(
     undefined
 );
 
-export interface DockviewDemoProps {
+export interface AdvaptiveViewDesktopProp {
     theme?: DockviewTheme;
     onReady?: () => void;
     renderControls?: (props: ControlsContentProps) => React.ReactNode;
 }
 
-const DockviewDemo = (props: DockviewDemoProps) => {
+const AdvaptiveViewDesktop = (props: AdvaptiveViewDesktopProp) => {
     const managerStore = useSandboxManagerStore();
     const registeredLayoutProfiles = useSandboxManagerSelector(
         (snapshot) => snapshot.context.layoutProfiles
@@ -939,9 +939,9 @@ const DockviewDemo = (props: DockviewDemoProps) => {
     const [debug, setDebug] = React.useState<boolean>(false);
     return (
         <div
-            className={`dockview-demo${
+            className={`sandbox${
                 effectiveTheme.colorScheme === 'light'
-                    ? ' dockview-demo--light'
+                    ? ' sandbox--light'
                     : ''
             }${themeAnimating ? ' dv-theme-animating' : ''}`}
             style={{
@@ -1142,4 +1142,4 @@ const DockviewDemo = (props: DockviewDemoProps) => {
     );
 };
 
-export default DockviewDemo;
+export default AdvaptiveViewDesktop;
