@@ -47,8 +47,37 @@
     --dv-shadow-lg: 0 20px 44px -14px rgba(31, 42, 68, 0.24);
 }
 
+/* Registry components bring their own theme provider. Clear sandbox-only
+   tokens at this boundary and keep sandbox chrome rules out of its subtree. */
+[data-sandbox-theme-isolated] {
+    --demo-btn-bg: initial;
+    --demo-btn-bg-hover: initial;
+    --demo-btn-color: initial;
+    --demo-accent: initial;
+    --demo-accent-selected: initial;
+    --ifm-background-surface-color: initial;
+    --ifm-background-color: initial;
+    --ifm-hover-overlay: initial;
+    --ifm-toc-border-color: initial;
+    --ifm-heading-color: initial;
+    --ifm-font-color-base: initial;
+    --ifm-color-content-secondary: initial;
+    --ifm-color-emphasis-300: initial;
+    --ifm-color-emphasis-500: initial;
+    --dv-border: initial;
+    --dv-border-strong: initial;
+    --dv-accent-soft: initial;
+    --dv-accent-soft-hover: initial;
+    --dv-shadow-sm: initial;
+    --dv-shadow-md: initial;
+    --dv-shadow-lg: initial;
+}
+
 .sandbox.dv-theme-animating,
-.sandbox.dv-theme-animating * {
+.sandbox.dv-theme-animating
+    *:not([data-sandbox-theme-isolated]):not(
+        [data-sandbox-theme-isolated] *
+    ) {
     transition: background-color 0.3s ease, color 0.3s ease,
         border-color 0.3s ease, outline-color 0.3s ease, fill 0.3s ease;
 }
@@ -77,7 +106,10 @@
     padding: 0px 8px;
 }
 
-.sandbox button:not(.dv-default-tab-action) {
+.sandbox
+    button:not(.dv-default-tab-action):not(
+        [data-sandbox-theme-isolated] *
+    ) {
         height: 25px;
         display: flex;
         align-items: center;
@@ -89,22 +121,28 @@
     outline: 1px solid var(--demo-accent);
 }
 
-.sandbox button:not(.dv-default-tab-action):focus {
+.sandbox
+    button:not(.dv-default-tab-action):not(
+        [data-sandbox-theme-isolated] *
+    ):focus {
     outline: 1px solid var(--demo-accent) !important;
 }
 
-.sandbox button:not(.dv-default-tab-action):hover {
+.sandbox
+    button:not(.dv-default-tab-action):not(
+        [data-sandbox-theme-isolated] *
+    ):hover {
     background-color: var(--demo-btn-bg-hover);
 }
 
-.sandbox input {
+.sandbox input:not([data-sandbox-theme-isolated] *) {
         outline: 1px solid var(--demo-accent);
         border: none;
         margin: 0px;
     height: 25px;
 }
 
-.sandbox input:focus {
+.sandbox input:not([data-sandbox-theme-isolated] *):focus {
     outline: 1px solid var(--demo-accent) !important;
 }
 

@@ -100,7 +100,14 @@ const components = {
     const componentId = props.params?.componentId;
     const title = props.title ?? props.api.title ?? 'Untitled';
 
-    return <RegistryViewer componentId={componentId} title={title} />;
+    return (
+      <div
+        data-sandbox-theme-isolated
+        style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
+      >
+        <RegistryViewer componentId={componentId} title={title} />
+      </div>
+    );
   },
   default: (props: IDockviewPanelProps) => {
     const isDebug = React.useContext(DebugContext)
