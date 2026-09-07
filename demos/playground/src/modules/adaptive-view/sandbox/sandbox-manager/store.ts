@@ -19,6 +19,7 @@ export interface SandboxLayoutProfile {
     id: string;
     title: string;
     data: unknown;
+    nodes?: any;
 }
 
 export const sandboxThemes: readonly SandboxThemeOption[] =

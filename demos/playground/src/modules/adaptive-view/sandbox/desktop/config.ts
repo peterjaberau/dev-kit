@@ -957,7 +957,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                 {
                   type: "leaf",
                   data: {
-                    views: ["dynamicInvalid", "dynamicButton", "dynamicPopover"],
+                    views: ["dynamicInvalid", "dynamicButton", "dynamicButtonCustom", "dynamicPopover"],
                     activeView: "dynamicInvalid",
                     id: "group-components",
                   },
@@ -995,6 +995,29 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           title: "Dynamic Button",
           params: {
             componentId: "components-button",
+            props: {
+              variant: "solid",
+              content: "Button",
+              size: "md",
+              colorPalette: "gray",
+              disabled: false,
+            },
+          },
+        },
+        dynamicButtonCustom: {
+          id: "dynamicButtonCustom",
+          contentComponent: "dynamic",
+          tabComponent: "props.defaultTabComponent",
+          title: "Dynamic Button Custom",
+          params: {
+            componentId: "components-button",
+            props: {
+              variant: "surface",
+              content: "Custom Button",
+              size: "sm",
+              colorPalette: "blue",
+              disabled: false,
+            },
           },
         },
         dynamicPopover: {
@@ -1137,6 +1160,10 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
     },
   },
 ]
+
+export const dynamicNodes: any = {
+
+}
 
 export const EDGE_GROUP_PANELS: readonly {
     pos: 'bottom' | 'left' | 'right';

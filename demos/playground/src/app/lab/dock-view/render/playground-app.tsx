@@ -9,7 +9,7 @@ import {
 import { Box, Flex, HStack, Icon as ChakraIcon, Text, ClientOnly } from "@chakra-ui/react"
 import { View } from "#view/react"
 import { usePointerDrag } from "./use-pointer-drag"
-import { RegistryTree, RegistryViewer } from "#plugins/registry-manager-plugin/view"
+import { RegistryTree, RegistryViewerWithCard } from "#plugins/registry-manager-plugin/view"
 import { usePlayground } from "./playground-provider"
 
 function renderTabHeader(tab: any) {
@@ -21,7 +21,7 @@ function renderTabContent(tab: any) {
   const componentId = data.inputs?.componentId
 
   return componentId ? (
-    <RegistryViewer componentId={componentId} title={data.title} />
+    <RegistryViewerWithCard componentId={componentId} title={data.title} />
   ) : (
     <RegistryTree withCardWrapper={false} actionType="select" />
   )

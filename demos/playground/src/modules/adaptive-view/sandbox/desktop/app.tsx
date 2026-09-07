@@ -105,7 +105,7 @@ const components = {
         data-sandbox-theme-isolated
         style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
       >
-        <RegistryViewer componentId={componentId} title={title} />
+        <RegistryViewer componentId={componentId} />
       </div>
     );
   },
