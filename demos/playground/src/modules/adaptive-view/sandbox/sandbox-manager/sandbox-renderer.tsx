@@ -4,6 +4,7 @@ import * as React from 'react';
 import SandboxManager, { SandboxManagerRenderProps } from './manager';
 import { SandboxManagerProvider } from './provider';
 import type { SandboxManagerStoreInput } from './store';
+import { InstanceManagerProvider } from '../instance-manager/provider';
 
 export type { SandboxManagerRenderProps } from './manager';
 
@@ -17,9 +18,11 @@ export function SandboxRenderer({
     layoutProfiles,
 }: SandboxRendererProps) {
     return (
-        <SandboxManagerProvider input={{ initialTheme, layoutProfiles }}>
-            <SandboxManager>{children}</SandboxManager>
-        </SandboxManagerProvider>
+        <InstanceManagerProvider>
+            <SandboxManagerProvider input={{ initialTheme, layoutProfiles }}>
+                <SandboxManager>{children}</SandboxManager>
+            </SandboxManagerProvider>
+        </InstanceManagerProvider>
     );
 }
 

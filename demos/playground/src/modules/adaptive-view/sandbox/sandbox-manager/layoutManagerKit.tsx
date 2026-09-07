@@ -22,8 +22,8 @@ export const IconChip: React.FC<{ icon: string; size?: number }> = ({
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: LM.accentSoft,
-            border: `1px solid ${LM.accentSoftHover}`,
+            // background: LM.accentSoft,
+            // border: `1px solid ${LM.accentSoftHover}`,
             color: LM.accent,
         }}
     >

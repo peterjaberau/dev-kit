@@ -53,6 +53,7 @@ import {
     useSandboxColors,
 } from '../sandbox-manager/sandboxTheme';
 import { RegistryViewer } from '#plugins/registry-manager-plugin/view';
+import { InstanceRenderer } from '../instance-manager/instance-renderer';
 
 export const ApiContext = React.createContext<DockviewApi | undefined>(
     undefined
@@ -89,23 +90,33 @@ const ShadowIframe = (props: IDockviewPanelProps) => {
 
 type DynamicPanelParams = {
     componentId?: string;
+    props?: Record<string, unknown>;
 };
 
 type DynamicPanelProps = IDockviewPanelProps<DynamicPanelParams> & {
     title?: string;
 };
 
+type InstancePanelParams = {
+    instanceId?: string;
+};
+
 const components = {
+  instance: (props: IDockviewPanelProps<InstancePanelParams>) => {
+    const instanceId = props.params?.instanceId;
+
+    return instanceId ? <InstanceRenderer instanceId={instanceId} /> : null;
+  },
   dynamic: (props: DynamicPanelProps) => {
     const componentId = props.params?.componentId;
-    const title = props.title ?? props.api.title ?? 'Untitled';
+    const componentProps = props.params?.props ?? {};
 
     return (
       <div
         data-sandbox-theme-isolated
         style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
       >
-        <RegistryViewer componentId={componentId} />
+        <RegistryViewer componentId={componentId} options={componentProps} />
       </div>
     );
   },

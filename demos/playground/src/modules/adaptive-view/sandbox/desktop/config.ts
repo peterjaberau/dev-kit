@@ -66,7 +66,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                 },
                 {
                   type: "leaf",
-                  data: { views: ["orderbook", "watchlist", "pricealert"], activeView: "orderbook", id: "3" },
+                  data: { views: ["orderbook", "watchlist", "pricealert"], activeView: "orderbook", id: "1" },
                   size: 482,
                 },
               ],
@@ -970,9 +970,28 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                 {
                   type: "leaf",
                   data: {
-                    views: ["dynamiccheckbox", "dynamicfield", "dynamicslider"],
+                    views: ["dynamicButtonCustom", "dynamiccheckbox", "dynamicfield", "dynamicslider"],
                     activeView: "dynamiccheckbox",
                     id: "group-forms",
+                  },
+                },
+              ],
+            },
+            {
+              type: "branch",
+              data: [
+                {
+                  type: "leaf",
+                  data: {
+                    views: [
+                      "instanceButton",
+                      "instancePopover",
+                      "instanceCheckbox",
+                      "instanceField",
+                      "instanceSlider",
+                    ],
+                    activeView: "instanceButton",
+                    id: "group-actor-instances",
                   },
                 },
               ],
@@ -1054,6 +1073,51 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           title: "Dynamic Slider",
           params: {
             componentId: "forms-slider",
+          },
+        },
+        instanceButton: {
+          id: "instanceButton",
+          contentComponent: "instance",
+          tabComponent: "props.defaultTabComponent",
+          title: "Actor Button",
+          params: {
+            instanceId: "components-button",
+          },
+        },
+        instancePopover: {
+          id: "instancePopover",
+          contentComponent: "instance",
+          tabComponent: "props.defaultTabComponent",
+          title: "Actor Popover",
+          params: {
+            instanceId: "components-popover",
+          },
+        },
+        instanceCheckbox: {
+          id: "instanceCheckbox",
+          contentComponent: "instance",
+          tabComponent: "props.defaultTabComponent",
+          title: "Actor Checkbox",
+          params: {
+            instanceId: "forms-checkbox",
+          },
+        },
+        instanceField: {
+          id: "instanceField",
+          contentComponent: "instance",
+          tabComponent: "props.defaultTabComponent",
+          title: "Actor Field",
+          params: {
+            instanceId: "forms-field",
+          },
+        },
+        instanceSlider: {
+          id: "instanceSlider",
+          contentComponent: "instance",
+          tabComponent: "props.defaultTabComponent",
+          title: "Actor Slider",
+          params: {
+            instanceId: "forms-slider",
           },
         },
 
@@ -1161,9 +1225,93 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
   },
 ]
 
-export const dynamicNodes: any = {
+export const dynamicLayoutProfile: any = {
+  id: "dynamicLayoutProfile",
+  title: "Dynamic Layout Profile",
+  data: {
+    grid: {
+      root: {
+        type: "branch",
+        data: [
+          {
+            type: "branch",
+            data: [
+              {
+                type: "leaf",
+                data: {
+                  id: "group-components",
+                },
+              },
+            ],
+          },
+        ],
+      },
+      orientation: "HORIZONTAL",
+    },
+    edgeGroups: {
+      left: {
+        size: 220,
+        visible: true,
+        collapsed: true,
+        minimumSize: 150,
+        collapsedSize: 44,
+        group: {
+          headerPosition: "left",
+        },
+        autoReveal: true,
+      },
 
+    },
+  },
 }
+export const dynamicNodes: any = [
+  {
+    nodeId: "dynamicButton",
+    componentId: "components-button",
+    props: {
+      variant: "solid",
+      content: "Button",
+      size: "md",
+      colorPalette: "gray",
+      disabled: false,
+    },
+  },
+  {
+    nodeId: "dynamicButtonCustom",
+    componentId: "components-button",
+    params: {
+      props: {
+        variant: "surface",
+        content: "Custom Button",
+        size: "sm",
+        colorPalette: "blue",
+        disabled: false,
+      },
+    },
+  },
+]
+export const dynamicNodesToPanels: any = [
+  {
+    groupId: "group-components",
+    panelId: "panel-button",
+    nodeId: "dynamicButton",
+  },
+  {
+    groupId: "group-components",
+    panelId: "panel-button-custom",
+    nodeId: "dynamicButtonCustom",
+  },
+  {
+    groupId: "group-components",
+    panelId: "panel-button-custom1",
+    nodeId: "dynamicButtonCustom",
+  },
+  {
+    groupId: "left",
+    panelId: "panel-button-custom2",
+    nodeId: "dynamicButtonCustom",
+  },
+]
 
 export const EDGE_GROUP_PANELS: readonly {
     pos: 'bottom' | 'left' | 'right';
