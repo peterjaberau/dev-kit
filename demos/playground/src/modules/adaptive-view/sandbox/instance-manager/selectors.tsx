@@ -11,6 +11,9 @@ export function useInstanceManager() {
     const instanceManagerContext = InstanceManagerContext.useSelector(
         (state) => state.context
     );
+    const instanceChildren = InstanceManagerContext.useSelector(
+        (state) => state.children
+    );
 
     return {
         instanceManagerRef,
@@ -20,12 +23,13 @@ export function useInstanceManager() {
         instanceManagerId: instanceManagerRef.id,
         metadata: instanceManagerContext.metadata,
         instanceRefs: instanceManagerContext.instanceRefs,
+        instanceChildren,
     };
 }
 
 export function useInstance(instanceId: string) {
     const instanceRef = InstanceManagerContext.useSelector(
-        (state) => state.context.instanceRefs[instanceId]
+        (state) => state.children[instanceId]
     );
     const instanceProps = useSelector(
         instanceRef,

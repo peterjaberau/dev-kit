@@ -54,6 +54,16 @@ import {
 } from '../sandbox-manager/sandboxTheme';
 import { RegistryViewer } from '#plugins/registry-manager-plugin/view';
 import { InstanceRenderer } from '../instance-manager/instance-renderer';
+import { useInstanceManager } from '../instance-manager/selectors';
+import { Box, NativeSelect } from '@chakra-ui/react';
+import {
+    ViewInstanceInspector,
+    ViewInstances,
+    ViewLayoutGroupInspector,
+    ViewLayoutInspector,
+    ViewLayoutPanelInspector,
+    ViewRegistryLibrary,
+} from '../sandbox-manager/views';
 
 export const ApiContext = React.createContext<DockviewApi | undefined>(
     undefined
@@ -101,7 +111,134 @@ type InstancePanelParams = {
     instanceId?: string;
 };
 
+const InspectorSelect = (props: {
+    value: string;
+    options: readonly string[];
+    label: string;
+    onChange: (value: string) => void;
+    children: React.ReactNode;
+}) => (
+    <Box width="full" height="full" display="flex" flexDirection="column">
+        <Box padding="2" flexShrink={0}>
+            <NativeSelect.Root size="sm">
+                <NativeSelect.Field
+                    aria-label={props.label}
+                    value={props.value}
+                    onChange={(event) => props.onChange(event.target.value)}
+                >
+                    {props.options.map((option) => (
+                        <option key={option} value={option}>
+                            {option}
+                        </option>
+                    ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+            </NativeSelect.Root>
+        </Box>
+        <Box minHeight={0} flex="1" overflow="hidden">
+            {props.children}
+        </Box>
+    </Box>
+);
+
+const SandboxIsolatedView = ({ children }: React.PropsWithChildren) => (
+    <Box
+        data-sandbox-theme-isolated
+        width="full"
+        height="full"
+        minWidth={0}
+        minHeight={0}
+    >
+        {children}
+    </Box>
+);
+
+const InstanceInspectorView = () => {
+    const { instanceChildren } = useInstanceManager();
+    const instanceIds = Object.keys(instanceChildren);
+    const [instanceId, setInstanceId] = React.useState(instanceIds[0] ?? '');
+
+    return (
+        <InspectorSelect
+            value={instanceId}
+            options={instanceIds}
+            label="Registry instance"
+            onChange={setInstanceId}
+        >
+            {instanceId ? (
+                <ViewInstanceInspector instanceId={instanceId} />
+            ) : null}
+        </InspectorSelect>
+    );
+};
+
+const LayoutGroupInspectorView = (props: IDockviewPanelProps) => {
+    const groupIds = props.containerApi.groups.map((group) => group.id);
+    const [groupId, setGroupId] = React.useState(groupIds[0] ?? '');
+
+    return (
+        <InspectorSelect
+            value={groupId}
+            options={groupIds}
+            label="Dockview group"
+            onChange={setGroupId}
+        >
+            {groupId ? (
+                <ViewLayoutGroupInspector
+                    api={props.containerApi}
+                    groupId={groupId}
+                />
+            ) : null}
+        </InspectorSelect>
+    );
+};
+
+const LayoutPanelInspectorView = (props: IDockviewPanelProps) => {
+    const panelIds = props.containerApi.panels.map((panel) => panel.id);
+    const [panelId, setPanelId] = React.useState(panelIds[0] ?? '');
+
+    return (
+        <InspectorSelect
+            value={panelId}
+            options={panelIds}
+            label="Dockview panel"
+            onChange={setPanelId}
+        >
+            {panelId ? (
+                <ViewLayoutPanelInspector
+                    api={props.containerApi}
+                    panelId={panelId}
+                />
+            ) : null}
+        </InspectorSelect>
+    );
+};
+
 const components = {
+  registryLibrary: () => (
+    <SandboxIsolatedView><ViewRegistryLibrary /></SandboxIsolatedView>
+  ),
+  instances: () => (
+    <SandboxIsolatedView><ViewInstances /></SandboxIsolatedView>
+  ),
+  instanceInspector: () => (
+    <SandboxIsolatedView><InstanceInspectorView /></SandboxIsolatedView>
+  ),
+  layoutStateInspector: (props: IDockviewPanelProps) => (
+    <SandboxIsolatedView>
+      <ViewLayoutInspector api={props.containerApi} />
+    </SandboxIsolatedView>
+  ),
+  layoutGroupInspector: (props: IDockviewPanelProps) => (
+    <SandboxIsolatedView>
+      <LayoutGroupInspectorView {...props} />
+    </SandboxIsolatedView>
+  ),
+  layoutPanelInspector: (props: IDockviewPanelProps) => (
+    <SandboxIsolatedView>
+      <LayoutPanelInspectorView {...props} />
+    </SandboxIsolatedView>
+  ),
   instance: (props: IDockviewPanelProps<InstancePanelParams>) => {
     const instanceId = props.params?.instanceId;
 
