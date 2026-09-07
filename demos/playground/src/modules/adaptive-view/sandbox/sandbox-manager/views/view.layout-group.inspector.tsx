@@ -20,12 +20,17 @@ export function ViewLayoutGroupInspector({
     }
 
     return (
-        <Box width="full" height="full" overflow="auto" padding="2">
-            <JsonView
-                key={`${groupId}:${JSON.stringify(groupState)}`}
-                src={groupState}
-                collapsed={1}
-            />
-        </Box>
-    );
+      <Box width="full" height="full" overflow="auto" padding="2">
+        <JsonView
+          key={`${groupId}:${JSON.stringify(groupState)}`}
+          src={groupState}
+          style={{
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+          theme="github"
+          collapsed={1}
+        />
+      </Box>
+    )
 }

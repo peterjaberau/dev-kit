@@ -31,6 +31,11 @@ export function ViewInstanceInspector({
             <JsonView
                 key={`${instanceId}:${JSON.stringify(snapshotJson)}`}
                 src={snapshotJson}
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                }}
+                theme="github"
                 collapsed={1}
             />
         </Box>

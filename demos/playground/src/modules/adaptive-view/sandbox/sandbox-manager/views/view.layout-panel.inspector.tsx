@@ -20,12 +20,17 @@ export function ViewLayoutPanelInspector({
     }
 
     return (
-        <Box width="full" height="full" overflow="auto" padding="2">
-            <JsonView
-                key={`${panelId}:${JSON.stringify(panelState)}`}
-                src={panelState}
-                collapsed={1}
-            />
-        </Box>
-    );
+      <Box width="full" height="full" overflow="auto" padding="2">
+        <JsonView
+          key={`${panelId}:${JSON.stringify(panelState)}`}
+          src={panelState}
+          style={{
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+          theme="github"
+          collapsed={1}
+        />
+      </Box>
+    )
 }

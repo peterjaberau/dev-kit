@@ -12,12 +12,17 @@ export function ViewLayoutInspector({ api }: ViewLayoutInspectorProps) {
     const layoutState = api.toJSON();
 
     return (
-        <Box width="full" height="full" overflow="auto" padding="2">
-            <JsonView
-                key={JSON.stringify(layoutState)}
-                src={layoutState}
-                collapsed={1}
-            />
-        </Box>
-    );
+      <Box width="full" height="full" overflow="auto" padding="2">
+        <JsonView
+          key={JSON.stringify(layoutState)}
+          src={layoutState}
+          style={{
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+          theme="github"
+          collapsed={1}
+        />
+      </Box>
+    )
 }
