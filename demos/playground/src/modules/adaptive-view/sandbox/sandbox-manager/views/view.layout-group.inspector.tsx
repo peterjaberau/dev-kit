@@ -29,7 +29,7 @@ export function ViewLayoutGroupInspector({
             fontWeight: "bold",
           }}
           theme="github"
-          collapsed={1}
+          collapsed={2}
         />
       </Box>
     )

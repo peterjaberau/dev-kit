@@ -63,6 +63,7 @@ import {
     ViewLayoutGroupInspector,
     ViewLayoutInspector,
     ViewLayoutPanelInspector,
+    ViewPanels,
     ViewRegistryLibrary,
     ViewSandboxPlayground,
 } from '../sandbox-manager/views';
@@ -223,6 +224,9 @@ const components = {
   ),
   instances: () => (
     <SandboxIsolatedView><ViewInstances /></SandboxIsolatedView>
+  ),
+  panels: (props: IDockviewPanelProps) => (
+    <SandboxIsolatedView><ViewPanels {...props} /></SandboxIsolatedView>
   ),
   instanceInspector: () => (
     <SandboxIsolatedView><InstanceInspectorView /></SandboxIsolatedView>

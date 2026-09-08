@@ -1290,18 +1290,25 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                 {
                   type: "leaf",
                   data: {
+                    views: ["instanceRenderer", "registryLibrary", "instances", "panels"],
+                    activeView: "instanceRenderer",
+                    id: "group-render",
+                  },
+                  size: 100,
+                },
+                {
+                  type: "leaf",
+                  data: {
                     views: [
-                      "registryLibrary",
-                      "instances",
                       "instanceInspector",
-                      "instanceRenderer",
                       "layoutStateInspector",
                       "layoutGroupInspector",
                       "layoutPanelInspector",
                     ],
-                    activeView: "registryLibrary",
-                    id: "manager-inspectors",
+                    activeView: "instanceInspector",
+                    id: "group-debug",
                   },
+                  size: 100,
                 },
               ],
             },
@@ -1315,6 +1322,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                     activeView: "sandboxPlaygroundInstance",
                     id: "inspector-playground-group",
                   },
+                  size: 100,
                 },
               ],
             },
@@ -1324,6 +1332,8 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
         width: 1530,
         height: 964,
         orientation: "HORIZONTAL",
+        // proportionalLayout: true,
+        // disableAutoResizing: false
       },
       panels: {
         layoutinspector: {
@@ -1343,6 +1353,12 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           contentComponent: "instances",
           tabComponent: "props.defaultTabComponent",
           title: "Instances",
+        },
+        panels: {
+          id: "panels",
+          contentComponent: "panels",
+          tabComponent: "props.defaultTabComponent",
+          title: "Panels",
         },
         instanceInspector: {
           id: "instanceInspector",

@@ -21,7 +21,7 @@ export function ViewLayoutInspector({ api }: ViewLayoutInspectorProps) {
             fontWeight: "bold",
           }}
           theme="github"
-          collapsed={1}
+          collapsed={2}
         />
       </Box>
     )

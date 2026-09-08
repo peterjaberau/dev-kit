@@ -1,30 +1,135 @@
 'use client';
 
-import { Button, Flex, Stack, Text } from '@chakra-ui/react';
-import { useInstanceManager } from '../../instance-manager/selectors';
+import {
+    Badge,
+    Box,
+    Button,
+    Card,
+    Container,
+    HStack,
+    Icon,
+    Input,
+    InputGroup,
+    Stack,
+    Text,
+} from '@chakra-ui/react';
+import { type MouseEvent, useState } from 'react';
+import { LuSearch } from 'react-icons/lu';
+import {
+    useInstanceManager,
+    useSandboxInstance,
+} from '../../instance-manager/selectors';
+
+const categories = ['All', 'Forms', 'Components'] as const;
+type Category = (typeof categories)[number];
 
 export function ViewInstances() {
-    const { instanceRefs } = useInstanceManager();
+    const { instancesList } = useInstanceManager();
+    const [activeCategory, setActiveCategory] = useState<Category>('All');
+    const [search, setSearch] = useState('');
+
+    const normalizedSearch = search.toLowerCase();
+    const normalizedCategory = activeCategory.toLowerCase();
+    const filteredInstances = instancesList.filter(({ id, name }) => {
+        const normalizedId = id.toLowerCase();
+        const normalizedName = name.toLowerCase();
+        const matchesCategory =
+            activeCategory === 'All' ||
+            normalizedName.includes(normalizedCategory);
+        const matchesSearch =
+            normalizedId.includes(normalizedSearch) ||
+            normalizedName.includes(normalizedSearch);
+
+        return matchesCategory && matchesSearch;
+    });
 
     return (
-        <Stack width="full" height="full" overflowY="auto" gap="2" padding="2">
-            {Object.entries(instanceRefs).map(([id, actorRef]) => (
-                <Flex
-                    key={id}
-                    align="center"
-                    justify="space-between"
-                    gap="3"
-                >
-                    <Text truncate>{id}</Text>
+        <Container maxW="2xl" py="5">
+            <Stack gap="6">
+                <InputGroup flex="1" startElement={<LuSearch />}>
+                    <Input
+                        placeholder="Search instances..."
+                        size="sm"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                    />
+                </InputGroup>
+
+                <HStack gap="2" flexWrap="wrap">
+                    {categories.map((category) => (
+                        <Button
+                            key={category}
+                            size="xs"
+                            variant={activeCategory === category ? 'solid' : 'outline'}
+                            colorPalette={activeCategory === category ? undefined : 'gray'}
+                            onClick={() => setActiveCategory(category)}
+                        >
+                            {category}
+                        </Button>
+                    ))}
+                </HStack>
+
+                <Stack gap="3">
+                    {filteredInstances.map(({ id, name }) => (
+                        <InstanceCard key={id} id={id} name={name} />
+                    ))}
+                </Stack>
+
+                {filteredInstances.length === 0 && (
+                    <Stack align="center" py="10" gap="2">
+                        <Icon fontSize="2xl" color="fg.muted">
+                            <LuSearch />
+                        </Icon>
+                        <Text color="fg.muted" textStyle="sm">
+                            No instances found
+                        </Text>
+                    </Stack>
+                )}
+            </Stack>
+        </Container>
+    );
+}
+
+interface InstanceCardProps {
+    id: string;
+    name: string;
+}
+
+function InstanceCard({ id, name }: InstanceCardProps) {
+    const { selectedInstanceId, sentToSandboxInstance } = useSandboxInstance();
+    const selected = selectedInstanceId === id;
+
+    const handleSelect = (event: MouseEvent<HTMLButtonElement>) => {
+        sentToSandboxInstance?.({
+            type: 'ON_SELECT_INSTANCE',
+            instanceId: event.currentTarget.value,
+        });
+    };
+
+    return (
+        <Card.Root size="sm" variant={selected ? 'elevated' : 'outline'}>
+            <Card.Body>
+                <HStack gap="4">
+                    <Box flex="1">
+                        <HStack gap="2">
+                            <Card.Title textStyle="sm">{id}</Card.Title>
+                            <Badge size="sm" variant="outline">{name}</Badge>
+                        </HStack>
+                    </Box>
                     <Button
-                        size="xs"
-                        variant="outline"
-                        onClick={() => console.log(actorRef?.getSnapshot())}
+                        type="button"
+                        value={id}
+                        onClick={handleSelect}
+                        size="sm"
+                        variant={selected ? 'solid' : 'outline'}
+                        colorPalette={selected ? 'blue' : 'gray'}
+                        bg={selected ? undefined : 'bg'}
+                        aria-pressed={selected}
                     >
-                        Inspect
+                        {selected ? 'Selected' : 'Select'}
                     </Button>
-                </Flex>
-            ))}
-        </Stack>
+                </HStack>
+            </Card.Body>
+        </Card.Root>
     );
 }

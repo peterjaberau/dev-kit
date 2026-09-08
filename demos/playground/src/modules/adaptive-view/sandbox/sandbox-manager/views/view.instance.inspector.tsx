@@ -36,7 +36,7 @@ export function ViewInstanceInspector({
                   fontWeight: 'bold',
                 }}
                 theme="github"
-                collapsed={1}
+                collapsed={2}
             />
         </Box>
     );
