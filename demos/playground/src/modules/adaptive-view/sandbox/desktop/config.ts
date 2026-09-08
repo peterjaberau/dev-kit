@@ -1290,7 +1290,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                 {
                   type: "leaf",
                   data: {
-                    views: ["instanceRenderer", "registryLibrary", "instances", "panels"],
+                    views: ["instanceRenderer", "registryLibrary"],
                     activeView: "instanceRenderer",
                     id: "group-render",
                   },
