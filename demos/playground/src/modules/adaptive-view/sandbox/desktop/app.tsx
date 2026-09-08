@@ -55,6 +55,7 @@ import {
 import { RegistryViewer } from '#plugins/registry-manager-plugin/view';
 import { InstanceRenderer } from '../instance-manager/instance-renderer';
 import { useSandboxInstance } from '../instance-manager/selectors';
+import { useLayoutManager } from '../layout-manager/selectors';
 import { Box, NativeSelect, Text } from '@chakra-ui/react';
 import {
     ViewInstanceInspector,
@@ -225,8 +226,8 @@ const components = {
   instances: () => (
     <SandboxIsolatedView><ViewInstances /></SandboxIsolatedView>
   ),
-  panels: (props: IDockviewPanelProps) => (
-    <SandboxIsolatedView><ViewPanels {...props} /></SandboxIsolatedView>
+  panels: () => (
+    <SandboxIsolatedView><ViewPanels /></SandboxIsolatedView>
   ),
   instanceInspector: () => (
     <SandboxIsolatedView><InstanceInspectorView /></SandboxIsolatedView>
@@ -732,6 +733,7 @@ export interface AdvaptiveViewDesktopProp {
 }
 
 const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
+    const { sentToLayoutManager } = useLayoutManager();
     const registeredLayoutProfiles = useSandboxManagerSelector(
         (snapshot) => snapshot.context.layoutProfiles
     );
@@ -869,6 +871,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
 
     const onReady = (event: DockviewReadyEvent) => {
         setupEdgeGroups(event.api);
+        sentToLayoutManager({ type: 'ON_READY', api: event.api });
         setApi(event.api);
     };
 

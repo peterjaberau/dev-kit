@@ -6,6 +6,7 @@ import { SandboxManagerProvider } from './provider';
 import type { SandboxManagerStoreInput } from './store';
 import { InstanceManagerProvider } from '../instance-manager/provider';
 import type { InstanceManagerInput } from '../instance-manager/machines';
+import { LayoutManagerProvider } from '../layout-manager/provider';
 
 export type { SandboxManagerRenderProps } from './manager';
 
@@ -22,9 +23,11 @@ export function SandboxRenderer({
 }: SandboxRendererProps) {
     return (
         <InstanceManagerProvider input={instanceManagerInput}>
-            <SandboxManagerProvider input={{ initialTheme, layoutProfiles }}>
-                <SandboxManager>{children}</SandboxManager>
-            </SandboxManagerProvider>
+            <LayoutManagerProvider>
+                <SandboxManagerProvider input={{ initialTheme, layoutProfiles }}>
+                    <SandboxManager>{children}</SandboxManager>
+                </SandboxManagerProvider>
+            </LayoutManagerProvider>
         </InstanceManagerProvider>
     );
 }

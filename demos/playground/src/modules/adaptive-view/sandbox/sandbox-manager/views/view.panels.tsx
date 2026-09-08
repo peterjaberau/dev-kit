@@ -14,15 +14,16 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { LuSearch } from 'react-icons/lu';
-import type { IDockviewPanelProps } from '#adaptive-view/react';
+import { useLayoutManager } from '../../layout-manager/selectors';
 
 const categories = ['All'] as const;
 
-export function ViewPanels(props: IDockviewPanelProps) {
+export function ViewPanels() {
+    const { panelsList } = useLayoutManager();
     const [search, setSearch] = useState('');
     const normalizedSearch = search.toLowerCase();
-    const filteredPanels = props.containerApi.panels.filter((panel) =>
-        (panel.title ?? '').toLowerCase().includes(normalizedSearch)
+    const filteredPanels = panelsList.filter((panel) =>
+        panel.name.toLowerCase().includes(normalizedSearch)
     );
 
     return (
@@ -51,7 +52,7 @@ export function ViewPanels(props: IDockviewPanelProps) {
                             <Card.Body>
                                 <HStack gap="2">
                                     <Card.Title textStyle="sm">
-                                        {panel.title || panel.id}
+                                        {panel.name}
                                     </Card.Title>
                                     <Badge size="sm" variant="outline">
                                         {panel.id}
