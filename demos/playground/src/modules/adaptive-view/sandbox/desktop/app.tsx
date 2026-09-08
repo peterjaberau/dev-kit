@@ -55,7 +55,10 @@ import {
 import { RegistryViewer } from '#plugins/registry-manager-plugin/view';
 import { InstanceRenderer } from '../instance-manager/instance-renderer';
 import { useSandboxInstance } from '../instance-manager/selectors';
-import { useLayoutManager } from '../layout-manager/selectors';
+import {
+    useLayoutManager,
+    useSandboxLayout,
+} from '../layout-manager/selectors';
 import { Box, NativeSelect, Text } from '@chakra-ui/react';
 import {
     ViewInstanceInspector,
@@ -64,7 +67,7 @@ import {
     ViewLayoutGroupInspector,
     ViewLayoutInspector,
     ViewLayoutPanelInspector,
-    ViewPanels,
+    ViewLayoutPanels,
     ViewRegistryLibrary,
     ViewSandboxPlayground,
 } from '../sandbox-manager/views';
@@ -177,8 +180,9 @@ const InstanceRendererView = () => {
     );
 };
 
-const LayoutGroupInspectorView = (props: IDockviewPanelProps) => {
-    const groupIds = props.containerApi.groups.map((group) => group.id);
+const LayoutGroupInspectorView = () => {
+    const { api } = useLayoutManager();
+    const groupIds = api?.groups.map((group) => group.id) ?? [];
     const [groupId, setGroupId] = React.useState(groupIds[0] ?? '');
 
     return (
@@ -190,7 +194,6 @@ const LayoutGroupInspectorView = (props: IDockviewPanelProps) => {
         >
             {groupId ? (
                 <ViewLayoutGroupInspector
-                    api={props.containerApi}
                     groupId={groupId}
                 />
             ) : null}
@@ -198,24 +201,13 @@ const LayoutGroupInspectorView = (props: IDockviewPanelProps) => {
     );
 };
 
-const LayoutPanelInspectorView = (props: IDockviewPanelProps) => {
-    const panelIds = props.containerApi.panels.map((panel) => panel.id);
-    const [panelId, setPanelId] = React.useState(panelIds[0] ?? '');
+const LayoutPanelInspectorView = () => {
+    const { selectedPanelId } = useSandboxLayout();
 
-    return (
-        <InspectorSelect
-            value={panelId}
-            options={panelIds}
-            label="Dockview panel"
-            onChange={setPanelId}
-        >
-            {panelId ? (
-                <ViewLayoutPanelInspector
-                    api={props.containerApi}
-                    panelId={panelId}
-                />
-            ) : null}
-        </InspectorSelect>
+    return selectedPanelId ? (
+        <ViewLayoutPanelInspector panelId={selectedPanelId} />
+    ) : (
+        <Text padding="3">Select a panel from Panels.</Text>
     );
 };
 
@@ -227,7 +219,7 @@ const components = {
     <SandboxIsolatedView><ViewInstances /></SandboxIsolatedView>
   ),
   panels: () => (
-    <SandboxIsolatedView><ViewPanels /></SandboxIsolatedView>
+    <SandboxIsolatedView><ViewLayoutPanels /></SandboxIsolatedView>
   ),
   instanceInspector: () => (
     <SandboxIsolatedView><InstanceInspectorView /></SandboxIsolatedView>
@@ -238,19 +230,19 @@ const components = {
   sandboxPlaygroundInstance: () => (
     <SandboxIsolatedView><ViewSandboxPlayground /></SandboxIsolatedView>
   ),
-  layoutStateInspector: (props: IDockviewPanelProps) => (
+  layoutStateInspector: () => (
     <SandboxIsolatedView>
-      <ViewLayoutInspector api={props.containerApi} />
+      <ViewLayoutInspector />
     </SandboxIsolatedView>
   ),
-  layoutGroupInspector: (props: IDockviewPanelProps) => (
+  layoutGroupInspector: () => (
     <SandboxIsolatedView>
-      <LayoutGroupInspectorView {...props} />
+      <LayoutGroupInspectorView />
     </SandboxIsolatedView>
   ),
-  layoutPanelInspector: (props: IDockviewPanelProps) => (
+  layoutPanelInspector: () => (
     <SandboxIsolatedView>
-      <LayoutPanelInspectorView {...props} />
+      <LayoutPanelInspectorView />
     </SandboxIsolatedView>
   ),
   instance: (props: IDockviewPanelProps<InstancePanelParams>) => {

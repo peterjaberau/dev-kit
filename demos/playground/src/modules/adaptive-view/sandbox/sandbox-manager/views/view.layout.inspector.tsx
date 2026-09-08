@@ -1,14 +1,16 @@
 'use client';
 
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import JsonView from 'react18-json-view';
-import type { DockviewApi } from '#adaptive-view/react';
+import { useLayoutManager } from '../../layout-manager/selectors';
 
-export interface ViewLayoutInspectorProps {
-    api: DockviewApi;
-}
+export function ViewLayoutInspector() {
+    const { api } = useLayoutManager();
 
-export function ViewLayoutInspector({ api }: ViewLayoutInspectorProps) {
+    if (!api) {
+        return <Text padding="3">Layout is not ready.</Text>;
+    }
+
     const layoutState = api.toJSON();
 
     return (

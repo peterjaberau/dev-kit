@@ -7,11 +7,11 @@ import {
     themeGithubLightSpaced,
 } from '#adaptive-view/react';
 import { ViewInstances } from './view.instances';
-import { ViewPanels } from './view.panels';
+import { ViewLayoutPanels } from './view.layout-panels';
 
 const playgroundComponents = {
     instances: ViewInstances,
-    panels: ViewPanels,
+    panels: ViewLayoutPanels,
 };
 
 export function ViewSandboxPlayground() {

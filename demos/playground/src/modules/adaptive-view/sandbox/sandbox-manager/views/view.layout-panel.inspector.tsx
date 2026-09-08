@@ -2,18 +2,16 @@
 
 import { Box, Text } from '@chakra-ui/react';
 import JsonView from 'react18-json-view';
-import type { DockviewApi } from '#adaptive-view/react';
+import { useLayoutPanel } from '../../layout-manager/selectors';
 
 export interface ViewLayoutPanelInspectorProps {
-    api: DockviewApi;
     panelId: string;
 }
 
 export function ViewLayoutPanelInspector({
-    api,
     panelId,
 }: ViewLayoutPanelInspectorProps) {
-    const panelState = api.getPanel(panelId)?.toJSON();
+    const { panelState } = useLayoutPanel(panelId);
 
     if (!panelState) {
         return <Text padding="3">Panel not found: {panelId}</Text>;

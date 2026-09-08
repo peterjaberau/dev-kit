@@ -1,6 +1,12 @@
 'use client';
 
+import { useSelector } from '@xstate/react';
+import type { ActorRefFrom } from 'xstate';
 import { LayoutManagerContext } from './provider';
+import {
+    SANDBOX_LAYOUT_ID,
+    sandboxLayoutMachine,
+} from './machines';
 
 export function useLayoutManager() {
     const layoutManagerRef = LayoutManagerContext.useActorRef();
@@ -33,6 +39,29 @@ export function useLayoutManager() {
     };
 }
 
+export function useSandboxLayout() {
+    const sandboxLayoutRef = LayoutManagerContext.useSelector(
+        (state) =>
+            state.children[SANDBOX_LAYOUT_ID] as
+                | ActorRefFrom<typeof sandboxLayoutMachine>
+                | undefined
+    );
+    const sandboxLayoutState = useSelector(
+        sandboxLayoutRef,
+        (state) => state
+    );
+    const sandboxLayoutContext = sandboxLayoutState?.context;
+
+    return {
+        sandboxLayoutRef,
+        sentToSandboxLayout: sandboxLayoutRef?.send,
+        sandboxLayoutState,
+        sandboxLayoutContext,
+        sandboxLayoutSnapshot: sandboxLayoutRef?.getSnapshot(),
+        selectedPanelId: sandboxLayoutContext?.selectedPanelId ?? null,
+    };
+}
+
 export function useLayoutPanel(panelId: string) {
     const {
         layoutManagerRef,
@@ -43,6 +72,15 @@ export function useLayoutPanel(panelId: string) {
         sentToLayoutManager,
     } = useLayoutManager();
     const panel = api?.getPanel(panelId);
+    const panelState = panel?.toJSON();
+    const panelContext = panel
+        ? {
+              id: panel.id,
+              title: panel.title,
+              params: panel.params,
+              groupId: panel.group.id,
+          }
+        : undefined;
 
     return {
         layoutManagerRef,
@@ -53,6 +91,8 @@ export function useLayoutPanel(panelId: string) {
         sentToLayoutManager,
         panel,
         panelApi: panel?.api,
+        panelState,
+        panelContext,
         panelId,
     };
 }
