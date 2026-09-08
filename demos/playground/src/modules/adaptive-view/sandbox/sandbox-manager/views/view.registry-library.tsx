@@ -4,13 +4,13 @@ import { Button, Flex, Stack, Text } from '@chakra-ui/react';
 import { useInstanceManager } from '../../instance-manager/selectors';
 
 export function ViewRegistryLibrary() {
-    const { metadata } = useInstanceManager();
+    const { instancesList } = useInstanceManager();
 
     return (
         <Stack width="full" height="full" overflowY="auto" gap="2" padding="2">
-            {metadata.registryNames.map((name) => (
+            {instancesList.map(({ id, name }) => (
                 <Flex
-                    key={name}
+                    key={id}
                     align="center"
                     justify="space-between"
                     gap="3"
@@ -19,7 +19,7 @@ export function ViewRegistryLibrary() {
                     <Button
                         size="xs"
                         variant="outline"
-                        onClick={() => console.log(name)}
+                        onClick={() => console.log({ id, name })}
                     >
                         Inspect
                     </Button>

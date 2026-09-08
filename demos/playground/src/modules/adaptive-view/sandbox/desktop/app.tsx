@@ -54,8 +54,8 @@ import {
 } from '../sandbox-manager/sandboxTheme';
 import { RegistryViewer } from '#plugins/registry-manager-plugin/view';
 import { InstanceRenderer } from '../instance-manager/instance-renderer';
-import { useInstanceManager } from '../instance-manager/selectors';
-import { Box, NativeSelect } from '@chakra-ui/react';
+import { useSandboxInstance } from '../instance-manager/selectors';
+import { Box, NativeSelect, Text } from '@chakra-ui/react';
 import {
     ViewInstanceInspector,
     ViewInstanceRenderer,
@@ -64,6 +64,7 @@ import {
     ViewLayoutInspector,
     ViewLayoutPanelInspector,
     ViewRegistryLibrary,
+    ViewSandboxPlayground,
 } from '../sandbox-manager/views';
 
 export const ApiContext = React.createContext<DockviewApi | undefined>(
@@ -155,50 +156,22 @@ const SandboxIsolatedView = ({ children }: React.PropsWithChildren) => (
 );
 
 const InstanceInspectorView = () => {
-    const { instanceNames } = useInstanceManager();
-    const [instanceId, setInstanceId] = React.useState(instanceNames[0] ?? '');
+    const { selectedInstanceId } = useSandboxInstance();
 
-    React.useEffect(() => {
-        if (!instanceNames.includes(instanceId)) {
-            setInstanceId(instanceNames[0] ?? '');
-        }
-    }, [instanceId, instanceNames]);
-
-    return (
-        <InspectorSelect
-            value={instanceId}
-            options={instanceNames}
-            label="Registry instance"
-            onChange={setInstanceId}
-        >
-            {instanceId ? (
-                <ViewInstanceInspector instanceId={instanceId} />
-            ) : null}
-        </InspectorSelect>
+    return selectedInstanceId ? (
+        <ViewInstanceInspector instanceId={selectedInstanceId} />
+    ) : (
+        <Text padding="3">Select an instance from Spawned Instances.</Text>
     );
 };
 
 const InstanceRendererView = () => {
-    const { instanceNames } = useInstanceManager();
-    const [instanceId, setInstanceId] = React.useState(instanceNames[0] ?? '');
+    const { selectedInstanceId } = useSandboxInstance();
 
-    React.useEffect(() => {
-        if (!instanceNames.includes(instanceId)) {
-            setInstanceId(instanceNames[0] ?? '');
-        }
-    }, [instanceId, instanceNames]);
-
-    return (
-        <InspectorSelect
-            value={instanceId}
-            options={instanceNames}
-            label="Registry instance"
-            onChange={setInstanceId}
-        >
-            {instanceId ? (
-                <ViewInstanceRenderer instanceId={instanceId} />
-            ) : null}
-        </InspectorSelect>
+    return selectedInstanceId ? (
+        <ViewInstanceRenderer instanceId={selectedInstanceId} />
+    ) : (
+        <Text padding="3">Select an instance from Spawned Instances.</Text>
     );
 };
 
@@ -256,6 +229,9 @@ const components = {
   ),
   instanceRenderer: () => (
     <SandboxIsolatedView><InstanceRendererView /></SandboxIsolatedView>
+  ),
+  sandboxPlaygroundInstance: () => (
+    <SandboxIsolatedView><ViewSandboxPlayground /></SandboxIsolatedView>
   ),
   layoutStateInspector: (props: IDockviewPanelProps) => (
     <SandboxIsolatedView>

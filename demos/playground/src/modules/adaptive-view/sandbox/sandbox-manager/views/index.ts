@@ -5,3 +5,4 @@ export { ViewLayoutGroupInspector } from './view.layout-group.inspector';
 export { ViewLayoutInspector } from './view.layout.inspector';
 export { ViewLayoutPanelInspector } from './view.layout-panel.inspector';
 export { ViewRegistryLibrary } from './view.registry-library';
+export { ViewSandboxPlayground } from './view.sandbox.playground';

@@ -1042,13 +1042,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                 {
                   type: "leaf",
                   data: {
-                    views: [
-                      "instanceButton",
-                      "instancePopover",
-                      "instanceCheckbox",
-                      "instanceField",
-                      "instanceSlider",
-                    ],
+                    views: ["instanceButton", "instancePopover", "instanceCheckbox", "instanceField", "instanceSlider"],
                     activeView: "instanceButton",
                     id: "group-actor-instances",
                   },
@@ -1290,7 +1284,6 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
         root: {
           type: "branch",
           data: [
-
             {
               type: "branch",
               data: [
@@ -1309,10 +1302,21 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                     activeView: "registryLibrary",
                     id: "manager-inspectors",
                   },
-                  size: 482,
                 },
               ],
-              size: 354,
+            },
+            {
+              type: "branch",
+              data: [
+                {
+                  type: "leaf",
+                  data: {
+                    views: ["sandboxPlaygroundInstance"],
+                    activeView: "sandboxPlaygroundInstance",
+                    id: "inspector-playground-group",
+                  },
+                },
+              ],
             },
           ],
           size: 964,
@@ -1322,147 +1326,11 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
         orientation: "HORIZONTAL",
       },
       panels: {
-        "bottom-1": {
-          id: "bottom-1",
-          contentComponent: "fixedPlaceholder",
-          tabComponent: "props.defaultTabComponent",
-          params: { label: "Terminal", position: "bottom" },
-          title: "Terminal",
-        },
-        "bottom-2": {
-          id: "bottom-2",
-          contentComponent: "fixedPlaceholder",
-          tabComponent: "props.defaultTabComponent",
-          params: { label: "Output", position: "bottom" },
-          title: "Output",
-        },
-        "bottom-3": {
-          id: "bottom-3",
-          contentComponent: "fixedPlaceholder",
-          tabComponent: "props.defaultTabComponent",
-          params: { label: "Problems", position: "bottom" },
-          title: "Problems",
-        },
-        "left-1": {
-          id: "left-1",
-          contentComponent: "fixedPlaceholder",
-          tabComponent: "props.defaultTabComponent",
-          params: { label: "Explorer", position: "left" },
-          title: "Explorer",
-        },
-        "right-1": {
-          id: "right-1",
-          contentComponent: "fixedPlaceholder",
-          tabComponent: "props.defaultTabComponent",
-          params: { label: "Outline", position: "right" },
-          title: "Outline",
-        },
-        signals: {
-          id: "signals",
-          contentComponent: "signals",
-          tabComponent: "props.defaultTabComponent",
-          title: "Tech View",
-        },
-        orderbook: {
-          id: "orderbook",
-          contentComponent: "orderbook",
-          tabComponent: "props.defaultTabComponent",
-          title: "Order Book",
-          renderer: "always",
-        },
-        fxtiles: {
-          id: "fxtiles",
-          contentComponent: "fxtiles",
-          tabComponent: "props.defaultTabComponent",
-          title: "FX Rates",
-          renderer: "always",
-        },
-        news: { id: "news", contentComponent: "news", tabComponent: "props.defaultTabComponent", title: "News" },
-        orders: {
-          id: "orders",
-          contentComponent: "orders",
-          tabComponent: "props.defaultTabComponent",
-          title: "Orders",
-          renderer: "always",
-        },
-        positionsummary: {
-          id: "positionsummary",
-          contentComponent: "positionsummary",
-          tabComponent: "props.defaultTabComponent",
-          title: "Positions",
-          renderer: "always",
-        },
-        correlation: {
-          id: "correlation",
-          contentComponent: "correlation",
-          tabComponent: "props.defaultTabComponent",
-          title: "Correlation",
-        },
-        volsurface: {
-          id: "volsurface",
-          contentComponent: "volsurface",
-          tabComponent: "props.defaultTabComponent",
-          title: "Vol Surface",
-        },
-        nested: {
-          id: "nested",
-          contentComponent: "nested",
-          tabComponent: "props.defaultTabComponent",
-          title: "Nested",
-        },
-        eventlog: {
-          id: "eventlog",
-          contentComponent: "eventlog",
-          tabComponent: "props.defaultTabComponent",
-          title: "Event Log",
-        },
-        iframe: {
-          id: "iframe",
-          contentComponent: "iframe",
-          tabComponent: "props.defaultTabComponent",
-          title: "IFrame",
-        },
-        vesselfinder: {
-          id: "vesselfinder",
-          contentComponent: "vesselfinder",
-          tabComponent: "props.defaultTabComponent",
-          title: "Vessel Finder",
-        },
-        debuginfo: {
-          id: "debuginfo",
-          contentComponent: "debuginfo",
-          tabComponent: "props.defaultTabComponent",
-          title: "Debug Info",
-        },
-        watchlist: {
-          id: "watchlist",
-          contentComponent: "watchlist",
-          tabComponent: "props.defaultTabComponent",
-          title: "Watchlist",
-        },
-        pricealert: {
-          id: "pricealert",
-          contentComponent: "pricealert",
-          tabComponent: "props.defaultTabComponent",
-          title: "Price Alert",
-        },
-        chart: {
-          id: "chart",
-          contentComponent: "chart",
-          tabComponent: "props.defaultTabComponent",
-          title: "Chart",
-        },
         layoutinspector: {
           id: "layoutinspector",
           contentComponent: "layoutinspector",
           tabComponent: "props.defaultTabComponent",
           title: "Layout Inspector",
-        },
-        shadowDom: {
-          id: "shadowDom",
-          contentComponent: "shadowDom",
-          tabComponent: "props.defaultTabComponent",
-          title: "Shadow DOM",
         },
         registryLibrary: {
           id: "registryLibrary",
@@ -1506,43 +1374,11 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           tabComponent: "props.defaultTabComponent",
           title: "Panel Inspector",
         },
-      },
-      activeGroup: "6",
-      edgeGroups: {
-        left: {
-          size: 220,
-          visible: true,
-          collapsed: true,
-          group: { views: ["left-1"], activeView: "left-1", id: "left", headerPosition: "left" },
-          autoReveal: true,
-        },
-        right: {
-          size: 220,
-          visible: true,
-          collapsed: true,
-          group: { views: ["right-1"], activeView: "right-1", id: "right", headerPosition: "right" },
-          autoReveal: true,
-        },
-        bottom: {
-          size: 200,
-          visible: true,
-          collapsed: true,
-          group: {
-            views: ["bottom-1", "bottom-2", "bottom-3"],
-            activeView: "bottom-1",
-            id: "bottom",
-            headerPosition: "bottom",
-            tabGroups: [
-              {
-                id: "tg-bottom-0",
-                collapsed: false,
-                panelIds: ["bottom-1", "bottom-2"],
-                label: "Logs",
-                color: "purple",
-              },
-            ],
-          },
-          autoReveal: true,
+        sandboxPlaygroundInstance: {
+          id: "sandboxPlaygroundInstance",
+          contentComponent: "sandboxPlaygroundInstance",
+          tabComponent: "props.defaultTabComponent",
+          title: "Sandbox Playground",
         },
       },
     },
