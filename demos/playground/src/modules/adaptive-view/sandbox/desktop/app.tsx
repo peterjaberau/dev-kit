@@ -22,7 +22,7 @@ import { useSandboxManagerSelector } from '../sandbox-manager/provider';
 import SandboxRenderer, {
     type SandboxManagerRenderProps,
 } from '../sandbox-manager/sandbox-renderer';
-import { layoutProfiles } from './config';
+import { instanceProfiles, layoutProfiles } from './config';
 import {
     LeftControls,
     PrefixHeaderControls,
@@ -58,6 +58,7 @@ import { useInstanceManager } from '../instance-manager/selectors';
 import { Box, NativeSelect } from '@chakra-ui/react';
 import {
     ViewInstanceInspector,
+    ViewInstanceRenderer,
     ViewInstances,
     ViewLayoutGroupInspector,
     ViewLayoutInspector,
@@ -154,19 +155,48 @@ const SandboxIsolatedView = ({ children }: React.PropsWithChildren) => (
 );
 
 const InstanceInspectorView = () => {
-    const { instanceChildren } = useInstanceManager();
-    const instanceIds = Object.keys(instanceChildren);
-    const [instanceId, setInstanceId] = React.useState(instanceIds[0] ?? '');
+    const { instanceNames } = useInstanceManager();
+    const [instanceId, setInstanceId] = React.useState(instanceNames[0] ?? '');
+
+    React.useEffect(() => {
+        if (!instanceNames.includes(instanceId)) {
+            setInstanceId(instanceNames[0] ?? '');
+        }
+    }, [instanceId, instanceNames]);
 
     return (
         <InspectorSelect
             value={instanceId}
-            options={instanceIds}
+            options={instanceNames}
             label="Registry instance"
             onChange={setInstanceId}
         >
             {instanceId ? (
                 <ViewInstanceInspector instanceId={instanceId} />
+            ) : null}
+        </InspectorSelect>
+    );
+};
+
+const InstanceRendererView = () => {
+    const { instanceNames } = useInstanceManager();
+    const [instanceId, setInstanceId] = React.useState(instanceNames[0] ?? '');
+
+    React.useEffect(() => {
+        if (!instanceNames.includes(instanceId)) {
+            setInstanceId(instanceNames[0] ?? '');
+        }
+    }, [instanceId, instanceNames]);
+
+    return (
+        <InspectorSelect
+            value={instanceId}
+            options={instanceNames}
+            label="Registry instance"
+            onChange={setInstanceId}
+        >
+            {instanceId ? (
+                <ViewInstanceRenderer instanceId={instanceId} />
             ) : null}
         </InspectorSelect>
     );
@@ -223,6 +253,9 @@ const components = {
   ),
   instanceInspector: () => (
     <SandboxIsolatedView><InstanceInspectorView /></SandboxIsolatedView>
+  ),
+  instanceRenderer: () => (
+    <SandboxIsolatedView><InstanceRendererView /></SandboxIsolatedView>
   ),
   layoutStateInspector: (props: IDockviewPanelProps) => (
     <SandboxIsolatedView>
@@ -1295,6 +1328,7 @@ const AdvaptiveViewDesktop = ({ initialTheme }: AdvaptiveViewDesktopProp) => (
     <SandboxRenderer
         initialTheme={initialTheme}
         layoutProfiles={layoutProfiles}
+        instanceManagerInput={instanceProfiles[0]}
     >
         {(props) => <AdvaptiveViewDesktopContent {...props} />}
     </SandboxRenderer>

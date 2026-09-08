@@ -2,13 +2,23 @@
 
 import * as React from 'react';
 import { createActorContext } from '@xstate/react';
-import { instanceManagerMachine } from './machines';
+import {
+    instanceManagerMachine,
+    type InstanceManagerInput,
+} from './machines';
 
 export const InstanceManagerContext = createActorContext(instanceManagerMachine);
 
-export function InstanceManagerProvider({ children }: React.PropsWithChildren) {
+export interface InstanceManagerProviderProps extends React.PropsWithChildren {
+    input: InstanceManagerInput;
+}
+
+export function InstanceManagerProvider({
+    children,
+    input,
+}: InstanceManagerProviderProps) {
     return (
-        <InstanceManagerContext.Provider>
+        <InstanceManagerContext.Provider options={{ input }}>
             {children}
         </InstanceManagerContext.Provider>
     );

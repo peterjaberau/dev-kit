@@ -4,11 +4,11 @@ import { Button, Flex, Stack, Text } from '@chakra-ui/react';
 import { useInstanceManager } from '../../instance-manager/selectors';
 
 export function ViewInstances() {
-    const { instanceChildren } = useInstanceManager();
+    const { instanceRefs } = useInstanceManager();
 
     return (
         <Stack width="full" height="full" overflowY="auto" gap="2" padding="2">
-            {Object.entries(instanceChildren).map(([id, actorRef]) => (
+            {Object.entries(instanceRefs).map(([id, actorRef]) => (
                 <Flex
                     key={id}
                     align="center"

@@ -1,13 +1,26 @@
 'use client';
 
-import { assign, setup } from 'xstate';
-import type { ActorRefFrom } from 'xstate';
+import { assign, enqueueActions, setup } from 'xstate';
 import { registryNames } from '#registry';
 
 export type RegistryComponentProps = Record<string, unknown>;
 
 type RegistryComponentContext = {
+    plugin: string;
     props: RegistryComponentProps;
+};
+
+export type RegistryComponentInstance = {
+    id: string;
+    plugin: string;
+    props?: RegistryComponentProps;
+};
+
+export type InstanceManagerInput = {
+    id: string;
+    data: {
+        instances: RegistryComponentInstance[];
+    };
 };
 
 type RegistryComponentEvent = {
@@ -19,7 +32,10 @@ export const registryComponentMachine = setup({
     types: {
         context: {} as RegistryComponentContext,
         events: {} as RegistryComponentEvent,
-        input: {} as { props?: RegistryComponentProps },
+        input: {} as {
+            plugin: string;
+            props?: RegistryComponentProps;
+        },
     },
     actions: {
         setProps: assign({
@@ -30,6 +46,7 @@ export const registryComponentMachine = setup({
     id: 'registry-component',
     initial: 'idle',
     context: ({ input }) => ({
+        plugin: input.plugin,
         props: { ...(input.props ?? {}) },
     }),
     states: {
@@ -43,15 +60,11 @@ export const registryComponentMachine = setup({
     },
 });
 
-export type RegistryComponentActorRef = ActorRefFrom<
-    typeof registryComponentMachine
->;
-
 type InstanceManagerContext = {
     metadata: {
         registryNames: readonly string[];
     };
-    instanceRefs: Record<string, RegistryComponentActorRef>;
+    data: InstanceManagerInput['data'];
 };
 
 const availableRegistryNames = registryNames.filter(
@@ -61,34 +74,34 @@ const availableRegistryNames = registryNames.filter(
 export const instanceManagerMachine = setup({
     types: {
         context: {} as InstanceManagerContext,
+        input: {} as InstanceManagerInput,
     },
     actors: {
         registryComponentMachine,
     },
     actions: {
-        spawnRegistryComponents: assign({
-            instanceRefs: ({ context, spawn }) =>
-                Object.fromEntries(
-                    context.metadata.registryNames.map((name) => [
-                        name,
-                        spawn('registryComponentMachine', {
-                            id: name,
-                            systemId: name,
-                            input: { props: {} },
-                        }),
-                    ])
-                ),
+        spawnRegistryComponents: enqueueActions(({ context, enqueue }) => {
+            for (const instance of context.data.instances) {
+                enqueue.spawnChild('registryComponentMachine', {
+                    id: instance.id,
+                    systemId: instance.id,
+                    input: {
+                        plugin: instance.plugin,
+                        props: instance.props,
+                    },
+                });
+            }
         }),
     },
 }).createMachine({
     id: 'instance-manager',
     initial: 'initiating',
-    context: {
+    context: ({ input }) => ({
         metadata: {
             registryNames: availableRegistryNames,
         },
-        instanceRefs: {},
-    },
+        data: input.data,
+    }),
     states: {
         initiating: {
             entry: 'spawnRegistryComponents',

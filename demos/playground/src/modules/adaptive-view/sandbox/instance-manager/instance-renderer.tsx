@@ -8,14 +8,21 @@ export interface InstanceRendererProps {
 }
 
 export function InstanceRenderer({ instanceId }: InstanceRendererProps) {
-    const { instanceProps } = useInstance(instanceId);
+    const { instancePlugin, instanceProps } = useInstance(instanceId);
+
+    if (!instancePlugin) {
+        return null;
+    }
 
     return (
         <div
             data-sandbox-theme-isolated
             style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
         >
-            <RegistryViewer componentId={instanceId} options={instanceProps} />
+            <RegistryViewer
+                componentId={instancePlugin}
+                options={instanceProps}
+            />
         </div>
     );
 }

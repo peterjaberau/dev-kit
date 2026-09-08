@@ -105,6 +105,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                       "registryLibrary",
                       "instances",
                       "instanceInspector",
+                      "instanceRenderer",
                       "layoutStateInspector",
                       "layoutGroupInspector",
                       "layoutPanelInspector",
@@ -284,6 +285,12 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           contentComponent: "instanceInspector",
           tabComponent: "props.defaultTabComponent",
           title: "Instance Inspector",
+        },
+        instanceRenderer: {
+          id: "instanceRenderer",
+          contentComponent: "instanceRenderer",
+          tabComponent: "props.defaultTabComponent",
+          title: "Instance Renderer",
         },
         layoutStateInspector: {
           id: "layoutStateInspector",
@@ -1133,7 +1140,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           tabComponent: "props.defaultTabComponent",
           title: "Actor Button",
           params: {
-            instanceId: "components-button",
+            instanceId: "button",
           },
         },
         instancePopover: {
@@ -1142,7 +1149,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           tabComponent: "props.defaultTabComponent",
           title: "Actor Popover",
           params: {
-            instanceId: "components-popover",
+            instanceId: "popover",
           },
         },
         instanceCheckbox: {
@@ -1151,7 +1158,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           tabComponent: "props.defaultTabComponent",
           title: "Actor Checkbox",
           params: {
-            instanceId: "forms-checkbox",
+            instanceId: "checkbox",
           },
         },
         instanceField: {
@@ -1160,7 +1167,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           tabComponent: "props.defaultTabComponent",
           title: "Actor Field",
           params: {
-            instanceId: "forms-field",
+            instanceId: "field",
           },
         },
         instanceSlider: {
@@ -1169,7 +1176,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           tabComponent: "props.defaultTabComponent",
           title: "Actor Slider",
           params: {
-            instanceId: "forms-slider",
+            instanceId: "slider",
           },
         },
 
@@ -1294,6 +1301,7 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
                       "registryLibrary",
                       "instances",
                       "instanceInspector",
+                      "instanceRenderer",
                       "layoutStateInspector",
                       "layoutGroupInspector",
                       "layoutPanelInspector",
@@ -1474,6 +1482,12 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           tabComponent: "props.defaultTabComponent",
           title: "Instance Inspector",
         },
+        instanceRenderer: {
+          id: "instanceRenderer",
+          contentComponent: "instanceRenderer",
+          tabComponent: "props.defaultTabComponent",
+          title: "Instance Renderer",
+        },
         layoutStateInspector: {
           id: "layoutStateInspector",
           contentComponent: "layoutStateInspector",
@@ -1531,6 +1545,54 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           autoReveal: true,
         },
       },
+    },
+  },
+]
+
+export const instanceProfiles: any = [
+  {
+    id: "registryInstances",
+    data: {
+      instances: [
+        {
+          id: "button",
+          plugin: "components-button",
+          props: {
+            variant: "solid",
+            content: "Button",
+            size: "md",
+            colorPalette: "gray",
+            disabled: false,
+          },
+        },
+        {
+          id: "button-custom",
+          plugin: "components-button",
+          props: {
+            variant: "surface",
+            content: "Custom Button",
+            size: "sm",
+            colorPalette: "blue",
+            disabled: false,
+          },
+        },
+        {
+          id: "popover",
+          plugin: "components-popover",
+        },
+        {
+          id: "checkbox",
+          plugin: "forms-checkbox",
+        },
+        {
+          id: "field",
+          plugin: "forms-field",
+        },
+        {
+          id: "slider",
+          plugin: "forms-slider",
+        },
+      ],
     },
   },
 ]

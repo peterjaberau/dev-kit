@@ -8,22 +8,24 @@ const EMPTY_PROPS: RegistryComponentProps = {};
 
 export function useInstanceManager() {
     const instanceManagerRef = InstanceManagerContext.useActorRef();
-    const instanceManagerContext = InstanceManagerContext.useSelector(
-        (state) => state.context
+    const instanceManagerState = InstanceManagerContext.useSelector(
+        (state) => state
     );
-    const instanceChildren = InstanceManagerContext.useSelector(
-        (state) => state.children
-    );
+    const instanceManagerContext = instanceManagerState.context;
+    const instanceChildren = instanceManagerState.children;
+    const instanceNames = Object.keys(instanceChildren);
+    const instanceManagerSnapshot = instanceManagerRef.getSnapshot();
 
     return {
         instanceManagerRef,
         sentToInstanceManager: instanceManagerRef.send,
         instanceManagerContext,
-        instanceManagerState: instanceManagerRef.getSnapshot(),
+        instanceManagerState,
+        instanceManagerSnapshot,
         instanceManagerId: instanceManagerRef.id,
         metadata: instanceManagerContext.metadata,
-        instanceRefs: instanceManagerContext.instanceRefs,
-        instanceChildren,
+        instanceRefs: instanceChildren,
+        instanceNames,
     };
 }
 
@@ -31,17 +33,20 @@ export function useInstance(instanceId: string) {
     const instanceRef = InstanceManagerContext.useSelector(
         (state) => state.children[instanceId]
     );
-    const instanceProps = useSelector(
-        instanceRef,
-        (state) => state?.context.props ?? EMPTY_PROPS
-    );
+    const instanceState = useSelector(instanceRef, (state) => state);
+    const instanceContext = instanceState?.context;
+    const instanceProps = instanceContext?.props ?? EMPTY_PROPS;
+    const instancePlugin = instanceContext?.plugin;
+    const instanceSnapshot = instanceRef?.getSnapshot();
 
     return {
         instanceRef,
         sentToInstance: instanceRef?.send,
-        instanceContext: instanceRef?.getSnapshot().context,
-        instanceState: instanceRef?.getSnapshot(),
+        instanceContext,
+        instanceState,
+        instanceSnapshot,
         instanceProps,
+        instancePlugin,
         instanceId,
     };
 }
