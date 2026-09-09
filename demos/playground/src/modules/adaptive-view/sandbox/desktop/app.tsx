@@ -59,7 +59,7 @@ import {
     useLayoutManager,
     useSandboxLayout,
 } from '../layout-manager/selectors';
-import { Box, NativeSelect, Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import {
     ViewInstanceInspector,
     ViewInstanceRenderer,
@@ -118,36 +118,6 @@ type InstancePanelParams = {
     instanceId?: string;
 };
 
-const InspectorSelect = (props: {
-    value: string;
-    options: readonly string[];
-    label: string;
-    onChange: (value: string) => void;
-    children: React.ReactNode;
-}) => (
-    <Box width="full" height="full" display="flex" flexDirection="column">
-        <Box padding="2" flexShrink={0}>
-            <NativeSelect.Root size="sm">
-                <NativeSelect.Field
-                    aria-label={props.label}
-                    value={props.value}
-                    onChange={(event) => props.onChange(event.target.value)}
-                >
-                    {props.options.map((option) => (
-                        <option key={option} value={option}>
-                            {option}
-                        </option>
-                    ))}
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-            </NativeSelect.Root>
-        </Box>
-        <Box minHeight={0} flex="1" overflow="hidden">
-            {props.children}
-        </Box>
-    </Box>
-);
-
 const SandboxIsolatedView = ({ children }: React.PropsWithChildren) => (
     <Box
         data-sandbox-theme-isolated
@@ -181,23 +151,12 @@ const InstanceRendererView = () => {
 };
 
 const LayoutGroupInspectorView = () => {
-    const { api } = useLayoutManager();
-    const groupIds = api?.groups.map((group) => group.id) ?? [];
-    const [groupId, setGroupId] = React.useState(groupIds[0] ?? '');
+    const { selectedGroupId } = useSandboxLayout();
 
-    return (
-        <InspectorSelect
-            value={groupId}
-            options={groupIds}
-            label="Dockview group"
-            onChange={setGroupId}
-        >
-            {groupId ? (
-                <ViewLayoutGroupInspector
-                    groupId={groupId}
-                />
-            ) : null}
-        </InspectorSelect>
+    return selectedGroupId ? (
+        <ViewLayoutGroupInspector groupId={selectedGroupId} />
+    ) : (
+        <Text padding="3">Select a group from Groups.</Text>
     );
 };
 

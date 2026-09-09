@@ -1,35 +1,32 @@
-'use client';
+"use client"
 
-import { Box, Text } from '@chakra-ui/react';
-import JsonView from 'react18-json-view';
-import { useLayoutManager } from '../../layout-manager/selectors';
+import { Box, Text } from "@chakra-ui/react"
+import JsonView from "react18-json-view"
+import { useLayoutGroup } from "../../layout-manager/selectors"
 
 export interface ViewLayoutGroupInspectorProps {
-    groupId: string;
+  groupId: string
 }
 
-export function ViewLayoutGroupInspector({
-    groupId,
-}: ViewLayoutGroupInspectorProps) {
-    const { api } = useLayoutManager();
-    const groupState = api?.getGroup(groupId)?.toJSON();
+export function ViewLayoutGroupInspector({ groupId }: ViewLayoutGroupInspectorProps) {
+  const { groupState } = useLayoutGroup(groupId)
 
-    if (!groupState) {
-        return <Text padding="3">Group not found: {groupId}</Text>;
-    }
+  if (!groupState) {
+    return <Text padding="3">Group not found: {groupId}</Text>
+  }
 
-    return (
-      <Box width="full" height="full" overflow="auto" padding="2">
-        <JsonView
-          key={`${groupId}:${JSON.stringify(groupState)}`}
-          src={groupState}
-          style={{
-            fontSize: "14px",
-            fontWeight: "bold",
-          }}
-          theme="github"
-          collapsed={2}
-        />
-      </Box>
-    )
+  return (
+    <Box width="full" height="full" overflow="auto" padding="2">
+      <JsonView
+        key={`${groupId}:${JSON.stringify(groupState)}`}
+        src={groupState}
+        style={{
+          fontSize: "14px",
+          fontWeight: "bold",
+        }}
+        theme="github"
+        collapsed={2}
+      />
+    </Box>
+  )
 }
