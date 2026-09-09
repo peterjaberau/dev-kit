@@ -5,6 +5,7 @@ import type { ActorRefFrom } from 'xstate';
 import { LayoutManagerContext } from './provider';
 import {
     SANDBOX_LAYOUT_ID,
+    SANDBOX_LAYOUT_PANEL_ID,
     sandboxLayoutMachine,
 } from './machines';
 
@@ -15,12 +16,12 @@ export function useLayoutManager() {
     );
     const layoutManagerContext = layoutManagerState.context;
     const api = layoutManagerContext.api;
-    const panelIds = api?.panels.map((panel) => panel.id) ?? [];
-    const panelsList =
-        api?.panels.map((panel) => ({
-            id: panel.id,
-            name: panel.title ?? panel.id,
-        })) ?? [];
+    const layoutPanels = api?.panels.filter((panel) => panel.id !== SANDBOX_LAYOUT_PANEL_ID) ?? []
+    const panelIds = layoutPanels.map((panel) => panel.id);
+    const panelsList = layoutPanels.map((panel) => ({
+        id: panel.id,
+        name: panel.title ?? panel.id,
+    }));
     const metadata = {
         panelsList,
     };

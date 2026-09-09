@@ -13,6 +13,7 @@ type LayoutManagerEvent = {
 };
 
 export const SANDBOX_LAYOUT_ID = 'sandbox-layout';
+export const SANDBOX_LAYOUT_PANEL_ID = "sandboxPlaygroundInstance"
 
 type SandboxLayoutContext = {
     selectedPanelId: string | null;
