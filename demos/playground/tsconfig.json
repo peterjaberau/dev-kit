@@ -37,6 +37,9 @@
       "#plugins": ["./src/plugins"],
       "#adaptive-view/*": ["./src/modules/adaptive-view/*"],
       "#adaptive-view": ["./src/modules/adaptive-view"],
+      "#adaptive-debugger/*": ["./src/modules/adaptive-debugger/*"],
+      "#adaptive-debugger": ["./src/modules/adaptive-debugger"],
+      //      adaptive-debugger
       "#registry/*": ["./src/registry/*"],
       "#registry": ["./src/registry"],
       "#views/*": ["./src/views/*"],

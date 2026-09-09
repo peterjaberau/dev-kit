@@ -71,6 +71,7 @@ import {
     ViewRegistryLibrary,
     ViewSandboxPlayground,
 } from '../sandbox-manager/views';
+import { AdaptiveDebuggerRoot } from '../../../adaptive-debugger/components/root';
 
 export const ApiContext = React.createContext<DockviewApi | undefined>(
     undefined
@@ -1254,6 +1255,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
                     onClearLogs: () => setLogLines([]),
                 })}
             </div>
+            <AdaptiveDebuggerRoot />
         </div>
     );
 };
