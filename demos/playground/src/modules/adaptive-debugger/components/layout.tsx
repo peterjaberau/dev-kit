@@ -13,6 +13,7 @@ import { DebuggerGroupsView } from "./views.groups"
 import { DebuggerInspectorView } from "./views.inspector"
 import { DebuggerInstancesView } from "./views.instances"
 import { DebuggerPanelsView } from "./views.panels"
+import { DebuggerRegistryLibraryView } from "./views.registry-library"
 
 const debuggerComponents = {
   panels: (props: IDockviewPanelProps) => (
@@ -28,6 +29,11 @@ const debuggerComponents = {
   instances: (props: IDockviewPanelProps) => (
     <LayoutPanel api={props.containerApi} panelProps={props}>
       <DebuggerInstancesView />
+    </LayoutPanel>
+  ),
+  registryLibrary: (props: IDockviewPanelProps) => (
+    <LayoutPanel api={props.containerApi} panelProps={props}>
+      <DebuggerRegistryLibraryView />
     </LayoutPanel>
   ),
   inspector: (props: IDockviewPanelProps) => (

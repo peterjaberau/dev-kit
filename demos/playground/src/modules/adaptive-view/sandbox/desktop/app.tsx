@@ -55,23 +55,23 @@ import {
 import { RegistryViewer } from '#plugins/registry-manager-plugin/view';
 import { InstanceRenderer } from '../instance-manager/instance-renderer';
 import { useSandboxInstance } from '../instance-manager/selectors';
-import {
-    useLayoutManager,
-    useSandboxLayout,
-} from '../layout-manager/selectors';
+import { useLayoutManager } from '../layout-manager/selectors';
 import { Box, Text } from '@chakra-ui/react';
-import {
-    ViewInstanceInspector,
-    ViewInstanceRenderer,
-    ViewInstances,
-    ViewLayoutGroupInspector,
-    ViewLayoutInspector,
-    ViewLayoutPanelInspector,
-    ViewLayoutPanels,
-    ViewRegistryLibrary,
-    ViewSandboxPlayground,
-} from '../sandbox-manager/views';
+import { ViewInstanceRenderer } from '../sandbox-manager/views';
 import { AdaptiveDebuggerRoot } from '../../../adaptive-debugger/components/root';
+import { useLocalStore } from '../store-manager/selectors';
+import {
+  TabRenderer,
+  tabComponents,
+  FloatMenuItemRenderer as FloatMenuItem,
+  TabModeMenuItemRenderer as TabModeMenuItem,
+  EdgeAutoHideMenuItemRenderer as EdgeAutoHideMenuItem,
+  PopoutMenuItemRenderer as PopoutMenuItem,
+  TabModeMenuItemProps,
+  TabOverflowMode,
+  WatermarkRenderer as WatermarkComponent,
+  GroupDragGhostRenderer as GroupDragGhost,
+} from "#adaptive-view/app/components"
 
 export const ApiContext = React.createContext<DockviewApi | undefined>(
     undefined
@@ -131,16 +131,6 @@ const SandboxIsolatedView = ({ children }: React.PropsWithChildren) => (
     </Box>
 );
 
-const InstanceInspectorView = () => {
-    const { selectedInstanceId } = useSandboxInstance();
-
-    return selectedInstanceId ? (
-        <ViewInstanceInspector instanceId={selectedInstanceId} />
-    ) : (
-        <Text padding="3">Select an instance from Spawned Instances.</Text>
-    );
-};
-
 const InstanceRendererView = () => {
     const { selectedInstanceId } = useSandboxInstance();
 
@@ -151,76 +141,34 @@ const InstanceRendererView = () => {
     );
 };
 
-const LayoutGroupInspectorView = () => {
-    const { selectedGroupId } = useSandboxLayout();
-
-    return selectedGroupId ? (
-        <ViewLayoutGroupInspector groupId={selectedGroupId} />
-    ) : (
-        <Text padding="3">Select a group from Groups.</Text>
-    );
-};
-
-const LayoutPanelInspectorView = () => {
-    const { selectedPanelId } = useSandboxLayout();
-
-    return selectedPanelId ? (
-        <ViewLayoutPanelInspector panelId={selectedPanelId} />
-    ) : (
-        <Text padding="3">Select a panel from Panels.</Text>
-    );
-};
-
 const components = {
-  registryLibrary: () => (
-    <SandboxIsolatedView><ViewRegistryLibrary /></SandboxIsolatedView>
-  ),
-  instances: () => (
-    <SandboxIsolatedView><ViewInstances /></SandboxIsolatedView>
-  ),
-  panels: () => (
-    <SandboxIsolatedView><ViewLayoutPanels /></SandboxIsolatedView>
-  ),
-  instanceInspector: () => (
-    <SandboxIsolatedView><InstanceInspectorView /></SandboxIsolatedView>
-  ),
-  instanceRenderer: () => (
-    <SandboxIsolatedView><InstanceRendererView /></SandboxIsolatedView>
-  ),
-  sandboxPlaygroundInstance: () => (
-    <SandboxIsolatedView><ViewSandboxPlayground /></SandboxIsolatedView>
-  ),
-  layoutStateInspector: () => (
-    <SandboxIsolatedView>
-      <ViewLayoutInspector />
-    </SandboxIsolatedView>
-  ),
-  layoutGroupInspector: () => (
-    <SandboxIsolatedView>
-      <LayoutGroupInspectorView />
-    </SandboxIsolatedView>
-  ),
-  layoutPanelInspector: () => (
-    <SandboxIsolatedView>
-      <LayoutPanelInspectorView />
-    </SandboxIsolatedView>
+  instanceRenderer: (props: IDockviewPanelProps) => (
+    <PanelRenderer api={props.api} scrollable={false}>
+      <SandboxIsolatedView><InstanceRendererView /></SandboxIsolatedView>
+    </PanelRenderer>
   ),
   instance: (props: IDockviewPanelProps<InstancePanelParams>) => {
     const instanceId = props.params?.instanceId;
 
-    return instanceId ? <InstanceRenderer instanceId={instanceId} /> : null;
+    return (
+      <PanelRenderer api={props.api} scrollable={false}>
+        {instanceId ? <InstanceRenderer instanceId={instanceId} /> : null}
+      </PanelRenderer>
+    );
   },
   dynamic: (props: DynamicPanelProps) => {
     const componentId = props.params?.componentId;
     const componentProps = props.params?.props ?? {};
 
     return (
-      <div
-        data-sandbox-theme-isolated
-        style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
-      >
-        <RegistryViewer componentId={componentId} options={componentProps} />
-      </div>
+      <PanelRenderer api={props.api} scrollable={false}>
+        <div
+          data-sandbox-theme-isolated
+          style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
+        >
+          <RegistryViewer componentId={componentId} options={componentProps} />
+        </div>
+      </PanelRenderer>
     );
   },
   default: (props: IDockviewPanelProps) => {
@@ -230,45 +178,24 @@ const components = {
 
     if (isDebug) {
       return (
-        <div
-          style={{
-            height: "100%",
-            overflow: "auto",
-            background: c.bg,
-            color: c.text,
-            border: "2px dashed orange",
-            padding: 8,
-            fontSize: "0.8em",
-          }}
-        >
-          <Option
-            title="Panel Rendering Mode"
-            value={metadata.renderer.value}
-            onClick={() => props.api.setRenderer(props.api.renderer === "always" ? "onlyWhenVisible" : "always")}
-          />
-          <Table data={metadata} />
-        </div>
+        <PanelRenderer api={props.api}>
+          <div style={{ background: c.bg, color: c.text, border: "2px dashed orange", padding: 8, fontSize: "0.8em" }}>
+            <Option
+              title="Panel Rendering Mode"
+              value={metadata.renderer.value}
+              onClick={() => props.api.setRenderer(props.api.renderer === "always" ? "onlyWhenVisible" : "always")}
+            />
+            <Table data={metadata} />
+          </div>
+        </PanelRenderer>
       )
     }
 
     // Clean, theme-aware placeholder for generic / user-added panels: a
     // faint dotted field with the panel title and an idle status line.
     return (
-      <div
-        style={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 8,
-          background: c.bg,
-          color: c.text,
-          border: `1px solid ${c.border}`,
-          backgroundImage: `radial-gradient(${c.border} 1px, transparent 1px)`,
-          backgroundSize: "16px 16px",
-        }}
-      >
+      <PanelRenderer api={props.api}>
+       <div style={{ minHeight: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, background: c.bg, color: c.text, border: `1px solid ${c.border}`, backgroundImage: `radial-gradient(${c.border} 1px, transparent 1px)`, backgroundSize: "16px 16px" }}>
         <span className="material-symbols-outlined" style={{ fontSize: 26, color: c.textFaint }}>
           monitoring
         </span>
@@ -302,15 +229,15 @@ const components = {
           />
           Connected · idle
         </div>
-      </div>
+       </div>
+      </PanelRenderer>
     )
   },
   nested: (props: IDockviewPanelProps) => {
     const theme = React.useContext(ThemeContext)
     return (
-      <DockviewReact
-        components={components}
-        onReady={(event: DockviewReadyEvent) => {
+      <PanelRenderer api={props.api} scrollable={false}>
+       <DockviewReact components={components} onReady={(event: DockviewReadyEvent) => {
           event.api.addPanel({ id: "panel_1", component: "default" })
           event.api.addPanel({ id: "panel_2", component: "default" })
           event.api.addPanel({
@@ -322,14 +249,15 @@ const components = {
             console.log("remove", e)
           })
         }}
-        theme={theme}
-      />
+        theme={theme} />
+      </PanelRenderer>
     )
   },
   fixedPlaceholder: (props: IDockviewPanelProps) => {
     const c = useSandboxColors()
     return (
-      <div
+      <PanelRenderer api={props.api}>
+       <div
         style={{
           display: "flex",
           alignItems: "center",
@@ -345,12 +273,14 @@ const components = {
           folder_open
         </span>
         <span>{props.params?.label as string}</span>
-      </div>
+       </div>
+      </PanelRenderer>
     )
   },
   iframe: (props: IDockviewPanelProps) => {
     return (
-      <iframe
+      <PanelRenderer api={props.api} scrollable={false}>
+       <iframe
         onMouseDown={() => {
           if (!props.api.isActive) {
             props.api.setActive()
@@ -362,7 +292,8 @@ const components = {
           height: "100%",
         }}
         src="https://dockview.dev"
-      />
+       />
+      </PanelRenderer>
     )
   },
   vesselfinder: (props: IDockviewPanelProps) => {
@@ -373,7 +304,8 @@ const components = {
 <script src="https://www.vesselfinder.com/aismap.js"></script>
 </body></html>`
     return (
-      <iframe
+      <PanelRenderer api={props.api} scrollable={false}>
+       <iframe
         onMouseDown={() => {
           if (!props.api.isActive) {
             props.api.setActive()
@@ -385,14 +317,19 @@ const components = {
           width: "100%",
           height: "100%",
         }}
-      />
+       />
+      </PanelRenderer>
     )
   },
-  debuginfo: (props: IDockviewPanelProps) => <PanelDebugPanel {...props} />,
+  debuginfo: (props: IDockviewPanelProps) => (
+    <PanelRenderer api={props.api}><PanelDebugPanel {...props} /></PanelRenderer>
+  ),
   // Live-ticking panels are wrapped so they only re-render while visible
   // (renderer:'always' keeps inactive tabs mounted). The blotter and news are
   // static so they don't need gating.
-  orders: () => <OrdersPanel />,
+  orders: (props: IDockviewPanelProps) => (
+    <PanelRenderer api={props.api}><OrdersPanel /></PanelRenderer>
+  ),
   orderbook: (props: IDockviewPanelProps) => (
     <PanelRenderer api={props.api}>
       <OrderBookPanel />
@@ -418,7 +355,9 @@ const components = {
       <ChartPanel />
     </PanelRenderer>
   ),
-  news: () => <NewsPanel />,
+  news: (props: IDockviewPanelProps) => (
+    <PanelRenderer api={props.api}><NewsPanel /></PanelRenderer>
+  ),
   fxtiles: (props: IDockviewPanelProps) => (
     <PanelRenderer api={props.api}>
       <FxTilesPanel />
@@ -439,172 +378,17 @@ const components = {
       <VolSurfacePanel />
     </PanelRenderer>
   ),
-  eventlog: () => {
+  eventlog: (props: IDockviewPanelProps) => {
     const api = React.useContext(ApiContext)
     if (!api) return null
-    return <EventLogPanel api={api} />
+    return <PanelRenderer api={props.api}><EventLogPanel api={api} /></PanelRenderer>
   },
-  layoutinspector: () => {
+  layoutinspector: (props: IDockviewPanelProps) => {
     const api = React.useContext(ApiContext)
     if (!api) return null
-    return <LayoutInspectorPanel api={api} />
+    return <PanelRenderer api={props.api}><LayoutInspectorPanel api={api} /></PanelRenderer>
   },
 }
-
-const headerComponents = {
-    default: (props: IDockviewPanelHeaderProps) => {
-        return <DockviewDefaultTab {...props} />;
-    },
-};
-
-const FloatMenuItem = ({
-    panel,
-    api,
-    close,
-}: IContextMenuItemComponentProps) => {
-    return (
-        <div
-            className="dv-context-menu-item"
-            onClick={() => {
-                api.addFloatingGroup(panel);
-                close();
-            }}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-        >
-            <span
-                className="material-symbols-outlined"
-                style={{ fontSize: '14px' }}
-            >
-                ad_group
-            </span>
-            Float tab
-        </div>
-    );
-};
-
-const PopoutMenuItem = ({
-    panel,
-    api,
-    close,
-}: IContextMenuItemComponentProps) => {
-    return (
-        <div
-            className="dv-context-menu-item"
-            onClick={() => {
-                api.addPopoutGroup(panel);
-                close();
-            }}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-        >
-            <span
-                className="material-symbols-outlined"
-                style={{ fontSize: '14px' }}
-            >
-                open_in_new
-            </span>
-            Popout tab
-        </div>
-    );
-};
-
-type TabOverflowMode = 'dropdown' | 'wrap';
-
-interface TabModeMenuItemProps {
-    mode: TabOverflowMode;
-    active: boolean;
-    onSelect: (mode: TabOverflowMode) => void;
-}
-
-const TAB_MODE_LABELS: Record<TabOverflowMode, string> = {
-    dropdown: 'Overflow dropdown',
-    wrap: 'Wrap onto rows',
-};
-
-/**
- * Radio-style item for `overflow.mode`. `updateOptions` re-applies wrap to every
- * group, so the two modes can be swapped while the dock is live; the tick marks
- * whichever is currently active.
- */
-const TabModeMenuItem = ({
-    close,
-    componentProps,
-}: IContextMenuItemComponentProps) => {
-    const { mode, active, onSelect } = componentProps as TabModeMenuItemProps;
-
-    return (
-        <div
-            className="dv-context-menu-item"
-            onClick={() => {
-                onSelect(mode);
-                close();
-            }}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-        >
-            {TAB_MODE_LABELS[mode]}
-            {/* Kept mounted (not conditionally rendered) so the reserved space
-                stops the menu width changing as the tick moves between modes. */}
-            <span
-                className="material-symbols-outlined"
-                style={{
-                    fontSize: '14px',
-                    marginLeft: 'auto',
-                    visibility: active ? 'visible' : 'hidden',
-                }}
-            >
-                check
-            </span>
-        </div>
-    );
-};
-
-/**
- * Checkable toggle for an edge group's auto-hide mode. `setAutoHide` writes a
- * per-group override of the global `autoHideEdgeGroups` option and the auto-hide
- * controller reconciles the group's chrome live, so a single edge can be flipped
- * between a pinnable tool window and a static docked panel while the dock runs.
- *
- * One toggling item rather than an on/off pair: every edge group here starts
- * auto-hiding, so in a pair the ticked row is the one you'd reach for first and
- * clicking it would do nothing.
- */
-const EdgeAutoHideMenuItem = ({
-    group,
-    close,
-}: IContextMenuItemComponentProps) => {
-    const autoHide = group.api.isAutoHide();
-
-    return (
-        <div
-            className="dv-context-menu-item"
-            onClick={() => {
-                group.api.setAutoHide(!autoHide);
-                if (autoHide) {
-                    // Turning it off: nothing expands a collapsed edge group
-                    // once auto-hide is gone (the strip's click-to-peek goes
-                    // with it and the sash is locked at the collapsed size), so
-                    // open it here rather than leave a dead strip.
-                    group.api.expand();
-                }
-                close();
-            }}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-        >
-            Auto-hide edge
-            {/* Kept mounted (not conditionally rendered) so the reserved space
-                stops the menu width changing as the tick comes and goes. */}
-            <span
-                className="material-symbols-outlined"
-                style={{
-                    fontSize: '14px',
-                    marginLeft: 'auto',
-                    visibility: autoHide ? 'visible' : 'hidden',
-                }}
-            >
-                check
-            </span>
-        </div>
-    );
-};
 
 const colors = [
     'rgba(255,0,0,0.2)',
@@ -616,65 +400,6 @@ const colors = [
 ];
 let count = 0;
 
-const WatermarkComponent = () => {
-    return (
-        <div
-            style={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8,
-                color: 'rgba(255,255,255,0.55)',
-                fontFamily: 'monospace',
-                pointerEvents: 'none',
-            }}
-        >
-            <span
-                className="material-symbols-outlined"
-                style={{ fontSize: 32, opacity: 0.7 }}
-            >
-                dashboard
-            </span>
-            <div style={{ fontSize: 13 }}>Custom watermark</div>
-            <div style={{ fontSize: 11, opacity: 0.7 }}>
-                Drag a tab here or add a panel
-            </div>
-        </div>
-    );
-};
-
-const GroupDragGhost = (props: IDockviewGroupDragGhostProps) => {
-    const count = props.group.panels.length;
-    const title = props.group.activePanel?.title ?? 'Group';
-    return (
-        <div
-            style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '4px 10px',
-                borderRadius: 999,
-                background: 'rgba(33, 150, 243, 0.92)',
-                color: 'white',
-                font: '11px/1 system-ui, sans-serif',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
-            }}
-        >
-            <span style={{ fontWeight: 600 }}>{title}</span>
-            <span
-                style={{
-                    padding: '1px 6px',
-                    borderRadius: 999,
-                    background: 'rgba(255,255,255,0.25)',
-                }}
-            >
-                +{Math.max(0, count - 1)} more
-            </span>
-        </div>
-    );
-};
 
 export const ThemeContext = React.createContext<DockviewTheme | undefined>(
     undefined
@@ -696,9 +421,26 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
         (snapshot) => snapshot.context.layoutRevision
     );
     const profilesRegistered = registeredLayoutProfiles === layoutProfiles;
-    const selectedLayoutData = registeredLayoutProfiles.find(
-        (profile) => profile.id === selectedLayoutProfileId
-    )?.data;
+    const { value: selectedLayoutData, save: saveSelectedLayoutData } =
+        useLocalStore<unknown>('sandbox.layout');
+
+    React.useEffect(() => {
+        if (!profilesRegistered || !selectedLayoutProfileId) {
+            return;
+        }
+
+        const profileData = registeredLayoutProfiles.find(
+            (profile) => profile.id === selectedLayoutProfileId
+        )?.data;
+        if (profileData !== undefined) {
+            saveSelectedLayoutData(profileData);
+        }
+    }, [
+        profilesRegistered,
+        registeredLayoutProfiles,
+        saveSelectedLayoutData,
+        selectedLayoutProfileId,
+    ]);
 
     const [logLines, setLogLines] = React.useState<
         { text: string; timestamp?: Date; backgroundColor?: string }[]
@@ -813,7 +555,13 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
             return;
         }
 
-        if (selectedLayoutData === undefined) {
+        const hasStoredLayout =
+            selectedLayoutData !== undefined &&
+            selectedLayoutData !== null &&
+            (typeof selectedLayoutData !== 'object' ||
+                Object.keys(selectedLayoutData as object).length > 0);
+
+        if (!hasStoredLayout) {
             loadDockviewLayout(api);
         } else {
             loadDockviewLayout(api, selectedLayoutData);
@@ -1055,209 +803,166 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
     const [showLogs, setShowLogs] = React.useState<boolean>(false);
     const [debug, setDebug] = React.useState<boolean>(false);
     return (
+      <div
+        className={`sandbox${
+          effectiveTheme.colorScheme === "light" ? "sandbox--light" : ""
+        }${themeAnimating ? "dv-theme-animating" : ""}`}
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          backgroundColor: effectiveTheme.colorScheme === "light" ? "rgba(0,0,0,0.03)" : "rgba(0,0,50,0.25)",
+          borderRadius: "8px",
+          position: "relative",
+          ...css,
+        }}
+      >
         <div
-            className={`sandbox${
-                effectiveTheme.colorScheme === 'light'
-                    ? ' sandbox--light'
-                    : ''
-            }${themeAnimating ? ' dv-theme-animating' : ''}`}
-            style={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                flexGrow: 1,
-                backgroundColor:
-                    effectiveTheme.colorScheme === 'light'
-                        ? 'rgba(0,0,0,0.03)'
-                        : 'rgba(0,0,50,0.25)',
-                borderRadius: '8px',
-                position: 'relative',
-                ...css,
-            }}
+          style={{
+            flexGrow: 1,
+            height: 0,
+            display: "flex",
+          }}
         >
-            <div
-                style={{
-                    flexGrow: 1,
-                    height: 0,
-                    display: 'flex',
-                }}
-            >
-                <div
-                    style={{
-                        flexGrow: 1,
-                        overflow: 'hidden',
-                        display: 'flex',
-                        visibility: layoutReady ? 'visible' : 'hidden',
-                    }}
-                >
-                    <SandboxColorsContext.Provider value={sandboxColors}>
-                        <MarketProvider>
-                            <ApiContext.Provider value={api}>
-                                <DebugContext.Provider value={debug}>
-                                    <ThemeContext.Provider
-                                        value={effectiveTheme}
-                                    >
-                                        <DockviewReact
-                                            components={components}
-                                            defaultTabComponent={
-                                                headerComponents.default
-                                            }
-                                            rightHeaderActionsComponent={
-                                                RightControls
-                                            }
-                                            leftHeaderActionsComponent={
-                                                LeftControls
-                                            }
-                                            prefixHeaderActionsComponent={
-                                                PrefixHeaderControls
-                                            }
-                                            watermarkComponent={
-                                                watermark
-                                                    ? WatermarkComponent
-                                                    : undefined
-                                            }
-                                            groupDragGhostComponent={
-                                                customGhost
-                                                    ? GroupDragGhost
-                                                    : undefined
-                                            }
-                                            onReady={onReady}
-                                            keyboardNavigation
-                                            theme={effectiveTheme}
-                                            autoHideEdgeGroups
-                                            dockToEdgeGroups
-                                            pinnedTabs={{ enabled: true }}
-                                            overflow={overflow}
-                                            floatingGroupDragHandle="titlebar"
-                                            dndCompass={dndCompass}
-                                            smartGuides={
-                                                smartGuides
-                                                    ? { snapDistance: 8 }
-                                                    : undefined
-                                            }
-                                            getTabContextMenuItems={
-                                                getTabContextMenuItems
-                                            }
-                                            getTabGroupChipContextMenuItems={
-                                                getTabGroupChipContextMenuItems
-                                            }
-                                        />
-                                    </ThemeContext.Provider>
-                                </DebugContext.Provider>
-                            </ApiContext.Provider>
-                        </MarketProvider>
-                    </SandboxColorsContext.Provider>
-                </div>
+          <div
+            style={{
+              flexGrow: 1,
+              overflow: "hidden",
+              display: "flex",
+              visibility: layoutReady ? "visible" : "hidden",
+            }}
+          >
+            <SandboxColorsContext.Provider value={sandboxColors}>
+              <MarketProvider>
+                <ApiContext.Provider value={api}>
+                  <DebugContext.Provider value={debug}>
+                    <ThemeContext.Provider value={effectiveTheme}>
+                      <DockviewReact
+                        components={components}
+                        defaultTabComponent={TabRenderer}
+                        rightHeaderActionsComponent={RightControls}
+                        leftHeaderActionsComponent={LeftControls}
+                        prefixHeaderActionsComponent={PrefixHeaderControls}
+                        watermarkComponent={watermark ? WatermarkComponent : undefined}
+                        groupDragGhostComponent={customGhost ? GroupDragGhost : undefined}
+                        onReady={onReady}
+                        keyboardNavigation
+                        theme={effectiveTheme}
+                        autoHideEdgeGroups
+                        dockToEdgeGroups
+                        pinnedTabs={{ enabled: true }}
+                        overflow={overflow}
+                        floatingGroupDragHandle="titlebar"
+                        dndCompass={dndCompass}
+                        smartGuides={smartGuides ? { snapDistance: 8 } : undefined}
+                        getTabContextMenuItems={getTabContextMenuItems}
+                        getTabGroupChipContextMenuItems={getTabGroupChipContextMenuItems}
+                      />
+                    </ThemeContext.Provider>
+                  </DebugContext.Provider>
+                </ApiContext.Provider>
+              </MarketProvider>
+            </SandboxColorsContext.Provider>
+          </div>
 
-                {showLogs && (
+          {showLogs && (
+            <div
+              style={{
+                width: "400px",
+                backgroundColor: effectiveTheme.colorScheme === "light" ? "#f6f8fa" : "black",
+                color: effectiveTheme.colorScheme === "light" ? "#1f2328" : "white",
+                overflow: "hidden",
+                fontFamily: "monospace",
+                marginLeft: "10px",
+                flexShrink: 0,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div style={{ flexGrow: 1, overflow: "auto" }}>
+                {logLines.map((line, i) => {
+                  return (
                     <div
-                        style={{
-                            width: '400px',
-                            backgroundColor:
-                                effectiveTheme.colorScheme === 'light'
-                                    ? '#f6f8fa'
-                                    : 'black',
-                            color:
-                                effectiveTheme.colorScheme === 'light'
-                                    ? '#1f2328'
-                                    : 'white',
-                            overflow: 'hidden',
-                            fontFamily: 'monospace',
-                            marginLeft: '10px',
-                            flexShrink: 0,
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
+                      style={{
+                        height: "30px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        fontSize: "13px",
+                        display: "flex",
+                        alignItems: "center",
+                        backgroundColor: line.backgroundColor,
+                      }}
+                      key={i}
                     >
-                        <div style={{ flexGrow: 1, overflow: 'auto' }}>
-                            {logLines.map((line, i) => {
-                                return (
-                                    <div
-                                        style={{
-                                            height: '30px',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
-                                            fontSize: '13px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            backgroundColor:
-                                                line.backgroundColor,
-                                        }}
-                                        key={i}
-                                    >
-                                        <span
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                minWidth: '20px',
-                                                maxWidth: '20px',
-                                                color: 'gray',
-                                                borderRight: '1px solid gray',
-                                                marginRight: '4px',
-                                                paddingLeft: '4px',
-                                                height: '100%',
-                                            }}
-                                        >
-                                            {logLines.length - i}
-                                        </span>
-                                        <span>
-                                            {line.timestamp && (
-                                                <span
-                                                    style={{
-                                                        fontSize: '0.7em',
-                                                        padding: '0px 2px',
-                                                    }}
-                                                >
-                                                    {line.timestamp
-                                                        .toISOString()
-                                                        .substring(11, 23)}
-                                                </span>
-                                            )}
-                                            <span>{line.text}</span>
-                                        </span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          minWidth: "20px",
+                          maxWidth: "20px",
+                          color: "gray",
+                          borderRight: "1px solid gray",
+                          marginRight: "4px",
+                          paddingLeft: "4px",
+                          height: "100%",
+                        }}
+                      >
+                        {logLines.length - i}
+                      </span>
+                      <span>
+                        {line.timestamp && (
+                          <span
                             style={{
-                                padding: '4px',
-                                display: 'flex',
-                                justifyContent: 'flex-end',
+                              fontSize: "0.7em",
+                              padding: "0px 2px",
                             }}
-                        >
-                            <button onClick={() => setLogLines([])}>
-                                Clear
-                            </button>
-                        </div>
+                          >
+                            {line.timestamp.toISOString().substring(11, 23)}
+                          </span>
+                        )}
+                        <span>{line.text}</span>
+                      </span>
                     </div>
-                )}
-                {props.renderControls?.({
-                    api,
-                    panels,
-                    groups,
-                    activePanel,
-                    activeGroup,
-                    hasCustomWatermark: watermark,
-                    toggleCustomWatermark: () => setWatermark(!watermark),
-                    hasCustomGhost: customGhost,
-                    toggleCustomGhost: () => setCustomGhost(!customGhost),
-                    dndCompass,
-                    onToggleDndCompass: () => setDndCompass(!dndCompass),
-                    smartGuides,
-                    onToggleSmartGuides: () =>
-                        setSmartGuides(!smartGuides),
-                    debug,
-                    onToggleDebug: () => setDebug(!debug),
-                    showLogs,
-                    onToggleShowLogs: () => setShowLogs(!showLogs),
-                    onClearLogs: () => setLogLines([]),
+                  )
                 })}
+              </div>
+              <div
+                style={{
+                  padding: "4px",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <button onClick={() => setLogLines([])}>Clear</button>
+              </div>
             </div>
-            <AdaptiveDebuggerRoot />
+          )}
+          {props.renderControls?.({
+            api,
+            panels,
+            groups,
+            activePanel,
+            activeGroup,
+            hasCustomWatermark: watermark,
+            toggleCustomWatermark: () => setWatermark(!watermark),
+            hasCustomGhost: customGhost,
+            toggleCustomGhost: () => setCustomGhost(!customGhost),
+            dndCompass,
+            onToggleDndCompass: () => setDndCompass(!dndCompass),
+            smartGuides,
+            onToggleSmartGuides: () => setSmartGuides(!smartGuides),
+            debug,
+            onToggleDebug: () => setDebug(!debug),
+            showLogs,
+            onToggleShowLogs: () => setShowLogs(!showLogs),
+            onClearLogs: () => setLogLines([]),
+          })}
         </div>
-    );
+        <AdaptiveDebuggerRoot />
+      </div>
+    )
 };
 
 const AdvaptiveViewDesktop = ({ initialTheme }: AdvaptiveViewDesktopProp) => (

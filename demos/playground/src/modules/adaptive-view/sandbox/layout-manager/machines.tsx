@@ -13,8 +13,6 @@ type LayoutManagerEvent = {
 }
 
 export const SANDBOX_LAYOUT_ID = "sandbox-layout"
-export const SANDBOX_LAYOUT_PANEL_ID = "sandboxPlaygroundInstance"
-export const SANDBOX_LAYOUT_GROUP_ID = "inspector-playground-group"
 
 type SandboxLayoutContext = {
   selectedPanelId: string | null

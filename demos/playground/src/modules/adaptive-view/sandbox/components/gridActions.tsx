@@ -8,6 +8,7 @@ import {
 import type { SandboxLayoutProfile } from '../sandbox-manager/store';
 import { LM } from '../sandbox-manager/layoutManagerTheme';
 import { Btn, IconBtn } from '../sandbox-manager/layoutManagerKit';
+import { useLocalStore } from '../store-manager/selectors';
 
 const Row = (props: {
     label?: string;
@@ -221,6 +222,7 @@ function usePopover() {
 
 export const GridActions = (props: { api?: DockviewApi }) => {
     const managerStore = useSandboxManagerStore();
+    const layoutStore = useLocalStore<unknown>('sandbox.layout');
     const layoutProfiles = useSandboxManagerSelector(
         (snapshot) => snapshot.context.layoutProfiles
     );
@@ -239,6 +241,7 @@ export const GridActions = (props: { api?: DockviewApi }) => {
         }
 
         setLoadMenuOpen(false);
+        layoutStore.save(profile.data);
         managerStore.trigger.selectLayoutProfile({ profileId: profile.id });
     };
 
@@ -246,16 +249,14 @@ export const GridActions = (props: { api?: DockviewApi }) => {
         if (props.api) {
             const state = props.api.toJSON();
             console.log(state);
-            localStorage.setItem('dv-demo-state-v9', JSON.stringify(state));
+            layoutStore.save(state);
         }
     };
 
     const onReset = () => {
         if (props.api) {
-            localStorage.removeItem('dv-demo-state-v9');
-            try {
-                managerStore.trigger.selectLayoutProfile({ profileId: null });
-            } catch {}
+            layoutStore.reset();
+            managerStore.trigger.selectLayoutProfile({ profileId: null });
         }
     };
 

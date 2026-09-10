@@ -98,23 +98,6 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
               data: [
                 { type: "leaf", data: { views: ["news", "nested"], activeView: "news", id: "7" }, size: 482 },
                 { type: "leaf", data: { views: ["signals"], activeView: "signals", id: "1" }, size: 482 },
-                {
-                  type: "leaf",
-                  data: {
-                    views: [
-                      "registryLibrary",
-                      "instances",
-                      "instanceInspector",
-                      "instanceRenderer",
-                      "layoutStateInspector",
-                      "layoutGroupInspector",
-                      "layoutPanelInspector",
-                    ],
-                    activeView: "registryLibrary",
-                    id: "manager-inspectors",
-                  },
-                  size: 482,
-                },
               ],
               size: 354,
             },
@@ -267,48 +250,6 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
           contentComponent: "shadowDom",
           tabComponent: "props.defaultTabComponent",
           title: "Shadow DOM",
-        },
-        registryLibrary: {
-          id: "registryLibrary",
-          contentComponent: "registryLibrary",
-          tabComponent: "props.defaultTabComponent",
-          title: "Registry Library",
-        },
-        instances: {
-          id: "instances",
-          contentComponent: "instances",
-          tabComponent: "props.defaultTabComponent",
-          title: "Instances",
-        },
-        instanceInspector: {
-          id: "instanceInspector",
-          contentComponent: "instanceInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Instance Inspector",
-        },
-        instanceRenderer: {
-          id: "instanceRenderer",
-          contentComponent: "instanceRenderer",
-          tabComponent: "props.defaultTabComponent",
-          title: "Instance Renderer",
-        },
-        layoutStateInspector: {
-          id: "layoutStateInspector",
-          contentComponent: "layoutStateInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Layout JSON",
-        },
-        layoutGroupInspector: {
-          id: "layoutGroupInspector",
-          contentComponent: "layoutGroupInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Group Inspector",
-        },
-        layoutPanelInspector: {
-          id: "layoutPanelInspector",
-          contentComponent: "layoutPanelInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Panel Inspector",
         },
       },
       activeGroup: "6",
@@ -1272,129 +1213,6 @@ export const layoutProfiles: readonly SandboxLayoutProfile[] = [
             ],
           },
           autoReveal: true,
-        },
-      },
-    },
-  },
-  {
-    id: "inspectors",
-    title: "Inspectors",
-    data: {
-      grid: {
-        root: {
-          type: "branch",
-          data: [
-            {
-              type: "branch",
-              data: [
-                {
-                  type: "leaf",
-                  data: {
-                    views: ["instanceRenderer", "registryLibrary"],
-                    activeView: "instanceRenderer",
-                    id: "group-render",
-                  },
-                  size: 100,
-                },
-                {
-                  type: "leaf",
-                  data: {
-                    views: [
-                      "instanceInspector",
-                      "layoutStateInspector",
-                      "layoutGroupInspector",
-                      "layoutPanelInspector",
-                    ],
-                    activeView: "instanceInspector",
-                    id: "group-debug",
-                  },
-                  size: 100,
-                },
-              ],
-            },
-            {
-              type: "branch",
-              data: [
-                {
-                  type: "leaf",
-                  data: {
-                    views: ["sandboxPlaygroundInstance"],
-                    activeView: "sandboxPlaygroundInstance",
-                    id: "inspector-playground-group",
-                  },
-                  size: 100,
-                },
-              ],
-            },
-          ],
-          size: 964,
-        },
-        width: 1530,
-        height: 964,
-        orientation: "HORIZONTAL",
-        // proportionalLayout: true,
-        // disableAutoResizing: false
-      },
-      panels: {
-        layoutinspector: {
-          id: "layoutinspector",
-          contentComponent: "layoutinspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Layout Inspector",
-        },
-        registryLibrary: {
-          id: "registryLibrary",
-          contentComponent: "registryLibrary",
-          tabComponent: "props.defaultTabComponent",
-          title: "Registry Library",
-        },
-        instances: {
-          id: "instances",
-          contentComponent: "instances",
-          tabComponent: "props.defaultTabComponent",
-          title: "Instances",
-        },
-        panels: {
-          id: "panels",
-          contentComponent: "panels",
-          tabComponent: "props.defaultTabComponent",
-          title: "Panels",
-        },
-        instanceInspector: {
-          id: "instanceInspector",
-          contentComponent: "instanceInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Instance Inspector",
-        },
-        instanceRenderer: {
-          id: "instanceRenderer",
-          contentComponent: "instanceRenderer",
-          tabComponent: "props.defaultTabComponent",
-          title: "Instance Renderer",
-        },
-        layoutStateInspector: {
-          id: "layoutStateInspector",
-          contentComponent: "layoutStateInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Layout JSON",
-        },
-        layoutGroupInspector: {
-          id: "layoutGroupInspector",
-          contentComponent: "layoutGroupInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Group Inspector",
-        },
-        layoutPanelInspector: {
-          id: "layoutPanelInspector",
-          contentComponent: "layoutPanelInspector",
-          tabComponent: "props.defaultTabComponent",
-          title: "Panel Inspector",
-        },
-        sandboxPlaygroundInstance: {
-          id: "sandboxPlaygroundInstance",
-          contentComponent: "sandboxPlaygroundInstance",
-          tabComponent: "props.defaultTabComponent",
-          title: "Sandbox Playground",
         },
       },
     },

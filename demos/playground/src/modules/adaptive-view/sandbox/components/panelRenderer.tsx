@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { WrapperWithScrollArea } from './ui';
 
 export type PanelRendererApi = {
     isVisible: boolean;
@@ -30,7 +31,29 @@ export function usePanelRenderer(
 export const PanelRenderer: React.FC<{
     api: PanelRendererApi | undefined;
     children: React.ReactNode;
-}> = ({ api, children }) => {
+    scrollable?: boolean;
+}> = ({ api, children, scrollable = true }) => {
     const visible = usePanelRenderer(api);
-    return <div style={{ height: '100%' }}>{visible ? children : null}</div>;
+
+    if (!visible) {
+        return <div style={{ width: '100%', height: '100%' }} />;
+    }
+
+    return (
+        <div
+            style={{
+                width: '100%',
+                height: '100%',
+                minWidth: 0,
+                minHeight: 0,
+                overflow: 'hidden',
+            }}
+        >
+            {scrollable ? (
+                <WrapperWithScrollArea>{children}</WrapperWithScrollArea>
+            ) : (
+                children
+            )}
+        </div>
+    );
 };

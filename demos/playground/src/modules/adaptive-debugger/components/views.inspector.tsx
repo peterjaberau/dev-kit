@@ -50,7 +50,7 @@ export function DebuggerInspectorView() {
     : null
 
   return (
-    <Box width="full" height="full" overflow="auto" padding="3">
+    <Box width="full" padding="3">
       <Stack gap="3">
         <InspectorJson title="Selections" value={selections} />
         <InspectorJson title="Available State" value={{ instanceMetadata, layoutMetadata }} />
