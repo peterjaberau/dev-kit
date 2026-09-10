@@ -72,6 +72,7 @@ import {
   WatermarkRenderer as WatermarkComponent,
   GroupDragGhostRenderer as GroupDragGhost,
 } from "#adaptive-view/app/components"
+import { useDockViewAdapter } from '#adaptive-view/app/actors/selectors'
 
 export const ApiContext = React.createContext<DockviewApi | undefined>(
     undefined
@@ -410,7 +411,9 @@ export interface AdvaptiveViewDesktopProp {
 }
 
 const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
-    const { sentToLayoutManager } = useLayoutManager();
+  const { sendToDockViewAdapter } = useDockViewAdapter()
+
+  const { sentToLayoutManager } = useLayoutManager();
     const registeredLayoutProfiles = useSandboxManagerSelector(
         (snapshot) => snapshot.context.layoutProfiles
     );
@@ -569,10 +572,13 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
         setLayoutReady(true);
     }, [api, layoutRevision, profilesRegistered, selectedLayoutData]);
 
+
     const onReady = (event: DockviewReadyEvent) => {
         setupEdgeGroups(event.api);
         sentToLayoutManager({ type: 'ON_READY', api: event.api });
         setApi(event.api);
+
+      sendToDockViewAdapter({ type: "onReady", api: event.api })
     };
 
     // Signal the host once the layout is loaded and the dock becomes visible,

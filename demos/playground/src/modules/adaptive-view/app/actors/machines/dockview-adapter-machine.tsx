@@ -108,6 +108,7 @@ export const dockViewAdapterMachine = setup({
 }).createMachine({
   initial: "initiating",
   context: ({ input, self }: any) => {
+
     return {
       refs: {
         internal: {
@@ -138,6 +139,9 @@ export const dockViewAdapterMachine = setup({
       },
     },
     idle: {
+      entry: (({ context }) => {
+        console.log("--dockViewAdapterMachine---", context)
+      }),
       on: {
         onAddPanel: { actions: ["handleAddPanel"] },
         onRemovePanel: {

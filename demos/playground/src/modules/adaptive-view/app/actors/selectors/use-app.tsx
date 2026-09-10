@@ -9,8 +9,9 @@ export const useApp = () => {
   const appContext = appState.context
 
   const dockViewAdapterRef = appContext.dockViewAdapterRef
-  const oasRef = appContext.oasRef
-  const oasManagerRef = appContext.oasManagerRef
+
+
+
 
   return {
     appRef,
@@ -20,7 +21,5 @@ export const useApp = () => {
     appContext,
 
     dockViewAdapterRef,
-    oasRef,
-    oasManagerRef
   }
 }

@@ -35,9 +35,11 @@ export const appMachine = setup({
       ...input,
     }
   },
-  entry: enqueueActions(({ enqueue }) => {
+  entry: enqueueActions(({ enqueue, context }) => {
     enqueue("spawnDockViewAdapter")
     enqueue("spawnDynamicPanelLab")
+
+
 
   }),
 })
