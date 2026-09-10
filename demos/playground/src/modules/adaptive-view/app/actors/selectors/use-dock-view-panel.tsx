@@ -5,13 +5,11 @@ import { createTreeCollection } from "@chakra-ui/react"
 
 // https://dockview.dev/docs/api/dockview/panelApi
 export const useDockViewPanel = ({ panelId }: any) => {
-
   const { getPanel, activePanelId, dockPanelRef: panelRef }: any = useDockViewAdapter()
 
   const panelState: any = useSelector(panelRef(panelId), (state) => state)
   const panelContext = panelState?.context
   const sendToPanel = panelRef?.send
-
 
   const panel = getPanel(panelId)
   const panelApi = panel?.api
@@ -29,7 +27,6 @@ export const useDockViewPanel = ({ panelId }: any) => {
   // const renderer = {}
   const title = panel?.title
 
-
   // Panel View
   const panelViewRef = panelContext?.refs?.relations?.view
   const panelViewState: any = useSelector(panelViewRef, (state) => state)
@@ -38,8 +35,6 @@ export const useDockViewPanel = ({ panelId }: any) => {
 
   const inPanelViewScopeState = panelViewState?.matches("scope") || false
   const inPanelViewScopedState = panelViewState?.matches("scoped") || false
-
-
 
   const panelViewScopeContext = {
     collection: createTreeCollection<any>({
@@ -51,12 +46,10 @@ export const useDockViewPanel = ({ panelId }: any) => {
     selectedValue: [],
     filter: {
       sensitivity: "base",
-    }
+    },
   }
 
-
   const panelViewScopedContext = panelViewContext?.scoped || {}
-
 
   return {
     panelRef,
@@ -75,8 +68,7 @@ export const useDockViewPanel = ({ panelId }: any) => {
 
     panelApi,
 
-
-    isPopout: panelApi?.location.type === 'popout',
+    isPopout: panelApi?.location.type === "popout",
     panel: panel,
     panelContainerApi,
     componentId: panel?.component,
@@ -104,7 +96,5 @@ export const useDockViewPanel = ({ panelId }: any) => {
     setTitle: (title: string) => panel?.api.setTitle(title),
     updateParameters: (parameters: any) => panel?.api.updateParameters(parameters),
     focus: () => panel?.focus(),
-
-
   }
 }

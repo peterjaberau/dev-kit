@@ -1,7 +1,7 @@
 export * from "./use-root"
 export * from "./use-root-actors"
 
-export * from "./use-app"
+export * from "./use-dock-view"
 
 export * from './use-dock-view-adapter'
 export * from './use-dock-view-api'

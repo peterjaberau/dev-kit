@@ -68,6 +68,9 @@ export const dockViewAdapterConfig = {
       },
       model: {},
     },
+
+
+
     // {
     //   id: "panel__2",
     //   view: {

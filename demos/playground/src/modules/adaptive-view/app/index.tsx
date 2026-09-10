@@ -1,8 +1,10 @@
 "use client"
-import { RenderAdaptiveView } from "./render"
+import { RenderAdaptiveRenderer } from "./render"
 
-const Index = ({children}: any) => {
-  return <RenderAdaptiveView>{children}</RenderAdaptiveView>
+
+
+const AdaptiveViewApp = ({children, input = {}}: any) => {
+  return <RenderAdaptiveRenderer input={input}>{children}</RenderAdaptiveRenderer>
 }
 
-export default Index
+export default AdaptiveViewApp

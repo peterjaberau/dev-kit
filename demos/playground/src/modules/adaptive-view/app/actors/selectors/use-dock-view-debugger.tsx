@@ -1,17 +1,17 @@
 'use client'
 import {
-  useApp,
+  useDockView,
   useDockViewAdapter
 } from "."
 
 
 export const useDockViewDebugger = () => {
-  const { appRef } = useApp()
+  const { dockviewRef } = useDockView()
   const dockViewAdapter = useDockViewAdapter()
 
 
   const dockViewDebugger = {
-    app: appRef.getSnapshot().toJSON(),
+    app: dockviewRef.getSnapshot().toJSON(),
     dockViewAdapter,
   }
 

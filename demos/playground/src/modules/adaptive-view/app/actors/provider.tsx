@@ -5,6 +5,6 @@ import { rootMachine } from './machines'
 
 export const ActorsModelContext = createActorContext(rootMachine)
 
-export const ActorsModelProvider = ({ children }: any) => {
-  return <ActorsModelContext.Provider>{children}</ActorsModelContext.Provider>
+export const ActorsModelProvider = ({ children, input = {} }: any) => {
+  return <ActorsModelContext.Provider options={{ input }}>{children}</ActorsModelContext.Provider>
 }

@@ -3,7 +3,7 @@ import { dockViewAdapterMachine } from "./dockview-adapter-machine"
 import { dynamicPanelLabMachine } from "./dynamic-panel-lab-machine"
 import { DOCK_VIEW_ENUM } from "../constants"
 
-export const appMachine = setup({
+export const dockviewMachine = setup({
   types: {
     context: {} as any,
     events: {} as any,
@@ -38,8 +38,6 @@ export const appMachine = setup({
   entry: enqueueActions(({ enqueue, context }) => {
     enqueue("spawnDockViewAdapter")
     enqueue("spawnDynamicPanelLab")
-
-
 
   }),
 })

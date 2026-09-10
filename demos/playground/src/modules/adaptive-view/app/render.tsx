@@ -2,13 +2,10 @@
 import { ActorsModelProvider } from "./actors/provider"
 
 
-export const RenderAdaptiveView = ({ children }: any) => {
-
+export const RenderAdaptiveRenderer = ({ children, input }: any) => {
   return (
     <>
-      <ActorsModelProvider>
-        {children}
-      </ActorsModelProvider>
+      <ActorsModelProvider input={input}>{children}</ActorsModelProvider>
     </>
   )
 }
