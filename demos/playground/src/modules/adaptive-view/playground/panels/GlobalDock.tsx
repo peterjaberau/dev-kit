@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
-import {
-  DockviewReact,
-  type DockviewApi,
-  type DockviewReadyEvent,
-} from "#adaptive-view/react";
-import { applyPanelConstraints, useDockviewStore } from "../store/dockview";
+import { DockviewReact, type DockviewApi, type DockviewReadyEvent, themeGithubLight } from "#adaptive-view/react"
+import { applyPanelConstraints, useDockviewStore } from "../store/dockview"
 import { useGlobalRegionStore } from "../store/globalRegion";
 import { useLayoutsStore } from "../store/layouts";
 import { GLOBAL_DOCKVIEW_COMPONENTS, GLOBAL_DOCKVIEW_TAB_COMPONENTS, GLOBAL_PANELS, PANEL_TITLES } from "./registry";
@@ -51,10 +47,10 @@ export function GlobalDock() {
         tabComponents={GLOBAL_DOCKVIEW_TAB_COMPONENTS}
         watermarkComponent={DockWatermark}
         onReady={onReady}
-        className="dockview-theme-abyss"
+        theme={themeGithubLight}
       />
     </div>
-  );
+  )
 }
 
 /**
@@ -94,7 +90,7 @@ export function readyGlobalDock(api: DockviewApi) {
   api.onDidLayoutChange(() => {
     try { persistLayout(api.toJSON()); } catch { /* ignore */ }
     // The docks no longer match a saved layout once they change.
-    useLayoutsStore.getState().noteDockLayoutChanged();
+    useLayoutsStore.getState().noteRepoLayoutChanged();
   });
 
   // Deliver a summon that was waiting for this mount. Deliberately NOT

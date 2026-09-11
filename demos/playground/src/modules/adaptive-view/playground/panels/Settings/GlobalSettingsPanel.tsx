@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { usePanelFocusEffect } from "../PanelApiContext"
 import { LinkIcon, UnlinkIcon, WarningIcon } from "../../icons"
-import { Button, IconButton } from "../shared/buttons"
 import { useDelayedBusy } from "../shared/useDelayedBusy"
 import { useRowDragReorder } from "../shared/useRowDragReorder"
 import { useDelayedFlag } from "../shared/useDelayedFlag"
+import { chakra, Card, Button, IconButton, HStack, EmptyState, Badge } from "@chakra-ui/react"
 
 /** localStorage key for the line-height ↔ lane-width link toggle (default on). */
 import type { RegionPlacement } from "../../lib/types"
@@ -17,17 +17,16 @@ import { useSettingsStore } from "../../store/settings"
 /** Global Settings panel — edits global-scope settings (DESIGN-v0.2.md §F.6). */
 export function GlobalSettingsPanel() {
   return (
-    <div className="legit-panel">
-      <div className="legit-panel__body">
-        panel__body
+    <Card.Root>
+      <Card.Body>
         <SettingsGroup id="appearance" title="Appearance" caption="How LeGit looks">
           <GeneralSection />
         </SettingsGroup>
         <SettingsGroup id="behavior" title="Behavior" caption="How LeGit acts">
           <AutoOpenPanelsSection />
         </SettingsGroup>
-      </div>
-    </div>
+      </Card.Body>
+    </Card.Root>
   )
 }
 
@@ -52,8 +51,8 @@ function GeneralSection() {
   return (
     <Section title="General">
       <FieldNote>writes to: global settings — base UI size &amp; dock placement for all panels</FieldNote>
-      <div
-        style={{
+      <chakra.div
+        css={{
           display: "grid",
           // label · gutter · control · range — shared shape/widths with Commits
           // graph so the control column aligns across the two sections.
@@ -62,29 +61,31 @@ function GeneralSection() {
           alignItems: "center",
           marginTop: 8,
           width: "fit-content",
-          fontSize: "var(--fz-lg)",
+          fontSize: "lg",
         }}
       >
-        <span className="legit-subtle" style={{ gridColumn: 1, gridRow: 1, whiteSpace: "nowrap" }}>
+        <chakra.span color="fg.subtle" style={{ gridColumn: 1, gridRow: 1, whiteSpace: "nowrap" }}>
           Layout orientation
-        </span>
-        <div style={{ gridColumn: "3 / -1", gridRow: 1, display: "flex", gap: 8 }}>
+        </chakra.span>
+        <chakra.div style={{ gridColumn: "3 / -1", gridRow: 1, display: "flex", gap: 8 }}>
           <Button
-            variant={placement === "top" ? "primary" : "default"}
+            size={"sm"}
+            variant={placement === "top" ? "solid" : "outline"}
             disabled={saving}
             onClick={() => selectPlacement("top")}
           >
             Top / Bottom
           </Button>
           <Button
-            variant={placement === "left" ? "primary" : "default"}
+            size={"sm"}
+            variant={placement === "left" ? "solid" : "outline"}
             disabled={saving}
             onClick={() => selectPlacement("left")}
           >
             Left / Right
           </Button>
-        </div>
-      </div>
+        </chakra.div>
+      </chakra.div>
     </Section>
   )
 }
@@ -167,16 +168,16 @@ function NumberField({
     />
   )
   const range = (
-    <span
-      className="legit-subtle"
-      style={{
-        fontSize: "var(--fz-sm)",
+    <chakra.span
+      color="fg.subtle"
+      css={{
+        fontSize: "sm",
         fontVariantNumeric: "tabular-nums",
         ...(grid ? { gridColumn: 4, gridRow: row } : {}),
       }}
     >
       px ({min}–{max})
-    </span>
+    </chakra.span>
   )
 
   if (grid) {
@@ -184,25 +185,24 @@ function NumberField({
     // input 3, range 4; column 2 is a gutter the caller uses for the link
     // toggle) so all fields align regardless of label length.
     return (
-      <label style={{ display: "contents" }}>
-        <span className="legit-subtle" style={{ gridColumn: 1, gridRow: row }}>
+      <chakra.label style={{ display: "contents" }}>
+        <chakra.span color="fg.subtle" css={{ gridColumn: 1, gridRow: row }}>
           {label}
-        </span>
+        </chakra.span>
         {input}
         {range}
-      </label>
+      </chakra.label>
     )
   }
 
   return (
-    <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--fz-lg)" }}>
-      <span className="legit-subtle">{label}</span>
+    <chakra.label css={{ display: "flex", alignItems: "center", gap: 6, fontSize: "lg" }}>
+      <chakra.span color={"fg.subtle"}>{label}</chakra.span>
       {input}
       {range}
-    </label>
+    </chakra.label>
   )
 }
-
 
 /** Stable empty default so the store selector doesn't return a fresh array. */
 const EMPTY_PANELS: string[] = []
@@ -235,13 +235,13 @@ function AutoOpenPanelsSection() {
         {SUPPRESSIBLE_SUMMON_PANELS.map((id) => {
           const autoOpen = !suppressed.includes(id)
           return (
-            <label
+            <chakra.label
               key={id}
-              style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--fz-lg)", cursor: "pointer" }}
+              css={{ display: "flex", alignItems: "center", gap: 6, fontSize: "lg", cursor: "pointer" }}
             >
               <input type="checkbox" checked={autoOpen} disabled={saving} onChange={() => toggle(id, !autoOpen)} />
               {titleFor(id)}
-            </label>
+            </chakra.label>
           )
         })}
       </div>

@@ -38,7 +38,7 @@ export interface LayoutEntry {
 export interface LayoutDocument {
   name: string
   global: unknown
-  dock: unknown
+  repo: unknown
 }
 
 export type AppError =

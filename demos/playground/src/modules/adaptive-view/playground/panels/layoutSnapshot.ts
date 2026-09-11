@@ -8,22 +8,22 @@
 import type { DockviewApi } from "#adaptive-view/react"
 import { applyPanelConstraints } from "../store/dockview"
 import { computeFallbackPosition, useSummonStore, type FallbackPosition } from "../store/summon"
-// Only the DockLayoutEnvelope TYPE flows back into defaultLayouts - no
+// Only the RepoLayoutEnvelope TYPE flows back into defaultLayouts - no
 // runtime cycle.
-import { DEFAULT_GLOBAL_LAYOUT, DEFAULT_DOCK_LAYOUT } from "./defaultLayouts"
+import { DEFAULT_GLOBAL_LAYOUT, DEFAULT_REPO_LAYOUT } from "./defaultLayouts"
 import { GLOBAL_DOCKVIEW_COMPONENTS, PANEL_TITLES, REPO_DOCKVIEW_COMPONENTS } from "./registry"
 
 // Legacy "saved default" snapshot keys - written by the retired
 // "Save as default layout" menu entry, read only by the one-time migration
 // into a named layout (store/layouts.ts).
-export const SAVED_DOCK_LAYOUT_KEY = "legit.dock-layout-default"
-export const SAVED_GLOBAL_LAYOUT_KEY = "legit.global-layout-default"
+export const SAVED_REPO_LAYOUT_KEY = "legit.repo-dock-layout-default"
+export const SAVED_GLOBAL_LAYOUT_KEY = "legit.global-dock-layout-default"
 
 /** Persisted shape of the global dock's layout (live key and saved default). */
-export interface DockLayoutEnvelope {
+export interface RepoLayoutEnvelope {
   dockview: unknown
-  placements?: Record<string, string>
-  fallbacks?: Record<string, FallbackPosition>
+  placements: Record<string, string>
+  fallbacks: Record<string, FallbackPosition>
 }
 
 /**
@@ -32,7 +32,7 @@ export interface DockLayoutEnvelope {
  * Returns null for unparseable input - callers fall back to the default
  * layout, never throw.
  */
-export function parseDockLayoutEnvelope(raw: string | null): DockLayoutEnvelope | null {
+export function parseRepoLayoutEnvelope(raw: string | null): RepoLayoutEnvelope | null {
   if (!raw) return null
   let parsed: unknown
   try {
@@ -40,12 +40,12 @@ export function parseDockLayoutEnvelope(raw: string | null): DockLayoutEnvelope 
   } catch {
     return null
   }
-  return coerceDockLayoutEnvelope(parsed)
+  return coerceRepoLayoutEnvelope(parsed)
 }
 
-/** Same tolerance rules as `parseDockLayoutEnvelope`, for already-parsed
+/** Same tolerance rules as `parseRepoLayoutEnvelope`, for already-parsed
  *  values (a named layout document's `repo` field). */
-export function coerceDockLayoutEnvelope(parsed: unknown): DockLayoutEnvelope | null {
+export function coerceRepoLayoutEnvelope(parsed: unknown): RepoLayoutEnvelope | null {
   if (!parsed || typeof parsed !== "object") return null
   const envelope = parsed as {
     dockview?: unknown
@@ -86,7 +86,7 @@ export function coerceDockLayoutEnvelope(parsed: unknown): DockLayoutEnvelope | 
  * persisted title: layouts store titles verbatim, so without this a panel
  * rename in the registry would never reach existing saved layouts.
  */
-export function sanitizeDockviewLayout(
+export function sanitizeRepoviewLayout(
   json: unknown,
   knownComponents: ReadonlySet<string>,
   titles?: Readonly<Record<string, string>>,
@@ -160,7 +160,7 @@ export function sanitizeDockviewLayout(
 // registry), so the registry consts are still undefined when a panel's
 // import triggers this module first. Reading them inside the functions
 // (like store/summon does) makes the cycle harmless.
-const dockComponentIds = (): ReadonlySet<string> => new Set(Object.keys(DOCKVIEW_COMPONENTS))
+const repoComponentIds = (): ReadonlySet<string> => new Set(Object.keys(REPO_DOCKVIEW_COMPONENTS))
 const globalComponentIds = (): ReadonlySet<string> => new Set(Object.keys(GLOBAL_DOCKVIEW_COMPONENTS))
 
 /**
@@ -181,7 +181,7 @@ export function capturePlacements(api: DockviewApi, layoutJson?: unknown) {
 }
 
 /** The dock dock's current layout in its persisted envelope shape. */
-export function captureDockLayoutEnvelope(api: DockviewApi): DockLayoutEnvelope {
+export function captureRepoLayoutEnvelope(api: DockviewApi): RepoLayoutEnvelope {
   return {
     dockview: api.toJSON(),
     placements: useSummonStore.getState().placements,
@@ -195,10 +195,10 @@ export function captureDockLayoutEnvelope(api: DockviewApi): DockLayoutEnvelope 
  * apply the layout. Returns false when the layout restored zero panels or
  * threw - the caller falls back to the default layout.
  */
-export function applyDockLayoutEnvelope(api: DockviewApi, envelope: DockLayoutEnvelope): boolean {
+export function applyRepoLayoutEnvelope(api: DockviewApi, envelope: RepoLayoutEnvelope): boolean {
   // Retired panels are pruned first - a stale reference would make fromJSON
   // throw and nuke the whole layout.
-  const dockview = sanitizeDockviewLayout(envelope.dockview, dockComponentIds(), PANEL_TITLES)
+  const dockview = sanitizeRepoviewLayout(envelope.dockview, repoComponentIds(), PANEL_TITLES)
   if (dockview === null) return false
   const { capturePlacement, captureFallback } = useSummonStore.getState()
   for (const [panelId, groupId] of Object.entries(envelope.placements)) {
@@ -225,7 +225,7 @@ export function applyDockLayoutEnvelope(api: DockviewApi, envelope: DockLayoutEn
  * Shared by the startup restore, the saved default, and the baked default.
  */
 export function applyGlobalLayoutJson(api: DockviewApi, json: unknown): boolean {
-  const layout = sanitizeDockviewLayout(json, globalComponentIds(), PANEL_TITLES)
+  const layout = sanitizeRepoviewLayout(json, globalComponentIds(), PANEL_TITLES)
   if (layout === null) return false
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -245,11 +245,11 @@ export function applyGlobalLayoutJson(api: DockviewApi, json: unknown): boolean 
  * constant. Returns false if it fails to apply - callers fall back to the
  * programmatic builder.
  */
-export function applyBakedDockLayout(api: DockviewApi): boolean {
-  return applyDockLayoutEnvelope(api, structuredClone(DEFAULT_DOCK_LAYOUT))
+export function applyBakedRepoLayout(api: DockviewApi): boolean {
+  return applyRepoLayoutEnvelope(api, structuredClone(DEFAULT_REPO_LAYOUT))
 }
 
-/** Same as `applyBakedDockLayout`, for the global dock. */
+/** Same as `applyBakedRepoLayout`, for the global dock. */
 export function applyBakedGlobalLayout(api: DockviewApi): boolean {
   return applyGlobalLayoutJson(api, structuredClone(DEFAULT_GLOBAL_LAYOUT))
 }

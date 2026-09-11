@@ -1,14 +1,4 @@
-// Central icon module.
-//
-// Every SVG icon used in the UI is re-exported here as a semantic component, so
-// call sites never import an icon library directly. Swapping or extending the
-// icon set (e.g. adding Octicons for git-specific glyphs) stays a single-file
-// change rather than a find-and-replace across the app.
-//
-// Icons default to `size="1em"` and inherit `currentColor`, so they scale with
-// the surrounding font size and follow the active theme's text colour with no
-// per-call-site styling. Pass `size`, `color`, `strokeWidth`, `style`, etc. to
-// override; pass `aria-label` (and `aria-hidden={false}`) for meaningful icons.
+"use client"
 
 import { forwardRef, type SVGProps } from "react";
 import {

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { create } from "zustand";
 import { useDockviewStore } from "./dockview";
 import { useSettingsStore } from "./settings";
-import { DOCK_PANELS, SUPPRESSIBLE_SUMMON_PANELS } from "../panels/registry";
+import { REPO_PANELS, SUPPRESSIBLE_SUMMON_PANELS } from "../panels/registry";
 
 /**
  * True when the user has opted this panel out of auto-opening (Settings →
@@ -118,7 +118,7 @@ export const useSummonStore = create<SummonStore>((set, get) => ({
     const api = useDockviewStore.getState().repoApi;
     if (!api) return;
 
-    const desc = DOCK_PANELS.find((p) => p.id === targetId);
+    const desc = REPO_PANELS.find((p) => p.id === targetId);
     if (!desc) return;
 
     const { placements, fallbackPositions, callbacks } = get();
@@ -196,7 +196,7 @@ export const useSummonStore = create<SummonStore>((set, get) => ({
       }
       // None of the three open yet — use Diff's default placement for all of
       // them, guarding against its reference panel being closed.
-      const diffPlacement = DOCK_PANELS.find((p) => p.id === "diff")?.defaultPlacement
+      const diffPlacement = REPO_PANELS.find((p) => p.id === "diff")?.defaultPlacement
       if (diffPlacement) {
         const refOpen = diffPlacement.referencePanel
           ? !!api.getPanel(diffPlacement.referencePanel)
@@ -237,7 +237,7 @@ export const useSummonStore = create<SummonStore>((set, get) => ({
 
     const api = useDockviewStore.getState().repoApi;
     if (!api) return;
-    const desc = DOCK_PANELS.find((p) => p.id === showId)
+    const desc = REPO_PANELS.find((p) => p.id === showId)
     if (!desc) return;
 
     const sibling = api.getPanel(hideId);

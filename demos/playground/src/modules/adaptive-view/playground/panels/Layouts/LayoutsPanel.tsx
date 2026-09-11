@@ -3,8 +3,8 @@ import { formatAppError } from "../../lib/types"
 import { DeleteIcon, RenameIcon } from "../../icons"
 import { useLayoutsStore } from "../../store/layouts"
 import { notify } from "../../store/notifications"
-import { Button, IconButton } from "../shared/buttons"
 import { InlineRenameInput } from "../shared/InlineRenameInput"
+import { chakra, Card, Button, IconButton, HStack, EmptyState, Badge } from "@chakra-ui/react"
 
 /**
  * Manage saved panel layouts (the View menu is the fast switch path): save
@@ -64,45 +64,55 @@ export function LayoutsPanel() {
     })
 
   return (
-    <div className="legit-panel">
-      <div className="legit-panel__toolbar" style={{ flexWrap: "wrap" }}>
-        <input
-          data-testid="layouts-new-name"
-          placeholder="New layout name"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") void onSaveCurrent()
-          }}
-        />
-        <Button
-          variant="primary"
-          onClick={() => void onSaveCurrent()}
-          disabled={newName.trim().length === 0}
-          title="Save the current arrangement of both docks as a named layout"
-        >
-          Save current
-        </Button>
+    <Card.Root size={"sm"}>
+      <Card.Header>
+        <HStack css={{ flexWrap: "wrap" }}>
+          <input
+            data-testid="layouts-new-name"
+            placeholder="New layout name"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") void onSaveCurrent()
+            }}
+          />
 
-        <button
-          onClick={resetToDefault}
-          title="Rebuild both docks' built-in default layout (saved layouts are unaffected)"
-        >
-          Reset to default layout
-        </button>
-      </div>
-      <div className="legit-panel__body">
+          <Button
+            variant="solid"
+            size={"sm"}
+            onClick={() => void onSaveCurrent()}
+            disabled={newName.trim().length === 0}
+            title="Save the current arrangement of both docks as a named layout"
+          >
+            Save current
+          </Button>
+          <Button
+            variant="outline"
+            size={"sm"}
+            onClick={resetToDefault}
+            disabled={newName.trim().length === 0}
+            title="Rebuild both docks' built-in default layout (saved layouts are unaffected)"
+          >
+            Reset to default layout
+          </Button>
+        </HStack>
+      </Card.Header>
+      <Card.Body>
         {layouts.length === 0 ? (
-          <p className="legit-subtle">
-            No saved layouts yet. Arrange the panels the way you like, then save the arrangement under a name - it
-            becomes a one-click switch in the View menu.
-          </p>
+          <EmptyState.Root>
+            <EmptyState.Content>
+              <EmptyState.Description>
+                No saved layouts yet. Arrange the panels the way you like, then save the arrangement under a name - it
+                becomes a one-click switch in the View menu.
+              </EmptyState.Description>
+            </EmptyState.Content>
+          </EmptyState.Root>
         ) : (
           layouts.map((l) => (
-            <div
+            <chakra.div
               key={l.name}
               data-testid={`layouts-row-${l.name}`}
-              style={{
+              css={{
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5em",
@@ -117,8 +127,8 @@ export function LayoutsPanel() {
                   style={{ flex: 1, minWidth: 0 }}
                 />
               ) : (
-                <span
-                  style={{
+                <chakra.span
+                  css={{
                     flex: 1,
                     minWidth: 0,
                     overflow: "hidden",
@@ -128,18 +138,23 @@ export function LayoutsPanel() {
                   title={l.name}
                 >
                   {l.name}
-                  {lastApplied === l.name && (
-                    <span className="legit-subtle" style={{ marginLeft: "0.5em" }}>
-                      (active)
-                    </span>
-                  )}
-                </span>
+                  {lastApplied === l.name && <Badge variant="subtle">(active)</Badge>}
+                </chakra.span>
               )}
-              <button onClick={() => void run(() => apply(l.name))}>Apply</button>
-              <button onClick={() => void onOverride(l.name)} title="Replace this layout with the current arrangement">
+              <Button size={"xs"} variant={"outline"} onClick={() => void run(() => apply(l.name))}>
+                Apply
+              </Button>
+              <Button
+                size={"xs"}
+                variant={"outline"}
+                onClick={() => void onOverride(l.name)}
+                title="Replace this layout with the current arrangement"
+              >
                 Override
-              </button>
+              </Button>
               <IconButton
+                size={"xs"}
+                variant={"ghost"}
                 onClick={() => setRenaming(renaming === l.name ? null : l.name)}
                 title="Rename layout"
                 aria-label={`Rename layout ${l.name}`}
@@ -147,16 +162,18 @@ export function LayoutsPanel() {
                 <RenameIcon />
               </IconButton>
               <IconButton
+                size={"xs"}
+                variant={"ghost"}
                 onClick={() => void onDelete(l.name)}
                 title="Delete layout"
                 aria-label={`Delete layout ${l.name}`}
               >
                 <DeleteIcon />
               </IconButton>
-            </div>
+            </chakra.div>
           ))
         )}
-      </div>
-    </div>
+      </Card.Body>
+    </Card.Root>
   )
 }

@@ -250,7 +250,7 @@ const FxCategoryPanel: React.FC<IDockviewPanelProps<{ categoryId: string }>> = (
           // already frames the other three sides, so a full border here
           // would double up against it. This top edge is the header
           // divider under the G10/EM/Crosses tabs, matching a normal
-          // panel's `PanelHeader` divider inside its card.
+          // panel's `SectionHeader` divider inside its card.
           borderTop: `1px solid ${c.border}`,
           background: c.bg,
           display: "grid",
@@ -344,7 +344,7 @@ export const FxTilesPanel: React.FC = () => {
                     boxSizing: 'border-box',
                     overflow: 'hidden',
                     background: c.bg,
-                    // Match every other panel's `PanelShell`: a full hairline
+                    // Match every other panel's `Section`: a full hairline
                     // card border (+ the same subtle top highlight) around the
                     // panel content (here the nested dockview), so the FX panel
                     // reads as a card like the rest.

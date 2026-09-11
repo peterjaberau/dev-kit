@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, type ReactNode, type RefObject } from "react";
 import type { DockviewPanelApi } from "#adaptive-view/react";
+import * as React from "react"
 
 const PanelApiContext = createContext<DockviewPanelApi | null>(null);
 
@@ -18,6 +19,24 @@ export function PanelApiProvider({
 export function usePanelApi(): DockviewPanelApi | null {
   return useContext(PanelApiContext);
 }
+
+export function usePanelVisibilityEffect(callback: () => void) {
+  const api = useContext(PanelApiContext)
+  const [visible, setVisible] = React.useState(true)
+
+  useEffect(() => {
+    if (!api) return
+    setVisible(api.isVisible)
+    const disposable = api.onDidVisibilityChange((e) => {
+      if (e.isVisible) {
+        setVisible(e.isVisible)
+        callback()
+      }
+    })
+    return () => disposable.dispose()
+  }, [api])
+}
+
 
 /** Run `callback` every time this panel gains focus. */
 export function usePanelFocusEffect(callback: () => void) {

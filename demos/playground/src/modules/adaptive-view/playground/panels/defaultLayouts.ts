@@ -20,13 +20,13 @@
 // grid proportionally to the actual window on fromJSON.
 //
 // Panel entries deliberately carry NO `title`: tab titles live only in the
-// panel registry, and the apply path (sanitizeDockviewLayout) injects them
+// panel registry, and the apply path (sanitizeRepoviewLayout) injects them
 // from there. When re-capturing these layouts from a live dockview, strip
 // the `title` fields again - defaultLayouts.test.ts enforces this.
 
-import type { DockLayoutEnvelope } from "./layoutSnapshot";
+import type { RepoLayoutEnvelope } from "./layoutSnapshot";
 
-export const DEFAULT_DOCK_LAYOUT: DockLayoutEnvelope = {
+export const DEFAULT_REPO_LAYOUT: RepoLayoutEnvelope = {
   dockview: {
     grid: {
       root: {

@@ -3,13 +3,13 @@ import { useMarket, useMarketDispatch, WATCHLIST_TICKERS } from '../providers/ma
 import { rowData } from './ordersPanel';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import {
-    PanelShell,
-    PanelHeader,
+    Section,
+    SectionHeader,
     StatStrip,
     Stat,
     Chip,
     MiniBar,
-} from '../components/parts';
+} from './components';
 import { tnum } from '../constants';
 import { fmtCompact, fmtNum, fmtSigned } from '../utils';
 
@@ -100,8 +100,8 @@ export const PositionSummaryPanel: React.FC = () => {
     const pnlColor = totalUPnl >= 0 ? c.green : c.red;
 
     return (
-        <PanelShell>
-            <PanelHeader pad="7px 12px 6px">
+        <Section>
+            <SectionHeader pad="7px 12px 6px">
                 <div
                     style={{
                         display: 'flex',
@@ -136,7 +136,7 @@ export const PositionSummaryPanel: React.FC = () => {
                     </span>
                     <Chip tone="blue">{positions.length}</Chip>
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <StatStrip cols={3}>
                 <Stat
@@ -247,6 +247,6 @@ export const PositionSummaryPanel: React.FC = () => {
                     );
                 })}
             </div>
-        </PanelShell>
+        </Section>
     );
 };

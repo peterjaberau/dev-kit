@@ -28,13 +28,14 @@ import {
     PrefixHeaderControls,
     RightControls,
 } from '../components/headerActions';
-import { Table, usePanelApiMetadata } from '../sandbox-manager/debugPanel';
-import { EventLogPanel } from '../sandbox-manager/panels/eventLogPanel';
-import { LayoutInspectorPanel } from '../sandbox-manager/panels/layoutInspectorPanel';
-import { PanelDebugPanel } from '../sandbox-manager/panels/panelDebugPanel';
+import { DebugPanelTable, usePanelApiMetadata } from "./panels/debugPanel"
+import { ChartPanel } from "./panels/chartPanel"
+import { CorrelationPanel } from "./panels/correlationPanel"
+
+import { EventLogPanel } from './panels/eventLogPanel';
+import { LayoutInspectorPanel } from './panels/layoutInspectorPanel';
+import { DebugPanel } from './panels/debugPanel';
 import { MarketProvider } from './providers/marketProvider';
-import { ChartPanel } from './panels/chartPanel';
-import { CorrelationPanel } from './panels/correlationPanel';
 import { FxTilesPanel } from './panels/fxTilesPanel';
 import { NewsPanel } from './panels/newsPanel';
 import { OrderBookPanel } from './panels/orderBookPanel';
@@ -143,35 +144,6 @@ const InstanceRendererView = () => {
 };
 
 const components = {
-  instanceRenderer: (props: IDockviewPanelProps) => (
-    <PanelRenderer api={props.api} scrollable={false}>
-      <SandboxIsolatedView><InstanceRendererView /></SandboxIsolatedView>
-    </PanelRenderer>
-  ),
-  instance: (props: IDockviewPanelProps<InstancePanelParams>) => {
-    const instanceId = props.params?.instanceId;
-
-    return (
-      <PanelRenderer api={props.api} scrollable={false}>
-        {instanceId ? <InstanceRenderer instanceId={instanceId} /> : null}
-      </PanelRenderer>
-    );
-  },
-  dynamic: (props: DynamicPanelProps) => {
-    const componentId = props.params?.componentId;
-    const componentProps = props.params?.props ?? {};
-
-    return (
-      <PanelRenderer api={props.api} scrollable={false}>
-        <div
-          data-sandbox-theme-isolated
-          style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
-        >
-          <RegistryViewer componentId={componentId} options={componentProps} />
-        </div>
-      </PanelRenderer>
-    );
-  },
   default: (props: IDockviewPanelProps) => {
     const isDebug = React.useContext(DebugContext)
     const metadata = usePanelApiMetadata(props.api)
@@ -186,7 +158,7 @@ const components = {
               value={metadata.renderer.value}
               onClick={() => props.api.setRenderer(props.api.renderer === "always" ? "onlyWhenVisible" : "always")}
             />
-            <Table data={metadata} />
+            <DebugPanelTable data={metadata} />
           </div>
         </PanelRenderer>
       )
@@ -196,41 +168,93 @@ const components = {
     // faint dotted field with the panel title and an idle status line.
     return (
       <PanelRenderer api={props.api}>
-       <div style={{ minHeight: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, background: c.bg, color: c.text, border: `1px solid ${c.border}`, backgroundImage: `radial-gradient(${c.border} 1px, transparent 1px)`, backgroundSize: "16px 16px" }}>
-        <span className="material-symbols-outlined" style={{ fontSize: 26, color: c.textFaint }}>
-          monitoring
-        </span>
         <div
           style={{
-            fontFamily: MONO,
-            fontSize: 13,
-            fontWeight: 600,
-            color: c.textSecondary,
-          }}
-        >
-          {props.api.title}
-        </div>
-        <div
-          style={{
+            minHeight: "100%",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 6,
-            fontSize: 10.5,
-            color: c.textFaint,
+            justifyContent: "center",
+            gap: 8,
+            background: c.bg,
+            color: c.text,
+            border: `1px solid ${c.border}`,
+            backgroundImage: `radial-gradient(${c.border} 1px, transparent 1px)`,
+            backgroundSize: "16px 16px",
           }}
         >
-          <span
+          <span className="material-symbols-outlined" style={{ fontSize: 26, color: c.textFaint }}>
+            monitoring
+          </span>
+          <div
             style={{
-              width: 6,
-              height: 6,
-              borderRadius: 6,
-              background: c.green,
-              boxShadow: `0 0 4px ${c.green}`,
+              fontFamily: MONO,
+              fontSize: 13,
+              fontWeight: 600,
+              color: c.textSecondary,
             }}
-          />
-          Connected · idle
+          >
+            {props.api.title}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 10.5,
+              color: c.textFaint,
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: 6,
+                background: c.green,
+                boxShadow: `0 0 4px ${c.green}`,
+              }}
+            />
+            Connected · idle
+          </div>
         </div>
-       </div>
+      </PanelRenderer>
+    )
+  },
+  chart: (props: IDockviewPanelProps) => (
+    <PanelRenderer api={props.api}>
+      <ChartPanel />
+    </PanelRenderer>
+  ),
+  correlation: (props: IDockviewPanelProps) => (
+    <PanelRenderer api={props.api}>
+      <CorrelationPanel />
+    </PanelRenderer>
+  ),
+  instanceRenderer: (props: IDockviewPanelProps) => (
+    <PanelRenderer api={props.api} scrollable={false}>
+      <SandboxIsolatedView>
+        <InstanceRendererView />
+      </SandboxIsolatedView>
+    </PanelRenderer>
+  ),
+  instance: (props: IDockviewPanelProps<InstancePanelParams>) => {
+    const instanceId = props.params?.instanceId
+
+    return (
+      <PanelRenderer api={props.api} scrollable={false}>
+        {instanceId ? <InstanceRenderer instanceId={instanceId} /> : null}
+      </PanelRenderer>
+    )
+  },
+  dynamic: (props: DynamicPanelProps) => {
+    const componentId = props.params?.componentId
+    const componentProps = props.params?.props ?? {}
+
+    return (
+      <PanelRenderer api={props.api} scrollable={false}>
+        <div data-sandbox-theme-isolated style={{ width: "100%", height: "100%", minWidth: 0, minHeight: 0 }}>
+          <RegistryViewer componentId={componentId} options={componentProps} />
+        </div>
       </PanelRenderer>
     )
   },
@@ -238,19 +262,22 @@ const components = {
     const theme = React.useContext(ThemeContext)
     return (
       <PanelRenderer api={props.api} scrollable={false}>
-       <DockviewReact components={components} onReady={(event: DockviewReadyEvent) => {
-          event.api.addPanel({ id: "panel_1", component: "default" })
-          event.api.addPanel({ id: "panel_2", component: "default" })
-          event.api.addPanel({
-            id: "panel_3",
-            component: "default",
-          })
+        <DockviewReact
+          components={components}
+          onReady={(event: DockviewReadyEvent) => {
+            event.api.addPanel({ id: "panel_1", component: "default" })
+            event.api.addPanel({ id: "panel_2", component: "default" })
+            event.api.addPanel({
+              id: "panel_3",
+              component: "default",
+            })
 
-          event.api.onDidRemovePanel((e) => {
-            console.log("remove", e)
-          })
-        }}
-        theme={theme} />
+            event.api.onDidRemovePanel((e) => {
+              console.log("remove", e)
+            })
+          }}
+          theme={theme}
+        />
       </PanelRenderer>
     )
   },
@@ -258,42 +285,42 @@ const components = {
     const c = useSandboxColors()
     return (
       <PanelRenderer api={props.api}>
-       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 7,
-          height: "100%",
-          color: c.textMuted,
-          fontFamily: MONO,
-          fontSize: props.params?.position === "top" ? "13px" : "14px",
-        }}
-      >
-        <span className="material-symbols-outlined" style={{ fontSize: 16, color: c.textFaint }}>
-          folder_open
-        </span>
-        <span>{props.params?.label as string}</span>
-       </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 7,
+            height: "100%",
+            color: c.textMuted,
+            fontFamily: MONO,
+            fontSize: props.params?.position === "top" ? "13px" : "14px",
+          }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 16, color: c.textFaint }}>
+            folder_open
+          </span>
+          <span>{props.params?.label as string}</span>
+        </div>
       </PanelRenderer>
     )
   },
   iframe: (props: IDockviewPanelProps) => {
     return (
       <PanelRenderer api={props.api} scrollable={false}>
-       <iframe
-        onMouseDown={() => {
-          if (!props.api.isActive) {
-            props.api.setActive()
-          }
-        }}
-        style={{
-          border: "none",
-          width: "100%",
-          height: "100%",
-        }}
-        src="https://dockview.dev"
-       />
+        <iframe
+          onMouseDown={() => {
+            if (!props.api.isActive) {
+              props.api.setActive()
+            }
+          }}
+          style={{
+            border: "none",
+            width: "100%",
+            height: "100%",
+          }}
+          src="https://dockview.dev"
+        />
       </PanelRenderer>
     )
   },
@@ -306,30 +333,34 @@ const components = {
 </body></html>`
     return (
       <PanelRenderer api={props.api} scrollable={false}>
-       <iframe
-        onMouseDown={() => {
-          if (!props.api.isActive) {
-            props.api.setActive()
-          }
-        }}
-        srcDoc={srcdoc}
-        style={{
-          border: "none",
-          width: "100%",
-          height: "100%",
-        }}
-       />
+        <iframe
+          onMouseDown={() => {
+            if (!props.api.isActive) {
+              props.api.setActive()
+            }
+          }}
+          srcDoc={srcdoc}
+          style={{
+            border: "none",
+            width: "100%",
+            height: "100%",
+          }}
+        />
       </PanelRenderer>
     )
   },
   debuginfo: (props: IDockviewPanelProps) => (
-    <PanelRenderer api={props.api}><PanelDebugPanel {...props} /></PanelRenderer>
+    <PanelRenderer api={props.api}>
+      <DebugPanel {...props} />
+    </PanelRenderer>
   ),
   // Live-ticking panels are wrapped so they only re-render while visible
   // (renderer:'always' keeps inactive tabs mounted). The blotter and news are
   // static so they don't need gating.
   orders: (props: IDockviewPanelProps) => (
-    <PanelRenderer api={props.api}><OrdersPanel /></PanelRenderer>
+    <PanelRenderer api={props.api}>
+      <OrdersPanel />
+    </PanelRenderer>
   ),
   orderbook: (props: IDockviewPanelProps) => (
     <PanelRenderer api={props.api}>
@@ -351,13 +382,10 @@ const components = {
       <PositionSummaryPanel />
     </PanelRenderer>
   ),
-  chart: (props: IDockviewPanelProps) => (
-    <PanelRenderer api={props.api}>
-      <ChartPanel />
-    </PanelRenderer>
-  ),
   news: (props: IDockviewPanelProps) => (
-    <PanelRenderer api={props.api}><NewsPanel /></PanelRenderer>
+    <PanelRenderer api={props.api}>
+      <NewsPanel />
+    </PanelRenderer>
   ),
   fxtiles: (props: IDockviewPanelProps) => (
     <PanelRenderer api={props.api}>
@@ -369,11 +397,7 @@ const components = {
       <SignalsPanel />
     </PanelRenderer>
   ),
-  correlation: (props: IDockviewPanelProps) => (
-    <PanelRenderer api={props.api}>
-      <CorrelationPanel />
-    </PanelRenderer>
-  ),
+
   volsurface: (props: IDockviewPanelProps) => (
     <PanelRenderer api={props.api}>
       <VolSurfacePanel />
@@ -382,12 +406,20 @@ const components = {
   eventlog: (props: IDockviewPanelProps) => {
     const api = React.useContext(ApiContext)
     if (!api) return null
-    return <PanelRenderer api={props.api}><EventLogPanel api={api} /></PanelRenderer>
+    return (
+      <PanelRenderer api={props.api}>
+        <EventLogPanel api={api} />
+      </PanelRenderer>
+    )
   },
   layoutinspector: (props: IDockviewPanelProps) => {
     const api = React.useContext(ApiContext)
     if (!api) return null
-    return <PanelRenderer api={props.api}><LayoutInspectorPanel api={api} /></PanelRenderer>
+    return (
+      <PanelRenderer api={props.api}>
+        <LayoutInspectorPanel api={api} />
+      </PanelRenderer>
+    )
   },
 }
 

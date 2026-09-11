@@ -6,11 +6,11 @@ import {
 } from '../providers/marketProvider';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import {
-    PanelShell,
-    PanelHeader,
+    Section,
+    SectionHeader,
     Chip,
     MiniBar,
-} from '../components/parts';
+} from './components';
 import { tnum } from '../constants';
 import { fmtCompact, fmtNum } from '../utils';
 
@@ -140,8 +140,8 @@ export const OrdersPanel: React.FC = () => {
     );
 
     return (
-        <PanelShell>
-            <PanelHeader pad="8px 12px 7px">
+        <Section>
+            <SectionHeader pad="8px 12px 7px">
                 <div
                     style={{
                         display: 'flex',
@@ -165,7 +165,7 @@ export const OrdersPanel: React.FC = () => {
                         Gross ${fmtCompact(grossNotional)}
                     </span>
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <div
                 style={{
@@ -298,6 +298,6 @@ export const OrdersPanel: React.FC = () => {
                     );
                 })}
             </div>
-        </PanelShell>
+        </Section>
     );
 };

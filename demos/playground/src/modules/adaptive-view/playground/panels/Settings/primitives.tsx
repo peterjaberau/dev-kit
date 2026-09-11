@@ -3,6 +3,8 @@
 
 import { useState, type ReactNode } from "react";
 import { ChevronDownIcon } from "../../icons";
+import { chakra, Button, IconButton, Text } from "@chakra-ui/react";
+
 
 /**
  * A collapsible top-level category (Appearance, Behavior, Git, About). Expanded
@@ -49,43 +51,30 @@ export function SettingsGroup({
     });
 
   return (
-    <div style={{ marginBottom: 18 }}>
-      <button
-        type="button"
-        onClick={toggle}
-        aria-expanded={open}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          width: "100%",
-          background: "transparent",
-          border: "none",
-          borderBottom: "1px solid var(--panel-border)",
-          padding: "6px 0",
-          cursor: "pointer",
-          color: "var(--subtle-fg)",
-          textAlign: "left",
-        }}
-      >
+    <chakra.div css={{ marginBottom: 18 }}>
+      <Button variant={"plain"} size={"sm"} onClick={toggle} aria-expanded={open}>
         <ChevronDownIcon
-          size="1em"
           style={{
             flexShrink: 0,
             transform: open ? "none" : "rotate(-90deg)",
             transition: "transform 0.12s",
           }}
         />
-        <span style={{ fontSize: "var(--fz-sm)", textTransform: "uppercase", letterSpacing: "0.09em", fontWeight: 700 }}>
+        <Text textStyle="sm" textTransform={"uppercase"} fontWeight={"bold"}>
           {title}
-        </span>
+        </Text>
         {caption && (
-          <span style={{ fontSize: "var(--fz-sm)", textTransform: "none", letterSpacing: 0 }}>{caption}</span>
+          <Text
+            textStyle="xs"
+            textTransform={"none"}
+          >
+            {caption}
+          </Text>
         )}
-      </button>
-      {open && <div style={{ marginTop: 12 }}>{children}</div>}
-    </div>
-  );
+      </Button>
+      {open && <chakra.div css={{ marginTop: 12 }}>{children}</chakra.div>}
+    </chakra.div>
+  )
 }
 
 /**
@@ -142,87 +131,44 @@ export function Section({
 
   const heading = (
     <>
-      <span style={{ fontSize: "var(--fz-lg)", fontWeight: 550 }}>{title}</span>
-      {scope === "git" && <GitConfigPill />}
-      {caption && (
-        <span style={{ fontSize: "var(--fz-sm)", color: "var(--subtle-fg)" }}>{caption}</span>
-      )}
+      <chakra.span css={{ fontSize: "lg", fontWeight: 550 }}>{title}</chakra.span>
+      {caption && <chakra.span css={{ fontSize: "sm", color: "fg.subtle" }}>{caption}</chakra.span>}
     </>
-  );
+  )
 
   return (
-    <div style={{ marginBottom: 16 }}>
+    <chakra.div style={{ marginBottom: 16 }}>
       {id ? (
-        <button
-          type="button"
-          onClick={toggle}
-          aria-expanded={open}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            width: "100%",
-            background: "transparent",
-            border: "none",
-            padding: "0 0 6px",
-            cursor: "pointer",
-            color: "inherit",
-            textAlign: "left",
-          }}
-        >
+        <Button size={"sm"} variant={"plain"} onClick={toggle} aria-expanded={open}>
           <ChevronDownIcon
-            size="1em"
             style={{
               flexShrink: 0,
-              color: "var(--subtle-fg)",
               transform: open ? "none" : "rotate(-90deg)",
               transition: "transform 0.12s",
             }}
           />
           {heading}
-        </button>
+        </Button>
       ) : (
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>{heading}</div>
+        <chakra.div css={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>{heading}</chakra.div>
       )}
       {open && children}
-    </div>
-  );
+    </chakra.div>
+  )
 }
 
-/** Pill marking a setting that changes the user's git configuration. */
-export function GitConfigPill() {
-  return (
-    <span
-      title="Changes your git configuration"
-      style={{
-        fontSize: "var(--fz-xs)",
-        fontWeight: 700,
-        letterSpacing: "0.04em",
-        textTransform: "uppercase",
-        color: "var(--status-modified)",
-        border: "1px solid var(--status-modified)",
-        borderRadius: 999,
-        padding: "0 6px",
-        lineHeight: 1.6,
-        whiteSpace: "nowrap",
-      }}
-    >
-      Git config
-    </span>
-  );
-}
 
 export function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 6, padding: "2px 0" }}>
-      <div className="legit-subtle">{label}</div>
-      <div>{value}</div>
-    </div>
-  );
+    <chakra.div css={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 6, padding: "2px 0" }}>
+      <chakra.div color={"fg.subtle"}>{label}</chakra.div>
+      <chakra.div>{value}</chakra.div>
+    </chakra.div>
+  )
 }
 
 export function FieldNote({ children }: { children: ReactNode }) {
   return (
-    <div style={{ fontSize: "var(--fz-sm)", color: "var(--subtle-fg)", marginTop: 4 }}>{children}</div>
+    <chakra.div css={{ fontSize: "small", color: "fg.subtle", marginTop: 4 }}>{children}</chakra.div>
   );
 }

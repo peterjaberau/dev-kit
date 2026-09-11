@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import {
-    PanelShell,
-    PanelHeader,
+    Section,
+    SectionHeader,
     Chip,
-} from '../components/parts';
+} from './components';
 import { MONO, tnum } from '../constants';
 import { useTick } from '../hooks';
 import { hashStr, pseudo, tint } from '../utils';
@@ -85,8 +85,8 @@ export const SignalsPanel: React.FC = () => {
     );
 
     return (
-        <PanelShell>
-            <PanelHeader pad="8px 12px 7px">
+        <Section>
+            <SectionHeader pad="8px 12px 7px">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ fontSize: 11, fontWeight: 600 }}>Tech View</span>
                     <span style={{ fontSize: 9.5, color: c.textFaint }}>
@@ -97,7 +97,7 @@ export const SignalsPanel: React.FC = () => {
                         <Chip tone="red">{bears} bear</Chip>
                     </div>
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <div
                 style={{
@@ -148,6 +148,6 @@ export const SignalsPanel: React.FC = () => {
                     </div>
                 ))}
             </div>
-        </PanelShell>
+        </Section>
     );
 };

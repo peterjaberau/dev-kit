@@ -8,10 +8,10 @@ import type { DockviewApi } from "#adaptive-view/react"
 import type { LayoutDocument } from "../lib/types"
 import {
   applyGlobalLayoutJson,
-  applyDockLayoutEnvelope,
-  captureDockLayoutEnvelope,
-  coerceDockLayoutEnvelope,
-  sanitizeDockviewLayout,
+  applyRepoLayoutEnvelope,
+  captureRepoLayoutEnvelope,
+  coerceRepoLayoutEnvelope,
+  sanitizeRepoviewLayout,
 } from "./layoutSnapshot"
 import { GLOBAL_DOCKVIEW_COMPONENTS, PANEL_TITLES } from "./registry"
 
@@ -36,14 +36,14 @@ const globalComponentIdsWithoutLayoutsPanel = (): ReadonlySet<string> => {
  *  panel pruned. Null when nothing (else) is open in the global dock — the
  *  document then leaves the global dock alone on apply. */
 export function stripGlobalForCapture(json: unknown): unknown {
-  return sanitizeDockviewLayout(json, globalComponentIdsWithoutLayoutsPanel(), PANEL_TITLES)
+  return sanitizeRepoviewLayout(json, globalComponentIdsWithoutLayoutsPanel(), PANEL_TITLES)
 }
 
-export function buildLayoutDocument(name: string, global: unknown, dock: unknown): LayoutDocument {
+export function buildLayoutDocument(name: string, global: unknown, repo: unknown): LayoutDocument {
   return {
     name,
     global: global ?? null,
-    dock: dock ?? null,
+    repo: repo ?? null,
   }
 }
 
@@ -53,12 +53,12 @@ export function buildLayoutDocument(name: string, global: unknown, dock: unknown
 export function captureLayoutDocument(
   name: string,
   globalApi: DockviewApi | null,
-  dockApi: DockviewApi | null,
+  repoApi: DockviewApi | null,
 ): LayoutDocument | null {
   const global = globalApi ? stripGlobalForCapture(globalApi.toJSON()) : null
-  const dock = dockApi ? captureDockLayoutEnvelope(dockApi) : null
-  if (global === null && dock === null) return null
-  return buildLayoutDocument(name, global, dock)
+  const repo = repoApi ? captureRepoLayoutEnvelope(repoApi) : null
+  if (global === null && repo === null) return null
+  return buildLayoutDocument(name, global, repo)
 }
 
 /** Validate an untrusted value (an imported file, a loaded document) into a
@@ -71,9 +71,9 @@ export function asLayoutDocument(raw: unknown): LayoutDocument | null {
   if (typeof doc.formatVersion !== "number") return null
   if (typeof doc.name !== "string" || doc.name.trim().length === 0) return null
   const dockOk = (v: unknown) => v === null || (typeof v === "object" && !Array.isArray(v))
-  if (!("global" in doc) || !("dock" in doc)) return null
-  if (!dockOk(doc.global) || !dockOk(doc.dock)) return null
-  if (doc.global === null && doc.dock === null) return null
+  if (!("global" in doc) || !("repo" in doc)) return null
+  if (!dockOk(doc.global) || !dockOk(doc.repo)) return null
+  if (doc.global === null && doc.repo === null) return null
   return doc as unknown as LayoutDocument
 }
 
@@ -123,14 +123,14 @@ export function chooseUniqueName(base: string, taken: ReadonlySet<string>): stri
  * the caller then just clears the keys.
  */
 export function migrateLegacyDefaultLayout(
-  rawDock: string | null,
+  rawRepo: string | null,
   rawGlobal: string | null,
   taken: ReadonlySet<string>,
 ): LayoutDocument | null {
-  const dock = rawDock !== null ? coerceParsed(rawDock, coerceDockLayoutEnvelope) : null
+  const repo = rawRepo !== null ? coerceParsed(rawRepo, coerceRepoLayoutEnvelope) : null
   const global = rawGlobal !== null ? coerceParsed(rawGlobal, (v) => v) : null
-  if (dock === null && global === null) return null
-  return buildLayoutDocument(chooseUniqueName("My layout", taken), global, dock)
+  if (repo === null && global === null) return null
+  return buildLayoutDocument(chooseUniqueName("My layout", taken), global, repo)
 }
 
 function coerceParsed<T>(raw: string, coerce: (parsed: unknown) => T | null): T | null {
@@ -151,15 +151,15 @@ function coerceParsed<T>(raw: string, coerce: (parsed: unknown) => T | null): T 
 export function applyLayoutDocument(
   doc: LayoutDocument,
   globalApi: DockviewApi | null,
-  dockApi: DockviewApi | null,
+  repoApi: DockviewApi | null,
 ): boolean {
   let ok = true
   if (doc.global !== null && globalApi) {
     ok = applyGlobalLayoutJson(globalApi, doc.global) && ok
   }
-  if (doc.dock !== null && dockApi) {
-    const envelope = coerceDockLayoutEnvelope(doc.dock)
-    ok = envelope !== null && applyDockLayoutEnvelope(dockApi, envelope) && ok
+  if (doc.repo !== null && repoApi) {
+    const envelope = coerceRepoLayoutEnvelope(doc.repo)
+    ok = envelope !== null && applyRepoLayoutEnvelope(repoApi, envelope) && ok
   }
   return ok
 }

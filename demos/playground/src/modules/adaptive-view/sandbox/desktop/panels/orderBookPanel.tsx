@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useMarket, Trade } from '../providers/marketProvider';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import {
-    PanelShell,
-    PanelHeader,
+    Section,
+    SectionHeader,
     StatStrip,
     Stat,
     SectionLabel,
     Sparkline,
-} from '../components/parts';
+} from './components';
 import { tnum } from '../constants';
 import { useFlash } from '../hooks';
 import { fmtCompact, fmtNum, fmtPrice } from '../utils';
@@ -165,8 +165,8 @@ export const OrderBookPanel: React.FC = () => {
     const oi = mid * 640;
 
     return (
-        <PanelShell alt>
-            <PanelHeader>
+        <Section alt>
+            <SectionHeader>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                         <div
@@ -232,7 +232,7 @@ export const OrderBookPanel: React.FC = () => {
                         fill
                     />
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <StatStrip>
                 <Stat label="24h High" value={fmtPrice(dayHigh, 1)} color={c.textSecondary} />
@@ -360,6 +360,6 @@ export const OrderBookPanel: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </PanelShell>
+        </Section>
     );
 };

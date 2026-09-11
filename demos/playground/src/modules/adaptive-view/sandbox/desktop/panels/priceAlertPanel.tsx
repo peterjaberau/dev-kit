@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useMarket, useMarketDispatch } from '../providers/marketProvider';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import {
-    PanelShell,
-    PanelHeader,
+    Section,
+    SectionHeader,
     Chip,
-} from '../components/parts';
+} from './components';
 import { tnum } from '../constants';
 import { useFlash } from '../hooks';
 import { fmtPrice } from '../utils';
@@ -66,7 +66,7 @@ export const PriceAlertPanel: React.FC = () => {
     };
 
     return (
-        <PanelShell>
+        <Section>
             {alertTriggered && (
                 <div
                     style={{
@@ -108,7 +108,7 @@ export const PriceAlertPanel: React.FC = () => {
                 </div>
             )}
 
-            <PanelHeader pad="8px 12px 7px">
+            <SectionHeader pad="8px 12px 7px">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ fontSize: 11, fontWeight: 600 }}>Price Alert</span>
                     <Chip tone="blue">{selectedTicker}</Chip>
@@ -118,7 +118,7 @@ export const PriceAlertPanel: React.FC = () => {
                         </span>
                     )}
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
@@ -295,7 +295,7 @@ export const PriceAlertPanel: React.FC = () => {
                     </div>
                 )}
             </div>
-        </PanelShell>
+        </Section>
     );
 };
 

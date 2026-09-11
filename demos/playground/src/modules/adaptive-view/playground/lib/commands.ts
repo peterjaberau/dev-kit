@@ -1,4 +1,4 @@
-import { LayoutDocument } from "./types"
+import { LayoutDocument, ThemeEntry, ThemeDocument } from "./types"
 
 export const invoke: any = (cmd: any, input: any) => {}
 
@@ -7,7 +7,7 @@ export const invoke: any = (cmd: any, input: any) => {}
  */
 export const loadLayout = (name: string) => invoke("load_layout", { name })
 
-export const listLayouts = (name: string) => invoke("list_layouts", { name })
+export const listLayouts = () => invoke("list_layouts", { name })
 
 export const saveLayout = (name: string, contents: LayoutDocument) => invoke("save_layout", { name, contents })
 
@@ -29,3 +29,16 @@ export const saveRegionState = (
 export const setWatcherEnabled = (enabled: boolean) => invoke("set_watcher_enabled", { enabled })
 
 export const setSuppressedAutoOpenPanels = (panels: string[]) => invoke("set_suppressed_auto_open_panels", { panels })
+
+// --- theme ----
+
+export const setActiveTheme = (name: string) => invoke("set_active_theme", { name })
+
+export const listThemes = () => invoke("list_themes")
+
+export const loadTheme = (name: string) => invoke("load_theme", { name })
+
+export const saveTheme = (name: string, contents: ThemeDocument) => invoke("save_theme", { name, contents })
+
+export const deleteTheme = (name: string) => invoke("delete_theme", { name })
+

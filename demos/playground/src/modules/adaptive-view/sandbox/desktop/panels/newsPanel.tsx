@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
-import { PanelShell, PanelHeader, Chip } from '../components/parts';
+import { Section, SectionHeader, Chip } from './components';
 import { tnum } from '../constants';
 
 type Tone = 'green' | 'red' | 'neutral';
@@ -33,8 +33,8 @@ const HEADLINES: Headline[] = [
 export const NewsPanel: React.FC = () => {
     const c = useSandboxColors();
     return (
-        <PanelShell>
-            <PanelHeader pad="8px 12px 7px">
+        <Section>
+            <SectionHeader pad="8px 12px 7px">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span
                         style={{
@@ -60,7 +60,7 @@ export const NewsPanel: React.FC = () => {
                         {HEADLINES.length} stories
                     </span>
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <div className="dv-trade-scroll" style={{ flex: 1, overflow: 'auto' }}>
                 {HEADLINES.map((h, i) => (
@@ -123,6 +123,6 @@ export const NewsPanel: React.FC = () => {
                     </div>
                 ))}
             </div>
-        </PanelShell>
+        </Section>
     );
 };

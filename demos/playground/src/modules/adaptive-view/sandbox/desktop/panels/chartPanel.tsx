@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useMarket } from '../providers/marketProvider';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import {
-    PanelShell,
-    PanelHeader,
+    Section,
+    SectionHeader,
     StatStrip,
     Stat,
-} from '../components/parts';
+} from './components';
 import { tnum } from '../constants';
 import { useFlash } from '../hooks';
 import { fmtCompact, fmtPrice } from '../utils';
@@ -103,8 +103,8 @@ export const ChartPanel: React.FC = () => {
     const grid = [0, 0.25, 0.5, 0.75, 1].map((f) => min + f * span);
 
     return (
-        <PanelShell alt>
-            <PanelHeader>
+        <Section alt>
+            <SectionHeader>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
                     <span style={{ ...tnum, fontSize: 12, fontWeight: 600 }}>
                         {selectedTicker}
@@ -144,7 +144,7 @@ export const ChartPanel: React.FC = () => {
                         1m · OHLC
                     </span>
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <StatStrip cols={5}>
                 <Stat label="Open" value={fmtPrice(open)} color={c.textSecondary} />
@@ -273,6 +273,6 @@ export const ChartPanel: React.FC = () => {
                     </svg>
                 )}
             </div>
-        </PanelShell>
+        </Section>
     );
 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DockviewApi } from '#adaptive-view/react';
-import { useSandboxColors } from '../sandboxTheme';
+import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 
 type LogEntry = {
     id: number;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
-import { PanelShell, PanelHeader } from '../components/parts';
+import { Section, SectionHeader } from './components';
 import { tnum } from '../constants';
 import { useTick } from '../hooks';
 import { heatColor } from '../utils';
@@ -13,7 +13,7 @@ const DELTAS = ['10dP', '25dP', 'ATM', '25dC', '10dC'];
 function iv(tenorIdx: number, deltaIdx: number, tick: number): number {
     const atm = 9 + tenorIdx * 1.4; // rising term structure
     // Smile: wings (10d) richer than ATM.
-    const skew = [4.5, 1.8, 0, 1.4, 3.8][deltaIdx];
+    const skew: any = [4.5, 1.8, 0, 1.4, 3.8][deltaIdx]
     const drift = Math.sin(tick * 0.5 + tenorIdx + deltaIdx * 2) * 0.6;
     return atm + skew + drift;
 }
@@ -22,15 +22,15 @@ export const VolSurfacePanel: React.FC = () => {
     const c = useSandboxColors();
     const tick = useTick(1500);
 
-    const values = TENORS.map((_, t) => DELTAS.map((__, d) => iv(t, d, tick)));
+    const values: any = TENORS.map((_, t) => DELTAS.map((__, d) => iv(t, d, tick)))
     const flat = values.flat();
     const min = Math.min(...flat);
     const max = Math.max(...flat);
     const range = max - min || 1;
 
     return (
-        <PanelShell>
-            <PanelHeader pad="8px 12px 7px">
+        <Section>
+            <SectionHeader pad="8px 12px 7px">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ fontSize: 11, fontWeight: 600 }}>Vol Surface</span>
                     <span style={{ fontSize: 9.5, color: c.textFaint }}>
@@ -60,7 +60,7 @@ export const VolSurfacePanel: React.FC = () => {
                         <span>{max.toFixed(0)}%</span>
                     </div>
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <div style={{ flex: 1, overflow: 'auto', padding: 8 }} className="dv-trade-scroll">
                 <div
@@ -129,6 +129,6 @@ export const VolSurfacePanel: React.FC = () => {
                     ))}
                 </div>
             </div>
-        </PanelShell>
+        </Section>
     );
 };

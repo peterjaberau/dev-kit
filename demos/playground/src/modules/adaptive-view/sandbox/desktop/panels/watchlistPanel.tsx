@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useMarket, useMarketDispatch, WATCHLIST_TICKERS } from '../providers/marketProvider';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import {
-    PanelShell,
-    PanelHeader,
+    Section,
+    SectionHeader,
     Chip,
     Sparkline,
     RangeBar,
-} from '../components/parts';
+} from './components';
 import { tnum } from '../constants';
 import { useFlash } from '../hooks';
 import { fmtCompact, fmtNum, fmtPrice, fmtSigned } from '../utils';
@@ -177,8 +177,8 @@ export const WatchlistPanel: React.FC = () => {
     }
 
     return (
-        <PanelShell>
-            <PanelHeader pad="8px 12px 7px">
+        <Section>
+            <SectionHeader pad="8px 12px 7px">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ fontSize: 11, fontWeight: 600 }}>Watchlist</span>
                     <span style={{ ...tnum, fontSize: 10, color: c.textFaint }}>
@@ -189,13 +189,13 @@ export const WatchlistPanel: React.FC = () => {
                         <Chip tone="red">▼ {dec}</Chip>
                     </div>
                 </div>
-            </PanelHeader>
+            </SectionHeader>
 
             <div className="dv-trade-scroll" style={{ flex: 1, overflow: 'auto' }}>
                 {WATCHLIST_TICKERS.map((ticker) => (
                     <WatchRow key={ticker} ticker={ticker} />
                 ))}
             </div>
-        </PanelShell>
+        </Section>
     );
 };
