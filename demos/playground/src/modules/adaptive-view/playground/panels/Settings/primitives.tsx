@@ -1,0 +1,228 @@
+// Shared building blocks for the Settings panels (Global + Repo). Extracted so
+// the field/section layout is defined once instead of duplicated per panel.
+
+import { useState, type ReactNode } from "react";
+import { ChevronDownIcon } from "../../icons";
+
+/**
+ * A collapsible top-level category (Appearance, Behavior, Git, About). Expanded
+ * by default (override with `defaultOpen`); the collapsed/expanded state is
+ * remembered per `id` in localStorage — a pure UI preference, so it
+ * deliberately does NOT touch the settings store. The uppercase header is the
+ * category label; the setting names inside use `Section` (normal weight),
+ * giving a clear two-level hierarchy.
+ */
+export function SettingsGroup({
+  id,
+  title,
+  caption,
+  defaultOpen = true,
+  children,
+}: {
+  id: string;
+  title: string;
+  caption?: string;
+  /** Initial state when the user hasn't toggled this group yet. */
+  defaultOpen?: boolean;
+  children: ReactNode;
+}) {
+  const key = `legit.settings-group.${id}`;
+  const [open, setOpen] = useState(() => {
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored === "collapsed") return false;
+      if (stored === "expanded") return true;
+      return defaultOpen;
+    } catch {
+      return defaultOpen;
+    }
+  });
+  const toggle = () =>
+    setOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(key, next ? "expanded" : "collapsed");
+      } catch {
+        /* private mode / quota — the toggle still works for the session */
+      }
+      return next;
+    });
+
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          width: "100%",
+          background: "transparent",
+          border: "none",
+          borderBottom: "1px solid var(--panel-border)",
+          padding: "6px 0",
+          cursor: "pointer",
+          color: "var(--subtle-fg)",
+          textAlign: "left",
+        }}
+      >
+        <ChevronDownIcon
+          size="1em"
+          style={{
+            flexShrink: 0,
+            transform: open ? "none" : "rotate(-90deg)",
+            transition: "transform 0.12s",
+          }}
+        />
+        <span style={{ fontSize: "var(--fz-sm)", textTransform: "uppercase", letterSpacing: "0.09em", fontWeight: 700 }}>
+          {title}
+        </span>
+        {caption && (
+          <span style={{ fontSize: "var(--fz-sm)", textTransform: "none", letterSpacing: 0 }}>{caption}</span>
+        )}
+      </button>
+      {open && <div style={{ marginTop: 12 }}>{children}</div>}
+    </div>
+  );
+}
+
+/**
+ * One setting: a name (+ an optional "Git config" pill when it writes git
+ * config rather than LeGit's own instant-apply settings) over its control(s).
+ *
+ * Pass `id` to make the section collapsible (collapsed by default unless
+ * `defaultOpen`): niche settings stay out of the way for users who don't need
+ * them. The state is remembered per `id` in localStorage, like `SettingsGroup`.
+ * Children are only rendered while open, so a collapsed section's effects
+ * (e.g. probes) never run.
+ */
+export function Section({
+  title,
+  scope,
+  id,
+  caption,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  /** "git" marks a setting that writes git config (shown with a pill). */
+  scope?: "git";
+  /** Set to make the section collapsible; also the localStorage key. */
+  id?: string;
+  /** Short hint shown next to the title of a collapsible section. */
+  caption?: string;
+  /** Initial state when the user hasn't toggled this section yet. */
+  defaultOpen?: boolean;
+  children: ReactNode;
+}) {
+  const key = `legit.settings-section.${id}`;
+  const [open, setOpen] = useState(() => {
+    if (!id) return true;
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored === "collapsed") return false;
+      if (stored === "expanded") return true;
+      return defaultOpen;
+    } catch {
+      return defaultOpen;
+    }
+  });
+  const toggle = () =>
+    setOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(key, next ? "expanded" : "collapsed");
+      } catch {
+        /* private mode / quota — the toggle still works for the session */
+      }
+      return next;
+    });
+
+  const heading = (
+    <>
+      <span style={{ fontSize: "var(--fz-lg)", fontWeight: 550 }}>{title}</span>
+      {scope === "git" && <GitConfigPill />}
+      {caption && (
+        <span style={{ fontSize: "var(--fz-sm)", color: "var(--subtle-fg)" }}>{caption}</span>
+      )}
+    </>
+  );
+
+  return (
+    <div style={{ marginBottom: 16 }}>
+      {id ? (
+        <button
+          type="button"
+          onClick={toggle}
+          aria-expanded={open}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            width: "100%",
+            background: "transparent",
+            border: "none",
+            padding: "0 0 6px",
+            cursor: "pointer",
+            color: "inherit",
+            textAlign: "left",
+          }}
+        >
+          <ChevronDownIcon
+            size="1em"
+            style={{
+              flexShrink: 0,
+              color: "var(--subtle-fg)",
+              transform: open ? "none" : "rotate(-90deg)",
+              transition: "transform 0.12s",
+            }}
+          />
+          {heading}
+        </button>
+      ) : (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>{heading}</div>
+      )}
+      {open && children}
+    </div>
+  );
+}
+
+/** Pill marking a setting that changes the user's git configuration. */
+export function GitConfigPill() {
+  return (
+    <span
+      title="Changes your git configuration"
+      style={{
+        fontSize: "var(--fz-xs)",
+        fontWeight: 700,
+        letterSpacing: "0.04em",
+        textTransform: "uppercase",
+        color: "var(--status-modified)",
+        border: "1px solid var(--status-modified)",
+        borderRadius: 999,
+        padding: "0 6px",
+        lineHeight: 1.6,
+        whiteSpace: "nowrap",
+      }}
+    >
+      Git config
+    </span>
+  );
+}
+
+export function Row({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 6, padding: "2px 0" }}>
+      <div className="legit-subtle">{label}</div>
+      <div>{value}</div>
+    </div>
+  );
+}
+
+export function FieldNote({ children }: { children: ReactNode }) {
+  return (
+    <div style={{ fontSize: "var(--fz-sm)", color: "var(--subtle-fg)", marginTop: 4 }}>{children}</div>
+  );
+}

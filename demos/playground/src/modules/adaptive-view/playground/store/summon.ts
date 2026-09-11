@@ -1,0 +1,353 @@
+import { useEffect } from "react";
+import { create } from "zustand";
+import { useDockviewStore } from "./dockview";
+import { useSettingsStore } from "./settings";
+import { DOCK_PANELS, SUPPRESSIBLE_SUMMON_PANELS } from "../panels/registry";
+
+/**
+ * True when the user has opted this panel out of auto-opening (Settings →
+ * "Auto-open panels"). A `summon`/`swapSummon` to a suppressed panel degrades
+ * to `notifyIfOpen`: it updates the panel only if it's already open, never
+ * creates or focuses it. Read lazily (getState) so it always reflects the
+ * current setting. SUPPRESSIBLE_SUMMON_PANELS is the authority: a stored id
+ * no longer on that list (e.g. interactive-rebase, summon-only since
+ * 2026-08-19) is inert - otherwise a stale settings entry could suppress a
+ * panel that no longer offers the toggle to undo it.
+ */
+function isSuppressed(panelId: string): boolean {
+  return (
+    SUPPRESSIBLE_SUMMON_PANELS.includes(panelId) &&
+    (useSettingsStore.getState().settings?.suppressed_auto_open_panels?.includes(panelId) ?? false)
+  );
+}
+
+/**
+ * The file-inspection panels. When one of these opens with no remembered
+ * placement, it lands in an already-open companion's group (so the three share
+ * one tabbed group); if none are open, it uses the group Diff opens into by
+ * default. A panel the user has deliberately moved keeps its spot (that memory
+ * is honoured before this).
+ */
+const FILE_INSPECTION_GROUP = ["diff", "file-view", "blame"];
+
+type Callback = (payload: unknown) => void;
+
+export interface FallbackPosition {
+  referencePanel: string;
+  direction: "left" | "right" | "above" | "below";
+}
+
+interface SummonStore {
+  /** Last-known group ID for each panel that has been closed. */
+  placements: Record<string, string>;
+  /** Fallback position (near-sibling reference) for panels whose group may be destroyed. */
+  fallbackPositions: Record<string, FallbackPosition>;
+  /** Payload waiting for a panel that isn't mounted yet. */
+  payloadQueue: Record<string, unknown>;
+  /** Mounted panel callbacks, keyed by panel ID. */
+  callbacks: Record<string, Callback>;
+
+  registerTarget: (panelId: string, cb: Callback) => void;
+  unregisterTarget: (panelId: string) => void;
+  capturePlacement: (panelId: string, groupId: string) => void;
+  captureFallback: (panelId: string, pos: FallbackPosition) => void;
+  summon: (targetId: string, payload?: unknown) => void;
+  /**
+   * Deliver `payload` to a panel ONLY if it is currently mounted — never opens
+   * or queues. Used to push state into an already-open panel (e.g. clearing the
+   * Diff panel when the file selection is reset) without summoning it into view.
+   */
+  notifyIfOpen: (targetId: string, payload?: unknown) => void;
+  /**
+   * Show `showId` in place of `hideId`: if `showId` isn't open, it opens in the
+   * hidden sibling's group (taking over its spot); then `hideId` is closed. Used
+   * so Changed Files and Working Changes share one side-region slot, one at a time.
+   */
+  swapSummon: (showId: string, hideId: string, payload?: unknown) => void;
+}
+
+export const useSummonStore = create<SummonStore>((set, get) => ({
+  placements: {},
+  fallbackPositions: {},
+  payloadQueue: {},
+  callbacks: {},
+
+  registerTarget(panelId, cb) {
+    set((s) => ({ callbacks: { ...s.callbacks, [panelId]: cb } }));
+    // Flush any payload that arrived before the panel was mounted.
+    const queued = get().payloadQueue[panelId];
+    if (queued !== undefined) {
+      set((s) => {
+        const next = { ...s.payloadQueue };
+        delete next[panelId];
+        return { payloadQueue: next };
+      });
+      cb(queued);
+    }
+  },
+
+  unregisterTarget(panelId) {
+    set((s) => {
+      const next = { ...s.callbacks };
+      delete next[panelId];
+      return { callbacks: next };
+    });
+  },
+
+  capturePlacement(panelId, groupId) {
+    set((s) => ({ placements: { ...s.placements, [panelId]: groupId } }));
+  },
+
+  captureFallback(panelId, pos) {
+    set((s) => ({ fallbackPositions: { ...s.fallbackPositions, [panelId]: pos } }));
+  },
+
+  notifyIfOpen(targetId, payload) {
+    const cb = get().callbacks[targetId];
+    if (cb) cb(payload);
+  },
+
+  summon(targetId, payload) {
+    // Per-panel "don't auto-open" opt-out: degrade to a notify so the panel
+    // updates only if already open and never pops into view.
+    if (isSuppressed(targetId)) {
+      get().notifyIfOpen(targetId, payload);
+      return;
+    }
+
+    const api = useDockviewStore.getState().repoApi;
+    if (!api) return;
+
+    const desc = DOCK_PANELS.find((p) => p.id === targetId);
+    if (!desc) return;
+
+    const { placements, fallbackPositions, callbacks } = get();
+    const existing = api.getPanel(targetId);
+
+    if (existing) {
+      // Case 1: panel is already open — focus and deliver payload.
+      existing.focus();
+      if (payload !== undefined) {
+        const cb = callbacks[targetId];
+        if (cb) {
+          cb(payload);
+        } else {
+          set((s) => ({ payloadQueue: { ...s.payloadQueue, [targetId]: payload } }));
+        }
+      }
+      return;
+    }
+
+    // Slot sharing: if this panel's swap sibling is open, take over its spot
+    // instead of placing a second panel next to it (e.g. Diff <-> Merge).
+    if (desc.swapsWith && api.getPanel(desc.swapsWith)) {
+      get().swapSummon(targetId, desc.swapsWith, payload);
+      return;
+    }
+
+    // Panel is not open — queue payload so it's ready when the panel mounts.
+    if (payload !== undefined) {
+      set((s) => ({ payloadQueue: { ...s.payloadQueue, [targetId]: payload } }));
+    }
+
+    // Case 2a: panel was previously placed — restore to that group if it still exists.
+    const savedGroupId = placements[targetId];
+    if (savedGroupId && api.groups.some((g) => g.id === savedGroupId)) {
+      api.addPanel({
+        id: targetId,
+        component: targetId,
+        title: desc.title,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        position: { referenceGroup: savedGroupId as any, direction: "within" },
+      });
+      return;
+    }
+
+    // Case 2b: group was destroyed but we have a fallback position (near where the panel was).
+    const fallback = fallbackPositions[targetId];
+    if (fallback && api.getPanel(fallback.referencePanel)) {
+      api.addPanel({
+        id: targetId,
+        component: targetId,
+        title: desc.title,
+        position: { referencePanel: fallback.referencePanel, direction: fallback.direction },
+      });
+      return;
+    }
+
+    // Case 2c: file-inspection panels (Diff / File View / Blame) collocate —
+    // land in an already-open companion's group, otherwise in the group Diff
+    // opens into by default (so wherever the first of the three opens, the
+    // other two join it as tabs).
+    if (FILE_INSPECTION_GROUP.includes(targetId)) {
+      const companionId = FILE_INSPECTION_GROUP.find(
+        (cid) => cid !== targetId && api.getPanel(cid),
+      );
+      const companionGroup = companionId ? api.getPanel(companionId)?.group : undefined;
+      if (companionGroup) {
+        api.addPanel({
+          id: targetId,
+          component: targetId,
+          title: desc.title,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          position: { referenceGroup: companionGroup.id as any, direction: "within" },
+        });
+        return;
+      }
+      // None of the three open yet — use Diff's default placement for all of
+      // them, guarding against its reference panel being closed.
+      const diffPlacement = DOCK_PANELS.find((p) => p.id === "diff")?.defaultPlacement
+      if (diffPlacement) {
+        const refOpen = diffPlacement.referencePanel
+          ? !!api.getPanel(diffPlacement.referencePanel)
+          : false;
+        api.addPanel({
+          id: targetId,
+          component: targetId,
+          title: desc.title,
+          position: refOpen
+            ? { referencePanel: diffPlacement.referencePanel!, direction: diffPlacement.direction }
+            : { direction: diffPlacement.direction },
+        });
+        return;
+      }
+    }
+
+    // Case 3: first time or no usable position — use descriptor's default placement.
+    if (desc.defaultPlacement) {
+      const { direction, referencePanel } = desc.defaultPlacement;
+      api.addPanel({
+        id: targetId,
+        component: targetId,
+        title: desc.title,
+        position: referencePanel ? { referencePanel, direction } : { direction },
+      });
+    } else {
+      api.addPanel({ id: targetId, component: targetId, title: desc.title });
+    }
+  },
+
+  swapSummon(showId, hideId, payload) {
+    // Suppressed target: don't take over the slot or open it — just update it
+    // if it's already open, and leave the sibling (`hideId`) untouched.
+    if (isSuppressed(showId)) {
+      get().notifyIfOpen(showId, payload);
+      return;
+    }
+
+    const api = useDockviewStore.getState().repoApi;
+    if (!api) return;
+    const desc = DOCK_PANELS.find((p) => p.id === showId)
+    if (!desc) return;
+
+    const sibling = api.getPanel(hideId);
+    const existing = api.getPanel(showId);
+
+    if (existing) {
+      existing.focus();
+      if (payload !== undefined) {
+        const cb = get().callbacks[showId];
+        if (cb) cb(payload);
+        else set((s) => ({ payloadQueue: { ...s.payloadQueue, [showId]: payload } }));
+      }
+    } else if (sibling?.group) {
+      // Take over the sibling's group so the new panel lands in the same spot.
+      // Queue the payload so it's delivered when the freshly-added panel mounts.
+      if (payload !== undefined) {
+        set((s) => ({ payloadQueue: { ...s.payloadQueue, [showId]: payload } }));
+      }
+      api.addPanel({
+        id: showId,
+        component: showId,
+        title: desc.title,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        position: { referenceGroup: sibling.group.id as any, direction: "within" },
+      });
+    } else {
+      // No sibling open — fall back to normal placement (memory / default).
+      get().summon(showId, payload);
+    }
+
+    // Close the sibling so only one panel occupies the shared spot.
+    sibling?.api.close();
+  },
+}));
+
+/**
+ * Hook for panels that receive payloads via the summon mechanism.
+ * `onReceive` must be stable (wrap in useCallback at the call site).
+ */
+export function useSummonTarget<T>(panelId: string, onReceive: (payload: T) => void) {
+  useEffect(() => {
+    const { registerTarget, unregisterTarget } = useSummonStore.getState();
+    registerTarget(panelId, onReceive as Callback);
+    return () => unregisterTarget(panelId);
+  }, [panelId, onReceive]);
+}
+
+/**
+ * Given a dockview `toJSON()` snapshot and a group ID, find a reference panel
+ * and direction that describes approximately where that group sits in the layout.
+ * Returns null if the group is the only node or can't be found.
+ */
+export function computeFallbackPosition(
+  layoutJson: unknown,
+  groupId: string
+): FallbackPosition | null {
+  const json = layoutJson as any;
+  const grid = json?.grid;
+  if (!grid?.root) return null;
+  return walkGrid(grid.root, grid.orientation as string, groupId);
+}
+
+function walkGrid(
+  node: any,
+  orientation: string,
+  targetGroupId: string
+): FallbackPosition | null {
+  if (node.type === "leaf") return null;
+
+  const children: any[] = node.data;
+  for (let i = 0; i < children.length; i++) {
+    if (!subtreeContainsGroup(children[i], targetGroupId)) continue;
+
+    // Recurse first to get the most precise sibling (e.g. "right of log"
+    // rather than the coarser "above console" found at a higher level).
+    const next = orientation === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL";
+    const deeper = walkGrid(children[i], next, targetGroupId);
+    if (deeper) return deeper;
+
+    // Target is a direct leaf of this branch — use an adjacent sibling.
+    if (children.length > 1) {
+      const siblingIdx = i === 0 ? 1 : i - 1;
+      const refPanel = firstPanelInSubtree(children[siblingIdx]);
+      if (refPanel) {
+        const direction: FallbackPosition["direction"] =
+          orientation === "HORIZONTAL"
+            ? i < siblingIdx ? "left" : "right"
+            : i < siblingIdx ? "above" : "below";
+        return { referencePanel: refPanel, direction };
+      }
+    }
+
+    return null;
+  }
+  return null;
+}
+
+function subtreeContainsGroup(node: any, groupId: string): boolean {
+  if (node.type === "leaf") return node.data?.id === groupId;
+  return (node.data as any[]).some((c: any) => subtreeContainsGroup(c, groupId));
+}
+
+function firstPanelInSubtree(node: any): string | null {
+  if (node.type === "leaf") {
+    const views = node.data?.views;
+    return Array.isArray(views) && views.length > 0 ? views[0] : null;
+  }
+  for (const child of node.data as any[]) {
+    const p = firstPanelInSubtree(child);
+    if (p) return p;
+  }
+  return null;
+}
