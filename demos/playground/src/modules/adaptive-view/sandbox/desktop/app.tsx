@@ -52,12 +52,6 @@ import {
 } from "#adaptive-view/app/components"
 import { useDockViewAdapter } from "#adaptive-view/app/actors/selectors"
 
-
-
-
-
-
-
 const colors = [
   "rgba(255,0,0,0.2)",
   "rgba(0,255,0,0.2)",
@@ -68,13 +62,13 @@ const colors = [
 ]
 let count = 0
 
-
 export interface AdvaptiveViewDesktopProp {
   initialTheme?: DockviewTheme
 }
 
 const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
-  const { sendToDesktop, desktopRef } = useDesktop()
+  const { sendToDesktop, dockviewApi, currentDesktop } = useDesktop()
+  const { logLines, panels, groups, layoutReady, activePanel, activeGroup } = currentDesktop
 
   const { sendToDockViewAdapter } = useDockViewAdapter()
 
@@ -96,104 +90,136 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
     }
   }, [profilesRegistered, registeredLayoutProfiles, saveSelectedLayoutData, selectedLayoutProfileId])
 
-  const [logLines, setLogLines] = React.useState<{ text: string; timestamp?: Date; backgroundColor?: string }[]>([])
-
-  const [panels, setPanels] = React.useState<string[]>([])
-  const [groups, setGroups] = React.useState<string[]>([])
-  const [api, setApi] = React.useState<DockviewApi>()
-  const [layoutReady, setLayoutReady] = React.useState(false)
-
-  const [activePanel, setActivePanel] = React.useState<string>()
-  const [activeGroup, setActiveGroup] = React.useState<string>()
-
-  const [pending, setPending] = React.useState<{ text: string; timestamp?: Date }[]>([])
-
-  const addLogLine = (message: string) => {
-    setPending((line) => [{ text: message, timestamp: new Date() }, ...line])
-  }
-
-  React.useLayoutEffect(() => {
-    if (pending.length === 0) {
-      return
-    }
-    const color = colors[count++ % colors.length]
-    setLogLines((lines) => [...pending.map((_) => ({ ..._, backgroundColor: color })), ...lines])
-    setPending([])
-  }, [pending])
+  /**
+   * Listen to events emitted by the current Dockview API.
+   *
+   * This component does NOT update panels/groups/logs directly anymore.
+   *
+   * Dockview emits events -> we send domain events -> desktopMachine
+   * updates its context.
+   */
 
   React.useEffect(() => {
-    if (!api) {
-      return
-    }
+    if (!dockviewApi) return
 
-    // Reset tracked state for the new api instance to prevent stale IDs
-    // accumulating across remounts (e.g. when toggling shell mode).
-    setPanels([])
-    setGroups([])
-    setActivePanel(undefined)
-    setActiveGroup(undefined)
+    sendToDesktop({
+      type: "onResetTrackedState",
+    })
 
     const disposables = [
-      api.onDidAddPanel((event) => {
-        setPanels((_) => [..._, event.id])
-        addLogLine(`Panel Added ${event.id}`)
-      }),
-      api.onDidActivePanelChange((event) => {
-        setActivePanel(event.panel?.id)
-        addLogLine(`Panel Activated ${event.panel?.id}`)
-      }),
-      api.onDidRemovePanel((event) => {
-        setPanels((_) => {
-          const next = [..._]
-          next.splice(
-            next.findIndex((x) => x === event.id),
-            1,
-          )
-
-          return next
+      dockviewApi.onDidAddPanel((event: any) => {
+        sendToDesktop({
+          type: "onPanelAdded",
+          params: {
+            panelId: event.id,
+          },
         })
-        addLogLine(`Panel Removed ${event.id}`)
+        // setPanels((_) => [..._, event.id])
+        // addLogLine(`Panel Added ${event.id}`)
       }),
 
-      api.onDidAddGroup((event) => {
-        setGroups((_) => [..._, event.id])
-        addLogLine(`Group Added ${event.id}`)
-      }),
-
-      api.onDidMovePanel((event) => {
-        addLogLine(`Panel Moved ${event.panel.id}`)
-      }),
-
-      api.onDidMaximizedGroupChange((event) => {
-        addLogLine(`Group Maximized Changed ${event.group.api.id} [${event.isMaximized}]`)
-      }),
-
-      api.onDidRemoveGroup((event) => {
-        setGroups((_) => {
-          const next = [..._]
-          next.splice(
-            next.findIndex((x) => x === event.id),
-            1,
-          )
-
-          return next
+      dockviewApi.onDidActivePanelChange((event: any) => {
+        sendToDesktop({
+          type: "onPanelActivated",
+          params: {
+            panelId: event.panel?.id,
+          },
         })
-        addLogLine(`Group Removed ${event.id}`)
+        // setActivePanel(event.panel?.id)
+        // addLogLine(`Panel Activated ${event.panel?.id}`)
+      }),
+      dockviewApi.onDidRemovePanel((event: any) => {
+        sendToDesktop({
+          type: "onPanelRemoved",
+          params: {
+            panelId: event.id,
+          },
+        })
+        // setPanels((_) => {
+        //   const next = [..._]
+        //   next.splice(
+        //     next.findIndex((x) => x === event.id),
+        //     1,
+        //   )
+        //
+        //   return next
+        // })
+        // addLogLine(`Panel Removed ${event.id}`)
       }),
 
-      api.onDidActiveGroupChange((event) => {
-        setActiveGroup(event?.id)
-        addLogLine(`Group Activated ${event?.id}`)
+      dockviewApi.onDidAddGroup((event: any) => {
+        sendToDesktop({
+          type: "onGroupAdded",
+          params: {
+            groupId: event.id,
+          },
+        })
+        // setGroups((_) => [..._, event.id])
+        // addLogLine(`Group Added ${event.id}`)
+      }),
+
+      dockviewApi.onDidMovePanel((event: any) => {
+        sendToDesktop({
+          type: "onPanelMoved",
+          params: {
+            panelId: event.panel.id,
+          },
+        })
+
+        // addLogLine(`Panel Moved ${event.panel.id}`)
+      }),
+
+      dockviewApi.onDidMaximizedGroupChange((event: any) => {
+        sendToDesktop({
+          type: "onGroupMaximizedChanged",
+          params: {
+            groupId: event.group.api.id,
+            isMaximized: event.isMaximized,
+          },
+        })
+        // addLogLine(`Group Maximized Changed ${event.group.api.id} [${event.isMaximized}]`)
+      }),
+
+      dockviewApi.onDidRemoveGroup((event: any) => {
+        sendToDesktop({
+          type: "onGroupRemoved",
+          params: {
+            groupId: event.id,
+          },
+        })
+
+        // setGroups((_) => {
+        //   const next = [..._]
+        //   next.splice(
+        //     next.findIndex((x) => x === event.id),
+        //     1,
+        //   )
+        //
+        //   return next
+        // })
+        // addLogLine(`Group Removed ${event.id}`)
+      }),
+
+      dockviewApi.onDidActiveGroupChange((event: any) => {
+        sendToDesktop({
+          type: "onGroupActivated",
+          params: {
+            groupId: event?.id,
+          },
+        })
+
+        // setActiveGroup(event?.id)
+        // addLogLine(`Group Activated ${event?.id}`)
       }),
     ]
 
     return () => {
       disposables.forEach((disposable) => disposable.dispose())
     }
-  }, [api])
+  }, [dockviewApi])
 
   React.useEffect(() => {
-    if (!api || !profilesRegistered) {
+    if (!dockviewApi || !profilesRegistered) {
       return
     }
 
@@ -203,17 +229,34 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
       (typeof selectedLayoutData !== "object" || Object.keys(selectedLayoutData as object).length > 0)
 
     if (!hasStoredLayout) {
-      loadDockviewLayout(api)
+      loadDockviewLayout(dockviewApi)
     } else {
-      loadDockviewLayout(api, selectedLayoutData)
+      loadDockviewLayout(dockviewApi, selectedLayoutData)
     }
-    setLayoutReady(true)
-  }, [api, layoutRevision, profilesRegistered, selectedLayoutData])
 
+    /**
+     * Previously:
+     *
+     * setLayoutReady(true)
+     *
+     * Now the machine owns this state.
+     */
+    sendToDesktop({
+      type: "onLayoutReady",
+    })
+    //       setLayoutReady(true)
+  }, [dockviewApi, layoutRevision, profilesRegistered, selectedLayoutData, sendToDesktop])
+
+  /**
+   * Dockview creates the API here.
+   *
+   * We don't call setApi anymore.
+   * desktopMachine receives the API and stores it in context.dockviewApi.
+   */
   const onReady = (event: DockviewReadyEvent) => {
     setupEdgeGroups(event.api)
     sentToLayoutManager({ type: "ON_READY", api: event.api })
-    setApi(event.api)
+    // setApi(event.api)
 
     sendToDockViewAdapter({ type: "onReady", api: event.api })
 
@@ -224,6 +267,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
   // so a loading overlay can fade out at the right moment rather than while
   // the grid is still hidden.
   const hasSignalledReady = React.useRef(false)
+
   React.useEffect(() => {
     if (layoutReady && !hasSignalledReady.current) {
       hasSignalledReady.current = true
@@ -314,19 +358,19 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
             [{ component: FloatMenuItem }, { component: PopoutMenuItem }]),
       ]
 
-      if (api) {
+      if (dockviewApi) {
         const groupId = group.id
         const panelId = panel.id
-        const tabGroup = api.getTabGroupForPanel({ groupId, panelId })
-        const allTabGroups = api.getTabGroups({ groupId })
-        const otherTabGroups = allTabGroups.filter((tg) => tg.id !== tabGroup?.id)
+        const tabGroup = dockviewApi.getTabGroupForPanel({ groupId, panelId })
+        const allTabGroups = dockviewApi.getTabGroups({ groupId })
+        const otherTabGroups = allTabGroups.filter((tg: any) => tg.id !== tabGroup?.id)
 
         items.push("separator")
 
         if (tabGroup) {
           items.push({
             label: `Remove from "${tabGroup.label || tabGroup.id}"`,
-            action: () => api.removePanelFromTabGroup({ groupId, panelId }),
+            action: () => dockviewApi.removePanelFromTabGroup({ groupId, panelId }),
           })
         }
 
@@ -334,7 +378,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
           items.push({
             label: `Add to "${tg.label || tg.id}"`,
             action: () =>
-              api.addPanelToTabGroup({
+              dockviewApi.addPanelToTabGroup({
                 groupId,
                 tabGroupId: tg.id,
                 panelId,
@@ -348,12 +392,12 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
             const label = window.prompt("Group name:") || ""
             const colors: any = DEFAULT_TAB_GROUP_COLORS
             const color = colors[Math.floor(Math.random() * colors.length)].id
-            const newGroup = api.createTabGroup({
+            const newGroup = dockviewApi.createTabGroup({
               groupId,
               label,
               color,
             })
-            api.addPanelToTabGroup({
+            dockviewApi.addPanelToTabGroup({
               groupId,
               tabGroupId: newGroup.id,
               panelId,
@@ -364,7 +408,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
 
       return items
     },
-    [api, tabOverflowMode],
+    [dockviewApi, tabOverflowMode],
   )
 
   const getTabGroupChipContextMenuItems = React.useCallback(
@@ -378,7 +422,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
         | { label: string; action: () => void }
       )[] = ["rename", "colorPicker", "collapse", "close"]
 
-      if (api) {
+      if (dockviewApi) {
         // Float / popout operate on the whole containing group, so they
         // stay custom items. The built-in chip shortcuts are scoped to
         // the tab group (`'collapse'` / `'close'`, used above).
@@ -386,19 +430,19 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
           "separator",
           {
             label: "Float group",
-            action: () => api.addFloatingGroup(group),
+            action: () => dockviewApi.addFloatingGroup(group),
           },
           {
             label: "Popout group",
             action: () => {
-              void api.addPopoutGroup(group)
+              void dockviewApi.addPopoutGroup(group)
             },
           },
           "separator",
           {
             label: "Dissolve group",
             action: () =>
-              api.dissolveTabGroup({
+              dockviewApi.dissolveTabGroup({
                 groupId: group.id,
                 tabGroupId: tabGroup.id,
               }),
@@ -408,7 +452,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
 
       return items
     },
-    [api],
+    [dockviewApi],
   )
 
   const [watermark, setWatermark] = React.useState<boolean>(false)
@@ -463,7 +507,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
           }}
         >
           <SandboxColorsContext.Provider value={sandboxColors}>
-            <ApiContext.Provider value={api}>
+            <ApiContext.Provider value={dockviewApi}>
               <DebugContext.Provider value={debug}>
                 <ThemeContext.Provider value={effectiveTheme}>
                   <DockviewReact
@@ -508,7 +552,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
             }}
           >
             <div style={{ flexGrow: 1, overflow: "auto" }}>
-              {logLines.map((line, i) => {
+              {logLines.map((line: any, i: any) => {
                 return (
                   <div
                     style={{
@@ -562,12 +606,20 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
                 justifyContent: "flex-end",
               }}
             >
-              <button onClick={() => setLogLines([])}>Clear</button>
+              <button
+                onClick={() => {
+                  sendToDesktop({
+                    type: "onClearLogLines",
+                  })
+                }}
+              >
+                Clear
+              </button>
             </div>
           </div>
         )}
         {props.renderControls?.({
-          api,
+          api: dockviewApi,
           panels,
           groups,
           activePanel,
@@ -584,7 +636,11 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
           onToggleDebug: () => setDebug(!debug),
           showLogs,
           onToggleShowLogs: () => setShowLogs(!showLogs),
-          onClearLogs: () => setLogLines([]),
+          onClearLogs: () => {
+            sendToDesktop({
+              type: "onClearLogLines",
+            })
+          },
         })}
       </div>
       <AdaptiveDebuggerRoot />
