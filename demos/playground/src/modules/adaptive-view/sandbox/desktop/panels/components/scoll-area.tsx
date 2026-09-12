@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, Container, Flex, ScrollArea as ChakraScrollArea, Stack } from "@chakra-ui/react"
+import { chakra, Card, Container, Flex, ScrollArea as ChakraScrollArea, Stack } from "@chakra-ui/react"
 
 export interface ScrollAreaProps {
   [key: string]: any
@@ -51,8 +51,8 @@ export const WrapperWithScrollArea = ({ children }: { children: React.ReactNode 
             }}
           >
             <Stack minH={"100%"} justifyContent={"start"} alignItems={"center"} w={"full"} p={1}>
-              <div
-                style={{
+              <chakra.div
+                css={{
                   width: "100%",
                   height: "100%",
                   minWidth: 0,
@@ -61,7 +61,7 @@ export const WrapperWithScrollArea = ({ children }: { children: React.ReactNode 
                 }}
               >
                 {children}
-              </div>
+              </chakra.div>
             </Stack>
           </ScrollArea>
         </Flex>

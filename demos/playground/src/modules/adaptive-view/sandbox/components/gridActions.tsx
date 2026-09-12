@@ -1,11 +1,7 @@
 import { DockviewApi, EdgeGroupPosition } from '#adaptive-view/react';
 import * as React from 'react';
 import { nextId } from '../sandbox-manager/utils';
-import {
-    useSandboxManagerSelector,
-    useSandboxManagerStore,
-} from '../sandbox-manager/provider';
-import type { SandboxLayoutProfile } from '../sandbox-manager/store';
+import { useDesktop } from '../desktop/selectors';
 import { LM } from '../sandbox-manager/layoutManagerTheme';
 import { Btn, IconBtn } from '../sandbox-manager/layoutManagerKit';
 import { useLocalStore } from '../store-manager/selectors';
@@ -221,28 +217,26 @@ function usePopover() {
 }
 
 export const GridActions = (props: { api?: DockviewApi }) => {
-    const managerStore = useSandboxManagerStore();
+    const { sendToDesktop, desktopContext } = useDesktop();
     const layoutStore = useLocalStore<unknown>('sandbox.layout');
-    const layoutProfiles = useSandboxManagerSelector(
-        (snapshot) => snapshot.context.layoutProfiles
-    );
-    const selectedLayoutProfileId = useSandboxManagerSelector(
-        (snapshot) => snapshot.context.selectedLayoutProfileId
-    );
+    const { layoutProfiles, selectedLayoutProfileId } = desktopContext.layout;
     const [loadMenuOpen, setLoadMenuOpen] = React.useState(false);
 
     const onClear = () => {
         props.api?.clear();
     };
 
-    const onLoad = (profile: SandboxLayoutProfile) => {
+    const onLoad = (profile: any) => {
         if (!props.api) {
             return;
         }
 
         setLoadMenuOpen(false);
         layoutStore.save(profile.data);
-        managerStore.trigger.selectLayoutProfile({ profileId: profile.id });
+        sendToDesktop({
+            type: 'onSelectLayoutProfile',
+            params: { profileId: profile.id },
+        });
     };
 
     const onSave = () => {
@@ -256,7 +250,10 @@ export const GridActions = (props: { api?: DockviewApi }) => {
     const onReset = () => {
         if (props.api) {
             layoutStore.reset();
-            managerStore.trigger.selectLayoutProfile({ profileId: null });
+            sendToDesktop({
+                type: 'onSelectLayoutProfile',
+                params: { profileId: null },
+            });
         }
     };
 
@@ -310,35 +307,37 @@ export const GridActions = (props: { api?: DockviewApi }) => {
                                     boxShadow: LM.shadowMd,
                                 }}
                             >
-                                {layoutProfiles.map((profile) => (
-                                    <button
-                                        key={profile.id}
-                                        type="button"
-                                        role="menuitem"
-                                        aria-current={
-                                            profile.id ===
-                                            selectedLayoutProfileId
-                                                ? 'true'
-                                                : undefined
-                                        }
-                                        onClick={() => onLoad(profile)}
-                                        style={{
-                                            display: 'block',
-                                            width: '100%',
-                                            padding: '7px 9px',
-                                            border: 0,
-                                            borderRadius: 5,
-                                            background: 'transparent',
-                                            color: LM.text,
-                                            cursor: 'pointer',
-                                            fontFamily: LM.ui,
-                                            fontSize: 12,
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        {profile.title}
-                                    </button>
-                                ))}
+                                {layoutProfiles.map(
+                                    (profile: any) => (
+                                        <button
+                                            key={profile.id}
+                                            type="button"
+                                            role="menuitem"
+                                            aria-current={
+                                                profile.id ===
+                                                selectedLayoutProfileId
+                                                    ? 'true'
+                                                    : undefined
+                                            }
+                                            onClick={() => onLoad(profile)}
+                                            style={{
+                                                display: 'block',
+                                                width: '100%',
+                                                padding: '7px 9px',
+                                                border: 0,
+                                                borderRadius: 5,
+                                                background: 'transparent',
+                                                color: LM.text,
+                                                cursor: 'pointer',
+                                                fontFamily: LM.ui,
+                                                fontSize: 12,
+                                                textAlign: 'left',
+                                            }}
+                                        >
+                                            {profile.title}
+                                        </button>
+                                    )
+                                )}
                             </div>
                         )}
                     </div>

@@ -1,11 +1,24 @@
 "use client"
 import "./styles.css"
 
-import { layoutProfiles, instanceProfiles, EDGE_GROUP_PANELS } from "./config"
+import { layoutProfiles } from "./config"
 import AdvaptiveViewDesktop from "./app"
-import AdaptiveViewApp from "#adaptive-view/app"
-import { DesktopProvider } from './providers/DesktopProvider'
+import { DesktopProvider } from "./providers/DesktopProvider"
 import { MarketProvider } from "./providers/marketProvider"
+
+export default function AdaptiveViewDesktopSandbox(props: any) {
+  return (
+    <div className="app" style={{ height: "100%", width: "100%" }}>
+      <DesktopProvider input={{ layoutProfiles }}>
+        <MarketProvider>
+          <AdvaptiveViewDesktop {...props} />
+        </MarketProvider>
+      </DesktopProvider>
+    </div>
+  )
+}
+
+/*
 
 
 export default function AdaptiveViewDesktopSandbox(props: any) {
@@ -29,3 +42,8 @@ export default function AdaptiveViewDesktopSandbox(props: any) {
     </div>
   )
 }
+
+
+
+
+ */

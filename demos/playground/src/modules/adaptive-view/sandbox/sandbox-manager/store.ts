@@ -15,29 +15,16 @@ export interface SandboxThemeOption {
     theme: DockviewTheme;
 }
 
-export interface SandboxLayoutProfile {
-    id: string;
-    title: string;
-    data: unknown;
-    nodes?: any;
-}
-
 export const sandboxThemes: readonly SandboxThemeOption[] =
     LAYOUT_MANAGER_BUILTIN_THEMES;
 
 interface SandboxManagerContext {
     theme: DockviewTheme;
     layoutManagerTheme: LayoutManagerThemeState;
-    layoutManagerOpen: boolean;
-    ready: boolean;
-    layoutProfiles: readonly SandboxLayoutProfile[];
-    selectedLayoutProfileId: string | null;
-    layoutRevision: number;
 }
 
 export interface SandboxManagerStoreInput {
     initialTheme?: DockviewTheme;
-    layoutProfiles?: readonly SandboxLayoutProfile[];
 }
 
 export function createSandboxManagerStore(
@@ -47,11 +34,6 @@ export function createSandboxManagerStore(
     const context: SandboxManagerContext = {
         theme,
         layoutManagerTheme: getInitialStateFromLayoutManagerTheme(theme),
-        layoutManagerOpen: false,
-        ready: false,
-        layoutProfiles: input.layoutProfiles ?? [],
-        selectedLayoutProfileId: null,
-        layoutRevision: 0,
     };
 
     return createStore({
@@ -113,26 +95,6 @@ export function createSandboxManagerStore(
                 layoutManagerTheme: getInitialStateFromLayoutManagerTheme(
                     context.theme
                 ),
-            }),
-            selectLayoutProfile: (
-                context,
-                event: { profileId: string | null }
-            ): SandboxManagerContext => ({
-                ...context,
-                selectedLayoutProfileId: event.profileId,
-                layoutRevision: context.layoutRevision + 1,
-            }),
-            toggleLayoutManager: (context): SandboxManagerContext => ({
-                ...context,
-                layoutManagerOpen: !context.layoutManagerOpen,
-            }),
-            closeLayoutManager: (context): SandboxManagerContext => ({
-                ...context,
-                layoutManagerOpen: false,
-            }),
-            markReady: (context): SandboxManagerContext => ({
-                ...context,
-                ready: true,
             }),
         },
     });

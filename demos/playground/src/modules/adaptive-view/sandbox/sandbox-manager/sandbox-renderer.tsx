@@ -19,14 +19,13 @@ export interface SandboxRendererProps extends SandboxManagerStoreInput {
 export function SandboxRenderer({
     children,
     initialTheme,
-    layoutProfiles,
     instanceManagerInput,
 }: SandboxRendererProps) {
     return (
         <StoreManagerProvider>
             <InstanceManagerProvider input={instanceManagerInput}>
                 <LayoutManagerProvider>
-                    <SandboxManagerProvider input={{ initialTheme, layoutProfiles }}>
+                    <SandboxManagerProvider input={{ initialTheme }}>
                         <SandboxManager>{children}</SandboxManager>
                     </SandboxManagerProvider>
                 </LayoutManagerProvider>

@@ -13,6 +13,7 @@ import {
 import { sandboxThemes } from './store';
 import { buildEffectiveLayoutManagerTheme } from './layoutManagerTheme';
 import { LayoutManager } from './layoutManager';
+import { useDesktop } from '../desktop/selectors';
 import './styles/dockview.css';
 import './styles/manager.css';
 import './styles/sandbox.css';
@@ -29,16 +30,19 @@ export interface SandboxManagerProps {
 
 export default function SandboxManager({ children }: SandboxManagerProps) {
     const store = useSandboxManagerStore();
+    const { desktopRef, sendToDesktop, desktopContext } = useDesktop();
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
     const {
         theme,
         layoutManagerTheme,
+    } = useSandboxManagerSelector((snapshot) => snapshot.context);
+    const {
         layoutManagerOpen,
         ready,
         selectedLayoutProfileId,
-    } = useSandboxManagerSelector((snapshot) => snapshot.context);
+    } = desktopContext.layout;
     const syncingLayoutFromUrl = React.useRef(false);
     const frameRef = React.useRef<HTMLElement>(null);
     const previousCssOverrideKeys = React.useRef<string[]>([]);
@@ -50,14 +54,15 @@ export default function SandboxManager({ children }: SandboxManagerProps) {
 
     React.useEffect(() => {
         const currentProfileId =
-            store.getSnapshot().context.selectedLayoutProfileId;
+            desktopRef.getSnapshot().context.layout.selectedLayoutProfileId;
         if (currentProfileId !== urlLayoutProfileId) {
             syncingLayoutFromUrl.current = true;
-            store.trigger.selectLayoutProfile({
-                profileId: urlLayoutProfileId,
+            sendToDesktop({
+                type: 'onSelectLayoutProfile',
+                params: { profileId: urlLayoutProfileId },
             });
         }
-    }, [store, urlLayoutProfileId]);
+    }, [desktopRef, sendToDesktop, urlLayoutProfileId]);
 
     React.useEffect(() => {
         if (syncingLayoutFromUrl.current) {
@@ -113,8 +118,8 @@ export default function SandboxManager({ children }: SandboxManagerProps) {
     }, [layoutManagerTheme.cssOverrides, effectiveTheme]);
 
     const markReady = React.useCallback(() => {
-        store.trigger.markReady();
-    }, [store]);
+        sendToDesktop({ type: 'onMarkReady' });
+    }, [sendToDesktop]);
 
     return (
         <main
@@ -148,7 +153,9 @@ export default function SandboxManager({ children }: SandboxManagerProps) {
                         type="button"
                         className={layoutManagerOpen ? 'is-active' : ''}
                         aria-pressed={layoutManagerOpen}
-                        onClick={() => store.trigger.toggleLayoutManager()}
+                        onClick={() =>
+                            sendToDesktop({ type: 'onToggleLayoutManager' })
+                        }
                     >
                         Controls &amp; Theme
                     </button>
@@ -165,7 +172,9 @@ export default function SandboxManager({ children }: SandboxManagerProps) {
                     renderControls: (controls) => (
                         <LayoutManager
                             open={layoutManagerOpen}
-                            onClose={() => store.trigger.closeLayoutManager()}
+                            onClose={() =>
+                                sendToDesktop({ type: 'onCloseLayoutManager' })
+                            }
                             state={layoutManagerTheme}
                             onChange={(patch) =>
                                 store.trigger.updateLayoutManagerTheme({ patch })

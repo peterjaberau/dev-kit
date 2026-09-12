@@ -20,7 +20,6 @@ import { DESKTOP_DOCKVIEW_COMPONENTS, DEFAULT_DOCKVIEW_COMPONENT } from "./panel
 import * as React from "react"
 import { setupEdgeGroups } from "../sandbox-manager/defaultLayout"
 import { loadDockviewLayout } from "../sandbox-manager/utils"
-import { useSandboxManagerSelector } from "../sandbox-manager/provider"
 import SandboxRenderer, { type SandboxManagerRenderProps } from "../sandbox-manager/sandbox-renderer"
 import { instanceProfiles, layoutProfiles } from "./config"
 import { LeftControls, PrefixHeaderControls, RightControls } from "../components/headerActions"
@@ -50,7 +49,6 @@ import {
   WatermarkRenderer as WatermarkComponent,
   GroupDragGhostRenderer as GroupDragGhost,
 } from "#adaptive-view/app/components"
-import { useDockViewAdapter } from "#adaptive-view/app/actors/selectors"
 
 const colors = [
   "rgba(255,0,0,0.2)",
@@ -67,15 +65,27 @@ export interface AdvaptiveViewDesktopProp {
 }
 
 const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
-  const { sendToDesktop, dockviewApi, currentDesktop } = useDesktop()
-  const { logLines, panels, groups, layoutReady, activePanel, activeGroup } = currentDesktop
+  const { sendToDesktop, dockviewApi, currentDesktop, desktopContext } = useDesktop()
+  const {
+    logLines,
+    panels,
+    groups,
+    layoutReady,
+    activePanel,
+    activeGroup,
+    signalReady,
+    watermark,
+    customGhost,
+    dndCompass,
+    smartGuides,
+    showLogs,
+    debug,
+  } = currentDesktop
+  const { layoutProfiles: registeredLayoutProfiles, selectedLayoutProfileId, layoutRevision } =
+    desktopContext.layout
 
-  const { sendToDockViewAdapter } = useDockViewAdapter()
 
   const { sentToLayoutManager } = useLayoutManager()
-  const registeredLayoutProfiles = useSandboxManagerSelector((snapshot) => snapshot.context.layoutProfiles)
-  const selectedLayoutProfileId = useSandboxManagerSelector((snapshot) => snapshot.context.selectedLayoutProfileId)
-  const layoutRevision = useSandboxManagerSelector((snapshot) => snapshot.context.layoutRevision)
   const profilesRegistered = registeredLayoutProfiles === layoutProfiles
   const { value: selectedLayoutData, save: saveSelectedLayoutData } = useLocalStore<unknown>("sandbox.layout")
 
@@ -84,132 +94,91 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
       return
     }
 
-    const profileData = registeredLayoutProfiles.find((profile) => profile.id === selectedLayoutProfileId)?.data
+    const profileData = registeredLayoutProfiles.find(
+      (profile: any) => profile.id === selectedLayoutProfileId,
+    )?.data
     if (profileData !== undefined) {
       saveSelectedLayoutData(profileData)
     }
   }, [profilesRegistered, registeredLayoutProfiles, saveSelectedLayoutData, selectedLayoutProfileId])
 
-  /**
-   * Listen to events emitted by the current Dockview API.
-   *
-   * This component does NOT update panels/groups/logs directly anymore.
-   *
-   * Dockview emits events -> we send domain events -> desktopMachine
-   * updates its context.
-   */
-
   React.useEffect(() => {
     if (!dockviewApi) return
 
     sendToDesktop({
-      type: "onResetTrackedState",
+      type: "onResetTracking",
     })
 
     const disposables = [
       dockviewApi.onDidAddPanel((event: any) => {
         sendToDesktop({
-          type: "onPanelAdded",
+          type: "onDidAddPanel",
           params: {
             panelId: event.id,
           },
         })
-        // setPanels((_) => [..._, event.id])
-        // addLogLine(`Panel Added ${event.id}`)
       }),
 
       dockviewApi.onDidActivePanelChange((event: any) => {
         sendToDesktop({
-          type: "onPanelActivated",
+          type: "onDidActivePanelChange",
           params: {
             panelId: event.panel?.id,
           },
         })
-        // setActivePanel(event.panel?.id)
-        // addLogLine(`Panel Activated ${event.panel?.id}`)
       }),
       dockviewApi.onDidRemovePanel((event: any) => {
         sendToDesktop({
-          type: "onPanelRemoved",
+          type: "onDidRemovePanel",
           params: {
             panelId: event.id,
           },
         })
-        // setPanels((_) => {
-        //   const next = [..._]
-        //   next.splice(
-        //     next.findIndex((x) => x === event.id),
-        //     1,
-        //   )
-        //
-        //   return next
-        // })
-        // addLogLine(`Panel Removed ${event.id}`)
       }),
 
       dockviewApi.onDidAddGroup((event: any) => {
         sendToDesktop({
-          type: "onGroupAdded",
+          type: "onDidAddGroup",
           params: {
             groupId: event.id,
           },
         })
-        // setGroups((_) => [..._, event.id])
-        // addLogLine(`Group Added ${event.id}`)
       }),
-
       dockviewApi.onDidMovePanel((event: any) => {
         sendToDesktop({
-          type: "onPanelMoved",
+          type: "onDidMovePanel",
           params: {
             panelId: event.panel.id,
           },
         })
-
-        // addLogLine(`Panel Moved ${event.panel.id}`)
       }),
 
       dockviewApi.onDidMaximizedGroupChange((event: any) => {
         sendToDesktop({
-          type: "onGroupMaximizedChanged",
+          type: "onDidMaximizedGroupChange",
           params: {
             groupId: event.group.api.id,
             isMaximized: event.isMaximized,
           },
         })
-        // addLogLine(`Group Maximized Changed ${event.group.api.id} [${event.isMaximized}]`)
       }),
 
       dockviewApi.onDidRemoveGroup((event: any) => {
         sendToDesktop({
-          type: "onGroupRemoved",
+          type: "onDidRemoveGroup",
           params: {
             groupId: event.id,
           },
         })
-
-        // setGroups((_) => {
-        //   const next = [..._]
-        //   next.splice(
-        //     next.findIndex((x) => x === event.id),
-        //     1,
-        //   )
-        //
-        //   return next
-        // })
-        // addLogLine(`Group Removed ${event.id}`)
       }),
 
       dockviewApi.onDidActiveGroupChange((event: any) => {
         sendToDesktop({
-          type: "onGroupActivated",
+          type: "onDidActiveGroupChange",
           params: {
             groupId: event?.id,
           },
         })
-
-        // setActiveGroup(event?.id)
-        // addLogLine(`Group Activated ${event?.id}`)
       }),
     ]
 
@@ -234,46 +203,26 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
       loadDockviewLayout(dockviewApi, selectedLayoutData)
     }
 
-    /**
-     * Previously:
-     *
-     * setLayoutReady(true)
-     *
-     * Now the machine owns this state.
-     */
+
     sendToDesktop({
       type: "onLayoutReady",
     })
-    //       setLayoutReady(true)
   }, [dockviewApi, layoutRevision, profilesRegistered, selectedLayoutData, sendToDesktop])
 
-  /**
-   * Dockview creates the API here.
-   *
-   * We don't call setApi anymore.
-   * desktopMachine receives the API and stores it in context.dockviewApi.
-   */
   const onReady = (event: DockviewReadyEvent) => {
     setupEdgeGroups(event.api)
     sentToLayoutManager({ type: "ON_READY", api: event.api })
-    // setApi(event.api)
 
-    sendToDockViewAdapter({ type: "onReady", api: event.api })
 
     sendToDesktop({ type: "onReady", params: { api: event.api } })
   }
 
-  // Signal the host once the layout is loaded and the dock becomes visible,
-  // so a loading overlay can fade out at the right moment rather than while
-  // the grid is still hidden.
-  const hasSignalledReady = React.useRef(false)
-
   React.useEffect(() => {
-    if (layoutReady && !hasSignalledReady.current) {
-      hasSignalledReady.current = true
+    if (layoutReady && !signalReady) {
+      sendToDesktop({ type: "onToggleSignalReady" })
       props.onReady?.()
     }
-  }, [layoutReady, props])
+  }, [layoutReady, props, sendToDesktop, signalReady])
 
   const effectiveTheme = props.theme ?? themeAbyss
 
@@ -281,32 +230,6 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
     () => (effectiveTheme.colorScheme === "light" ? SANDBOX_LIGHT_COLORS : SANDBOX_DARK_COLORS),
     [effectiveTheme],
   )
-
-  // Briefly enable colour transitions when the light/dark scheme flips, so the
-  // dock crossfades between modes instead of hard-cutting. Scoped to the
-  // switch moment (a temporary class) so it never interferes with dragging,
-  // resizing or tab changes, and skipped under reduced-motion.
-  const [themeAnimating, setThemeAnimating] = React.useState(false)
-  const prevScheme = React.useRef(effectiveTheme.colorScheme)
-  React.useEffect(() => {
-    if (prevScheme.current === effectiveTheme.colorScheme) {
-      return
-    }
-    prevScheme.current = effectiveTheme.colorScheme
-    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      return
-    }
-    setThemeAnimating(true)
-    const handle = window.setTimeout(() => setThemeAnimating(false), 350)
-    return () => window.clearTimeout(handle)
-  }, [effectiveTheme.colorScheme])
-
-  const [tabOverflowMode, setTabOverflowMode] = React.useState<TabOverflowMode>("dropdown")
-
-  // `'wrap'` needs the MultiRowTabsModule, which the `dockview-enterprise`
-  // import above registers. Memoized so the prop only reaches `updateOptions`
-  // when the mode actually changes.
-  const overflow = React.useMemo(() => ({ mode: tabOverflowMode, mru: false, search: true }), [tabOverflowMode])
 
   const getTabContextMenuItems = React.useCallback(
     ({ panel, group }: GetTabContextMenuItemsParams) => {
@@ -342,8 +265,10 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
           component: TabModeMenuItem,
           componentProps: {
             mode,
-            active: tabOverflowMode === mode,
-            onSelect: setTabOverflowMode,
+            active: currentDesktop.overflow.mode === mode,
+            onSelect: (mode: TabOverflowMode) => {
+              sendToDesktop({ type: "onUpdateOverflow", params: { mode } })
+            },
           } satisfies TabModeMenuItemProps,
         })),
         "separator",
@@ -408,7 +333,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
 
       return items
     },
-    [dockviewApi, tabOverflowMode],
+    [currentDesktop.overflow.mode, dockviewApi, sendToDesktop],
   )
 
   const getTabGroupChipContextMenuItems = React.useCallback(
@@ -455,31 +380,9 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
     [dockviewApi],
   )
 
-  const [watermark, setWatermark] = React.useState<boolean>(false)
-  const [customGhost, setCustomGhost] = React.useState<boolean>(false)
-  const [dndCompass, setDndCompass] = React.useState<boolean>(false)
-  const [smartGuides, setSmartGuides] = React.useState<boolean>(true)
-
-  const [gapCheck, setGapCheck] = React.useState<boolean>(false)
-
-  const css = React.useMemo(() => {
-    if (!gapCheck) {
-      return {}
-    }
-
-    return {
-      "--dv-group-gap-size": "0.5rem",
-      "--demo-border": "5px dashed purple",
-    } as React.CSSProperties
-  }, [gapCheck])
-
-  const [showLogs, setShowLogs] = React.useState<boolean>(false)
-  const [debug, setDebug] = React.useState<boolean>(false)
   return (
     <div
-      className={`sandbox${
-        effectiveTheme.colorScheme === "light" ? "sandbox--light" : ""
-      }${themeAnimating ? "dv-theme-animating" : ""}`}
+      className={`sandbox${effectiveTheme.colorScheme === "light" ? "sandbox--light" : ""}`}
       style={{
         height: "100%",
         display: "flex",
@@ -488,7 +391,6 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
         backgroundColor: effectiveTheme.colorScheme === "light" ? "rgba(0,0,0,0.03)" : "rgba(0,0,50,0.25)",
         borderRadius: "8px",
         position: "relative",
-        ...css,
       }}
     >
       <div
@@ -524,7 +426,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
                     autoHideEdgeGroups
                     dockToEdgeGroups
                     pinnedTabs={{ enabled: true }}
-                    overflow={overflow}
+                    overflow={currentDesktop.overflow}
                     floatingGroupDragHandle="titlebar"
                     dndCompass={dndCompass}
                     smartGuides={smartGuides ? { snapDistance: 8 } : undefined}
@@ -625,17 +527,17 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
           activePanel,
           activeGroup,
           hasCustomWatermark: watermark,
-          toggleCustomWatermark: () => setWatermark(!watermark),
+          toggleCustomWatermark: () => sendToDesktop({ type: "onToggleWatermark" }),
           hasCustomGhost: customGhost,
-          toggleCustomGhost: () => setCustomGhost(!customGhost),
+          toggleCustomGhost: () => sendToDesktop({ type: "onToggleCustomGhost" }),
           dndCompass,
-          onToggleDndCompass: () => setDndCompass(!dndCompass),
+          onToggleDndCompass: () => sendToDesktop({ type: "onToggleDndCompass" }),
           smartGuides,
-          onToggleSmartGuides: () => setSmartGuides(!smartGuides),
+          onToggleSmartGuides: () => sendToDesktop({ type: "onToggleSmartGuides" }),
           debug,
-          onToggleDebug: () => setDebug(!debug),
+          onToggleDebug: () => sendToDesktop({ type: "onToggleDebug" }),
           showLogs,
-          onToggleShowLogs: () => setShowLogs(!showLogs),
+          onToggleShowLogs: () => sendToDesktop({ type: "onToggleShowLogs" }),
           onClearLogs: () => {
             sendToDesktop({
               type: "onClearLogLines",
@@ -651,7 +553,6 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
 const AdvaptiveViewDesktop = ({ initialTheme }: AdvaptiveViewDesktopProp) => (
   <SandboxRenderer
     initialTheme={initialTheme}
-    layoutProfiles={layoutProfiles}
     instanceManagerInput={instanceProfiles[0]}
   >
     {(props) => <AdvaptiveViewDesktopContent {...props} />}

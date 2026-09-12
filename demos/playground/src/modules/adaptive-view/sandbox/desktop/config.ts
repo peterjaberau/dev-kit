@@ -1,5 +1,4 @@
 import { DockviewApi } from '#adaptive-view/react';
-import type { SandboxLayoutProfile } from '../sandbox-manager/store';
 
 /** Readme
  *
@@ -7,7 +6,7 @@ import type { SandboxLayoutProfile } from '../sandbox-manager/store';
  * panels.panelKeyName.id: --> grid.root.data.activeView = "id"
  * panels.panelKeyName.contentComponent: --> DockviewReact.components["contentComponent"]
  */
-export const layoutProfiles: readonly SandboxLayoutProfile[] = [
+export const layoutProfiles: any[] = [
   {
     id: "emptyDemo",
     title: "Empty Demo",
