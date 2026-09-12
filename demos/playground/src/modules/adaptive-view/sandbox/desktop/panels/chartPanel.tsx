@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useMarket } from '../providers/marketProvider';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useSandboxInstance } from "#adaptive-view/sandbox/instance-manager/selectors"
+import { usePanelApi } from "../providers/PanelApiContext"
+
 import {
     Section,
     SectionHeader,

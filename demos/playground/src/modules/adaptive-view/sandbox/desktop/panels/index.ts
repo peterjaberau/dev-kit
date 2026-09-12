@@ -10,3 +10,4 @@ export { PriceAlertPanel } from './priceAlertPanel';
 export { SignalsPanel } from './signalsPanel';
 export { VolSurfacePanel } from './volSurfacePanel';
 export { WatchlistPanel } from './watchlistPanel';
+export { InstancePanel } from "./instancePanel"

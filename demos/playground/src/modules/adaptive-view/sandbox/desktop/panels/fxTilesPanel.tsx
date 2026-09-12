@@ -8,7 +8,7 @@ import {
 } from '#adaptive-view/react';
 import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
 import { MONO, UI } from '../constants';
-import { ThemeContext } from '../app';
+import { ThemeContext } from '../providers';
 
 type Pair = { sym: string; base: string; price: number; decimals: number };
 
