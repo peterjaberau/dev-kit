@@ -3,12 +3,9 @@ import {
     DockviewReact,
     DockviewReadyEvent,
     IDockviewPanelProps,
-    themeAbyss,
-    themeLight,
 } from '#adaptive-view/react';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors, useDockviewTheme } from "#adaptive-view/sandbox/desktop/providers";
 import { MONO, UI } from '../constants';
-import { ThemeContext } from '../providers';
 
 type Pair = { sym: string; base: string; price: number; decimals: number };
 
@@ -75,7 +72,7 @@ const BigQuote: React.FC<{
     frac: number;
     color: string;
 }> = ({ value, decimals, frac, color }) => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const { head, pips } = splitQuote(value, decimals);
     return (
         <div
@@ -101,7 +98,7 @@ const BigQuote: React.FC<{
 };
 
 const FxTile: React.FC<{ pair: Pair; quote: Quote }> = ({ pair, quote }) => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const dirColor = quote.dir > 0 ? c.green : c.red;
     const label: React.CSSProperties = { fontSize: 10, color: c.textMuted, fontFamily: UI };
     const foot: React.CSSProperties = {
@@ -232,7 +229,7 @@ const FxTile: React.FC<{ pair: Pair; quote: Quote }> = ({ pair, quote }) => {
 const FxCategoryPanel: React.FC<IDockviewPanelProps<{ categoryId: string }>> = (
     props
 ) => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const quotes = React.useContext(FxQuotesContext);
     const cat = CATEGORIES.find((x) => x.id === props.params.categoryId);
     if (!cat) {
@@ -270,11 +267,8 @@ const FxCategoryPanel: React.FC<IDockviewPanelProps<{ categoryId: string }>> = (
 const nestedComponents = { fxcat: FxCategoryPanel };
 
 export const FxTilesPanel: React.FC = () => {
-    const c = useSandboxColors();
-    // Use the parent demo's live theme so the nested dockview follows the theme
-    // picker / builder exactly (not only a light/dark approximation).
-    const parentTheme = React.useContext(ThemeContext);
-    const theme = parentTheme ?? (c.isDark ? themeAbyss : themeLight);
+    const c = useDesktopColors();
+    const { dockviewTheme: theme } = useDockviewTheme();
 
     const [quotes, setQuotes] = React.useState<Record<string, Quote>>(() => {
         const q: Record<string, Quote> = {};

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { DockviewApi } from '#adaptive-view/react';
 import { Button, chakra } from '@chakra-ui/react'
-import { useSandboxColors } from "../../sandbox-manager/sandboxTheme"
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers"
 import { useDesktop } from '../selectors'
 
 export const LayoutInspectorPanel = () => {
   const { dockviewApi } = useDesktop()
 
-  const c = useSandboxColors();
+  const c = useDesktopColors();
     const [json, setJson] = React.useState<string>('');
     const [copied, setCopied] = React.useState(false);
 

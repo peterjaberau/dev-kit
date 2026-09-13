@@ -4,7 +4,7 @@ import {
     useMarketDispatch,
     WATCHLIST_TICKERS,
 } from '../providers/marketProvider';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
 import {
     Section,
     SectionHeader,
@@ -109,7 +109,7 @@ const watchlistSet = new Set<string>(WATCHLIST_TICKERS);
 const COLS = '46px 62px 34px 1fr 1fr 74px 68px 60px';
 
 export const OrdersPanel: React.FC = () => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const { selectedTicker } = useMarket();
     const dispatch = useMarketDispatch();
 

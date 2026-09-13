@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
 import {
     Section,
     SectionHeader,
@@ -26,7 +26,7 @@ function momentum(inst: string, tf: string, tick: number): number {
 const COLS = '1.4fr repeat(3, 1fr) 1.1fr';
 
 const SignalCell: React.FC<{ m: number }> = ({ m }) => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const bull = m > 15;
     const bear = m < -15;
     const color = bull ? c.green : bear ? c.red : c.textMuted;
@@ -57,7 +57,7 @@ const SignalCell: React.FC<{ m: number }> = ({ m }) => {
 };
 
 export const SignalsPanel: React.FC = () => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const tick = useTick(1500);
 
     let bulls = 0;

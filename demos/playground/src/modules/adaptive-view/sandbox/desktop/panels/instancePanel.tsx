@@ -2,7 +2,7 @@
 
 import { Text } from "@chakra-ui/react"
 import { RegistryViewer } from "#plugins/registry-manager-plugin/view"
-import { useInstance, useSandboxInstance } from "../../instance-manager/selectors"
+import { useDesktopInstance, useInstance } from "../../instance-manager/selectors"
 import * as React from "react"
 
 interface InstanceViewProps {
@@ -17,14 +17,14 @@ function InstanceView({ instanceId }: InstanceViewProps) {
   }
 
   return (
-    <div data-sandbox-theme-isolated style={{ width: "100%", height: "100%", minWidth: 0, minHeight: 0 }}>
+    <div data-desktop-theme-isolated style={{ width: "100%", height: "100%", minWidth: 0, minHeight: 0 }}>
       <RegistryViewer componentId={instancePlugin} options={instanceProps} />
     </div>
   )
 }
 
 export const InstancePanel = () => {
-  const { selectedInstanceId } = useSandboxInstance()
+  const { selectedInstanceId } = useDesktopInstance()
 
   return selectedInstanceId ? (
     <InstanceView instanceId={selectedInstanceId} />

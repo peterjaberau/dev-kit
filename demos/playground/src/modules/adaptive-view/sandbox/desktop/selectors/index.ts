@@ -1,1 +1,1 @@
-export * from './desktop.selector'
+export * from "./desktop.selector"

@@ -3,20 +3,22 @@
 The actors are not explicitly passed as props to Adaptive Debugger. The debugger receives them through React context
 inheritance.
 
-The provider hierarchy is effectively:
+The desktop provider hierarchy is effectively:
 
 ```typescript jsx
-<InstanceManagerProvider>
-  <LayoutManagerProvider>
-    <SandboxManagerProvider>
-      <SandboxManager>
-        <AdvaptiveViewDesktopContent>
-          <AdaptiveDebuggerRoot />
-        </AdvaptiveViewDesktopContent>
-      </SandboxManager>
-    </SandboxManagerProvider>
-  </LayoutManagerProvider>
-</InstanceManagerProvider>
+<DesktopProvider>
+  <StoreManagerProvider>
+    <InstanceManagerProvider>
+      <DockviewManagerProvider>
+        <Desktop>
+          <AdvaptiveViewDesktopContent>
+            <AdaptiveDebuggerRoot />
+          </AdvaptiveViewDesktopContent>
+        </Desktop>
+      </DockviewManagerProvider>
+    </InstanceManagerProvider>
+  </StoreManagerProvider>
+</DesktopProvider>
 ```
 
 AdaptiveDebuggerRoot adds only its own provider:
@@ -31,13 +33,14 @@ AdaptiveDebuggerRoot adds only its own provider:
 
 | Component                     | Type     | File                                              |
 | ----------------------------- | -------- | ------------------------------------------------- |
+| `DesktopProvider`             | Provider | desktop/providers/DesktopProvider.tsx             |
+| `StoreManagerProvider`        | Provider | store-manager/provider.tsx                        |
 | `InstanceManagerProvider`     | Provider | instance-manager/provider.tsx                     |
-| `LayoutManagerProvider`       | Provider | layout-manager/provider.tsx                       |
-| `SandboxManagerProvider`      | Provider | sandbox-manager/provider.tsx                      |
+| `DockviewManagerProvider`     | Provider | dockview-manager/provider.tsx                     |
 | `AdaptiveDebuggerProvider`    | Provider | adaptive-debugger/provider.tsx                    |
-| `SandboxRenderer`             | Renderer | sandbox-manager/sandbox-renderer.tsx              |
-| `SandboxManager`              | Renderer | sandbox-manager/manager.tsx                       |
-| `AdvaptiveViewDesktopContent` | Renderer | app.tsx                                           |
+| `Desktop`                     | Renderer | desktop/desktop.tsx                               |
+| `DesktopDesigner`             | Renderer | desktop/designer/desktop-designer.tsx             |
+| `AdvaptiveViewDesktopContent` | Renderer | desktop/app.tsx                                   |
 | `AdaptiveDebuggerRoot`        | Renderer | adaptive-debugger/components/root.tsx             |
 | `AdaptiveDebuggerPanel`       | Renderer | adaptive-debugger/components/root.tsx             |
 | `AdaptiveDebuggerLayout`      | Renderer | adaptive-debugger/components/layout.tsx           |
@@ -45,17 +48,16 @@ AdaptiveDebuggerRoot adds only its own provider:
 
 That hierarchy is split across these files:
 
-## sandbox-renderer.tsx
-```typescript jsx
+## desktop/index.tsx
 
-// sandbox-renderer.tsx
-<InstanceManagerProvider>
-  <LayoutManagerProvider>
-    <SandboxManagerProvider>
-      <SandboxManager>{children}</SandboxManager>
-    </SandboxManagerProvider>
-  </LayoutManagerProvider>
-</InstanceManagerProvider>
+```typescript jsx
+<DesktopProvider>
+  <StoreManagerProvider>
+    <InstanceManagerProvider>
+      <DockviewManagerProvider>{children}</DockviewManagerProvider>
+    </InstanceManagerProvider>
+  </StoreManagerProvider>
+</DesktopProvider>
 
 // inside AdvaptiveViewDesktopContent
 <AdaptiveDebuggerRoot />
@@ -67,16 +69,18 @@ That hierarchy is split across these files:
 ```
 
 ## desktop/app.tsx
+
 ```typescript jsx
-<SandboxRenderer>
+<Desktop>
   {(props) => <AdvaptiveViewDesktopContent {...props} />}
-</SandboxRenderer>
+</Desktop>
 
 // inside AdvaptiveViewDesktopContent
 <AdaptiveDebuggerRoot />
 ```
 
 ## adaptive-debugger/components/root.tsx
+
 ```typescript jsx
 <AdaptiveDebuggerProvider>
   <AdaptiveDebuggerPanel />

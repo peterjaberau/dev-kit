@@ -1,7 +1,7 @@
 import { DockviewApi, IDockviewPanel } from '#adaptive-view/react';
 import * as React from 'react';
-import { LM } from '../sandbox-manager/layoutManagerTheme';
-import { IconBtn } from '../sandbox-manager/layoutManagerKit';
+import { LM } from '../desktop/designer/theme-utils';
+import { IconBtn } from '../desktop/designer/designer-kit';
 
 const PanelAction = (props: {
     panels: string[];

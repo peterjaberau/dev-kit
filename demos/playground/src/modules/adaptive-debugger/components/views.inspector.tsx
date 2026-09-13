@@ -5,14 +5,14 @@ import JsonView from "react18-json-view"
 import {
   useInstance,
   useInstanceManager,
-  useSandboxInstance,
+  useDesktopInstance,
 } from "../../adaptive-view/sandbox/instance-manager/selectors"
 import {
-  useLayoutGroup,
-  useLayoutManager,
-  useLayoutPanel,
-  useSandboxLayout,
-} from "../../adaptive-view/sandbox/layout-manager/selectors"
+  useDockviewGroup,
+  useDockviewManager,
+  useDockviewPanel,
+  useDockviewSelection,
+} from "../../adaptive-view/sandbox/dockview-manager/selectors"
 
 function InspectorJson({ title, value }: { title: string; value: object }) {
   return (
@@ -29,12 +29,12 @@ function InspectorJson({ title, value }: { title: string; value: object }) {
 
 export function DebuggerInspectorView() {
   const { metadata: instanceMetadata } = useInstanceManager()
-  const { metadata: layoutMetadata } = useLayoutManager()
-  const { selectedInstanceId } = useSandboxInstance()
-  const { selectedPanelId, selectedGroupId } = useSandboxLayout()
+  const { metadata: dockviewMetadata } = useDockviewManager()
+  const { selectedInstanceId } = useDesktopInstance()
+  const { selectedPanelId, selectedGroupId } = useDockviewSelection()
   const { instanceState } = useInstance(selectedInstanceId ?? "")
-  const { panelState, panelContext } = useLayoutPanel(selectedPanelId ?? "")
-  const { groupState, groupContext } = useLayoutGroup(selectedGroupId ?? "")
+  const { panelState, panelContext } = useDockviewPanel(selectedPanelId ?? "")
+  const { groupState, groupContext } = useDockviewGroup(selectedGroupId ?? "")
 
   const selections = {
     instanceId: selectedInstanceId,
@@ -53,7 +53,7 @@ export function DebuggerInspectorView() {
     <Box width="full" padding="3">
       <Stack gap="3">
         <InspectorJson title="Selections" value={selections} />
-        <InspectorJson title="Available State" value={{ instanceMetadata, layoutMetadata }} />
+        <InspectorJson title="Available State" value={{ instanceMetadata, dockviewMetadata }} />
         {instanceSnapshot ? (
           <InspectorJson title="Selected Instance" value={instanceSnapshot} />
         ) : (

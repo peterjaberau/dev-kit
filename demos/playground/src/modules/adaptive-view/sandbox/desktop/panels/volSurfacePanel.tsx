@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
 import { Section, SectionHeader } from './components';
 import { tnum } from '../constants';
 import { useTick } from '../hooks';
@@ -19,7 +19,7 @@ function iv(tenorIdx: number, deltaIdx: number, tick: number): number {
 }
 
 export const VolSurfacePanel: React.FC = () => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const tick = useTick(1500);
 
     const values: any = TENORS.map((_, t) => DELTAS.map((__, d) => iv(t, d, tick)))

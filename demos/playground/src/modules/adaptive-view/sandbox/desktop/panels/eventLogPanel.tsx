@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
 import { useDesktop } from "../selectors"
 
 type LogEntry = {
@@ -27,7 +27,7 @@ const categoryColor = (cat: LogEntry['category']) => {
 export const EventLogPanel = () => {
   const { dockviewApi } = useDesktop()
 
-  const c = useSandboxColors();
+  const c = useDesktopColors();
 
     const [entries, setEntries] = React.useState<LogEntry[]>([]);
 

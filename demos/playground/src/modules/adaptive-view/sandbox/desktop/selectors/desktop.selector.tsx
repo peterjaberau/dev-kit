@@ -1,8 +1,5 @@
 import { useSelector } from "@xstate/react"
-import { DesktopContext } from "../providers"
-
-
-
+import { DesktopContext } from "../providers/DesktopProvider"
 
 export const useDesktop = () => {
   const actorRef = DesktopContext.useActorRef()

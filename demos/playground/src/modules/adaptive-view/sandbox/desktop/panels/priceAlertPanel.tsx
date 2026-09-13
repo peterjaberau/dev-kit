@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMarket, useMarketDispatch } from '../providers/marketProvider';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
 import {
     Section,
     SectionHeader,
@@ -11,7 +11,7 @@ import { useFlash } from '../hooks';
 import { fmtPrice } from '../utils';
 
 export const PriceAlertPanel: React.FC = () => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const { selectedTicker, prices, alertThreshold, alertTriggered } = useMarket();
     const dispatch = useMarketDispatch();
     const [inputValue, setInputValue] = React.useState('');
@@ -305,7 +305,7 @@ const Marker: React.FC<{
     label: string;
     up?: boolean;
 }> = ({ posPct, color, label, up }) => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     return (
         <div
             style={{

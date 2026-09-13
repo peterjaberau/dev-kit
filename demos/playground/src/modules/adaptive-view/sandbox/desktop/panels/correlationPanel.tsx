@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
 import {
     Section,
     SectionHeader,
@@ -21,7 +21,7 @@ function corr(a: number, b: number, tick: number): number {
 }
 
 export const CorrelationPanel: React.FC = () => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     const tick = useTick(1500);
     const n = ASSETS.length;
 

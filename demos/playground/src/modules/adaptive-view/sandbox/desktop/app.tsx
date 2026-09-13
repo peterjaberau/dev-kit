@@ -6,35 +6,25 @@ import {
   IDockviewPanelHeaderProps,
   IDockviewPanelProps,
   DockviewApi,
-  DockviewTheme,
-  themeAbyss,
   IContextMenuItemComponentProps,
   GetTabContextMenuItemsParams,
   GetTabGroupChipContextMenuItemsParams,
   DEFAULT_TAB_GROUP_COLORS,
 } from "#adaptive-view/react"
 import "#adaptive-view/enterprise"
-import { DebugContext, ApiContext, ThemeContext } from "./providers"
 import { useDesktop } from "./selectors"
 import { DESKTOP_DOCKVIEW_COMPONENTS, DEFAULT_DOCKVIEW_COMPONENT } from "./panels/registry"
 import * as React from "react"
-import { setupEdgeGroups } from "../sandbox-manager/defaultLayout"
-import { loadDockviewLayout } from "../sandbox-manager/utils"
-import SandboxRenderer, { type SandboxManagerRenderProps } from "../sandbox-manager/sandbox-renderer"
-import { instanceProfiles, layoutProfiles } from "./config"
+import { setupEdgeGroups } from "./dockview/default-layout"
+import { loadDockviewLayout } from "./dockview/layout"
+import Desktop, { type DesktopRenderProps } from "./desktop"
+import { layoutProfiles } from "./config"
 import { LeftControls, PrefixHeaderControls, RightControls } from "../components/headerActions"
-import {
-  SandboxColorsContext,
-  SANDBOX_DARK_COLORS,
-  SANDBOX_LIGHT_COLORS,
-  useSandboxColors,
-} from "../sandbox-manager/sandboxTheme"
 import { RegistryViewer } from "#plugins/registry-manager-plugin/view"
 import { InstanceRenderer } from "../instance-manager/instance-renderer"
-import { useSandboxInstance } from "../instance-manager/selectors"
-import { useLayoutManager } from "../layout-manager/selectors"
+import { useDockviewManager } from "../dockview-manager/selectors"
 import { Box, Text } from "@chakra-ui/react"
-import { ViewInstanceRenderer } from "../sandbox-manager/views"
+import { ViewInstanceRenderer } from "./dockview/views"
 import { AdaptiveDebuggerRoot } from "../../../adaptive-debugger/components/root"
 import { useLocalStore } from "../store-manager/selectors"
 import {
@@ -60,11 +50,7 @@ const colors = [
 ]
 let count = 0
 
-export interface AdvaptiveViewDesktopProp {
-  initialTheme?: DockviewTheme
-}
-
-const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
+const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
   const { sendToDesktop, dockviewApi, currentDesktop, desktopContext } = useDesktop()
   const {
     logLines,
@@ -81,22 +67,18 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
     showLogs,
     debug,
   } = currentDesktop
-  const { layoutProfiles: registeredLayoutProfiles, selectedLayoutProfileId, layoutRevision } =
-    desktopContext.layout
+  const { layoutProfiles: registeredLayoutProfiles, selectedLayoutProfileId, layoutRevision } = desktopContext.layout
 
-
-  const { sentToLayoutManager } = useLayoutManager()
+  const { sendToDockviewManager } = useDockviewManager()
   const profilesRegistered = registeredLayoutProfiles === layoutProfiles
-  const { value: selectedLayoutData, save: saveSelectedLayoutData } = useLocalStore<unknown>("sandbox.layout")
+  const { value: selectedLayoutData, save: saveSelectedLayoutData } = useLocalStore<unknown>("desktop.layout")
 
   React.useEffect(() => {
     if (!profilesRegistered || !selectedLayoutProfileId) {
       return
     }
 
-    const profileData = registeredLayoutProfiles.find(
-      (profile: any) => profile.id === selectedLayoutProfileId,
-    )?.data
+    const profileData = registeredLayoutProfiles.find((profile: any) => profile.id === selectedLayoutProfileId)?.data
     if (profileData !== undefined) {
       saveSelectedLayoutData(profileData)
     }
@@ -203,7 +185,6 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
       loadDockviewLayout(dockviewApi, selectedLayoutData)
     }
 
-
     sendToDesktop({
       type: "onLayoutReady",
     })
@@ -211,8 +192,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
 
   const onReady = (event: DockviewReadyEvent) => {
     setupEdgeGroups(event.api)
-    sentToLayoutManager({ type: "ON_READY", api: event.api })
-
+    sendToDockviewManager({ type: "onReady", params: { api: event.api } })
 
     sendToDesktop({ type: "onReady", params: { api: event.api } })
   }
@@ -224,12 +204,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
     }
   }, [layoutReady, props, sendToDesktop, signalReady])
 
-  const effectiveTheme = props.theme ?? themeAbyss
-
-  const sandboxColors = React.useMemo(
-    () => (effectiveTheme.colorScheme === "light" ? SANDBOX_LIGHT_COLORS : SANDBOX_DARK_COLORS),
-    [effectiveTheme],
-  )
+  const effectiveTheme = props.theme
 
   const getTabContextMenuItems = React.useCallback(
     ({ panel, group }: GetTabContextMenuItemsParams) => {
@@ -382,7 +357,9 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
 
   return (
     <div
-      className={`sandbox${effectiveTheme.colorScheme === "light" ? "sandbox--light" : ""}`}
+      className={["desktop-workspace", effectiveTheme.colorScheme === "light" && "desktop-workspace--light"]
+        .filter(Boolean)
+        .join(" ")}
       style={{
         height: "100%",
         display: "flex",
@@ -408,35 +385,27 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
             visibility: layoutReady ? "visible" : "hidden",
           }}
         >
-          <SandboxColorsContext.Provider value={sandboxColors}>
-            <ApiContext.Provider value={dockviewApi}>
-              <DebugContext.Provider value={debug}>
-                <ThemeContext.Provider value={effectiveTheme}>
-                  <DockviewReact
-                    components={DESKTOP_DOCKVIEW_COMPONENTS}
-                    defaultTabComponent={TabRenderer}
-                    rightHeaderActionsComponent={RightControls}
-                    leftHeaderActionsComponent={LeftControls}
-                    prefixHeaderActionsComponent={PrefixHeaderControls}
-                    watermarkComponent={watermark ? WatermarkComponent : undefined}
-                    groupDragGhostComponent={customGhost ? GroupDragGhost : undefined}
-                    onReady={onReady}
-                    keyboardNavigation
-                    theme={effectiveTheme}
-                    autoHideEdgeGroups
-                    dockToEdgeGroups
-                    pinnedTabs={{ enabled: true }}
-                    overflow={currentDesktop.overflow}
-                    floatingGroupDragHandle="titlebar"
-                    dndCompass={dndCompass}
-                    smartGuides={smartGuides ? { snapDistance: 8 } : undefined}
-                    getTabContextMenuItems={getTabContextMenuItems}
-                    getTabGroupChipContextMenuItems={getTabGroupChipContextMenuItems}
-                  />
-                </ThemeContext.Provider>
-              </DebugContext.Provider>
-            </ApiContext.Provider>
-          </SandboxColorsContext.Provider>
+          <DockviewReact
+            components={DESKTOP_DOCKVIEW_COMPONENTS}
+            defaultTabComponent={TabRenderer}
+            rightHeaderActionsComponent={RightControls}
+            leftHeaderActionsComponent={LeftControls}
+            prefixHeaderActionsComponent={PrefixHeaderControls}
+            watermarkComponent={watermark ? WatermarkComponent : undefined}
+            groupDragGhostComponent={customGhost ? GroupDragGhost : undefined}
+            onReady={onReady}
+            keyboardNavigation
+            theme={effectiveTheme}
+            autoHideEdgeGroups
+            dockToEdgeGroups
+            pinnedTabs={{ enabled: true }}
+            overflow={currentDesktop.overflow}
+            floatingGroupDragHandle="titlebar"
+            dndCompass={dndCompass}
+            smartGuides={smartGuides ? { snapDistance: 8 } : undefined}
+            getTabContextMenuItems={getTabContextMenuItems}
+            getTabGroupChipContextMenuItems={getTabGroupChipContextMenuItems}
+          />
         </div>
 
         {showLogs && (
@@ -520,7 +489,7 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
             </div>
           </div>
         )}
-        {props.renderControls?.({
+        {props.renderController?.({
           api: dockviewApi,
           panels,
           groups,
@@ -550,13 +519,6 @@ const AdvaptiveViewDesktopContent = (props: SandboxManagerRenderProps) => {
   )
 }
 
-const AdvaptiveViewDesktop = ({ initialTheme }: AdvaptiveViewDesktopProp) => (
-  <SandboxRenderer
-    initialTheme={initialTheme}
-    instanceManagerInput={instanceProfiles[0]}
-  >
-    {(props) => <AdvaptiveViewDesktopContent {...props} />}
-  </SandboxRenderer>
-)
+const AdvaptiveViewDesktop = () => <Desktop>{(props) => <AdvaptiveViewDesktopContent {...props} />}</Desktop>
 
 export default AdvaptiveViewDesktop

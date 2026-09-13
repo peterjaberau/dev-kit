@@ -16,7 +16,7 @@ export function InstanceRenderer({ instanceId }: InstanceRendererProps) {
 
     return (
         <div
-            data-sandbox-theme-isolated
+            data-desktop-theme-isolated
             style={{ width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}
         >
             <RegistryViewer

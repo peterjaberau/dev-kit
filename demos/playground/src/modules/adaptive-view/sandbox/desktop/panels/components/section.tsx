@@ -1,12 +1,12 @@
 import * as React from "react"
-import { useSandboxColors } from "#adaptive-view/sandbox/sandbox-manager/sandboxTheme"
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers"
 import { UI } from "#adaptive-view/sandbox/desktop/constants"
 
 export const Section: React.FC<{
   children: React.ReactNode
   alt?: boolean
 }> = ({ children, alt }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   return (
     <div
       style={{
@@ -41,7 +41,7 @@ export const SectionHeader: React.FC<{
   children: React.ReactNode
   pad?: string
 }> = ({ children, pad = "9px 12px 8px" }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   return (
     <div
       style={{
@@ -63,7 +63,7 @@ export const SectionLabel: React.FC<{
   children: React.ReactNode
   right?: React.ReactNode
 }> = ({ children, right }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   return (
     <div
       style={{

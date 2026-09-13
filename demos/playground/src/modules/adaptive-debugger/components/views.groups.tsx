@@ -3,10 +3,10 @@
 import { Badge, Box, Button, Card, Container, HStack, Icon, Input, InputGroup, Stack, Text } from "@chakra-ui/react"
 import { type MouseEvent, useState } from "react"
 import { LuSearch } from "react-icons/lu"
-import { useLayoutManager, useSandboxLayout } from "../../adaptive-view/sandbox/layout-manager/selectors"
+import { useDockviewManager, useDockviewSelection } from "../../adaptive-view/sandbox/dockview-manager/selectors"
 
 export function DebuggerGroupsView() {
-  const { groupsList } = useLayoutManager()
+  const { groupsList } = useDockviewManager()
   const [search, setSearch] = useState("")
   const filtered = groupsList.filter(({ id, name }) => `${id} ${name}`.toLowerCase().includes(search.toLowerCase()))
 
@@ -45,10 +45,13 @@ export function DebuggerGroupsView() {
 }
 
 function GroupCard({ id, name }: { id: string; name: string }) {
-  const { selectedGroupId, sentToSandboxLayout } = useSandboxLayout()
+  const { selectedGroupId, sendToDockviewSelection } = useDockviewSelection()
   const selected = selectedGroupId === id
   const select = (event: MouseEvent<HTMLButtonElement>) =>
-    sentToSandboxLayout?.({ type: "ON_SELECT_GROUP", groupId: event.currentTarget.value })
+    sendToDockviewSelection?.({
+      type: "onSelectGroup",
+      params: { groupId: event.currentTarget.value },
+    })
 
   return (
     <Card.Root size="sm" variant={selected ? "elevated" : "outline"}>

@@ -1,111 +1,112 @@
-import { setup, assign, enqueueActions } from "xstate"
-import { themePresets, themeMetadata } from "../presets/theme.presets"
+import { assign, enqueueActions, setup } from "xstate"
+import { desktopThemeMeta, desktopThemes, dockviewThemeMeta, dockviewThemes } from "../presets"
 
+export type ThemeMachineType = "desktop" | "dockview"
+
+export interface DockviewThemeCssOverrides {
+  [property: `--dv-${string}`]: string | undefined
+}
+
+const normalizeDockviewTheme = (theme: any) => ({
+  ...theme,
+  gap: theme.gap ?? 0,
+  dndOverlayMounting: theme.dndOverlayMounting ?? "relative",
+  dndPanelOverlay: theme.dndPanelOverlay ?? "content",
+  dndTabIndicator: theme.dndTabIndicator ?? "fill",
+  dndOverlayBorder: theme.dndOverlayBorder ?? "",
+  tabGroupIndicator: theme.tabGroupIndicator ?? "wrap",
+  tabAnimation: theme.tabAnimation ?? "default",
+  cssOverrides: { ...theme.cssOverrides },
+})
 
 export const themeMachine = setup({
   actions: {
-    setDesktopTheme: assign(({ context, event }, params) => {
-      const { desktopTheme = context.settings.desktopDefaultTheme } = event.params || params
-      const desktopThemeProfile = context.presets.themes.find(({ theme }: any) => theme.name === desktopTheme)
+    setDesktopTheme: assign(({ context, event }, params: any) => {
+      const desktopTheme = (params || event.params)?.desktopTheme ?? context.settings.desktopDefaultTheme
+      const desktopThemeProfile =
+        context.presets.desktopThemes.find(({ name }: any) => name === desktopTheme) ?? context.presets.desktopThemes[0]
+
+      context.current = { ...context.current, desktopTheme: desktopThemeProfile.name, desktopThemeProfile }
+    }),
+    setDockviewTheme: assign(({ context, event }, params: any) => {
+      const requestedTheme = (params || event.params)?.dockviewTheme ?? context.settings.dockviewDefaultTheme
+      const requestedName = typeof requestedTheme === "string" ? requestedTheme : requestedTheme?.name
+      const dockviewThemeProfile =
+        context.presets.dockviewThemes.find(({ name }: any) => name === requestedName) ??
+        (typeof requestedTheme === "object" ? requestedTheme : context.presets.dockviewThemes[0])
+
       context.current = {
         ...context.current,
-        desktopTheme,
-        desktopThemeProfile,
+        dockviewTheme: dockviewThemeProfile.name,
+        dockviewThemeProfile: normalizeDockviewTheme(dockviewThemeProfile),
       }
     }),
-    setDockviewTheme: assign(({ context, event }, params) => {
-      const { dockviewTheme = context.settings.dockviewDefaultTheme } = event.params || params
-      const dockviewThemeProfile = context.presets.themes.find(({ theme }: any) => theme.name === dockviewTheme)
-      context.current = {
-        ...context.current,
-        dockviewTheme,
-        dockviewThemeProfile: {
-          gap: dockviewTheme.gap ?? 0,
-          dndOverlayMounting: dockviewTheme.dndOverlayMounting ?? "relative",
-          dndPanelOverlay: dockviewTheme.dndPanelOverlay ?? "content",
-          dndTabIndicator: dockviewTheme.dndTabIndicator ?? "fill",
-          dndOverlayBorder: dockviewTheme.dndOverlayBorder ?? "",
-          tabGroupIndicator: dockviewTheme.tabGroupIndicator ?? "wrap",
-          tabAnimation: dockviewTheme.tabAnimation ?? "default",
-          cssOverrides: {},
-        },
-      }
+    updateDockviewTheme: assign(({ context, event }, params: any) => {
+      const { patch } = params || event.params
+      context.current.dockviewThemeProfile = { ...context.current.dockviewThemeProfile, ...patch }
     }),
-    updateDockviewTheme: assign(({ context, event }, params) => {
-      const { patch } = event.params || params
-      context.current = {
-        ...context.current.dockviewThemeProfile,
-        ...patch,
+    updateDockviewThemeCss: assign(({ context, event }, params: any) => {
+      const { patch } = params || event.params
+      const cssOverrides = { ...context.current.dockviewThemeProfile.cssOverrides }
+
+      for (const [key, value] of Object.entries(patch)) {
+        if (value === undefined || value === "") {
+          delete cssOverrides[key]
+        } else {
+          cssOverrides[key] = value
+        }
       }
+
+      context.current.dockviewThemeProfile = { ...context.current.dockviewThemeProfile, cssOverrides }
     }),
-    updateDockviewThemeCss: assign(({ context, event }, params) => {}),
-    resetDockviewTheme: assign(({ context, event }, params) => {}),
+    resetDockviewTheme: assign(({ context }) => {
+      const preset =
+        context.presets.dockviewThemes.find(({ name }: any) => name === context.current.dockviewTheme) ??
+        context.presets.dockviewThemes[0]
+      context.current.dockviewThemeProfile = normalizeDockviewTheme(preset)
+    }),
   },
-  actors: {},
 }).createMachine({
   id: "theme",
   initial: "initiating",
   context: ({ input }: any) => ({
-    metadata: {
-      theme: themeMetadata,
-    },
-    presets: {
-      themes: themePresets,
-    },
+    type: input.type as ThemeMachineType,
+    metadata: { dockviewThemeMeta, desktopThemeMeta },
+    presets: { dockviewThemes, desktopThemes },
     current: {
       desktopTheme: null,
-      desktopThemeProfile: {},
-
+      desktopThemeProfile: null,
       dockviewTheme: null,
-      dockviewThemeProfile: {
-        gap: 0,
-        dndOverlayMounting: "relative",
-        dndPanelOverlay: "content",
-        dndTabIndicator: "fill",
-        dndOverlayBorder: "",
-        tabGroupIndicator: "wrap",
-        tabAnimation: "default",
-        cssOverrides: {},
-      },
+      dockviewThemeProfile: null,
     },
     settings: {
-      desktopDefaultTheme: "githubLight",
-      dockviewDefaultTheme: "githubLight",
+      dockviewDefaultTheme: input.initialTheme?.name ?? "githubLight",
+      desktopDefaultTheme: input.initialDesktopTheme ?? "desktop-default",
     },
+    initialTheme: input.initialTheme,
   }),
   states: {
     initiating: {
       entry: enqueueActions(({ context, enqueue }) => {
-        enqueue("setDesktopTheme")
-        enqueue("setDockviewTheme")
+        if (context.type === "desktop") {
+          enqueue("setDesktopTheme")
+        } else {
+          enqueue({
+            type: "setDockviewTheme",
+            params: { dockviewTheme: context.initialTheme ?? context.settings.dockviewDefaultTheme },
+          })
+        }
       }),
       always: "ready",
     },
     ready: {
       on: {
-        onSelectDesktopTheme: {
-          actions: ["setDesktopTheme"],
-        },
-        onSelectDockviewTheme: {
-          actions: ["setDockviewTheme"],
-        },
-        onUpdateDockviewTheme: {
-          actions: ["updateDockviewTheme"],
-        },
-        onUpdateDockviewThemeCss: {
-          actions: ["updateDockviewThemeCss"],
-        },
-        onResetDockviewTheme: {
-          actions: ["resetDockviewTheme"],
-        },
+        onSelectDesktopTheme: { actions: "setDesktopTheme" },
+        onSelectDockviewTheme: { actions: "setDockviewTheme" },
+        onUpdateDockviewTheme: { actions: "updateDockviewTheme" },
+        onUpdateDockviewThemeCss: { actions: "updateDockviewThemeCss" },
+        onResetDockviewTheme: { actions: "resetDockviewTheme" },
       },
     },
   },
 })
-
-
-/*
-sandboxThemes ---> themeMachine context.layout.presets (LAYOUT_MANAGER_BUILTIN_THEMES)
-
-
- */

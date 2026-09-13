@@ -1,13 +1,13 @@
 import * as React from "react"
 import { DockviewReadyEvent } from "#adaptive-view/core"
-import { ThemeContext } from "../providers"
+import { useDockviewTheme } from "../providers"
 import { usePanelApi } from "../providers/PanelApiContext"
 import { DockviewReact } from "#adaptive-view/react"
 import { DEFAULT_DOCKVIEW_COMPONENT } from "./registry"
 
 export function NestedPanel() {
 
-  const theme = React.useContext(ThemeContext)
+  const { dockviewTheme: theme } = useDockviewTheme()
   const panelApi: any = usePanelApi()
   return (
     <DockviewReact

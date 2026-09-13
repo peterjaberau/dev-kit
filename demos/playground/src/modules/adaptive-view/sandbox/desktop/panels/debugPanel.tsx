@@ -5,7 +5,7 @@ import {
   DockviewPanelApi,
   DockviewPanelRenderer,
 } from "#adaptive-view/react"
-import { useSandboxColors } from "../../sandbox-manager/sandboxTheme"
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers"
 import { PanelApiMetadata, usePanelApi, usePanelApiMetadata } from "../providers/PanelApiContext"
 
 
@@ -33,7 +33,7 @@ export const DebugPanelTable = (props: { data: PanelApiMetadata }) => {
 }
 
 const ValueDisplay: React.FC<{ value: unknown }> = ({ value }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   if (value === undefined || value === null) {
     return <span style={{ color: c.textFaint }}>—</span>
   }
@@ -60,7 +60,7 @@ const ValueDisplay: React.FC<{ value: unknown }> = ({ value }) => {
 }
 
 const CountBadge: React.FC<{ count: number }> = ({ count }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   return (
     <span
       style={{
@@ -83,7 +83,7 @@ const CountBadge: React.FC<{ count: number }> = ({ count }) => {
 }
 
 export const DebugPanel = () => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   const panelApi: any = usePanelApi()
 
   const metadata = usePanelApiMetadata(panelApi)

@@ -1,4 +1,4 @@
-import { useSandboxColors } from "#adaptive-view/sandbox/sandbox-manager/sandboxTheme"
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers"
 import * as React from "react"
 
 export const Chip: React.FC<{
@@ -6,7 +6,7 @@ export const Chip: React.FC<{
   tone?: "green" | "red" | "blue" | "yellow" | "neutral"
   solid?: boolean
 }> = ({ children, tone = "neutral", solid }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   const map = {
     green: [c.green, c.greenBg],
     red: [c.red, c.redBg],

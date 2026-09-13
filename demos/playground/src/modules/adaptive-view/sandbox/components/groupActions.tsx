@@ -5,8 +5,8 @@ import {
     DockviewHeaderPosition,
 } from '#adaptive-view/react';
 import * as React from 'react';
-import { LM } from '../sandbox-manager/layoutManagerTheme';
-import { IconBtn } from '../sandbox-manager/layoutManagerKit';
+import { LM } from '../desktop/designer/theme-utils';
+import { IconBtn } from '../desktop/designer/designer-kit';
 
 const selectStyle: React.CSSProperties = {
     padding: '5px 8px',
@@ -191,7 +191,7 @@ const GroupAction = (props: {
                     Header
                 </span>
                 <select
-                    className="dv-layout-manager-input"
+                    className="dv-designer-input"
                     style={selectStyle}
                     value={headerPosition}
                     onChange={(e) => {

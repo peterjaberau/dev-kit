@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSandboxColors } from '../../sandbox-manager/sandboxTheme';
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
 import { Section, SectionHeader, Chip } from './components';
 import { tnum } from '../constants';
 
@@ -31,7 +31,7 @@ const HEADLINES: Headline[] = [
 ];
 
 export const NewsPanel: React.FC = () => {
-    const c = useSandboxColors();
+    const c = useDesktopColors();
     return (
         <Section>
             <SectionHeader pad="8px 12px 7px">

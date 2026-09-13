@@ -1,17 +1,18 @@
 import * as React from "react"
 import { IDockviewPanelProps } from "#adaptive-view/core"
-import { DebugContext } from "../../providers/DebugContext"
+import { useDesktop } from "../../selectors"
 import { usePanelApiMetadata, usePanelApi } from "../../providers/PanelApiContext"
-import { useSandboxColors } from "../../../sandbox-manager/sandboxTheme"
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers"
 import { DebugPanelTable } from "../debugPanel"
 import { Option } from "../components"
 import { MONO } from "#adaptive-view/sandbox/desktop/constants"
 
 export function DefaultPanel() {
-  const isDebug = React.useContext(DebugContext)
+  const { currentDesktop } = useDesktop()
+  const isDebug = currentDesktop.debug
   const panelApi: any = usePanelApi()
   const metadata = usePanelApiMetadata(panelApi)
-  const c = useSandboxColors()
+  const c = useDesktopColors()
 
   if (isDebug) {
     return (

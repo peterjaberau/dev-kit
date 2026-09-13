@@ -3,7 +3,7 @@
 import { Badge, Box, Button, Card, Container, HStack, Icon, Input, InputGroup, Stack, Text } from "@chakra-ui/react"
 import { type MouseEvent, useState } from "react"
 import { LuSearch } from "react-icons/lu"
-import { useInstanceManager, useSandboxInstance } from "../../adaptive-view/sandbox/instance-manager/selectors"
+import { useDesktopInstance, useInstanceManager } from "../../adaptive-view/sandbox/instance-manager/selectors"
 
 const categories = ["All", "Forms", "Components"] as const
 type Category = (typeof categories)[number]
@@ -60,10 +60,13 @@ export function DebuggerInstancesView() {
 }
 
 function InstanceCard({ id, name }: { id: string; name: string }) {
-  const { selectedInstanceId, sentToSandboxInstance } = useSandboxInstance()
+  const { selectedInstanceId, sendToDesktopInstance } = useDesktopInstance()
   const selected = selectedInstanceId === id
   const select = (event: MouseEvent<HTMLButtonElement>) =>
-    sentToSandboxInstance?.({ type: "ON_SELECT_INSTANCE", instanceId: event.currentTarget.value })
+    sendToDesktopInstance?.({
+      type: "onSelectInstance",
+      params: { instanceId: event.currentTarget.value },
+    })
 
   return (
     <Card.Root size="sm" variant={selected ? "elevated" : "outline"}>

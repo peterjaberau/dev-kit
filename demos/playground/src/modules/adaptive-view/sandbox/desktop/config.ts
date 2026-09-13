@@ -1,4 +1,4 @@
-import { DockviewApi } from '#adaptive-view/react';
+import { DockviewApi } from "#adaptive-view/react"
 
 /** Readme
  *
@@ -969,7 +969,7 @@ export const layoutProfiles: any[] = [
                 {
                   type: "leaf",
                   data: {
-                    views: ["dynamicButtonCustom", "dynamiccheckbox", "dynamicfield", "dynamicslider"],
+                    views: ["dynamiccheckbox", "dynamicfield", "dynamicslider"],
                     activeView: "dynamiccheckbox",
                     id: "group-forms",
                   },
@@ -1301,7 +1301,6 @@ export const dynamicLayoutProfile: any = {
         },
         autoReveal: true,
       },
-
     },
   },
 }
@@ -1355,50 +1354,50 @@ export const dynamicNodesToPanels: any = [
 ]
 
 export const EDGE_GROUP_PANELS: readonly {
-    pos: 'bottom' | 'left' | 'right';
-    id: string;
-    title: string;
+  pos: "bottom" | "left" | "right"
+  id: string
+  title: string
 }[] = [
-    { pos: 'left', id: 'left-1', title: 'Explorer' },
-    { pos: 'right', id: 'right-1', title: 'Outline' },
-    { pos: 'right', id: 'right-2', title: 'Properties' },
-    { pos: 'bottom', id: 'bottom-1', title: 'Terminal' },
-    { pos: 'bottom', id: 'bottom-2', title: 'Output' },
-    { pos: 'bottom', id: 'bottom-3', title: 'Problems' },
-];
+  { pos: "left", id: "left-1", title: "Explorer" },
+  { pos: "right", id: "right-1", title: "Outline" },
+  { pos: "right", id: "right-2", title: "Properties" },
+  { pos: "bottom", id: "bottom-1", title: "Terminal" },
+  { pos: "bottom", id: "bottom-2", title: "Output" },
+  { pos: "bottom", id: "bottom-3", title: "Problems" },
+]
 
 export function populateEdgeGroups(api: DockviewApi): void {
-    for (const { pos, id, title } of EDGE_GROUP_PANELS) {
-        const groupApi = api.getEdgeGroup(pos);
-        if (groupApi && !api.panels.some((panel) => panel.id === id)) {
-            api.addPanel({
-                id,
-                component: 'fixedPlaceholder',
-                title,
-                position: { referenceGroup: groupApi.id },
-                params: { label: title, position: pos },
-            });
-        }
+  for (const { pos, id, title } of EDGE_GROUP_PANELS) {
+    const groupApi = api.getEdgeGroup(pos)
+    if (groupApi && !api.panels.some((panel) => panel.id === id)) {
+      api.addPanel({
+        id,
+        component: "fixedPlaceholder",
+        title,
+        position: { referenceGroup: groupApi.id },
+        params: { label: title, position: pos },
+      })
     }
+  }
 
-    const bottomEdge = api.getEdgeGroup('bottom');
-    if (!bottomEdge) {
-        return;
-    }
+  const bottomEdge = api.getEdgeGroup("bottom")
+  if (!bottomEdge) {
+    return
+  }
 
-    const logs = api.createTabGroup({
-        groupId: bottomEdge.id,
-        label: 'Logs',
-        color: 'purple',
-    });
-    api.addPanelToTabGroup({
-        groupId: bottomEdge.id,
-        tabGroupId: logs.id,
-        panelId: 'bottom-1',
-    });
-    api.addPanelToTabGroup({
-        groupId: bottomEdge.id,
-        tabGroupId: logs.id,
-        panelId: 'bottom-2',
-    });
+  const logs = api.createTabGroup({
+    groupId: bottomEdge.id,
+    label: "Logs",
+    color: "purple",
+  })
+  api.addPanelToTabGroup({
+    groupId: bottomEdge.id,
+    tabGroupId: logs.id,
+    panelId: "bottom-1",
+  })
+  api.addPanelToTabGroup({
+    groupId: bottomEdge.id,
+    tabGroupId: logs.id,
+    panelId: "bottom-2",
+  })
 }

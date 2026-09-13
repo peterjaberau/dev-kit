@@ -1,8 +1,23 @@
 import { setup, assign, enqueueActions } from "xstate"
-
+import { themeMachine } from "./theme.machine"
 
 export const desktopMachine = setup({
+  actors: { themeMachine },
   actions: {
+    spawnThemes: assign(({ context, spawn }) => {
+      context.theme = {
+        desktopThemeRef: spawn("themeMachine", {
+          id: "desktop-theme",
+          systemId: "desktop-theme",
+          input: { type: "desktop", initialDesktopTheme: context.input.initialDesktopTheme },
+        }),
+        dockviewThemeRef: spawn("themeMachine", {
+          id: "dockview-theme",
+          systemId: "dockview-theme",
+          input: { type: "dockview", initialTheme: context.input.initialTheme },
+        }),
+      }
+    }),
     setDockviewApi: assign(({ context, event }, params) => {
       const { api } = event.params || params
       context.dockviewApi = api
@@ -121,21 +136,21 @@ export const desktopMachine = setup({
       context.layout.selectedLayoutProfileId = event.params.profileId
       context.layout.layoutRevision += 1
     }),
-    toggleLayoutManager: assign(({ context }) => {
-      context.layout.layoutManagerOpen = !context.layout.layoutManagerOpen
+    toggleDesktopDesigner: assign(({ context }) => {
+      context.layout.desktopDesignerOpen = !context.layout.desktopDesignerOpen
     }),
-    closeLayoutManager: assign(({ context }) => {
-      context.layout.layoutManagerOpen = false
+    closeDesktopDesigner: assign(({ context }) => {
+      context.layout.desktopDesignerOpen = false
     }),
     markReady: assign(({ context }) => {
       context.layout.ready = true
     }),
   },
-  actors: {},
 }).createMachine({
   id: "desktop",
   initial: "initiating",
   context: ({ input }: any) => ({
+    input,
     dockviewApi: null,
     fixtures: {
       colors: [
@@ -177,6 +192,10 @@ export const desktopMachine = setup({
         search: true,
       },
     },
+    theme: {
+      desktopThemeRef: null,
+      dockviewThemeRef: null,
+    },
     dockview: {
       settings: {
         tabMenuItems: [
@@ -194,15 +213,17 @@ export const desktopMachine = setup({
       },
     },
     layout: {
-      layoutManagerOpen: false,
+      desktopDesignerOpen: false,
       ready: false,
       layoutProfiles: input.layoutProfiles ?? [],
       selectedLayoutProfileId: null,
       layoutRevision: 0,
+      themeRef: null,
     },
   }),
   states: {
     initiating: {
+      entry: "spawnThemes",
       on: {
         onReady: {
           actions: ["setDockviewApi"],
@@ -325,11 +346,11 @@ export const desktopMachine = setup({
         onSelectLayoutProfile: {
           actions: ["selectLayoutProfile"],
         },
-        onToggleLayoutManager: {
-          actions: ["toggleLayoutManager"],
+        onToggleDesktopDesigner: {
+          actions: ["toggleDesktopDesigner"],
         },
-        onCloseLayoutManager: {
-          actions: ["closeLayoutManager"],
+        onCloseDesktopDesigner: {
+          actions: ["closeDesktopDesigner"],
         },
         onMarkReady: {
           actions: ["markReady"],

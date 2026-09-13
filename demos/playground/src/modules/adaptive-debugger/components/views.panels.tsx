@@ -3,10 +3,10 @@
 import { Badge, Box, Button, Card, Container, HStack, Icon, Input, InputGroup, Stack, Text } from "@chakra-ui/react"
 import { type MouseEvent, useState } from "react"
 import { LuSearch } from "react-icons/lu"
-import { useLayoutManager, useSandboxLayout } from "../../adaptive-view/sandbox/layout-manager/selectors"
+import { useDockviewManager, useDockviewSelection } from "../../adaptive-view/sandbox/dockview-manager/selectors"
 
 export function DebuggerPanelsView() {
-  const { panelsList } = useLayoutManager()
+  const { panelsList } = useDockviewManager()
   const [search, setSearch] = useState("")
   const filtered = panelsList.filter(({ name }) => name.toLowerCase().includes(search.toLowerCase()))
 
@@ -38,10 +38,13 @@ export function DebuggerPanelsView() {
 }
 
 function PanelCard({ id, name }: { id: string; name: string }) {
-  const { selectedPanelId, sentToSandboxLayout } = useSandboxLayout()
+  const { selectedPanelId, sendToDockviewSelection } = useDockviewSelection()
   const selected = selectedPanelId === id
   const select = (event: MouseEvent<HTMLButtonElement>) =>
-    sentToSandboxLayout?.({ type: "ON_SELECT_PANEL", panelId: event.currentTarget.value })
+    sendToDockviewSelection?.({
+      type: "onSelectPanel",
+      params: { panelId: event.currentTarget.value },
+    })
 
   return <ItemCard id={id} name={name} selected={selected} value={id} onSelect={select} />
 }

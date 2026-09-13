@@ -1,11 +1,11 @@
 // A row of compact label/value tiles: the stat strips that fill terminal
 // headers (24h H/L, volume, VWAP, spread…).
 import * as React from "react"
-import { useSandboxColors } from "#adaptive-view/sandbox/sandbox-manager/sandboxTheme"
+import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers"
 import { tnum } from "../../constants"
 
 export const StatStrip: React.FC<{ children: React.ReactNode; cols?: number }> = ({ children, cols }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   return (
     <div
       style={{
@@ -28,7 +28,7 @@ export const Stat: React.FC<{
   color?: string
   title?: string
 }> = ({ label, value, color, title }) => {
-  const c = useSandboxColors()
+  const c = useDesktopColors()
   return (
     <div
       title={title}
@@ -77,7 +77,7 @@ export const MiniBar: React.FC<{
   height?: number;
   track?: boolean;
 }> = ({ pct, color, height = 4, track = true }) => {
-  const c = useSandboxColors();
+  const c = useDesktopColors();
   return (
     <div
       style={{
@@ -111,7 +111,7 @@ export const RangeBar: React.FC<{
   value: number;
   color: string;
 }> = ({ low, high, value, color }) => {
-  const c = useSandboxColors();
+  const c = useDesktopColors();
   const pct =
     high > low ? ((value - low) / (high - low)) * 100 : 50;
   return (
