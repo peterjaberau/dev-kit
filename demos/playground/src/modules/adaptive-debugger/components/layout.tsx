@@ -1,47 +1,9 @@
 "use client"
 
-import {
-  DockviewReact,
-  type DockviewReadyEvent,
-  type IDockviewPanelProps,
-  themeGithubLightSpaced,
-} from "#adaptive-view/react"
+import { DockviewReact, type DockviewReadyEvent, themeGithubLightSpaced } from "#adaptive-view/react"
 import { adaptiveDebuggerLayout } from "../config"
 import { useAdaptiveDebugger } from "../selectors"
-import { LayoutPanel } from "./layout.component"
-import { DebuggerGroupsView } from "./views.groups"
-import { DebuggerInspectorView } from "./views.inspector"
-import { DebuggerInstancesView } from "./views.instances"
-import { DebuggerPanelsView } from "./views.panels"
-import { DebuggerRegistryLibraryView } from "./views.registry-library"
-
-const debuggerComponents = {
-  panels: (props: IDockviewPanelProps) => (
-    <LayoutPanel api={props.containerApi} panelProps={props}>
-      <DebuggerPanelsView />
-    </LayoutPanel>
-  ),
-  groups: (props: IDockviewPanelProps) => (
-    <LayoutPanel api={props.containerApi} panelProps={props}>
-      <DebuggerGroupsView />
-    </LayoutPanel>
-  ),
-  instances: (props: IDockviewPanelProps) => (
-    <LayoutPanel api={props.containerApi} panelProps={props}>
-      <DebuggerInstancesView />
-    </LayoutPanel>
-  ),
-  registryLibrary: (props: IDockviewPanelProps) => (
-    <LayoutPanel api={props.containerApi} panelProps={props}>
-      <DebuggerRegistryLibraryView />
-    </LayoutPanel>
-  ),
-  inspector: (props: IDockviewPanelProps) => (
-    <LayoutPanel api={props.containerApi} panelProps={props}>
-      <DebuggerInspectorView />
-    </LayoutPanel>
-  ),
-}
+import { ADAPTIVE_DEBUGGER_PANELS } from "../panels/registry"
 
 export function AdaptiveDebuggerLayout() {
   const { sentToAdaptiveDebugger } = useAdaptiveDebugger()
@@ -51,5 +13,5 @@ export function AdaptiveDebuggerLayout() {
     sentToAdaptiveDebugger({ type: "ON_READY", api: event.api })
   }
 
-  return <DockviewReact components={debuggerComponents} theme={themeGithubLightSpaced} onReady={handleReady} />
+  return <DockviewReact components={ADAPTIVE_DEBUGGER_PANELS} theme={themeGithubLightSpaced} onReady={handleReady} />
 }

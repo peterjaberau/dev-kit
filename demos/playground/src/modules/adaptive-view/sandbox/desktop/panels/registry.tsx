@@ -1,14 +1,12 @@
 import * as React from "react"
-import  { FunctionComponent } from "react"
+import { FunctionComponent } from "react"
 import type { IDockviewPanelProps } from "#adaptive-view/core"
 import { DefaultPanel } from "./internals/defaultPanel"
 import { ChartPanel } from "./chartPanel"
 import { CorrelationPanel } from "./correlationPanel"
-import { DebugPanel } from './debugPanel';
+import { DebugPanel } from "./debugPanel"
 import { EventLogPanel } from "./eventLogPanel"
 import { FxTilesPanel } from "./fxTilesPanel"
-import { LayoutInspectorPanel } from "./layoutInspectorPanel"
-import { MapboxPanel } from "./mapboxPanel"
 import { NewsPanel } from "./newsPanel"
 import { OrderBookPanel } from "./orderBookPanel"
 import { OrdersPanel } from "./ordersPanel"
@@ -17,22 +15,20 @@ import { PriceAlertPanel } from "./priceAlertPanel"
 import { SignalsPanel } from "./signalsPanel"
 import { VolSurfacePanel } from "./volSurfacePanel"
 import { WatchlistPanel } from "./watchlistPanel"
-import { InstancePanel } from "./instancePanel"
+import { ViewPanel } from "./viewPanel"
+import { DynamicPanel } from "./dynamicPanel"
 import { NestedPanel } from "./nestedPanel"
 import { PlaceholderPanel } from "./placeholderPanel"
 import { IFramePanel } from "./iframePanel"
 import { VesselFinderPanel } from "./vesselFinderPanel"
-
-
-import { WrapperWithScrollArea } from './components/scoll-area'
+import { WrapperWithScrollArea } from "./components/scoll-area"
 import { PanelApiProvider } from "../providers/PanelApiContext"
 
-
-const wrap = (Inner: FunctionComponent): FunctionComponent<IDockviewPanelProps> => {
-  const Wrapped: FunctionComponent<IDockviewPanelProps> = ({ api }) => (
-    <PanelApiProvider api={api}>
+export const wrap = (Inner: FunctionComponent<any>): FunctionComponent<IDockviewPanelProps> => {
+  const Wrapped: FunctionComponent<IDockviewPanelProps> = (props) => (
+    <PanelApiProvider api={props.api}>
       <WrapperWithScrollArea>
-        <Inner />
+        <Inner {...props} />
       </WrapperWithScrollArea>
     </PanelApiProvider>
   )
@@ -51,8 +47,8 @@ export const DESKTOP_DOCKVIEW_COMPONENTS: Record<string, FunctionComponent<IDock
   debuginfo: wrap(DebugPanel),
 
   // similar
-  instance: wrap(InstancePanel),
-  dynamic: wrap(InstancePanel),
+  view: wrap(ViewPanel),
+  dynamic: wrap(DynamicPanel),
 
   nested: wrap(NestedPanel),
   fixedPlaceholder: wrap(PlaceholderPanel),

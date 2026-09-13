@@ -14,7 +14,7 @@ export default function Index(props: RegistryViewerProps) {
 
   return (
     <RegistryThemeProvider>
-      <WrapperWithScrollArea>
+      <WrapperWithScrollArea data-id="registry-viewer">
         <ComponentRenderer id={componentId} props={options} />
       </WrapperWithScrollArea>
     </RegistryThemeProvider>

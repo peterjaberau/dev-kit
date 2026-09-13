@@ -9,7 +9,7 @@ export const adaptiveDebuggerLayout: ReturnType<DockviewApi["toJSON"]> = {
           type: "leaf",
           data: {
             id: "adaptive-debugger-group",
-            views: ["panels", "groups", "instances", "registryLibrary", "inspector"],
+            views: ["panels", "groups", "views", "registryLibrary", "inspector"],
             activeView: "panels",
           },
         },
@@ -30,10 +30,10 @@ export const adaptiveDebuggerLayout: ReturnType<DockviewApi["toJSON"]> = {
       contentComponent: "groups",
       title: "Groups",
     },
-    instances: {
-      id: "instances",
-      contentComponent: "instances",
-      title: "Instances",
+    views: {
+      id: "views",
+      contentComponent: "views",
+      title: "Views",
     },
     registryLibrary: {
       id: "registryLibrary",

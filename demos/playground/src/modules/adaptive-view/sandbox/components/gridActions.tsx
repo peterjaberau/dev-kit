@@ -207,8 +207,9 @@ function usePopover() {
 
 export const GridActions = (props: { api?: DockviewApi }) => {
   const { sendToDesktop, desktopContext } = useDesktop()
-  const layoutStore = useLocalStore<unknown>("desktop.layout")
-  const { layoutProfiles, selectedLayoutProfileId } = desktopContext.layout
+  const dockviewStore = useLocalStore<unknown>("desktop.layout")
+  const { dockviewProfiles } = desktopContext.presets
+  const { selectedDockviewProfileId } = desktopContext.layout
   const [loadMenuOpen, setLoadMenuOpen] = React.useState(false)
 
   const onClear = () => {
@@ -221,9 +222,9 @@ export const GridActions = (props: { api?: DockviewApi }) => {
     }
 
     setLoadMenuOpen(false)
-    layoutStore.save(profile.data)
+    dockviewStore.save(profile.data)
     sendToDesktop({
-      type: "onSelectLayoutProfile",
+      type: "onSelectDockviewProfile",
       params: { profileId: profile.id },
     })
   }
@@ -232,15 +233,15 @@ export const GridActions = (props: { api?: DockviewApi }) => {
     if (props.api) {
       const state = props.api.toJSON()
       console.log(state)
-      layoutStore.save(state)
+      dockviewStore.save(state)
     }
   }
 
   const onReset = () => {
     if (props.api) {
-      layoutStore.reset()
+      dockviewStore.reset()
       sendToDesktop({
-        type: "onSelectLayoutProfile",
+        type: "onSelectDockviewProfile",
         params: { profileId: null },
       })
     }
@@ -272,13 +273,13 @@ export const GridActions = (props: { api?: DockviewApi }) => {
       <Row>
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
           <div style={{ position: "relative" }}>
-            <Btn onClick={() => setLoadMenuOpen((open) => !open)} icon="folder_open" title="Choose a layout profile">
+            <Btn onClick={() => setLoadMenuOpen((open) => !open)} icon="folder_open" title="Choose a Dockview profile">
               Load
             </Btn>
             {loadMenuOpen && (
               <div
                 role="menu"
-                aria-label="Layout profiles"
+                aria-label="Dockview profiles"
                 style={{
                   position: "absolute",
                   top: "calc(100% + 6px)",
@@ -292,12 +293,12 @@ export const GridActions = (props: { api?: DockviewApi }) => {
                   boxShadow: LM.shadowMd,
                 }}
               >
-                {layoutProfiles.map((profile: any) => (
+                {dockviewProfiles.map((profile: any) => (
                   <button
                     key={profile.id}
                     type="button"
                     role="menuitem"
-                    aria-current={profile.id === selectedLayoutProfileId ? "true" : undefined}
+                    aria-current={profile.id === selectedDockviewProfileId ? "true" : undefined}
                     onClick={() => onLoad(profile)}
                     style={{
                       display: "block",

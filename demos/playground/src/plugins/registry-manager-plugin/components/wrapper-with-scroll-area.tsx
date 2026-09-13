@@ -9,6 +9,7 @@ export const WrapperWithScrollArea = ({
 }) => {
   return (
     <Card.Root
+      data-id="wrapper-with-scroll-area"
       data-name="wrapper-with-scroll-area"
       size={"sm"}
       h="100%"
@@ -30,6 +31,7 @@ export const WrapperWithScrollArea = ({
           }}
         >
           <ScrollArea
+            data-id="scroll-area"
             css={{
               backgroundColor: "transparent",
               border: "none",

@@ -18,13 +18,7 @@ import * as React from "react"
 import { setupEdgeGroups } from "./dockview/default-layout"
 import { loadDockviewLayout } from "./dockview/layout"
 import Desktop, { type DesktopRenderProps } from "./desktop"
-import { layoutProfiles } from "./config"
 import { LeftControls, PrefixHeaderControls, RightControls } from "../components/headerActions"
-import { RegistryViewer } from "#plugins/registry-manager-plugin/view"
-import { InstanceRenderer } from "../instance-manager/instance-renderer"
-import { useDockviewManager } from "../dockview-manager/selectors"
-import { Box, Text } from "@chakra-ui/react"
-import { ViewInstanceRenderer } from "./dockview/views"
 import { AdaptiveDebuggerRoot } from "../../../adaptive-debugger/components/root"
 import { useLocalStore } from "../store-manager/selectors"
 import {
@@ -67,22 +61,23 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
     showLogs,
     debug,
   } = currentDesktop
-  const { layoutProfiles: registeredLayoutProfiles, selectedLayoutProfileId, layoutRevision } = desktopContext.layout
-
-  const { sendToDockviewManager } = useDockviewManager()
-  const profilesRegistered = registeredLayoutProfiles === layoutProfiles
+  const { selectedDockviewProfileId, dockviewRevision } = desktopContext.layout
+  const { dockviewProfiles } = desktopContext.presets
+  const profilesRegistered = dockviewProfiles.length > 0
   const { value: selectedLayoutData, save: saveSelectedLayoutData } = useLocalStore<unknown>("desktop.layout")
+  const selectedDockviewProfileData = dockviewProfiles.find(
+    (profile: any) => profile.id === selectedDockviewProfileId,
+  )?.data
 
   React.useEffect(() => {
-    if (!profilesRegistered || !selectedLayoutProfileId) {
+    if (!profilesRegistered || !selectedDockviewProfileId) {
       return
     }
 
-    const profileData = registeredLayoutProfiles.find((profile: any) => profile.id === selectedLayoutProfileId)?.data
-    if (profileData !== undefined) {
-      saveSelectedLayoutData(profileData)
+    if (selectedDockviewProfileData !== undefined) {
+      saveSelectedLayoutData(selectedDockviewProfileData)
     }
-  }, [profilesRegistered, registeredLayoutProfiles, saveSelectedLayoutData, selectedLayoutProfileId])
+  }, [profilesRegistered, saveSelectedLayoutData, selectedDockviewProfileData, selectedDockviewProfileId])
 
   React.useEffect(() => {
     if (!dockviewApi) return
@@ -174,25 +169,32 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
       return
     }
 
-    const hasStoredLayout =
-      selectedLayoutData !== undefined &&
-      selectedLayoutData !== null &&
-      (typeof selectedLayoutData !== "object" || Object.keys(selectedLayoutData as object).length > 0)
+    const layoutData = selectedDockviewProfileData ?? selectedLayoutData
+    const hasLayoutData =
+      layoutData !== undefined &&
+      layoutData !== null &&
+      (typeof layoutData !== "object" || Object.keys(layoutData as object).length > 0)
 
-    if (!hasStoredLayout) {
+    if (!hasLayoutData) {
       loadDockviewLayout(dockviewApi)
     } else {
-      loadDockviewLayout(dockviewApi, selectedLayoutData)
+      loadDockviewLayout(dockviewApi, layoutData)
     }
 
     sendToDesktop({
       type: "onLayoutReady",
     })
-  }, [dockviewApi, layoutRevision, profilesRegistered, selectedLayoutData, sendToDesktop])
+  }, [
+    dockviewApi,
+    dockviewRevision,
+    profilesRegistered,
+    selectedDockviewProfileData,
+    selectedLayoutData,
+    sendToDesktop,
+  ])
 
   const onReady = (event: DockviewReadyEvent) => {
     setupEdgeGroups(event.api)
-    sendToDockviewManager({ type: "onReady", params: { api: event.api } })
 
     sendToDesktop({ type: "onReady", params: { api: event.api } })
   }

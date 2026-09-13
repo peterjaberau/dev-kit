@@ -8,15 +8,11 @@ The desktop provider hierarchy is effectively:
 ```typescript jsx
 <DesktopProvider>
   <StoreManagerProvider>
-    <InstanceManagerProvider>
-      <DockviewManagerProvider>
-        <Desktop>
-          <AdvaptiveViewDesktopContent>
-            <AdaptiveDebuggerRoot />
-          </AdvaptiveViewDesktopContent>
-        </Desktop>
-      </DockviewManagerProvider>
-    </InstanceManagerProvider>
+    <Desktop>
+      <AdvaptiveViewDesktopContent>
+        <AdaptiveDebuggerRoot />
+      </AdvaptiveViewDesktopContent>
+    </Desktop>
   </StoreManagerProvider>
 </DesktopProvider>
 ```
@@ -31,20 +27,17 @@ AdaptiveDebuggerRoot adds only its own provider:
 
 # Hierarchy (Providers vs tsx Files)
 
-| Component                     | Type     | File                                              |
-| ----------------------------- | -------- | ------------------------------------------------- |
-| `DesktopProvider`             | Provider | desktop/providers/DesktopProvider.tsx             |
-| `StoreManagerProvider`        | Provider | store-manager/provider.tsx                        |
-| `InstanceManagerProvider`     | Provider | instance-manager/provider.tsx                     |
-| `DockviewManagerProvider`     | Provider | dockview-manager/provider.tsx                     |
-| `AdaptiveDebuggerProvider`    | Provider | adaptive-debugger/provider.tsx                    |
-| `Desktop`                     | Renderer | desktop/desktop.tsx                               |
-| `DesktopDesigner`             | Renderer | desktop/designer/desktop-designer.tsx             |
-| `AdvaptiveViewDesktopContent` | Renderer | desktop/app.tsx                                   |
-| `AdaptiveDebuggerRoot`        | Renderer | adaptive-debugger/components/root.tsx             |
-| `AdaptiveDebuggerPanel`       | Renderer | adaptive-debugger/components/root.tsx             |
-| `AdaptiveDebuggerLayout`      | Renderer | adaptive-debugger/components/layout.tsx           |
-| `LayoutPanel`                 | Renderer | adaptive-debugger/components/layout.component.tsx |
+| Component                     | Type     | File                                    |
+| ----------------------------- | -------- | --------------------------------------- |
+| `DesktopProvider`             | Provider | desktop/providers/DesktopProvider.tsx   |
+| `StoreManagerProvider`        | Provider | store-manager/provider.tsx              |
+| `AdaptiveDebuggerProvider`    | Provider | adaptive-debugger/provider.tsx          |
+| `Desktop`                     | Renderer | desktop/desktop.tsx                     |
+| `DesktopDesigner`             | Renderer | desktop/designer/desktop-designer.tsx   |
+| `AdvaptiveViewDesktopContent` | Renderer | desktop/app.tsx                         |
+| `AdaptiveDebuggerRoot`        | Renderer | adaptive-debugger/components/root.tsx   |
+| `AdaptiveDebuggerPanel`       | Renderer | adaptive-debugger/components/root.tsx   |
+| `AdaptiveDebuggerLayout`      | Renderer | adaptive-debugger/components/layout.tsx |
 
 That hierarchy is split across these files:
 
@@ -53,9 +46,7 @@ That hierarchy is split across these files:
 ```typescript jsx
 <DesktopProvider>
   <StoreManagerProvider>
-    <InstanceManagerProvider>
-      <DockviewManagerProvider>{children}</DockviewManagerProvider>
-    </InstanceManagerProvider>
+    {children}
   </StoreManagerProvider>
 </DesktopProvider>
 

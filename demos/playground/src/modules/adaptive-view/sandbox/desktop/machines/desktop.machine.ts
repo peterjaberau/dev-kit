@@ -56,7 +56,7 @@ export const desktopMachine = setup({
       }
     }),
     resetTracking: assign(({ context }) => {
-      // Reset tracked state for the new api instance to prevent stale IDs
+      // Reset tracked state for the new Dockview API to prevent stale IDs
       // accumulating across remounts (e.g. when toggling shell mode).
       context.current = {
         ...context.current,
@@ -64,6 +64,11 @@ export const desktopMachine = setup({
         groups: [],
         activePanel: null,
         activeGroup: null,
+      }
+      context.interactions = {
+        selectedPanelId: null,
+        selectedGroupId: null,
+        selectedViewId: null,
       }
     }),
     setLayoutReady: assign(({ context }) => {
@@ -81,6 +86,9 @@ export const desktopMachine = setup({
       if (context.current.activePanel === panelId) {
         context.current.activePanel = null
       }
+      if (context.interactions.selectedPanelId === panelId) {
+        context.interactions.selectedPanelId = null
+      }
     }),
     setActivePanel: assign(({ context, event }) => {
       context.current.activePanel = event.params.panelId ?? null
@@ -97,10 +105,26 @@ export const desktopMachine = setup({
       if (context.current.activeGroup === groupId) {
         context.current.activeGroup = null
       }
+      if (context.interactions.selectedGroupId === groupId) {
+        context.interactions.selectedGroupId = null
+      }
     }),
 
     setActiveGroup: assign(({ context, event }) => {
       context.current.activeGroup = event.params.groupId ?? null
+    }),
+
+    selectPanel: assign(({ context, event }) => {
+      const { panelId } = event.params
+      context.interactions.selectedPanelId = context.interactions.selectedPanelId === panelId ? null : panelId
+    }),
+    selectGroup: assign(({ context, event }) => {
+      const { groupId } = event.params
+      context.interactions.selectedGroupId = context.interactions.selectedGroupId === groupId ? null : groupId
+    }),
+    selectView: assign(({ context, event }) => {
+      const { viewId } = event.params
+      context.interactions.selectedViewId = context.interactions.selectedViewId === viewId ? null : viewId
     }),
 
     toggleSignalReady: assign(({ context }) => {
@@ -132,9 +156,9 @@ export const desktopMachine = setup({
         mode: event.params?.mode === "wrap" ? "wrap" : "dropdown",
       }
     }),
-    selectLayoutProfile: assign(({ context, event }) => {
-      context.layout.selectedLayoutProfileId = event.params.profileId
-      context.layout.layoutRevision += 1
+    selectDockviewProfile: assign(({ context, event }) => {
+      context.layout.selectedDockviewProfileId = event.params.profileId
+      context.layout.dockviewRevision += 1
     }),
     toggleDesktopDesigner: assign(({ context }) => {
       context.layout.desktopDesignerOpen = !context.layout.desktopDesignerOpen
@@ -149,82 +173,110 @@ export const desktopMachine = setup({
 }).createMachine({
   id: "desktop",
   initial: "initiating",
-  context: ({ input }: any) => ({
-    input,
-    dockviewApi: null,
-    fixtures: {
-      colors: [
-        "rgba(255,0,0,0.2)",
-        "rgba(0,255,0,0.2)",
-        "rgba(0,0,255,0.2)",
-        "rgba(255,255,0,0.2)",
-        "rgba(0,255,255,0.2)",
-        "rgba(255,0,255,0.2)",
-      ],
-    },
-    current: {
-      logLines: [],
-      pending: [],
+  context: ({ input }: any) => {
+    const dockviewProfiles = input.dockviewProfiles ?? []
+    const viewProfiles = input.viewProfiles ?? []
+    const viewProfile = viewProfiles.find(({ id }: any) => id === input.viewProfileId) ?? viewProfiles[0] ?? null
 
-      panels: [],
-      groups: [],
-
-      layoutReady: false,
-
-      activePanel: null,
-      activeGroup: null,
-
-      logColorIndex: 0,
-
-      // Signal the host once the layout is loaded and the dock becomes visible,
-      // so a loading overlay can fade out at the right moment rather than while
-      // the grid is still hidden.
-      signalReady: false,
-      watermark: false,
-      customGhost: false,
-      dndCompass: false,
-      smartGuides: true,
-      showLogs: false,
-      debug: false,
-      overflow: {
-        mode: "dropdown",
-        mru: false,
-        search: true,
-      },
-    },
-    theme: {
-      desktopThemeRef: null,
-      dockviewThemeRef: null,
-    },
-    dockview: {
-      settings: {
-        tabMenuItems: [
-          "separator",
-          "close",
-          "closeOthers",
-          "closeAll",
-          "closeLeft",
-          "closeRight",
-          "separator",
-          "maximize",
-          "separator",
+    return {
+      input,
+      dockviewApi: null,
+      fixtures: {
+        colors: [
+          "rgba(255,0,0,0.2)",
+          "rgba(0,255,0,0.2)",
+          "rgba(0,0,255,0.2)",
+          "rgba(255,255,0,0.2)",
+          "rgba(0,255,255,0.2)",
+          "rgba(255,0,255,0.2)",
         ],
-        tabGroupMenuItems: ["rename", "colorPicker", "collapse", "close"],
       },
-    },
-    layout: {
-      desktopDesignerOpen: false,
-      ready: false,
-      layoutProfiles: input.layoutProfiles ?? [],
-      selectedLayoutProfileId: null,
-      layoutRevision: 0,
-      themeRef: null,
-    },
-  }),
+
+      current: {
+        viewProfileId: viewProfile?.id ?? null,
+        logLines: [],
+        pending: [],
+
+        panels: [],
+        groups: [],
+
+        layoutReady: false,
+
+        activePanel: null,
+        activeGroup: null,
+
+        logColorIndex: 0,
+
+        // Signal the host once the layout is loaded and the dock becomes visible,
+        // so a loading overlay can fade out at the right moment rather than while
+        // the grid is still hidden.
+        signalReady: false,
+        watermark: false,
+        customGhost: false,
+        dndCompass: false,
+        smartGuides: true,
+        showLogs: false,
+        debug: false,
+        overflow: {
+          mode: "dropdown",
+          mru: false,
+          search: true,
+        },
+      },
+
+      interactions: {
+        selectedPanelId: null,
+        selectedGroupId: null,
+        selectedViewId: null,
+      },
+      view: {
+        viewProfile,
+      },
+      theme: {
+        desktopThemeRef: null,
+        dockviewThemeRef: null,
+      },
+      registry: {
+        dockviewProfiles: [],
+        viewProfiles: [],
+      },
+      presets: {
+        dockviewProfiles,
+        viewProfiles,
+        registry: [],
+      },
+      dockview: {
+        settings: {
+          tabMenuItems: [
+            "separator",
+            "close",
+            "closeOthers",
+            "closeAll",
+            "closeLeft",
+            "closeRight",
+            "separator",
+            "maximize",
+            "separator",
+          ],
+          tabGroupMenuItems: ["rename", "colorPicker", "collapse", "close"],
+        },
+      },
+      layout: {
+        desktopDesignerOpen: false,
+        ready: false,
+        selectedDockviewProfileId: null,
+        dockviewRevision: 0,
+        themeRef: null,
+      },
+    }
+  },
   states: {
     initiating: {
       entry: "spawnThemes",
       on: {
+        onSelectDockviewProfile: {
+          actions: ["selectDockviewProfile"],
+        },
         onReady: {
           actions: ["setDockviewApi"],
           target: "ready",
@@ -318,6 +370,16 @@ export const desktopMachine = setup({
           actions: "resetTracking",
         },
 
+        onSelectPanel: {
+          actions: "selectPanel",
+        },
+        onSelectGroup: {
+          actions: "selectGroup",
+        },
+        onSelectView: {
+          actions: "selectView",
+        },
+
         onToggleSignalReady: {
           actions: ["toggleSignalReady"],
         },
@@ -343,8 +405,8 @@ export const desktopMachine = setup({
           actions: ["setOverflow"],
         },
 
-        onSelectLayoutProfile: {
-          actions: ["selectLayoutProfile"],
+        onSelectDockviewProfile: {
+          actions: ["selectDockviewProfile"],
         },
         onToggleDesktopDesigner: {
           actions: ["toggleDesktopDesigner"],

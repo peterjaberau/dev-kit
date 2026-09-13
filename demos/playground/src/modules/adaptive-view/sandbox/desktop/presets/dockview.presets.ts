@@ -1,12 +1,4 @@
-import { DockviewApi } from "#adaptive-view/react"
-
-/** Readme
- *
- * panels.panelKeyName: --> grid.root.data.views = ["panelKeyName"]
- * panels.panelKeyName.id: --> grid.root.data.activeView = "id"
- * panels.panelKeyName.contentComponent: --> DockviewReact.components["contentComponent"]
- */
-export const layoutProfiles: any[] = [
+export const dockviewProfiles: any[] = [
   {
     id: "emptyDemo",
     title: "Empty Demo",
@@ -982,9 +974,9 @@ export const layoutProfiles: any[] = [
                 {
                   type: "leaf",
                   data: {
-                    views: ["instanceButton", "instancePopover", "instanceCheckbox", "instanceField", "instanceSlider"],
-                    activeView: "instanceButton",
-                    id: "group-actor-instances",
+                    views: ["viewButton", "viewPopover", "viewCheckbox", "viewField", "viewSlider"],
+                    activeView: "viewButton",
+                    id: "group-profile-views",
                   },
                 },
               ],
@@ -992,6 +984,8 @@ export const layoutProfiles: any[] = [
           ],
         },
         orientation: "HORIZONTAL",
+        width: 1530,
+        height: 964,
       },
       panels: {
         dynamicInvalid: {
@@ -1068,49 +1062,49 @@ export const layoutProfiles: any[] = [
             componentId: "forms-slider",
           },
         },
-        instanceButton: {
-          id: "instanceButton",
-          contentComponent: "instance",
+        viewButton: {
+          id: "viewButton",
+          contentComponent: "view",
           tabComponent: "props.defaultTabComponent",
-          title: "Actor Button",
+          title: "View Button",
           params: {
-            instanceId: "button",
+            viewId: "button",
           },
         },
-        instancePopover: {
-          id: "instancePopover",
-          contentComponent: "instance",
+        viewPopover: {
+          id: "viewPopover",
+          contentComponent: "view",
           tabComponent: "props.defaultTabComponent",
-          title: "Actor Popover",
+          title: "View Popover",
           params: {
-            instanceId: "popover",
+            viewId: "popover",
           },
         },
-        instanceCheckbox: {
-          id: "instanceCheckbox",
-          contentComponent: "instance",
+        viewCheckbox: {
+          id: "viewCheckbox",
+          contentComponent: "view",
           tabComponent: "props.defaultTabComponent",
-          title: "Actor Checkbox",
+          title: "View Checkbox",
           params: {
-            instanceId: "checkbox",
+            viewId: "checkbox",
           },
         },
-        instanceField: {
-          id: "instanceField",
-          contentComponent: "instance",
+        viewField: {
+          id: "viewField",
+          contentComponent: "view",
           tabComponent: "props.defaultTabComponent",
-          title: "Actor Field",
+          title: "View Field",
           params: {
-            instanceId: "field",
+            viewId: "field",
           },
         },
-        instanceSlider: {
-          id: "instanceSlider",
-          contentComponent: "instance",
+        viewSlider: {
+          id: "viewSlider",
+          contentComponent: "view",
           tabComponent: "props.defaultTabComponent",
-          title: "Actor Slider",
+          title: "View Slider",
           params: {
-            instanceId: "slider",
+            viewId: "slider",
           },
         },
 
@@ -1217,187 +1211,3 @@ export const layoutProfiles: any[] = [
     },
   },
 ]
-
-export const instanceProfiles: any = [
-  {
-    id: "registryInstances",
-    data: {
-      instances: [
-        {
-          id: "button",
-          plugin: "components-button",
-          props: {
-            variant: "solid",
-            content: "Button",
-            size: "md",
-            colorPalette: "gray",
-            disabled: false,
-          },
-        },
-        {
-          id: "button-custom",
-          plugin: "components-button",
-          props: {
-            variant: "surface",
-            content: "Custom Button",
-            size: "sm",
-            colorPalette: "blue",
-            disabled: false,
-          },
-        },
-        {
-          id: "popover",
-          plugin: "components-popover",
-        },
-        {
-          id: "checkbox",
-          plugin: "forms-checkbox",
-        },
-        {
-          id: "field",
-          plugin: "forms-field",
-        },
-        {
-          id: "slider",
-          plugin: "forms-slider",
-        },
-      ],
-    },
-  },
-]
-
-export const dynamicLayoutProfile: any = {
-  id: "dynamicLayoutProfile",
-  title: "Dynamic Layout Profile",
-  data: {
-    grid: {
-      root: {
-        type: "branch",
-        data: [
-          {
-            type: "branch",
-            data: [
-              {
-                type: "leaf",
-                data: {
-                  id: "group-components",
-                },
-              },
-            ],
-          },
-        ],
-      },
-      orientation: "HORIZONTAL",
-    },
-    edgeGroups: {
-      left: {
-        size: 220,
-        visible: true,
-        collapsed: true,
-        minimumSize: 150,
-        collapsedSize: 44,
-        group: {
-          headerPosition: "left",
-        },
-        autoReveal: true,
-      },
-    },
-  },
-}
-export const dynamicNodes: any = [
-  {
-    nodeId: "dynamicButton",
-    componentId: "components-button",
-    props: {
-      variant: "solid",
-      content: "Button",
-      size: "md",
-      colorPalette: "gray",
-      disabled: false,
-    },
-  },
-  {
-    nodeId: "dynamicButtonCustom",
-    componentId: "components-button",
-    params: {
-      props: {
-        variant: "surface",
-        content: "Custom Button",
-        size: "sm",
-        colorPalette: "blue",
-        disabled: false,
-      },
-    },
-  },
-]
-export const dynamicNodesToPanels: any = [
-  {
-    groupId: "group-components",
-    panelId: "panel-button",
-    nodeId: "dynamicButton",
-  },
-  {
-    groupId: "group-components",
-    panelId: "panel-button-custom",
-    nodeId: "dynamicButtonCustom",
-  },
-  {
-    groupId: "group-components",
-    panelId: "panel-button-custom1",
-    nodeId: "dynamicButtonCustom",
-  },
-  {
-    groupId: "left",
-    panelId: "panel-button-custom2",
-    nodeId: "dynamicButtonCustom",
-  },
-]
-
-export const EDGE_GROUP_PANELS: readonly {
-  pos: "bottom" | "left" | "right"
-  id: string
-  title: string
-}[] = [
-  { pos: "left", id: "left-1", title: "Explorer" },
-  { pos: "right", id: "right-1", title: "Outline" },
-  { pos: "right", id: "right-2", title: "Properties" },
-  { pos: "bottom", id: "bottom-1", title: "Terminal" },
-  { pos: "bottom", id: "bottom-2", title: "Output" },
-  { pos: "bottom", id: "bottom-3", title: "Problems" },
-]
-
-export function populateEdgeGroups(api: DockviewApi): void {
-  for (const { pos, id, title } of EDGE_GROUP_PANELS) {
-    const groupApi = api.getEdgeGroup(pos)
-    if (groupApi && !api.panels.some((panel) => panel.id === id)) {
-      api.addPanel({
-        id,
-        component: "fixedPlaceholder",
-        title,
-        position: { referenceGroup: groupApi.id },
-        params: { label: title, position: pos },
-      })
-    }
-  }
-
-  const bottomEdge = api.getEdgeGroup("bottom")
-  if (!bottomEdge) {
-    return
-  }
-
-  const logs = api.createTabGroup({
-    groupId: bottomEdge.id,
-    label: "Logs",
-    color: "purple",
-  })
-  api.addPanelToTabGroup({
-    groupId: bottomEdge.id,
-    tabGroupId: logs.id,
-    panelId: "bottom-1",
-  })
-  api.addPanelToTabGroup({
-    groupId: bottomEdge.id,
-    tabGroupId: logs.id,
-    panelId: "bottom-2",
-  })
-}
