@@ -1,6 +1,5 @@
 export { ChartPanel } from "./chartPanel"
 export { CorrelationPanel } from "./correlationPanel"
-export { FxTilesPanel } from "./fxTilesPanel"
 export { MapboxPanel } from "./mapboxPanel"
 export { NewsPanel } from "./newsPanel"
 export { OrderBookPanel } from "./orderBookPanel"
