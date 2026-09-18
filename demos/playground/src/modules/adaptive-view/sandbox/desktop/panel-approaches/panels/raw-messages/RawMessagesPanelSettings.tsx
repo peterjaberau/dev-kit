@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import type { PanelSettingsContext } from '../framework/types';
+import type { PanelSettingsContext } from '#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/types';
 import {
   SettingsField,
   SettingsNumber,
@@ -8,7 +8,7 @@ import {
   SettingsSection,
   SettingsSwitch,
   TopicAutocomplete,
-} from '../framework/settings';
+} from '#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/settings';
 import type { RawMessagesConfig } from './defaults';
 
 export function RawMessagesPanelSettings({

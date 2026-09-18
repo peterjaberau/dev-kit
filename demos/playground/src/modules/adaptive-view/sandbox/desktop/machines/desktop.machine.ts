@@ -4,6 +4,60 @@ import { themeMachine } from "./theme.machine"
 export const desktopMachine = setup({
   actors: { themeMachine },
   actions: {
+    resolveInitialLayout: assign(({ context }) => {
+      const profiles = context.presets.dockviewProfiles
+      const selected = profiles.find((profile: any) => profile.id === context.input.dockviewProfileId)
+      const fallback = profiles.find((profile: any) => profile.id === "default")
+      const saved = context.input.initialLayout
+      const hasSavedLayout = saved && typeof saved === "object" && "grid" in saved && "panels" in saved
+      return {
+        layout: {
+          ...context.layout,
+          selectedDockviewProfileId: selected?.id ?? null,
+          data: selected?.data ?? (hasSavedLayout ? saved : fallback?.data),
+        },
+      }
+    }),
+    loadLayout: assign(({ context }) => {
+      const api = context.dockviewApi
+      const fallback = context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")?.data
+      const apply = (data: any) => {
+        if (!data) throw new Error('DesktopProvider requires a dockview profile with id "default" and layout data.')
+        const layout = JSON.parse(JSON.stringify(data))
+        for (const panel of Object.values(layout.panels ?? {}) as any[]) {
+          if (panel.contentComponent === "instance") panel.contentComponent = "view"
+          if (panel.params?.instanceId && !panel.params.viewId) {
+            panel.params.viewId = panel.params.instanceId
+            delete panel.params.instanceId
+          }
+        }
+        api.fromJSON(layout)
+      }
+      let data = context.layout.data
+      try {
+        apply(data)
+      } catch (error) {
+        // Corrupt saved layouts must not prevent the desktop from opening.
+        if (context.layout.data === fallback) throw error
+        apply(fallback)
+        data = fallback
+      }
+      return {
+        layout: {
+          ...context.layout,
+          data,
+          selectedDockviewProfileId: data === context.layout.data ? context.layout.selectedDockviewProfileId : null,
+        },
+        current: {
+          ...context.current,
+          panels: api.panels.map((panel: any) => panel.id),
+          groups: api.groups.map((group: any) => group.id),
+          activePanel: api.activePanel?.id ?? null,
+          activeGroup: api.activeGroup?.id ?? null,
+        },
+        interactions: { selectedPanelId: null, selectedGroupId: null, selectedViewId: null },
+      }
+    }),
     spawnThemes: assign(({ context, spawn }) => {
       context.theme = {
         desktopThemeRef: spawn("themeMachine", {
@@ -71,9 +125,6 @@ export const desktopMachine = setup({
         selectedViewId: null,
       }
     }),
-    setLayoutReady: assign(({ context }) => {
-      context.current.layoutReady = true
-    }),
     addPanel: assign(({ context, event }) => {
       const { panelId } = event.params
       if (!context.current.panels.includes(panelId)) {
@@ -127,10 +178,6 @@ export const desktopMachine = setup({
       context.interactions.selectedViewId = context.interactions.selectedViewId === viewId ? null : viewId
     }),
 
-    toggleSignalReady: assign(({ context }) => {
-      context.current.signalReady = !context.current.signalReady
-    }),
-
     toggleSmartGuides: assign(({ context }) => {
       context.current.smartGuides = !context.current.smartGuides
     }),
@@ -157,17 +204,21 @@ export const desktopMachine = setup({
       }
     }),
     selectDockviewProfile: assign(({ context, event }) => {
-      context.layout.selectedDockviewProfileId = event.params.profileId
-      context.layout.dockviewRevision += 1
+      const profile = context.presets.dockviewProfiles.find((profile: any) => profile.id === event.params.profileId)
+      const fallback = context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")
+      return {
+        layout: {
+          ...context.layout,
+          selectedDockviewProfileId: profile?.id ?? null,
+          data: profile?.data ?? fallback?.data,
+        },
+      }
     }),
     toggleDesktopDesigner: assign(({ context }) => {
       context.layout.desktopDesignerOpen = !context.layout.desktopDesignerOpen
     }),
     closeDesktopDesigner: assign(({ context }) => {
       context.layout.desktopDesignerOpen = false
-    }),
-    markReady: assign(({ context }) => {
-      context.layout.ready = true
     }),
   },
 }).createMachine({
@@ -200,17 +251,11 @@ export const desktopMachine = setup({
         panels: [],
         groups: [],
 
-        layoutReady: false,
-
         activePanel: null,
         activeGroup: null,
 
         logColorIndex: 0,
 
-        // Signal the host once the layout is loaded and the dock becomes visible,
-        // so a loading overlay can fade out at the right moment rather than while
-        // the grid is still hidden.
-        signalReady: false,
         watermark: false,
         customGhost: false,
         dndCompass: false,
@@ -263,22 +308,28 @@ export const desktopMachine = setup({
       },
       layout: {
         desktopDesignerOpen: false,
-        ready: false,
         selectedDockviewProfileId: null,
-        dockviewRevision: 0,
+        data: null,
         themeRef: null,
       },
     }
   },
   states: {
     initiating: {
-      entry: "spawnThemes",
+      entry: enqueueActions(({ enqueue }) => {
+        enqueue("spawnThemes")
+        enqueue("resolveInitialLayout")
+        enqueue.raise({ type: "onCompleteInitiation" })
+      }),
       on: {
-        onSelectDockviewProfile: {
-          actions: ["selectDockviewProfile"],
-        },
+        onCompleteInitiation: { target: "starting" },
+      },
+    },
+    starting: {
+      on: {
+        onSelectDockviewProfile: { actions: "selectDockviewProfile" },
         onReady: {
-          actions: ["setDockviewApi"],
+          actions: ["setDockviewApi", "loadLayout"],
           target: "ready",
         },
       },
@@ -286,10 +337,7 @@ export const desktopMachine = setup({
     ready: {
       on: {
         onReady: {
-          actions: "setDockviewApi",
-        },
-        onLayoutReady: {
-          actions: "setLayoutReady",
+          actions: ["setDockviewApi", "loadLayout"],
         },
         onDidAddPanel: {
           actions: enqueueActions(({ event, enqueue }) => {
@@ -380,9 +428,6 @@ export const desktopMachine = setup({
           actions: "selectView",
         },
 
-        onToggleSignalReady: {
-          actions: ["toggleSignalReady"],
-        },
         onToggleWatermark: {
           actions: ["toggleWatermark"],
         },
@@ -406,16 +451,13 @@ export const desktopMachine = setup({
         },
 
         onSelectDockviewProfile: {
-          actions: ["selectDockviewProfile"],
+          actions: ["selectDockviewProfile", "loadLayout"],
         },
         onToggleDesktopDesigner: {
           actions: ["toggleDesktopDesigner"],
         },
         onCloseDesktopDesigner: {
           actions: ["closeDesktopDesigner"],
-        },
-        onMarkReady: {
-          actions: ["markReady"],
         },
       },
     },

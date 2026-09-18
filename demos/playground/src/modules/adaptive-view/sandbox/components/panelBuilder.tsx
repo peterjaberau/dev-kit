@@ -1,6 +1,6 @@
+import { nextPanelNumber } from "./panelId"
 import { DockviewApi } from "#adaptive-view/react"
 import * as React from "react"
-import { nextId } from "../desktop/dockview/layout"
 
 export const PanelBuilder = (props: { api: DockviewApi; done: () => void }) => {
   const [parameters, setParameters] = React.useState<{
@@ -99,7 +99,7 @@ export const PanelBuilder = (props: { api: DockviewApi; done: () => void }) => {
             props.api?.addPanel({
               id: `id_${Date.now().toString()}`,
               component: "default",
-              title: `Tab ${nextId()}`,
+              title: `Tab ${nextPanelNumber()}`,
               renderer: "always",
               ...parameters,
             })

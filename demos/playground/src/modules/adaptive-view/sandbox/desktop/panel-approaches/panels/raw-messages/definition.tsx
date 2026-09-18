@@ -1,6 +1,6 @@
 import { lazy } from 'react';
-import type { PanelDefinition } from '../framework/types';
-import { PanelSuspense } from '../framework/panelSuspense';
+import type { PanelDefinition } from '#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/types';
+import { PanelSuspense } from '#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/panelSuspense';
 import { defaultRawMessagesConfig, type RawMessagesConfig } from './defaults';
 import { parseRawMessagesConfig } from './schema';
 import { RawMessagesPanelSettings } from './RawMessagesPanelSettings';

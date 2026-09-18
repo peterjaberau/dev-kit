@@ -1,12 +1,26 @@
 "use client"
-import { Card, Flex, HStack, Stack } from "@chakra-ui/react"
-import { ScrollArea } from "./scoll-area"
 
-export const WrapperWithScrollArea = ({
-  children,
-}: {
-  children: React.ReactNode
-}) => {
+import { Card, Flex, HStack, Stack, Container, ScrollArea as ChakraScrollArea } from "@chakra-ui/react"
+
+export interface ScrollAreaProps {
+  [key: string]: any
+}
+export const ScrollArea = ({ children, css, ...rest }: ScrollAreaProps) => {
+  return (
+    <Container minW={"full"} p={0} w={"full"} {...rest} asChild>
+      <ChakraScrollArea.Root variant={"hover"} size={"xs"}>
+        <ChakraScrollArea.Viewport>
+          <ChakraScrollArea.Content css={{ justifyContent: "center" }} h={"full"} px={0} py={0}>
+            {children}
+          </ChakraScrollArea.Content>
+        </ChakraScrollArea.Viewport>
+        <ChakraScrollArea.Scrollbar />
+      </ChakraScrollArea.Root>
+    </Container>
+  )
+}
+
+export const WrapperWithScrollArea = ({ children }: { children: React.ReactNode }) => {
   return (
     <Card.Root
       data-name="wrapper-with-scroll-area"

@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
-import { messageBus } from '../../core/pipeline/messageBus';
-import { useMessagePipeline } from "../../core/pipeline/messageBus"
-import type { MessageEvent, Time } from "../../core/types"
-import type { MessagePipelineState } from "../../core/pipeline/store"
+import { messageBus } from '#adaptive-view/sandbox/desktop/panel-approaches/core/pipeline/messageBus';
+import { useMessagePipeline } from "#adaptive-view/sandbox/desktop/panel-approaches/core/pipeline/messageBus"
+import type { MessageEvent, Time } from "#adaptive-view/sandbox/desktop/panel-approaches/core/types"
+import type { MessagePipelineState } from "#adaptive-view/sandbox/desktop/panel-approaches/core/pipeline/store"
 import { pickDefaultRawMessagesTopic } from "./pickDefaultRawMessagesTopic"
-import { formatLocalTimestamp, scheduleFrame } from "../../shared/utils"
-import { TopicQuickPicker } from '../framework/TopicQuickPicker';
-import { PanelTopicBar } from '../framework/PanelTopicBar';
+import { formatLocalTimestamp, scheduleFrame } from "#adaptive-view/sandbox/desktop/panel-approaches/shared/utils"
+import { TopicQuickPicker } from '#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/TopicQuickPicker';
+import { PanelTopicBar } from '#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/PanelTopicBar';
 import type { RawMessagesConfig } from './defaults';
 import { buildRowsForMessageEvent, isExpandableArray, type FlatRow } from './shapeTree';
 

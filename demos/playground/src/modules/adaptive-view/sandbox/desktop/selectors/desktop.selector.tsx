@@ -9,6 +9,9 @@ export const useDesktop = () => {
   const context = state.context
 
   return {
+    isInitiating: state.matches("initiating"),
+    isStarting: state.matches("starting"),
+    isReady: state.matches("ready"),
     desktopRef: actorRef,
     sendToDesktop: sendTo,
     desktopState: state,

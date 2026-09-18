@@ -1,5 +1,45 @@
 export const dockviewProfiles: any[] = [
   {
+    id: "default",
+    title: "Default Layout",
+    data: {
+      grid: {
+        root: {
+          type: "branch",
+          data: [],
+          orientation: "HORIZONTAL",
+        },
+      },
+      panels: {},
+      edgeGroups: {
+        left: {
+          size: 220,
+          visible: true,
+          collapsed: true,
+          group: { headerPosition: "left", views: [] },
+          autoReveal: true,
+        },
+        right: {
+          size: 220,
+          visible: true,
+          collapsed: true,
+          group: { headerPosition: "right", views: [] },
+          autoReveal: true,
+        },
+        bottom: {
+          size: 200,
+          visible: true,
+          collapsed: true,
+          group: {
+            headerPosition: "bottom",
+            views: [],
+          },
+          autoReveal: true,
+        },
+      },
+    },
+  },
+  {
     id: "emptyDemo",
     title: "Empty Demo",
     data: {

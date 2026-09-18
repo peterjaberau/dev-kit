@@ -52,7 +52,7 @@ interface PanelSettingsContext<TConfig> {
 }
 ```
 
-A reusable form kit ships under `framework/settings`:
+A reusable form kit ships under `../panel-approaches/panels/framework`:
 
 | Component | Purpose |
 |---|---|

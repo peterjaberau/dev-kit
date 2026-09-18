@@ -1,29 +1,23 @@
 import {
-  DockviewDefaultTab,
   DockviewReact,
   DockviewReadyEvent,
-  IDockviewGroupDragGhostProps,
-  IDockviewPanelHeaderProps,
-  IDockviewPanelProps,
-  DockviewApi,
   IContextMenuItemComponentProps,
   GetTabContextMenuItemsParams,
   GetTabGroupChipContextMenuItemsParams,
   DEFAULT_TAB_GROUP_COLORS,
 } from "#adaptive-view/react"
+
 import "#adaptive-view/enterprise"
 import { useDesktop } from "./selectors"
-import { DESKTOP_DOCKVIEW_COMPONENTS, DEFAULT_DOCKVIEW_COMPONENT } from "./panels/registry"
+import { DESKTOP_DOCKVIEW_COMPONENTS } from "./panels/registry"
 import * as React from "react"
-import { setupEdgeGroups } from "./dockview/default-layout"
-import { loadDockviewLayout } from "./dockview/layout"
 import Desktop, { type DesktopRenderProps } from "./desktop"
-import { LeftControls, PrefixHeaderControls, RightControls } from "../components/headerActions"
-import { AdaptiveDebuggerRoot } from "../../../adaptive-debugger/components/root"
-import { useLocalStore } from "../store-manager/selectors"
+
 import {
+  LeftControls,
+  PrefixHeaderControls,
+  RightControls,
   TabRenderer,
-  tabComponents,
   FloatMenuItemRenderer as FloatMenuItem,
   TabModeMenuItemRenderer as TabModeMenuItem,
   EdgeAutoHideMenuItemRenderer as EdgeAutoHideMenuItem,
@@ -32,28 +26,16 @@ import {
   TabOverflowMode,
   WatermarkRenderer as WatermarkComponent,
   GroupDragGhostRenderer as GroupDragGhost,
-} from "#adaptive-view/app/components"
-
-const colors = [
-  "rgba(255,0,0,0.2)",
-  "rgba(0,255,0,0.2)",
-  "rgba(0,0,255,0.2)",
-  "rgba(255,255,0,0.2)",
-  "rgba(0,255,255,0.2)",
-  "rgba(255,0,255,0.2)",
-]
-let count = 0
+} from "../components"
 
 const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
-  const { sendToDesktop, dockviewApi, currentDesktop, desktopContext } = useDesktop()
+  const { sendToDesktop, dockviewApi, currentDesktop, isReady } = useDesktop()
   const {
     logLines,
     panels,
     groups,
-    layoutReady,
     activePanel,
     activeGroup,
-    signalReady,
     watermark,
     customGhost,
     dndCompass,
@@ -61,30 +43,8 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
     showLogs,
     debug,
   } = currentDesktop
-  const { selectedDockviewProfileId, dockviewRevision } = desktopContext.layout
-  const { dockviewProfiles } = desktopContext.presets
-  const profilesRegistered = dockviewProfiles.length > 0
-  const { value: selectedLayoutData, save: saveSelectedLayoutData } = useLocalStore<unknown>("desktop.layout")
-  const selectedDockviewProfileData = dockviewProfiles.find(
-    (profile: any) => profile.id === selectedDockviewProfileId,
-  )?.data
-
-  React.useEffect(() => {
-    if (!profilesRegistered || !selectedDockviewProfileId) {
-      return
-    }
-
-    if (selectedDockviewProfileData !== undefined) {
-      saveSelectedLayoutData(selectedDockviewProfileData)
-    }
-  }, [profilesRegistered, saveSelectedLayoutData, selectedDockviewProfileData, selectedDockviewProfileId])
-
   React.useEffect(() => {
     if (!dockviewApi) return
-
-    sendToDesktop({
-      type: "onResetTracking",
-    })
 
     const disposables = [
       dockviewApi.onDidAddPanel((event: any) => {
@@ -162,49 +122,11 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
     return () => {
       disposables.forEach((disposable) => disposable.dispose())
     }
-  }, [dockviewApi])
-
-  React.useEffect(() => {
-    if (!dockviewApi || !profilesRegistered) {
-      return
-    }
-
-    const layoutData = selectedDockviewProfileData ?? selectedLayoutData
-    const hasLayoutData =
-      layoutData !== undefined &&
-      layoutData !== null &&
-      (typeof layoutData !== "object" || Object.keys(layoutData as object).length > 0)
-
-    if (!hasLayoutData) {
-      loadDockviewLayout(dockviewApi)
-    } else {
-      loadDockviewLayout(dockviewApi, layoutData)
-    }
-
-    sendToDesktop({
-      type: "onLayoutReady",
-    })
-  }, [
-    dockviewApi,
-    dockviewRevision,
-    profilesRegistered,
-    selectedDockviewProfileData,
-    selectedLayoutData,
-    sendToDesktop,
-  ])
+  }, [dockviewApi, sendToDesktop])
 
   const onReady = (event: DockviewReadyEvent) => {
-    setupEdgeGroups(event.api)
-
     sendToDesktop({ type: "onReady", params: { api: event.api } })
   }
-
-  React.useEffect(() => {
-    if (layoutReady && !signalReady) {
-      sendToDesktop({ type: "onToggleSignalReady" })
-      props.onReady?.()
-    }
-  }, [layoutReady, props, sendToDesktop, signalReady])
 
   const effectiveTheme = props.theme
 
@@ -384,7 +306,7 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
             flexGrow: 1,
             overflow: "hidden",
             display: "flex",
-            visibility: layoutReady ? "visible" : "hidden",
+            visibility: isReady ? "visible" : "hidden",
           }}
         >
           <DockviewReact
@@ -516,7 +438,6 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
           },
         })}
       </div>
-      <AdaptiveDebuggerRoot />
     </div>
   )
 }

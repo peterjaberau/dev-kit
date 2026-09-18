@@ -1,4 +1,4 @@
-import { isRecord } from '../framework/types';
+import { isRecord } from '#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/types';
 import { defaultRawMessagesConfig, type RawMessagesConfig } from './defaults';
 
 function clampNumber(value: number, min: number, max: number): number {

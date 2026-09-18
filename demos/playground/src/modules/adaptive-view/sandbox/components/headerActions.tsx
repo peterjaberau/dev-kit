@@ -1,6 +1,6 @@
+import { nextPanelNumber } from "./panelId"
 import { IDockviewHeaderActionsProps } from "#adaptive-view/react"
 import * as React from "react"
-import { nextId } from "../desktop/dockview/layout"
 
 const Icon = (props: { icon: string; title?: string; onClick?: (event: React.MouseEvent) => void }) => {
   return (
@@ -108,7 +108,7 @@ export const LeftControls = (props: IDockviewHeaderActionsProps | any) => {
     props.containerApi.addPanel({
       id: `id_${Date.now().toString()}`,
       component: "default",
-      title: `Tab ${nextId()}`,
+      title: `Tab ${nextPanelNumber()}`,
       position: {
         referenceGroup: props.group,
       },

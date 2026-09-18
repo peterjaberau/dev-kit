@@ -6,7 +6,7 @@ import {
   type FrameworkAdapterState,
   type FrameworkConfig,
   type PanelFrameworkAdapter,
-} from "../framework/frameworkAdapter"
+} from "#adaptive-view/sandbox/desktop/panel-approaches/panels/framework/frameworkAdapter"
 import { type RawMessagesConfig } from './defaults';
 import { parseRawMessagesConfig } from './schema';
 

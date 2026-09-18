@@ -1,6 +1,6 @@
+import { nextPanelNumber } from "./panelId"
 import { DockviewApi, EdgeGroupPosition } from "#adaptive-view/react"
 import * as React from "react"
-import { nextId } from "../desktop/dockview/layout"
 import { useDesktop } from "../desktop/selectors"
 import { LM } from "../desktop/designer/theme-utils"
 import { Btn, IconBtn } from "../desktop/designer/designer-kit"
@@ -62,7 +62,7 @@ const EdgeGroupToggles = (props: { api: DockviewApi }) => {
       props.api.addPanel({
         id: `edge-panel-${position}-${Date.now()}`,
         component: "fixedPlaceholder",
-        title: `Tab ${nextId()}`,
+        title: `Tab ${nextPanelNumber()}`,
         position: { referenceGroup: groupApi.id },
         params: { label: position, position },
       })
@@ -258,7 +258,7 @@ export const GridActions = (props: { api?: DockviewApi }) => {
       props.api?.addPanel({
         id: `id_${Date.now().toString()}`,
         component: options?.nested ? "nested" : "default",
-        title: `Tab ${nextId()}`,
+        title: `Tab ${nextPanelNumber()}`,
         renderer: "always",
       })
     }

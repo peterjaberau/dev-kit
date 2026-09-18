@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { useSidebarStore } from "../../hooks/useSidebarStore"
+import { useSidebarStore } from "#adaptive-view/sandbox/desktop/panel-approaches/hooks/useSidebarStore"
 import { PanelErrorBoundary } from "./PanelErrorBoundary"
 import { chakra } from "@chakra-ui/react"
 import { registerPanelActions, unregisterPanelActions } from "./panelActionRegistry"

@@ -1,2 +1,2 @@
-export * from "./scoll-area"
-export * from "./wrapper-with-scroll-area"
+export * from "./collapase-wrapper"
+export * from "./scroll-area-wrapper"

@@ -12,7 +12,6 @@ import "./styles/dockview.css"
 
 export interface DesktopRenderProps {
   theme: DockviewTheme
-  onReady: () => void
   renderController: (controller: ControllerDockviewProps) => React.ReactNode
 }
 
@@ -21,7 +20,7 @@ export interface DesktopProps {
 }
 
 export default function Desktop({ children }: DesktopProps) {
-  const { desktopRef, sendToDesktop, desktopContext } = useDesktop()
+  const { desktopRef, sendToDesktop, desktopContext, isReady } = useDesktop()
   const { desktopThemeName, desktopTheme } = useDesktopTheme()
   const { dockviewTheme, dockviewThemeContext, sendToDockviewTheme } = useDockviewTheme()
   const pathname = usePathname()
@@ -30,8 +29,9 @@ export default function Desktop({ children }: DesktopProps) {
   const syncingLayoutFromUrl = React.useRef(false)
   const frameRef = React.useRef<HTMLElement>(null)
   const previousCssOverrideKeys = React.useRef<string[]>([])
-  const { desktopDesignerOpen, ready, selectedDockviewProfileId } = desktopContext.layout
+  const { desktopDesignerOpen, selectedDockviewProfileId } = desktopContext.layout
   const urlLayoutProfileId = searchParams.get("layout")
+  const previousUrlLayoutProfileId = React.useRef(urlLayoutProfileId)
   const themeMetadata = dockviewThemeContext.metadata.dockviewThemeMeta
   const selectedBaseTheme =
     dockviewThemeContext.presets.dockviewThemes.find(({ name }: any) => name === dockviewTheme.name) ?? dockviewTheme
@@ -44,6 +44,8 @@ export default function Desktop({ children }: DesktopProps) {
   )
 
   React.useEffect(() => {
+    if (previousUrlLayoutProfileId.current === urlLayoutProfileId) return
+    previousUrlLayoutProfileId.current = urlLayoutProfileId
     const currentProfileId = desktopRef.getSnapshot().context.layout.selectedDockviewProfileId
     if (currentProfileId !== urlLayoutProfileId) {
       syncingLayoutFromUrl.current = true
@@ -53,7 +55,7 @@ export default function Desktop({ children }: DesktopProps) {
 
   React.useEffect(() => {
     if (syncingLayoutFromUrl.current) {
-      if (selectedDockviewProfileId === urlLayoutProfileId) syncingLayoutFromUrl.current = false
+      syncingLayoutFromUrl.current = false
       return
     }
     if (selectedDockviewProfileId === urlLayoutProfileId) return
@@ -77,8 +79,6 @@ export default function Desktop({ children }: DesktopProps) {
     }
     previousCssOverrideKeys.current = Object.keys(dockviewTheme.cssOverrides)
   }, [dockviewTheme])
-
-  const markReady = React.useCallback(() => sendToDesktop({ type: "onMarkReady" }), [sendToDesktop])
 
   return (
     <main
@@ -121,7 +121,6 @@ export default function Desktop({ children }: DesktopProps) {
       <section ref={frameRef} className="adaptive-desktop__frame">
         {children({
           theme: dockviewTheme,
-          onReady: markReady,
           renderController: (controller) => (
             <DesktopDesigner
               open={desktopDesignerOpen}
@@ -138,10 +137,10 @@ export default function Desktop({ children }: DesktopProps) {
         })}
 
         <div
-          className={`adaptive-desktop__loader${ready ? "is-ready" : ""}`}
+          className={`adaptive-desktop__loader${isReady ? "is-ready" : ""}`}
           role="status"
           aria-label="Loading adaptive desktop"
-          aria-hidden={ready}
+          aria-hidden={isReady}
         >
           <span />
         </div>
