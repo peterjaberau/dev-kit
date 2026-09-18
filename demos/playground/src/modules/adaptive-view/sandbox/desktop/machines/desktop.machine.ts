@@ -1,26 +1,93 @@
 import { setup, assign, enqueueActions } from "xstate"
 import { themeMachine } from "./theme.machine"
+import { localStoreMachine } from "./local-store.machine"
+import type { ActorRefFrom } from "xstate"
+
+const resolveProfile = (context: any, profileId?: string | null) => {
+  const profiles = context.presets.dockviewProfiles
+  const selected = profiles.find((profile: any) => profile.id === profileId)
+  const fallback = profiles.find((profile: any) => profile.id === "default")
+  const store = context.store.localStoreRef?.getSnapshot().context
+  const saved = store?.data[store.settings.storeKey]
+  const hasSavedProfile =
+    saved &&
+    typeof saved.id === "string" &&
+    typeof saved.title === "string" &&
+    saved.data &&
+    typeof saved.data === "object" &&
+    "grid" in saved.data &&
+    "panels" in saved.data
+
+  // An explicit different profile opens its preset; the matching saved profile
+  // restores edits even when the URL also names that profile.
+  return hasSavedProfile && (!selected || saved.id === selected.id) ? saved : (selected ?? fallback)
+}
 
 export const desktopMachine = setup({
-  actors: { themeMachine },
+  actors: { themeMachine, localStoreMachine },
   actions: {
+    spawnLocalStore: assign(({ context, spawn }) => ({
+      store: {
+        ...context.store,
+        localStoreRef: spawn("localStoreMachine", {
+          id: "local-store",
+          systemId: "local-store",
+          input: { initialLayout: context.input.initialLayout },
+        }),
+      },
+    })),
+    spawnThemes: assign(({ context, spawn }) => {
+      context.theme = {
+        desktopThemeRef: spawn("themeMachine", {
+          id: "desktop-theme",
+          systemId: "desktop-theme",
+          input: { type: "desktop", initialDesktopTheme: context.input.initialDesktopTheme },
+        }),
+        dockviewThemeRef: spawn("themeMachine", {
+          id: "dockview-theme",
+          systemId: "dockview-theme",
+          input: { type: "dockview", initialTheme: context.input.initialTheme },
+        }),
+      }
+    }),
+
     resolveInitialLayout: assign(({ context }) => {
-      const profiles = context.presets.dockviewProfiles
-      const selected = profiles.find((profile: any) => profile.id === context.input.dockviewProfileId)
-      const fallback = profiles.find((profile: any) => profile.id === "default")
-      const saved = context.input.initialLayout
-      const hasSavedLayout = saved && typeof saved === "object" && "grid" in saved && "panels" in saved
+      const profile = resolveProfile(context, context.input.dockviewProfileId)
       return {
         layout: {
           ...context.layout,
-          selectedDockviewProfileId: selected?.id ?? null,
-          data: selected?.data ?? (hasSavedLayout ? saved : fallback?.data),
+          profile,
+          selectedDockviewProfileId: profile?.id ?? null,
+          data: profile?.data,
         },
       }
     }),
+    persistLoadedProfile: ({ context }) => {
+      const profile = context.layout.profile
+      const store = context.store.localStoreRef
+      if (!profile || !store) return
+      const { settings, data } = store.getSnapshot().context
+      const saved = data[settings.storeKey] as { id?: string } | null | undefined
+      if (saved == null || saved.id !== profile.id) {
+        store.send({
+          type: "SET_ITEM",
+          key: settings.storeKey,
+          value: { id: profile.id, title: profile.title, data: profile.data },
+        })
+      }
+    },
+    saveLayout: assign(({ context }) => {
+      const profile = context.layout.profile
+      if (!profile || !context.dockviewApi) return {}
+      const payload = { id: profile.id, title: profile.title, data: context.dockviewApi.toJSON() }
+      const store = context.store.localStoreRef
+      store?.send({ type: "SET_ITEM", key: store.getSnapshot().context.settings.storeKey, value: payload })
+      return { layout: { ...context.layout, profile: payload, data: payload.data } }
+    }),
     loadLayout: assign(({ context }) => {
       const api = context.dockviewApi
-      const fallback = context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")?.data
+      const fallbackProfile = context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")
+      const fallback = fallbackProfile?.data
       const apply = (data: any) => {
         if (!data) throw new Error('DesktopProvider requires a dockview profile with id "default" and layout data.')
         const layout = JSON.parse(JSON.stringify(data))
@@ -46,7 +113,9 @@ export const desktopMachine = setup({
         layout: {
           ...context.layout,
           data,
-          selectedDockviewProfileId: data === context.layout.data ? context.layout.selectedDockviewProfileId : null,
+          profile: data === context.layout.data ? context.layout.profile : fallbackProfile,
+          selectedDockviewProfileId:
+            data === context.layout.data ? context.layout.selectedDockviewProfileId : (fallbackProfile?.id ?? null),
         },
         current: {
           ...context.current,
@@ -56,20 +125,6 @@ export const desktopMachine = setup({
           activeGroup: api.activeGroup?.id ?? null,
         },
         interactions: { selectedPanelId: null, selectedGroupId: null, selectedViewId: null },
-      }
-    }),
-    spawnThemes: assign(({ context, spawn }) => {
-      context.theme = {
-        desktopThemeRef: spawn("themeMachine", {
-          id: "desktop-theme",
-          systemId: "desktop-theme",
-          input: { type: "desktop", initialDesktopTheme: context.input.initialDesktopTheme },
-        }),
-        dockviewThemeRef: spawn("themeMachine", {
-          id: "dockview-theme",
-          systemId: "dockview-theme",
-          input: { type: "dockview", initialTheme: context.input.initialTheme },
-        }),
       }
     }),
     setDockviewApi: assign(({ context, event }, params) => {
@@ -207,13 +262,13 @@ export const desktopMachine = setup({
       }
     }),
     selectDockviewProfile: assign(({ context, event }) => {
-      const profile = context.presets.dockviewProfiles.find((profile: any) => profile.id === event.params.profileId)
-      const fallback = context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")
+      const profile = resolveProfile(context, event.params.profileId ?? "default")
       return {
         layout: {
           ...context.layout,
+          profile,
           selectedDockviewProfileId: profile?.id ?? null,
-          data: profile?.data ?? fallback?.data,
+          data: profile?.data,
         },
       }
     }),
@@ -235,6 +290,9 @@ export const desktopMachine = setup({
     return {
       input,
       dockviewApi: null,
+      store: {
+        localStoreRef: null as ActorRefFrom<typeof localStoreMachine> | null,
+      },
       fixtures: {
         colors: [
           "rgba(255,0,0,0.2)",
@@ -312,6 +370,7 @@ export const desktopMachine = setup({
       },
       layout: {
         desktopDesignerOpen: false,
+        profile: null,
         selectedDockviewProfileId: null,
         data: null,
         themeRef: null,
@@ -321,8 +380,10 @@ export const desktopMachine = setup({
   states: {
     initiating: {
       entry: enqueueActions(({ enqueue }) => {
+        enqueue("spawnLocalStore")
         enqueue("spawnThemes")
         enqueue("resolveInitialLayout")
+        enqueue("persistLoadedProfile")
         enqueue.raise({ type: "onCompleteInitiation" })
       }),
       on: {
@@ -331,17 +392,18 @@ export const desktopMachine = setup({
     },
     starting: {
       on: {
-        onSelectDockviewProfile: { actions: "selectDockviewProfile" },
+        onSelectDockviewProfile: { actions: ["selectDockviewProfile", "persistLoadedProfile"] },
         onReady: {
-          actions: ["setDockviewApi", "loadLayout"],
+          actions: ["setDockviewApi", "loadLayout", "persistLoadedProfile"],
           target: "ready",
         },
       },
     },
     ready: {
       on: {
+        onSaveLayout: { actions: "saveLayout" },
         onReady: {
-          actions: ["setDockviewApi", "loadLayout"],
+          actions: ["setDockviewApi", "loadLayout", "persistLoadedProfile"],
         },
         onDidAddPanel: {
           actions: enqueueActions(({ event, enqueue }) => {
@@ -456,7 +518,7 @@ export const desktopMachine = setup({
         },
 
         onSelectDockviewProfile: {
-          actions: ["selectDockviewProfile", "loadLayout"],
+          actions: ["selectDockviewProfile", "loadLayout", "persistLoadedProfile"],
         },
         onToggleDesktopDesigner: {
           actions: ["toggleDesktopDesigner"],

@@ -1,9 +1,8 @@
 import { DockviewApi, EdgeGroupPosition } from "#adaptive-view/react"
 import * as React from "react"
-import { useDesktop, useDesktopCurrent } from "../desktop/selectors"
+import { useDesktop, useDesktopCurrent, useLocalStore } from "../desktop/selectors"
 import { LM } from "../desktop/designer/theme-utils"
 import { Btn, IconBtn } from "../desktop/designer/designer-kit"
-import { useLocalStore } from "../store-manager/selectors"
 
 const Row = (props: { label?: string; children: React.ReactNode; style?: React.CSSProperties }) => (
   <div
@@ -200,7 +199,7 @@ function usePopover() {
 export const GridActions = (props: { api?: DockviewApi }) => {
   const { panelCount } = useDesktopCurrent()
   const { sendToDesktop, desktopContext } = useDesktop()
-  const dockviewStore = useLocalStore<unknown>("desktop.layout")
+  const dockviewStore = useLocalStore<unknown>()
   const { dockviewProfiles } = desktopContext.presets
   const { selectedDockviewProfileId } = desktopContext.layout
   const [loadMenuOpen, setLoadMenuOpen] = React.useState(false)
@@ -215,7 +214,6 @@ export const GridActions = (props: { api?: DockviewApi }) => {
     }
 
     setLoadMenuOpen(false)
-    dockviewStore.save(profile.data)
     sendToDesktop({
       type: "onSelectDockviewProfile",
       params: { profileId: profile.id },
@@ -223,11 +221,7 @@ export const GridActions = (props: { api?: DockviewApi }) => {
   }
 
   const onSave = () => {
-    if (props.api) {
-      const state = props.api.toJSON()
-      console.log(state)
-      dockviewStore.save(state)
-    }
+    sendToDesktop({ type: "onSaveLayout" })
   }
 
   const onReset = () => {

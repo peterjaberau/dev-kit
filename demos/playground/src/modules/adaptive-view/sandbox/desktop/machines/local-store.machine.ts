@@ -2,8 +2,7 @@
 
 import { assign, setup } from "xstate"
 
-
-export type LocalStorageEvent =
+export type LocalStoreEvent =
   | { type: "HYDRATE" }
   | { type: "SET_ITEM"; key: string; value: unknown }
   | { type: "RESET_ITEM"; key: string }
@@ -21,7 +20,7 @@ const readItem = (key: string, fallback: unknown): unknown => {
   }
 }
 
-const hydrateData = (data: any): any =>
+const hydrateData = (data: Record<string, unknown>): Record<string, unknown> =>
   Object.fromEntries(Object.entries(data).map(([key, fallback]) => [key, readItem(key, fallback)]))
 
 const writeItem = (key: string, value: unknown) => {
@@ -32,7 +31,7 @@ const writeItem = (key: string, value: unknown) => {
   try {
     window.localStorage.setItem(key, JSON.stringify(value))
   } catch {
-    // Storage may be unavailable or full. The actor remains the source of
+    // The store may be unavailable or full. The actor remains the source of
     // truth for the current session even when persistence fails.
   }
 }
@@ -45,7 +44,7 @@ const removeItem = (key: string) => {
   try {
     window.localStorage.removeItem(key)
   } catch {
-    // Ignore unavailable storage; context is still reset below.
+    // Ignore an unavailable store; context is still reset below.
   }
 }
 
@@ -61,7 +60,11 @@ const hasStoredItem = (key: string): boolean => {
   }
 }
 
-export const localStorageMachine = setup({
+export const localStoreMachine = setup({
+  types: {
+    events: {} as LocalStoreEvent,
+    input: {} as { initialLayout?: unknown },
+  },
   actions: {
     persistInitialData: ({ context }) => {
       for (const [key, value] of Object.entries(context.data)) {
@@ -100,9 +103,13 @@ export const localStorageMachine = setup({
 }).createMachine({
   id: "local-store",
   initial: "ready",
-  context: ({ input }: any) => ({
-    data: hydrateData(input.data),
-  }),
+  context: ({ input }) => {
+    const settings = { storeKey: "sandbox-adaptive-view" }
+    return {
+      settings,
+      data: hydrateData({ [settings.storeKey]: input?.initialLayout ?? null }),
+    }
+  },
   entry: "persistInitialData",
   states: {
     ready: {

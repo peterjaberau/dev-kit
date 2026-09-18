@@ -3,17 +3,18 @@
 The actors are not explicitly passed as props to Adaptive Debugger. The debugger receives them through React context
 inheritance.
 
+The desktop machine spawns the local store and theme actors during initiation. The local store uses
+`sandbox-adaptive-view` as its persistence key and is available through `useLocalStore`.
+
 The desktop provider hierarchy is effectively:
 
 ```typescript jsx
 <DesktopProvider>
-  <StoreManagerProvider>
     <Desktop>
       <AdvaptiveViewDesktopContent>
         <AdaptiveDebuggerRoot />
       </AdvaptiveViewDesktopContent>
     </Desktop>
-  </StoreManagerProvider>
 </DesktopProvider>
 ```
 
@@ -30,7 +31,6 @@ AdaptiveDebuggerRoot adds only its own provider:
 | Component                     | Type     | File                                    |
 | ----------------------------- | -------- | --------------------------------------- |
 | `DesktopProvider`             | Provider | desktop/providers/DesktopProvider.tsx   |
-| `StoreManagerProvider`        | Provider | store-manager/provider.tsx              |
 | `AdaptiveDebuggerProvider`    | Provider | adaptive-debugger/provider.tsx          |
 | `Desktop`                     | Renderer | desktop/desktop.tsx                     |
 | `DesktopDesigner`             | Renderer | desktop/designer/desktop-designer.tsx   |
@@ -45,9 +45,7 @@ That hierarchy is split across these files:
 
 ```typescript jsx
 <DesktopProvider>
-  <StoreManagerProvider>
     {children}
-  </StoreManagerProvider>
 </DesktopProvider>
 
 // inside AdvaptiveViewDesktopContent
