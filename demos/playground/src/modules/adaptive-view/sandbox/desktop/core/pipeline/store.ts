@@ -11,7 +11,7 @@ export interface MessagePipelineState {
 }
 
 const EMPTY_PUBLISHERS: Map<string, Set<string>> = new Map();
-const EMPTY_DATATYPES = {} as RosDatatypes;
+const EMPTY_DATATYPES = {} as Record<string, unknown>
 
 /**
  * Message state (lastMessageByTopic, per-subscriber batches, seq counters) is
