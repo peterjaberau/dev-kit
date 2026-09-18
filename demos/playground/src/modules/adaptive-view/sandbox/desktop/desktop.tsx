@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type { DockviewTheme } from "#adaptive-view/react"
 import { useDesktop } from "./selectors"
 import { useDesktopTheme, useDockviewTheme } from "./providers"
@@ -20,18 +19,12 @@ export interface DesktopProps {
 }
 
 export default function Desktop({ children }: DesktopProps) {
-  const { desktopRef, sendToDesktop, desktopContext, isReady } = useDesktop()
+  const { sendToDesktop, desktopContext, isReady } = useDesktop()
   const { desktopThemeName, desktopTheme } = useDesktopTheme()
   const { dockviewTheme, dockviewThemeContext, sendToDockviewTheme } = useDockviewTheme()
-  const pathname = usePathname()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const syncingLayoutFromUrl = React.useRef(false)
   const frameRef = React.useRef<HTMLElement>(null)
   const previousCssOverrideKeys = React.useRef<string[]>([])
-  const { desktopDesignerOpen, selectedDockviewProfileId } = desktopContext.layout
-  const urlLayoutProfileId = searchParams.get("layout")
-  const previousUrlLayoutProfileId = React.useRef(urlLayoutProfileId)
+  const { desktopDesignerOpen } = desktopContext.layout
   const themeMetadata = dockviewThemeContext.metadata.dockviewThemeMeta
   const selectedBaseTheme =
     dockviewThemeContext.presets.dockviewThemes.find(({ name }: any) => name === dockviewTheme.name) ?? dockviewTheme
@@ -42,30 +35,6 @@ export default function Desktop({ children }: DesktopProps) {
       ) as React.CSSProperties,
     [desktopTheme],
   )
-
-  React.useEffect(() => {
-    if (previousUrlLayoutProfileId.current === urlLayoutProfileId) return
-    previousUrlLayoutProfileId.current = urlLayoutProfileId
-    const currentProfileId = desktopRef.getSnapshot().context.layout.selectedDockviewProfileId
-    if (currentProfileId !== urlLayoutProfileId) {
-      syncingLayoutFromUrl.current = true
-      sendToDesktop({ type: "onSelectDockviewProfile", params: { profileId: urlLayoutProfileId } })
-    }
-  }, [desktopRef, sendToDesktop, urlLayoutProfileId])
-
-  React.useEffect(() => {
-    if (syncingLayoutFromUrl.current) {
-      syncingLayoutFromUrl.current = false
-      return
-    }
-    if (selectedDockviewProfileId === urlLayoutProfileId) return
-
-    const nextParams = new URLSearchParams(searchParams.toString())
-    if (selectedDockviewProfileId) nextParams.set("layout", selectedDockviewProfileId)
-    else nextParams.delete("layout")
-    const nextQuery = nextParams.toString()
-    router.replace(`${pathname}${nextQuery ? `?${nextQuery}` : ""}`)
-  }, [pathname, router, searchParams, selectedDockviewProfileId, urlLayoutProfileId])
 
   React.useEffect(() => {
     const dockviewRoot = frameRef.current?.querySelector<HTMLElement>('[class*="dockview-theme"]')
