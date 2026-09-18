@@ -20,3 +20,13 @@ export const useDesktop = () => {
     currentDesktop: context.current,
   }
 }
+
+export const useDesktopCurrent = () => {
+  const { currentDesktop } = useDesktop()
+
+  return {
+    panelCount: currentDesktop.panelCount,
+  }
+
+
+}

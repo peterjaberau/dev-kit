@@ -125,6 +125,9 @@ export const desktopMachine = setup({
         selectedViewId: null,
       }
     }),
+    incrementPanelCount: assign(({ context }) => ({
+      current: { ...context.current, panelCount: context.current.panelCount + 1 },
+    })),
     addPanel: assign(({ context, event }) => {
       const { panelId } = event.params
       if (!context.current.panels.includes(panelId)) {
@@ -267,6 +270,7 @@ export const desktopMachine = setup({
           mru: false,
           search: true,
         },
+        panelCount: 0,
       },
 
       interactions: {
@@ -342,6 +346,7 @@ export const desktopMachine = setup({
         onDidAddPanel: {
           actions: enqueueActions(({ event, enqueue }) => {
             const { panelId } = event.params
+            enqueue("incrementPanelCount")
             enqueue("addPanel")
             enqueue({ type: "addPendingLogLine", params: { id: panelId, message: "Panel Added" } })
             enqueue("flushPendingLogLines")

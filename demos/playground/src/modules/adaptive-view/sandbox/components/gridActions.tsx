@@ -1,7 +1,6 @@
-import { nextPanelNumber } from "./panelId"
 import { DockviewApi, EdgeGroupPosition } from "#adaptive-view/react"
 import * as React from "react"
-import { useDesktop } from "../desktop/selectors"
+import { useDesktop, useDesktopCurrent } from "../desktop/selectors"
 import { LM } from "../desktop/designer/theme-utils"
 import { Btn, IconBtn } from "../desktop/designer/designer-kit"
 import { useLocalStore } from "../store-manager/selectors"
@@ -39,6 +38,7 @@ const readEdgeState = (api: DockviewApi): Partial<Record<EdgeGroupPosition, bool
   Object.fromEntries(EDGE_POSITIONS.map((pos) => [pos, api.getEdgeGroup(pos) !== undefined]))
 
 const EdgeGroupToggles = (props: { api: DockviewApi }) => {
+  const { panelCount } = useDesktopCurrent()
   const [active, setActive] = React.useState<Partial<Record<EdgeGroupPosition, boolean>>>(() =>
     readEdgeState(props.api),
   )
@@ -62,7 +62,7 @@ const EdgeGroupToggles = (props: { api: DockviewApi }) => {
       props.api.addPanel({
         id: `edge-panel-${position}-${Date.now()}`,
         component: "fixedPlaceholder",
-        title: `Tab ${nextPanelNumber()}`,
+        title: `Tab ${panelCount}`,
         position: { referenceGroup: groupApi.id },
         params: { label: position, position },
       })
@@ -107,7 +107,7 @@ const EdgeGroupToggles = (props: { api: DockviewApi }) => {
   )
 }
 
-import { createRoot } from "react-dom/client"
+import { createPortal } from "react-dom"
 import { PanelBuilder } from "./panelBuilder"
 
 let mount: HTMLElement | null = null
@@ -186,26 +186,19 @@ const PopoverComponent = (props: { close: () => void; component: React.FC<{ clos
 }
 
 function usePopover() {
-  return {
-    open: (Component: React.FC<{ close: () => void }>) => {
-      const el = document.createElement("div")
-      getPopoverMount().appendChild(el)
-      const root = createRoot(el)
+  const [component, setComponent] = React.useState<React.FC<{ close: () => void }> | null>(null)
+  const close = React.useCallback(() => setComponent(null), [])
 
-      root.render(
-        <PopoverComponent
-          component={Component}
-          close={() => {
-            root.unmount()
-            el.remove()
-          }}
-        />,
-      )
-    },
+  return {
+    open: (Component: React.FC<{ close: () => void }>) => setComponent(() => Component),
+    content: component
+      ? createPortal(<PopoverComponent component={component} close={close} />, getPopoverMount())
+      : null,
   }
 }
 
 export const GridActions = (props: { api?: DockviewApi }) => {
+  const { panelCount } = useDesktopCurrent()
   const { sendToDesktop, desktopContext } = useDesktop()
   const dockviewStore = useLocalStore<unknown>("desktop.layout")
   const { dockviewProfiles } = desktopContext.presets
@@ -258,7 +251,7 @@ export const GridActions = (props: { api?: DockviewApi }) => {
       props.api?.addPanel({
         id: `id_${Date.now().toString()}`,
         component: options?.nested ? "nested" : "default",
-        title: `Tab ${nextPanelNumber()}`,
+        title: `Tab ${panelCount}`,
         renderer: "always",
       })
     }
@@ -270,6 +263,7 @@ export const GridActions = (props: { api?: DockviewApi }) => {
 
   return (
     <div style={{ padding: "2px 0" }}>
+      {popover.content}
       <Row>
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
           <div style={{ position: "relative" }}>

@@ -1,4 +1,4 @@
-import { nextPanelNumber } from "./panelId"
+import { useDesktopCurrent } from "../desktop/selectors"
 import { IDockviewHeaderActionsProps } from "#adaptive-view/react"
 import * as React from "react"
 
@@ -100,6 +100,7 @@ export const RightControls = (props: IDockviewHeaderActionsProps | any) => {
 }
 
 export const LeftControls = (props: IDockviewHeaderActionsProps | any) => {
+  const { panelCount } = useDesktopCurrent()
   if (props.location.type === "edge") {
     return null
   }
@@ -108,7 +109,7 @@ export const LeftControls = (props: IDockviewHeaderActionsProps | any) => {
     props.containerApi.addPanel({
       id: `id_${Date.now().toString()}`,
       component: "default",
-      title: `Tab ${nextPanelNumber()}`,
+      title: `Tab ${panelCount}`,
       position: {
         referenceGroup: props.group,
       },
