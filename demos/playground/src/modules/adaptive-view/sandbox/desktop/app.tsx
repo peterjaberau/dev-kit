@@ -1,14 +1,7 @@
-import {
-  DockviewReact,
-  DockviewReadyEvent,
-  IContextMenuItemComponentProps,
-  GetTabContextMenuItemsParams,
-  GetTabGroupChipContextMenuItemsParams,
-  DEFAULT_TAB_GROUP_COLORS,
-} from "#adaptive-view/react"
+import { DockviewReact, DockviewReadyEvent } from "#adaptive-view/react"
 
 import "#adaptive-view/enterprise"
-import { useDesktop } from "./selectors"
+import { useDesktop, useDockviewMenus } from "./selectors"
 import { DESKTOP_DOCKVIEW_COMPONENTS } from "./panels/registry"
 import * as React from "react"
 import Desktop, { type DesktopRenderProps } from "./desktop"
@@ -22,262 +15,32 @@ import {
   TabModeMenuItemRenderer as TabModeMenuItem,
   EdgeAutoHideMenuItemRenderer as EdgeAutoHideMenuItem,
   PopoutMenuItemRenderer as PopoutMenuItem,
-  TabModeMenuItemProps,
-  TabOverflowMode,
   WatermarkRenderer as WatermarkComponent,
   GroupDragGhostRenderer as GroupDragGhost,
 } from "../components"
 
+const MENU_BINDINGS = {
+  renderers: {
+    overflow: TabModeMenuItem,
+    float: FloatMenuItem,
+    popout: PopoutMenuItem,
+    edgeAutoHide: EdgeAutoHideMenuItem,
+  },
+  prompt: (message: string) => window.prompt(message),
+}
+
+const SMART_GUIDES_OPTIONS = { snapDistance: 8 }
+
 const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
-  const { sendToDesktop, dockviewApi, currentDesktop, isReady } = useDesktop()
-  const {
-    logLines,
-    panels,
-    groups,
-    activePanel,
-    activeGroup,
-    watermark,
-    customGhost,
-    dndCompass,
-    smartGuides,
-    showLogs,
-    debug,
-  } = currentDesktop
-  React.useEffect(() => {
-    if (!dockviewApi) return
-
-    const disposables = [
-      dockviewApi.onDidAddPanel((event: any) => {
-        sendToDesktop({
-          type: "onDidAddPanel",
-          params: {
-            panelId: event.id,
-          },
-        })
-      }),
-
-      dockviewApi.onDidActivePanelChange((event: any) => {
-        sendToDesktop({
-          type: "onDidActivePanelChange",
-          params: {
-            panelId: event.panel?.id,
-          },
-        })
-      }),
-      dockviewApi.onDidRemovePanel((event: any) => {
-        sendToDesktop({
-          type: "onDidRemovePanel",
-          params: {
-            panelId: event.id,
-          },
-        })
-      }),
-
-      dockviewApi.onDidAddGroup((event: any) => {
-        sendToDesktop({
-          type: "onDidAddGroup",
-          params: {
-            groupId: event.id,
-          },
-        })
-      }),
-      dockviewApi.onDidMovePanel((event: any) => {
-        sendToDesktop({
-          type: "onDidMovePanel",
-          params: {
-            panelId: event.panel.id,
-          },
-        })
-      }),
-
-      dockviewApi.onDidMaximizedGroupChange((event: any) => {
-        sendToDesktop({
-          type: "onDidMaximizedGroupChange",
-          params: {
-            groupId: event.group.api.id,
-            isMaximized: event.isMaximized,
-          },
-        })
-      }),
-
-      dockviewApi.onDidRemoveGroup((event: any) => {
-        sendToDesktop({
-          type: "onDidRemoveGroup",
-          params: {
-            groupId: event.id,
-          },
-        })
-      }),
-
-      dockviewApi.onDidActiveGroupChange((event: any) => {
-        sendToDesktop({
-          type: "onDidActiveGroupChange",
-          params: {
-            groupId: event?.id,
-          },
-        })
-      }),
-    ]
-
-    return () => {
-      disposables.forEach((disposable) => disposable.dispose())
-    }
-  }, [dockviewApi, sendToDesktop])
+  const { sendToDesktop, currentDesktop, isReady } = useDesktop()
+  const { logLines, watermark, customGhost, dndCompass, showLogs } = currentDesktop
+  const { getTabContextMenuItems, getTabGroupChipContextMenuItems } = useDockviewMenus(MENU_BINDINGS)
 
   const onReady = (event: DockviewReadyEvent) => {
     sendToDesktop({ type: "onReady", params: { api: event.api } })
   }
 
   const effectiveTheme = props.theme
-
-  const getTabContextMenuItems = React.useCallback(
-    ({ panel, group }: GetTabContextMenuItemsParams) => {
-      const items: (
-        | "close"
-        | "closeOthers"
-        | "closeAll"
-        | "closeLeft"
-        | "closeRight"
-        | "maximize"
-        | "separator"
-        | "pin"
-        | {
-            component: React.FC<IContextMenuItemComponentProps>
-            componentProps?: object
-          }
-        | { label: string; action: () => void }
-      )[] = [
-        // No 'pin' here: `pinnedTabs.enabled` makes the context menu
-        // module inject Pin/Unpin at the top of the list already.
-        "separator",
-        "close",
-        "closeOthers",
-        "closeAll",
-        "closeLeft",
-        "closeRight",
-        "separator",
-        "maximize",
-        "separator",
-        // Switches `overflow.mode` between the single-row strip + chevron
-        // dropdown and multi-row wrapping tabs.
-        ...(["dropdown", "wrap"] as TabOverflowMode[]).map((mode) => ({
-          component: TabModeMenuItem,
-          componentProps: {
-            mode,
-            active: currentDesktop.overflow.mode === mode,
-            onSelect: (mode: TabOverflowMode) => {
-              sendToDesktop({ type: "onUpdateOverflow", params: { mode } })
-            },
-          } satisfies TabModeMenuItemProps,
-        })),
-        "separator",
-        ...(group.api.location.type === "edge"
-          ? // An edge group can't float or pop out, but it can switch
-            // between a pinnable tool window and a static docked
-            // panel, so that toggle takes the slot instead.
-            [{ component: EdgeAutoHideMenuItem }]
-          : // Float / popout are shown here as custom component items
-            // (with icons); the `'float'` and `'popout'` built-in
-            // shortcuts do the same thing without custom rendering.
-            [{ component: FloatMenuItem }, { component: PopoutMenuItem }]),
-      ]
-
-      if (dockviewApi) {
-        const groupId = group.id
-        const panelId = panel.id
-        const tabGroup = dockviewApi.getTabGroupForPanel({ groupId, panelId })
-        const allTabGroups = dockviewApi.getTabGroups({ groupId })
-        const otherTabGroups = allTabGroups.filter((tg: any) => tg.id !== tabGroup?.id)
-
-        items.push("separator")
-
-        if (tabGroup) {
-          items.push({
-            label: `Remove from "${tabGroup.label || tabGroup.id}"`,
-            action: () => dockviewApi.removePanelFromTabGroup({ groupId, panelId }),
-          })
-        }
-
-        for (const tg of otherTabGroups) {
-          items.push({
-            label: `Add to "${tg.label || tg.id}"`,
-            action: () =>
-              dockviewApi.addPanelToTabGroup({
-                groupId,
-                tabGroupId: tg.id,
-                panelId,
-              }),
-          })
-        }
-
-        items.push({
-          label: "Add to new group",
-          action: () => {
-            const label = window.prompt("Group name:") || ""
-            const colors: any = DEFAULT_TAB_GROUP_COLORS
-            const color = colors[Math.floor(Math.random() * colors.length)].id
-            const newGroup = dockviewApi.createTabGroup({
-              groupId,
-              label,
-              color,
-            })
-            dockviewApi.addPanelToTabGroup({
-              groupId,
-              tabGroupId: newGroup.id,
-              panelId,
-            })
-          },
-        })
-      }
-
-      return items
-    },
-    [currentDesktop.overflow.mode, dockviewApi, sendToDesktop],
-  )
-
-  const getTabGroupChipContextMenuItems = React.useCallback(
-    ({ group, tabGroup }: GetTabGroupChipContextMenuItemsParams) => {
-      const items: (
-        | "colorPicker"
-        | "rename"
-        | "collapse"
-        | "close"
-        | "separator"
-        | { label: string; action: () => void }
-      )[] = ["rename", "colorPicker", "collapse", "close"]
-
-      if (dockviewApi) {
-        // Float / popout operate on the whole containing group, so they
-        // stay custom items. The built-in chip shortcuts are scoped to
-        // the tab group (`'collapse'` / `'close'`, used above).
-        items.push(
-          "separator",
-          {
-            label: "Float group",
-            action: () => dockviewApi.addFloatingGroup(group),
-          },
-          {
-            label: "Popout group",
-            action: () => {
-              void dockviewApi.addPopoutGroup(group)
-            },
-          },
-          "separator",
-          {
-            label: "Dissolve group",
-            action: () =>
-              dockviewApi.dissolveTabGroup({
-                groupId: group.id,
-                tabGroupId: tabGroup.id,
-              }),
-          },
-        )
-      }
-
-      return items
-    },
-    [dockviewApi],
-  )
 
   return (
     <div
@@ -326,7 +89,7 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
             overflow={currentDesktop.overflow}
             floatingGroupDragHandle="titlebar"
             dndCompass={dndCompass}
-            smartGuides={smartGuides ? { snapDistance: 8 } : undefined}
+            smartGuides={SMART_GUIDES_OPTIONS}
             getTabContextMenuItems={getTabContextMenuItems}
             getTabGroupChipContextMenuItems={getTabGroupChipContextMenuItems}
           />
@@ -413,30 +176,7 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
             </div>
           </div>
         )}
-        {props.renderController?.({
-          api: dockviewApi,
-          panels,
-          groups,
-          activePanel,
-          activeGroup,
-          hasCustomWatermark: watermark,
-          toggleCustomWatermark: () => sendToDesktop({ type: "onToggleWatermark" }),
-          hasCustomGhost: customGhost,
-          toggleCustomGhost: () => sendToDesktop({ type: "onToggleCustomGhost" }),
-          dndCompass,
-          onToggleDndCompass: () => sendToDesktop({ type: "onToggleDndCompass" }),
-          smartGuides,
-          onToggleSmartGuides: () => sendToDesktop({ type: "onToggleSmartGuides" }),
-          debug,
-          onToggleDebug: () => sendToDesktop({ type: "onToggleDebug" }),
-          showLogs,
-          onToggleShowLogs: () => sendToDesktop({ type: "onToggleShowLogs" }),
-          onClearLogs: () => {
-            sendToDesktop({
-              type: "onClearLogLines",
-            })
-          },
-        })}
+        {props.renderController?.()}
       </div>
     </div>
   )

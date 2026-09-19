@@ -1,9 +1,9 @@
-import { useDesktopCurrent } from "../desktop/selectors"
-import { DockviewApi } from "#adaptive-view/react"
+import { useDesktopCurrent, useDockview } from "../desktop/selectors"
 import * as React from "react"
 
-export const PanelBuilder = (props: { api: DockviewApi; done: () => void }) => {
+export const PanelBuilder = (props: { done: () => void }) => {
   const { panelCount } = useDesktopCurrent()
+  const { sendToDesktop } = useDockview()
   const [parameters, setParameters] = React.useState<{
     initialWidth?: number
     initialHeight?: number
@@ -97,12 +97,17 @@ export const PanelBuilder = (props: { api: DockviewApi; done: () => void }) => {
         </button>
         <button
           onClick={() => {
-            props.api?.addPanel({
-              id: `id_${Date.now().toString()}`,
-              component: "default",
-              title: `Tab ${panelCount}`,
-              renderer: "always",
-              ...parameters,
+            sendToDesktop({
+              type: "onAddPanel",
+              params: {
+                options: {
+                  id: `id_${Date.now().toString()}`,
+                  component: "default",
+                  title: `Tab ${panelCount}`,
+                  renderer: "always",
+                  ...parameters,
+                },
+              },
             })
 
             props.done()
