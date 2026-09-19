@@ -12,38 +12,23 @@ const defaults = {
 export const configMachine = setup({
   types: {} as any,
   actions: {
-    resetConfig: assign(({ context }) => {
-      context = defaults
-    }),
-    toggleLeftPanel: assign(({ context, event }) => {
-      context.openLeftPanel = !context.openLeftPanel
-    }),
-    toggleRightPanel: assign(({ context, event }) => {
-      context.openRightPanel = !context.openRightPanel
-    }),
-    toggleBottomPanel: assign(({ context, event }) => {
-      context.openBottomPanel = !context.openBottomPanel
-    }),
-    toggleDebugger: assign(({ context, event }) => {
-      context.openDebugger = !context.openDebugger
-    }),
+    resetConfig: assign(() => ({ ...defaults, selectedComponents: [] })),
+    toggleLeftPanel: assign(({ context }) => ({ openLeftPanel: !context.openLeftPanel })),
+    toggleRightPanel: assign(({ context }) => ({ openRightPanel: !context.openRightPanel })),
+    toggleBottomPanel: assign(({ context }) => ({ openBottomPanel: !context.openBottomPanel })),
+    toggleDebugger: assign(({ context }) => ({ openDebugger: !context.openDebugger })),
     updateSelectedComponents: assign(({ context, event }) => {
       const { selected } = event.params
-      context.selectedComponents = [
-        ...context.selectedComponents,
-        ...selected.filter((item: any) => !context.selectedComponents.includes(item)),
-      ]
+      return {
+        selectedComponents: [
+          ...context.selectedComponents,
+          ...selected.filter((item: any) => !context.selectedComponents.includes(item)),
+        ],
+      }
     }),
-    clearSelectedComponents: assign(({ context }) => {
-      context.selectedComponents = []
-    }),
-    updatedSelectedAction: assign(({ context, event }) => {
-      const { selected } = event.params
-      context.selectedAction = selected
-    }),
-    clearSelectedAction: assign(({ context, event }) => {
-      context.selectedAction = null
-    }),
+    clearSelectedComponents: assign(() => ({ selectedComponents: [] })),
+    updatedSelectedAction: assign(({ event }) => ({ selectedAction: event.params.selected })),
+    clearSelectedAction: assign(() => ({ selectedAction: null })),
   },
   actors: {},
   guards: {},

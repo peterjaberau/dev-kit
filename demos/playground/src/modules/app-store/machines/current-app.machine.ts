@@ -19,7 +19,8 @@ export const currentAppMachine = createMachine({
       }),
     actionRef: ({ spawn }: any) =>
       spawn(actionMachine, { systemId: MACHINE_IDS.CURRENT_APP_ACTION, id: MACHINE_IDS.CURRENT_APP_ACTION }),
-    appInfoRef: ({ spawn }: any) => spawn(appInfoMachine, { id: MACHINE_IDS.CURRENT_APP_APP_INFO }),
+    appInfoRef: ({ spawn }: any) =>
+      spawn(appInfoMachine, { systemId: MACHINE_IDS.CURRENT_APP_APP_INFO, id: MACHINE_IDS.CURRENT_APP_APP_INFO }),
     executionRef: ({ spawn }: any) =>
       spawn(executionMachine, { systemId: MACHINE_IDS.CURRENT_APP_EXECUTION, id: MACHINE_IDS.CURRENT_APP_EXECUTION }),
     layoutInfoRef: ({ spawn }: any) =>
