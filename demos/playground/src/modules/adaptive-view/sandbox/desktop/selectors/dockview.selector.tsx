@@ -1,7 +1,14 @@
 import { useCallback } from "react"
 import { useSelector } from "@xstate/react"
-import { useNativeValue } from "./native-event.selector"
 import { DesktopContext } from "../providers/DesktopProvider"
+
+const emptyPanelState = { isActive: false, isVisible: false }
+const emptyGroupState = {
+  ...emptyPanelState,
+  isMaximized: false,
+  location: undefined,
+  headerPosition: "top" as const,
+}
 
 function useDockviewRef() {
   return DesktopContext.useSelector((snapshot) => snapshot.context.dockviewRef)
@@ -9,64 +16,42 @@ function useDockviewRef() {
 
 export const useDockview = () => {
   const dockviewRef = useDockviewRef()
-  const context = useSelector(dockviewRef, (snapshot: any) => snapshot.context)
-  const dockviewApi = context.api ?? undefined
+  const dockviewApi = useSelector(dockviewRef, (snapshot: any) => snapshot.context.api) ?? undefined
+  const dndCompass = useSelector(dockviewRef, (snapshot: any) => snapshot.context.options.dndCompass)
+  const overflow = useSelector(dockviewRef, (snapshot: any) => snapshot.context.options.overflow)
   return {
     dockviewApi,
     dockviewRef,
     sendToDockview: dockviewRef.send,
-    dndCompass: context.options.dndCompass,
-    overflow: context.options.overflow,
+    dndCompass,
+    overflow,
     tabGroupColors: dockviewApi?.tabGroupColors ?? [],
   }
 }
 
 export function useDockviewActive() {
-  const { dockviewApi } = useDockview()
-  return {
-    activePanel: useNativeValue(dockviewApi?.onDidActivePanelChange, () => dockviewApi?.activePanel),
-    activeGroup: useNativeValue(dockviewApi?.onDidActiveGroupChange, () => dockviewApi?.activeGroup),
-    smartGuidesEnabled: useNativeValue(
-      dockviewApi?.onDidSmartGuidesEnabledChange,
-      () => dockviewApi?.smartGuidesEnabled ?? false,
-    ),
-  }
+  const dockviewRef = useDockviewRef()
+  const activePanel = useSelector(dockviewRef, (state: any) => state.context.current.activePanel)
+  const activeGroup = useSelector(dockviewRef, (state: any) => state.context.current.activeGroup)
+  const smartGuidesEnabled = useSelector(dockviewRef, (state: any) => state.context.current.smartGuidesEnabled)
+  return { activePanel, activeGroup, smartGuidesEnabled }
 }
 
 export function useDockviewEdgeGroups() {
-  const { dockviewApi } = useDockview()
-  // A scalar snapshot avoids rendering when unrelated layout changes occur.
-  return useNativeValue(dockviewApi?.onDidLayoutChange, () =>
-    (["left", "right", "top", "bottom"] as const).filter((position) => dockviewApi?.getEdgeGroup(position)).join(","),
-  )
+  const dockviewRef = useDockviewRef()
+  return useSelector(dockviewRef, (state: any) => state.context.current.edgeGroups)
 }
 
 export function useDockviewPanel(panelId: string) {
-  const { dockviewApi, sendToDockview } = useDockview()
-  const panel = useNativeValue(dockviewApi?.onDidLayoutChange, () => dockviewApi?.getPanel(panelId))
-
-  return {
-    sendToDockview,
-    isActive: useNativeValue(panel?.api.onDidActiveChange, () => panel?.api.isActive ?? false),
-    isVisible: useNativeValue(panel?.api.onDidVisibilityChange, () => panel?.api.isVisible ?? false),
-  }
+  const dockviewRef = useDockviewRef()
+  const panel = useSelector(dockviewRef, (state: any) => state.context.current.panels[panelId] ?? emptyPanelState)
+  return { sendToDockview: dockviewRef.send, ...panel }
 }
 
 export function useDockviewGroup(groupId: string) {
-  const { dockviewApi, sendToDockview } = useDockview()
-  const group = useNativeValue(dockviewApi?.onDidLayoutChange, () => dockviewApi?.getGroup(groupId))
-
-  return {
-    sendToDockview,
-    isActive: useNativeValue(group?.api.onDidActiveChange, () => group?.api.isActive ?? false),
-    isVisible: useNativeValue(group?.api.onDidVisibilityChange, () => group?.api.isVisible ?? false),
-    isMaximized: useNativeValue(dockviewApi?.onDidMaximizedGroupChange, () => group?.api.isMaximized() ?? false),
-    location: useNativeValue(group?.api.onDidLocationChange, () => group?.api.location),
-    headerPosition: useNativeValue(
-      group?.api.onDidHeaderDirectionChange,
-      () => group?.api.getHeaderPosition() ?? "top",
-    ),
-  }
+  const dockviewRef = useDockviewRef()
+  const group = useSelector(dockviewRef, (state: any) => state.context.current.groups[groupId] ?? emptyGroupState)
+  return { sendToDockview: dockviewRef.send, ...group }
 }
 
 export function useDockviewMenus({ renderers, prompt }: any) {

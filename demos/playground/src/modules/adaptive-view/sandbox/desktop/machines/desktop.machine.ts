@@ -1,7 +1,8 @@
-import { setup, assign, enqueueActions, sendTo, fromCallback, spawnChild } from "xstate"
+import { setup, assign, enqueueActions, sendTo } from "xstate"
 import { themeMachine } from "./theme.machine"
 import { localStoreMachine } from "./local-store.machine"
 import { dockviewMachine } from "./dockview.machine"
+import { eventsMachine } from "./events.machine"
 import type { ActorRefFrom } from "xstate"
 
 const resolveProfile = (context: any, profileId?: string | null) => {
@@ -29,31 +30,15 @@ export const desktopMachine = setup({
     themeMachine,
     localStoreMachine,
     dockviewMachine,
-    observeDockviewChanges: fromCallback(
-      ({
-        input,
-        sendBack,
-      }: {
-        input: ActorRefFrom<typeof dockviewMachine>
-        sendBack: (event: any) => void
-      }) => {
-        const subscription = input.on("dockview.changed", ({ params }: any) => sendBack(params))
-        // React child effects may queue onReady before the provider starts its
-        // actors. Emissions are not replayed, so reconcile readiness after
-        // subscribing to cover a Dockview actor that has already started.
-        if (input.getSnapshot().matches("ready")) sendBack({ type: "onDockviewReady" })
-        return () => subscription.unsubscribe()
-      },
-    ),
+    eventsMachine,
   },
   actions: {
     spawnDockview: assign(({ spawn }) => ({
       dockviewRef: spawn("dockviewMachine", { id: "dockview", systemId: "dockview" }),
     })),
-    subscribeToDockview: spawnChild("observeDockviewChanges", {
-      id: "dockview-changes",
-      input: ({ context }) => context.dockviewRef!,
-    }),
+    spawnEvents: assign(({ spawn }) => ({
+      eventsRef: spawn("eventsMachine", { id: "events", systemId: "events" }),
+    })),
     requestLayout: sendTo(
       ({ context }) => context.dockviewRef!,
       ({ context }) => ({
@@ -134,15 +119,53 @@ export const desktopMachine = setup({
       store?.send({ type: "SET_ITEM", key: store.getSnapshot().context.settings.storeKey, value: payload })
       return { layout: { ...context.layout, profile: payload, data: payload.data } }
     }),
-    addPendingLogLine: assign(({ context }, params: { id: string; message: string }) => {
-      const { id, message } = params
-      context.current.pending = [
-        {
-          text: `${message} ${id}`,
-          timestamp: new Date(),
+    addPendingLogLine: assign(({ context, event }: any) => {
+      let id: string
+      let message: string
+
+      switch (event.type) {
+        case "dockview.onDidAddPanel":
+          id = event.params.panelId
+          message = "Panel Added"
+          break
+        case "dockview.onDidRemovePanel":
+          id = event.params.panelId
+          message = "Panel Removed"
+          break
+        case "dockview.onDidActivePanelChange":
+          id = event.params.panelId ?? "none"
+          message = "Panel Activated"
+          break
+        case "dockview.onDidMovePanel":
+          id = event.params.panelId
+          message = "Panel Moved"
+          break
+        case "dockview.onDidAddGroup":
+          id = event.params.groupId
+          message = "Group Added"
+          break
+        case "dockview.onDidRemoveGroup":
+          id = event.params.groupId
+          message = "Group Removed"
+          break
+        case "dockview.onDidActiveGroupChange":
+          id = event.params.groupId ?? "none"
+          message = "Group Activated"
+          break
+        case "dockview.onDidMaximizedGroupChange":
+          id = `${event.params.groupId} [${event.params.isMaximized}]`
+          message = "Group Maximized Changed"
+          break
+        default:
+          return {}
+      }
+
+      return {
+        current: {
+          ...context.current,
+          pending: [{ text: `${message} ${id}`, timestamp: new Date() }, ...context.current.pending],
         },
-        ...context.current.pending,
-      ]
+      }
     }),
     flushPendingLogLines: assign(({ context }) => {
       const { pending, logLines, logColorIndex } = context.current
@@ -212,6 +235,7 @@ export const desktopMachine = setup({
     return {
       input,
       dockviewRef: null as ActorRefFrom<typeof dockviewMachine> | null,
+      eventsRef: null as ActorRefFrom<typeof eventsMachine> | null,
       store: {
         localStoreRef: null as ActorRefFrom<typeof localStoreMachine> | null,
       },
@@ -260,10 +284,10 @@ export const desktopMachine = setup({
   states: {
     initiating: {
       entry: enqueueActions(({ enqueue }) => {
+        enqueue("spawnEvents")
         enqueue("spawnLocalStore")
         enqueue("spawnThemes")
         enqueue("spawnDockview")
-        enqueue("subscribeToDockview")
         enqueue("resolveInitialLayout")
         enqueue("persistLoadedProfile")
         enqueue.raise({ type: "onCompleteInitiation" })
@@ -275,16 +299,19 @@ export const desktopMachine = setup({
     starting: {
       on: {
         onSelectDockviewProfile: { actions: ["selectDockviewProfile", "persistLoadedProfile"] },
-        onDockviewReady: { actions: "requestLayout" },
-        onDockviewLayoutLoaded: { target: "ready", actions: ["acceptLoadedLayout", "persistLoadedProfile"] },
+        "dockview.ready": { actions: "requestLayout" },
+        "dockview.layout.loaded": {
+          target: "ready",
+          actions: ["acceptLoadedLayout", "persistLoadedProfile"],
+        },
       },
     },
     ready: {
       on: {
         onSaveLayout: { actions: "requestLayoutSnapshot" },
-        onDockviewLayoutSerialized: { actions: "saveLayout" },
-        onDockviewReady: { target: "starting", actions: "requestLayout" },
-        onDockviewLayoutLoaded: { actions: ["acceptLoadedLayout", "persistLoadedProfile"] },
+        "dockview.layout.serialized": { actions: "saveLayout" },
+        "dockview.ready": { target: "starting", actions: "requestLayout" },
+        "dockview.layout.loaded": { actions: ["acceptLoadedLayout", "persistLoadedProfile"] },
         onClearLogLines: { actions: "clearLogLines" },
         onToggleWatermark: { actions: "toggleWatermark" },
         onToggleCustomGhost: { actions: "toggleCustomGhost" },
@@ -297,12 +324,29 @@ export const desktopMachine = setup({
     },
   },
   on: {
-    onDockviewActivity: {
-      actions: enqueueActions(({ event, enqueue }) => {
-        if (event.params.panelAdded) enqueue("incrementPanelCount")
-        enqueue({ type: "addPendingLogLine", params: event.params })
-        enqueue("flushPendingLogLines")
-      }),
+    "dockview.onDidAddPanel": {
+      actions: ["incrementPanelCount", "addPendingLogLine", "flushPendingLogLines"],
+    },
+    "dockview.onDidRemovePanel": {
+      actions: ["addPendingLogLine", "flushPendingLogLines"],
+    },
+    "dockview.onDidActivePanelChange": {
+      actions: ["addPendingLogLine", "flushPendingLogLines"],
+    },
+    "dockview.onDidMovePanel": {
+      actions: ["addPendingLogLine", "flushPendingLogLines"],
+    },
+    "dockview.onDidAddGroup": {
+      actions: ["addPendingLogLine", "flushPendingLogLines"],
+    },
+    "dockview.onDidRemoveGroup": {
+      actions: ["addPendingLogLine", "flushPendingLogLines"],
+    },
+    "dockview.onDidActiveGroupChange": {
+      actions: ["addPendingLogLine", "flushPendingLogLines"],
+    },
+    "dockview.onDidMaximizedGroupChange": {
+      actions: ["addPendingLogLine", "flushPendingLogLines"],
     },
   },
 })

@@ -1,32 +1,188 @@
-import { setup, assign, enqueueActions, fromCallback, emit } from "xstate"
+import { setup, assign, enqueueActions, sendTo } from "xstate"
 
 export const dockviewMachine = setup({
-  actors: {
-    observeDockview: fromCallback(({ input, sendBack }: any) => {
+  actions: {
+    subscribePanels: assign(({ context, self }: any) => {
+      const input = context.api!
+      const panels = new Map<string, { dispose(): void }[]>()
+      const attach = (panel: any) => {
+        if (panels.has(panel.id)) return
+        const update = () => self.send({ type: "onDidPanelStateChange", params: { panelId: panel.id } })
+        panels.set(panel.id, [panel.api.onDidActiveChange(update), panel.api.onDidVisibilityChange(update)])
+        update()
+      }
+      const reconcile = () => {
+        const ids = new Set((input.panels ?? []).map((panel: any) => panel.id))
+        for (const [id, subscriptions] of panels) {
+          if (!ids.has(id)) {
+            subscriptions.forEach((subscription) => subscription.dispose())
+            panels.delete(id)
+          }
+        }
+        for (const panel of input.panels ?? []) attach(panel)
+      }
       const disposables = [
-        input.onDidAddPanel((panel: any) => sendBack({ type: "onDidAddPanel", params: { panelId: panel.id } })),
-        input.onDidRemovePanel((panel: any) => sendBack({ type: "onDidRemovePanel", params: { panelId: panel.id } })),
+        input.onDidLayoutChange(reconcile),
+        input.onDidLayoutFromJSON(reconcile),
+        input.onDidAddPanel((panel: any) => {
+          attach(panel)
+          self.send({ type: "onDidAddPanel", params: { panelId: panel.id } })
+        }),
+        input.onDidRemovePanel((panel: any) => {
+          panels.get(panel.id)?.forEach((subscription) => subscription.dispose())
+          panels.delete(panel.id)
+          self.send({ type: "onDidRemovePanel", params: { panelId: panel.id } })
+        }),
         input.onDidActivePanelChange((event: any) =>
-          sendBack({ type: "onDidActivePanelChange", params: { panelId: event.panel?.id } }),
+          self.send({ type: "onDidActivePanelChange", params: { panelId: event.panel?.id } }),
         ),
-        input.onDidAddGroup((group: any) => sendBack({ type: "onDidAddGroup", params: { groupId: group.id } })),
-        input.onDidRemoveGroup((group: any) => sendBack({ type: "onDidRemoveGroup", params: { groupId: group.id } })),
-        input.onDidActiveGroupChange((group: any) =>
-          sendBack({ type: "onDidActiveGroupChange", params: { groupId: group?.id } }),
-        ),
-        input.onDidMovePanel((event: any) => sendBack({ type: "onDidMovePanel", params: { panelId: event.panel.id } })),
-        input.onDidMaximizedGroupChange((event: any) =>
-          sendBack({
-            type: "onDidMaximizedGroupChange",
-            params: { groupId: event.group.id, isMaximized: event.isMaximized },
-          }),
+        input.onDidMovePanel((event: any) =>
+          self.send({ type: "onDidMovePanel", params: { panelId: event.panel.id } }),
         ),
       ]
-      return () => disposables.forEach((disposable) => disposable.dispose())
+      reconcile()
+      return {
+        subscriptions: {
+          ...context.subscriptions,
+          panels: [
+            ...disposables,
+            { dispose: () => panels.forEach((items) => items.forEach((item) => item.dispose())) },
+          ],
+        },
+      }
     }),
-  },
-  actions: {
-    emitChanges: emit((_, params: any) => ({ type: "dockview.changed", params })),
+    subscribeGroups: assign(({ context, self }: any) => {
+      const input = context.api!
+      const groups = new Map<string, { dispose(): void }[]>()
+      const attach = (group: any) => {
+        if (groups.has(group.id)) return
+        const update = () => self.send({ type: "onDidGroupStateChange", params: { groupId: group.id } })
+        groups.set(group.id, [
+          group.api.onDidActiveChange(update),
+          group.api.onDidVisibilityChange(update),
+          group.api.onDidLocationChange(update),
+          group.api.onDidHeaderDirectionChange(update),
+        ])
+        update()
+      }
+      const reconcile = () => {
+        const ids = new Set((input.groups ?? []).map((group: any) => group.id))
+        for (const [id, subscriptions] of groups) {
+          if (!ids.has(id)) {
+            subscriptions.forEach((subscription) => subscription.dispose())
+            groups.delete(id)
+          }
+        }
+        for (const group of input.groups ?? []) attach(group)
+      }
+      const disposables = [
+        input.onDidLayoutChange(reconcile),
+        input.onDidLayoutFromJSON(reconcile),
+        input.onDidAddGroup((group: any) => {
+          attach(group)
+          self.send({ type: "onDidAddGroup", params: { groupId: group.id } })
+        }),
+        input.onDidRemoveGroup((group: any) => {
+          groups.get(group.id)?.forEach((subscription) => subscription.dispose())
+          groups.delete(group.id)
+          self.send({ type: "onDidRemoveGroup", params: { groupId: group.id } })
+        }),
+        input.onDidActiveGroupChange((group: any) =>
+          self.send({ type: "onDidActiveGroupChange", params: { groupId: group?.id } }),
+        ),
+        input.onDidMaximizedGroupChange((event: any) => {
+          self.send({
+            type: "onDidMaximizedGroupChange",
+            params: { groupId: event.group.id, isMaximized: event.isMaximized },
+          })
+        }),
+      ]
+      reconcile()
+      return {
+        subscriptions: {
+          ...context.subscriptions,
+          groups: [
+            ...disposables,
+            { dispose: () => groups.forEach((items) => items.forEach((item) => item.dispose())) },
+          ],
+        },
+      }
+    }),
+    subscribeLayout: assign(({ context, self }: any) => {
+      const input = context.api!
+      const updateLayout = () => self.send({ type: "onDidLayoutStateChange" })
+      const updateSmartGuides = () => self.send({ type: "onDidSmartGuidesEnabledChange" })
+      const disposables = [
+        input.onDidLayoutChange(updateLayout),
+        input.onDidLayoutFromJSON(updateLayout),
+        input.onDidSmartGuidesEnabledChange(updateSmartGuides),
+      ]
+      updateLayout()
+      updateSmartGuides()
+      return { subscriptions: { ...context.subscriptions, layout: disposables } }
+    }),
+    unsubscribeDockview: ({ context }) => {
+      Object.values(context.subscriptions).forEach((items: any) => items?.forEach((item: any) => item.dispose()))
+    },
+    updateActivePanel: assign(({ context, event }) => ({
+      current: { ...context.current, activePanel: context.api?.activePanel },
+    })),
+    updateActiveGroup: assign(({ context, event }) => ({
+      current: { ...context.current, activeGroup: context.api?.activeGroup },
+    })),
+    updateSmartGuidesEnabled: assign(({ context }) => ({
+      current: { ...context.current, smartGuidesEnabled: context.api?.smartGuidesEnabled ?? false },
+    })),
+    updateEdgeGroups: assign(({ context }) => ({
+      current: {
+        ...context.current,
+        edgeGroups: (["left", "right", "top", "bottom"] as const)
+          .filter((position) => context.api?.getEdgeGroup(position))
+          .join(","),
+      },
+    })),
+    updatePanel: assign(({ context, event }) => {
+      const panel = context.api?.getPanel(event.params.panelId)
+      if (!panel) return {}
+      return {
+        current: {
+          ...context.current,
+          panels: {
+            ...context.current.panels,
+            [panel.id]: { isActive: panel.api.isActive, isVisible: panel.api.isVisible },
+          },
+        },
+      }
+    }),
+    removePanelState: assign(({ context, event }) => {
+      const panels = { ...context.current.panels }
+      delete panels[event.params.panelId]
+      return { current: { ...context.current, panels } }
+    }),
+    updateGroup: assign(({ context, event }) => {
+      const group = context.api?.getGroup(event.params.groupId)
+      if (!group) return {}
+      return {
+        current: {
+          ...context.current,
+          groups: {
+            ...context.current.groups,
+            [group.id]: {
+              isActive: group.api.isActive,
+              isVisible: group.api.isVisible,
+              isMaximized: group.api.isMaximized(),
+              location: group.api.location,
+              headerPosition: group.api.getHeaderPosition(),
+            },
+          },
+        },
+      }
+    }),
+    removeGroupState: assign(({ context, event }) => {
+      const groups = { ...context.current.groups }
+      delete groups[event.params.groupId]
+      return { current: { ...context.current, groups } }
+    }),
     loadLayout: enqueueActions(({ context, event, enqueue }: any) => {
       const { data, fallback } = event.params
       const apply = (value: any) => {
@@ -180,150 +336,172 @@ export const dockviewMachine = setup({
       api?.setSmartGuidesEnabled(!api.smartGuidesEnabled)
     },
   },
-})
-  .extend({
-    actions: {},
-  })
-  .createMachine({
-    id: "dockview",
-    initial: "initiating",
-    context: () => ({
-      api: null,
-      menus: { tab: [], tabGroup: [] },
-      options: { dndCompass: false, overflow: { mode: "dropdown", mru: false, search: true } },
-    }),
-    states: {
-      initiating: {
-        entry: ["initializeTabContextMenu", "initializeTabGroupContextMenu"],
-        always: "waiting",
-      },
-      waiting: {
-        on: { onReady: { target: "ready", actions: ["setApi", "applyOptions"] } },
-      },
-      ready: {
-        entry: { type: "emitChanges", params: { type: "onDockviewReady" } },
-        invoke: { src: "observeDockview", input: ({ context }) => context.api! },
-        on: {
-          onReady: { target: "ready", reenter: true, actions: ["setApi", "applyOptions"] },
-          onLoadLayout: { actions: "loadLayout" },
-          onSerializeLayout: {
-            actions: {
-              type: "emitChanges",
-              params: ({ context, event }: any) => ({
-                type: "onDockviewLayoutSerialized",
-                params: { ...event.params, data: context.api!.toJSON() },
-              }),
-            },
-          },
-          onLayoutLoaded: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewLayoutLoaded",
-                params: event.params,
-              }),
-            },
-          },
-          onToggleDndCompass: { actions: ["toggleDndCompass", "applyOptions"] },
-          onUpdateOverflow: { actions: ["setOverflow", "applyOptions"] },
-          onToggleSmartGuides: { actions: ["toggleSmartGuides"] },
-          onAddPanelToTabGroup: { actions: ["addPanelToTabGroup"] },
-          onRemovePanelFromTabGroup: { actions: ["removePanelFromTabGroup"] },
-          onCreateTabGroupForPanel: { actions: ["createTabGroupForPanel"] },
-          onDissolveTabGroup: { actions: ["dissolveTabGroup"] },
-          onToggleEdgeGroup: { actions: ["toggleEdgeGroup"] },
-          onAddPanel: { actions: ["addPanel"] },
-          onAddGroup: { actions: ["addGroup"] },
-          onClearDockview: { actions: ["clearDockview"] },
-          onSetActivePanel: { actions: ["setActivePanel"] },
-          onSetActiveGroup: { actions: ["setActiveGroup"] },
-          onClosePanel: { actions: ["closePanel"] },
-          onCloseGroup: { actions: ["closeGroup"] },
-          onFloatPanel: { actions: ["floatPanel"] },
-          onPopoutPanel: { actions: ["popoutPanel"] },
-          onFloatGroup: { actions: ["floatGroup"] },
-          onPopoutGroup: { actions: ["popoutGroup"] },
-          onToggleGroupMaximized: { actions: ["toggleGroupMaximized"] },
-          onToggleGroupVisible: { actions: ["toggleGroupVisible"] },
-          onSetGroupHeaderPosition: { actions: ["setGroupHeaderPosition"] },
+}).createMachine({
+  id: "dockview",
+  initial: "initiating",
+  context: () => ({
+    current: {
+      activePanel: undefined,
+      activeGroup: undefined,
+      smartGuidesEnabled: false,
+      edgeGroups: "",
+      panels: {},
+      groups: {},
+    },
+    subscriptions: { panels: [], groups: [], layout: [] },
+    api: null,
+    menus: { tab: [], tabGroup: [] },
+    options: { dndCompass: false, overflow: { mode: "dropdown", mru: false, search: true } },
+  }),
+  states: {
+    initiating: {
+      entry: ["initializeTabContextMenu", "initializeTabGroupContextMenu"],
+      always: "waiting",
+    },
+    waiting: {
+      on: { onReady: { target: "ready", actions: ["setApi", "applyOptions"] } },
+    },
+    ready: {
+      entry: [
+        "subscribePanels",
+        "subscribeGroups",
+        "subscribeLayout",
+        sendTo(({ self }) => self, { type: "dockview.ready" }),
+      ],
+      exit: "unsubscribeDockview",
+      on: {
+        onReady: { target: "ready", reenter: true, actions: ["setApi", "applyOptions"] },
+        onDidPanelStateChange: { actions: "updatePanel" },
+        onDidGroupStateChange: { actions: "updateGroup" },
+        onDidLayoutStateChange: { actions: "updateEdgeGroups" },
+        onDidSmartGuidesEnabledChange: { actions: "updateSmartGuidesEnabled" },
+        onLoadLayout: { actions: "loadLayout" },
+        onSerializeLayout: {
+          actions: sendTo(
+            ({ self }) => self,
+            ({ context, event }: any) => ({
+              type: "dockview.layout.serialized",
+              params: { ...event.params, data: context.api!.toJSON() },
+            }),
+          ),
+        },
+        onLayoutLoaded: {
+          actions: sendTo(
+            ({ self }) => self,
+            ({ event }: any) => ({ type: "dockview.layout.loaded", params: event.params }),
+          ),
+        },
+        onToggleDndCompass: { actions: ["toggleDndCompass", "applyOptions"] },
+        onUpdateOverflow: { actions: ["setOverflow", "applyOptions"] },
+        onToggleSmartGuides: { actions: ["toggleSmartGuides"] },
+        onAddPanelToTabGroup: { actions: ["addPanelToTabGroup"] },
+        onRemovePanelFromTabGroup: { actions: ["removePanelFromTabGroup"] },
+        onCreateTabGroupForPanel: { actions: ["createTabGroupForPanel"] },
+        onDissolveTabGroup: { actions: ["dissolveTabGroup"] },
+        onToggleEdgeGroup: { actions: ["toggleEdgeGroup"] },
+        onAddPanel: { actions: ["addPanel"] },
+        onAddGroup: { actions: ["addGroup"] },
+        onClearDockview: { actions: ["clearDockview"] },
+        onSetActivePanel: { actions: ["setActivePanel"] },
+        onSetActiveGroup: { actions: ["setActiveGroup"] },
+        onClosePanel: { actions: ["closePanel"] },
+        onCloseGroup: { actions: ["closeGroup"] },
+        onFloatPanel: { actions: ["floatPanel"] },
+        onPopoutPanel: { actions: ["popoutPanel"] },
+        onFloatGroup: { actions: ["floatGroup"] },
+        onPopoutGroup: { actions: ["popoutGroup"] },
+        onToggleGroupMaximized: { actions: ["toggleGroupMaximized"] },
+        onToggleGroupVisible: { actions: ["toggleGroupVisible"] },
+        onSetGroupHeaderPosition: { actions: ["setGroupHeaderPosition"] },
 
-          onDidActivePanelChange: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: { id: event.params.panelId ?? "none", message: "Panel Activated", panelAdded: false },
+        onDidActivePanelChange: {
+          actions: [
+            "updateActivePanel",
+            sendTo(
+              ({ self }) => self,
+              ({ event }: any) => ({
+                type: "dockview.onDidActivePanelChange",
+                params: { panelId: event.params.panelId },
               }),
-            },
-          },
-          onDidAddPanel: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: { id: event.params.panelId, message: "Panel Added", panelAdded: true },
+            ),
+          ],
+        },
+        onDidAddPanel: {
+          actions: enqueueActions(({ event, enqueue }: any) => {
+            enqueue("updatePanel")
+            enqueue.sendTo(({ self }: any) => self, {
+              type: "dockview.onDidAddPanel",
+              params: { panelId: event.params.panelId },
+            })
+          }),
+        },
+        onDidRemovePanel: {
+          actions: [
+            "removePanelState",
+            sendTo(
+              ({ self }) => self,
+              ({ event }: any) => ({
+                type: "dockview.onDidRemovePanel",
+                params: { panelId: event.params.panelId },
               }),
-            },
-          },
-          onDidRemovePanel: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: { id: event.params.panelId, message: "Panel Removed", panelAdded: false },
+            ),
+          ],
+        },
+        onDidMovePanel: {
+          actions: sendTo(
+            ({ self }) => self,
+            ({ event }: any) => ({
+              type: "dockview.onDidMovePanel",
+              params: { panelId: event.params.panelId },
+            }),
+          ),
+        },
+        onDidAddGroup: {
+          actions: enqueueActions(({ event, enqueue }: any) => {
+            enqueue("updateGroup")
+            enqueue.sendTo(({ self }: any) => self, {
+              type: "dockview.onDidAddGroup",
+              params: { groupId: event.params.groupId },
+            })
+          }),
+        },
+        onDidActiveGroupChange: {
+          actions: [
+            "updateActiveGroup",
+            sendTo(
+              ({ self }) => self,
+              ({ event }: any) => ({
+                type: "dockview.onDidActiveGroupChange",
+                params: { groupId: event.params.groupId },
               }),
-            },
-          },
-          onDidMovePanel: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: { id: event.params.panelId, message: "Panel Moved", panelAdded: false },
+            ),
+          ],
+        },
+        onDidRemoveGroup: {
+          actions: [
+            "removeGroupState",
+            sendTo(
+              ({ self }) => self,
+              ({ event }: any) => ({
+                type: "dockview.onDidRemoveGroup",
+                params: { groupId: event.params.groupId },
               }),
-            },
-          },
-          onDidAddGroup: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: { id: event.params.groupId, message: "Group Added", panelAdded: false },
-              }),
-            },
-          },
-          onDidActiveGroupChange: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: { id: event.params.groupId ?? "none", message: "Group Activated", panelAdded: false },
-              }),
-            },
-          },
-          onDidRemoveGroup: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: { id: event.params.groupId, message: "Group Removed", panelAdded: false },
-              }),
-            },
-          },
-          onDidMaximizedGroupChange: {
-            actions: {
-              type: "emitChanges",
-              params: ({ event }: any) => ({
-                type: "onDockviewActivity",
-                params: {
-                  id: `${event.params.groupId} [${event.params.isMaximized}]`,
-                  message: "Group Maximized Changed",
-                  panelAdded: false,
-                },
-              }),
-            },
-          },
+            ),
+          ],
+        },
+        onDidMaximizedGroupChange: {
+          actions: enqueueActions(({ event, enqueue }: any) => {
+            enqueue("updateGroup")
+            enqueue.sendTo(({ self }: any) => self, {
+              type: "dockview.onDidMaximizedGroupChange",
+              params: {
+                groupId: event.params.groupId,
+                isMaximized: event.params.isMaximized,
+              },
+            })
+          }),
         },
       },
     },
-  })
+  },
+})

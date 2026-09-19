@@ -3,3 +3,4 @@ export * from "./theme.machine"
 
 export * from "./local-store.machine"
 export * from "./dockview.machine"
+export * from "./events.machine"
