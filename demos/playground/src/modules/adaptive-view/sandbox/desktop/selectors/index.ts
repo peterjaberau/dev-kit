@@ -1,5 +1,4 @@
 export * from "./desktop.selector"
 export * from "./dockview.selector"
-export * from "./interactions.selector"
 export * from "./views.selector"
 export * from "./local-store.selector"

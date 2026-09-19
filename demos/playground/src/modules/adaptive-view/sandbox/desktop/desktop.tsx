@@ -4,14 +4,14 @@ import * as React from "react"
 import type { DockviewTheme } from "#adaptive-view/react"
 import { useDesktop } from "./selectors"
 import { useDesktopTheme, useDockviewTheme } from "./providers"
-import { ControllerDockview, type ControllerDockviewProps, DesktopDesigner } from "./designer"
+import { ControllerDockview, DesktopDesigner } from "./designer"
 import "./styles/designer.css"
 import "./styles/desktop.css"
 import "./styles/dockview.css"
 
 export interface DesktopRenderProps {
   theme: DockviewTheme
-  renderController: (controller: ControllerDockviewProps) => React.ReactNode
+  renderController: () => React.ReactNode
 }
 
 export interface DesktopProps {
@@ -90,7 +90,7 @@ export default function Desktop({ children }: DesktopProps) {
       <section ref={frameRef} className="adaptive-desktop__frame">
         {children({
           theme: dockviewTheme,
-          renderController: (controller) => (
+          renderController: () => (
             <DesktopDesigner
               open={desktopDesignerOpen}
               onClose={() => sendToDesktop({ type: "onCloseDesktopDesigner" })}
@@ -100,7 +100,7 @@ export default function Desktop({ children }: DesktopProps) {
               onReset={() => sendToDockviewTheme({ type: "onResetDockviewTheme" })}
               baseTheme={selectedBaseTheme}
               containerEl={frameRef.current}
-              controller={<ControllerDockview {...controller} />}
+              controller={<ControllerDockview />}
             />
           ),
         })}

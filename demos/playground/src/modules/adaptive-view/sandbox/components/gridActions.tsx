@@ -1,6 +1,6 @@
-import { DockviewApi, EdgeGroupPosition } from "#adaptive-view/react"
+import { EdgeGroupPosition } from "#adaptive-view/react"
 import * as React from "react"
-import { useDesktop, useDesktopCurrent, useLocalStore } from "../desktop/selectors"
+import { useDesktop, useDesktopCurrent, useLocalStore, useDockview } from "../desktop/selectors"
 import { LM } from "../desktop/designer/theme-utils"
 import { Btn, IconBtn } from "../desktop/designer/designer-kit"
 
@@ -33,40 +33,10 @@ const Row = (props: { label?: string; children: React.ReactNode; style?: React.C
 
 const EDGE_POSITIONS: EdgeGroupPosition[] = ["top", "bottom", "left", "right"]
 
-const readEdgeState = (api: DockviewApi): Partial<Record<EdgeGroupPosition, boolean>> =>
-  Object.fromEntries(EDGE_POSITIONS.map((pos) => [pos, api.getEdgeGroup(pos) !== undefined]))
-
-const EdgeGroupToggles = (props: { api: DockviewApi }) => {
-  const { panelCount } = useDesktopCurrent()
-  const [active, setActive] = React.useState<Partial<Record<EdgeGroupPosition, boolean>>>(() =>
-    readEdgeState(props.api),
-  )
-
-  React.useEffect(() => {
-    const sync = () => setActive(readEdgeState(props.api))
-    sync()
-    const disposable = props.api.onDidLayoutChange(sync)
-    return () => disposable.dispose()
-  }, [props.api])
-
-  const toggle = (position: EdgeGroupPosition) => {
-    if (active[position]) {
-      props.api.removeEdgeGroup(position)
-    } else {
-      const groupApi = props.api.addEdgeGroup(position, {
-        id: `edge-${position}`,
-        initialSize: 200,
-        minimumSize: 100,
-      })
-      props.api.addPanel({
-        id: `edge-panel-${position}-${Date.now()}`,
-        component: "fixedPlaceholder",
-        title: `Tab ${panelCount}`,
-        position: { referenceGroup: groupApi.id },
-        params: { label: position, position },
-      })
-    }
-  }
+const EdgeGroupToggles = () => {
+  const { dockviewApi, sendToDesktop } = useDockview()
+  const active = Object.fromEntries(EDGE_POSITIONS.map((position) => [position, !!dockviewApi?.getEdgeGroup(position)]))
+  const toggle = (position: EdgeGroupPosition) => sendToDesktop({ type: "onToggleEdgeGroup", params: { position } })
 
   return (
     <Row label="Edge groups">
@@ -196,7 +166,8 @@ function usePopover() {
   }
 }
 
-export const GridActions = (props: { api?: DockviewApi }) => {
+export const GridActions = () => {
+  const { dockviewApi: api } = useDockview()
   const { panelCount } = useDesktopCurrent()
   const { sendToDesktop, desktopContext } = useDesktop()
   const dockviewStore = useLocalStore<unknown>()
@@ -205,11 +176,11 @@ export const GridActions = (props: { api?: DockviewApi }) => {
   const [loadMenuOpen, setLoadMenuOpen] = React.useState(false)
 
   const onClear = () => {
-    props.api?.clear()
+    sendToDesktop({ type: "onClearDockview" })
   }
 
   const onLoad = (profile: any) => {
-    if (!props.api) {
+    if (!api) {
       return
     }
 
@@ -225,7 +196,7 @@ export const GridActions = (props: { api?: DockviewApi }) => {
   }
 
   const onReset = () => {
-    if (props.api) {
+    if (api) {
       dockviewStore.reset()
       sendToDesktop({
         type: "onSelectDockviewProfile",
@@ -239,20 +210,25 @@ export const GridActions = (props: { api?: DockviewApi }) => {
   const onAddPanel = (options?: { advanced?: boolean; nested?: boolean }) => {
     if (options?.advanced) {
       popover.open(({ close }) => {
-        return <PanelBuilder api={props.api!} done={close} />
+        return <PanelBuilder done={close} />
       })
     } else {
-      props.api?.addPanel({
-        id: `id_${Date.now().toString()}`,
-        component: options?.nested ? "nested" : "default",
-        title: `Tab ${panelCount}`,
-        renderer: "always",
+      sendToDesktop({
+        type: "onAddPanel",
+        params: {
+          options: {
+            id: `id_${Date.now().toString()}`,
+            component: options?.nested ? "nested" : "default",
+            title: `Tab ${panelCount}`,
+            renderer: "always",
+          },
+        },
       })
     }
   }
 
   const onAddGroup = () => {
-    props.api?.addGroup()
+    sendToDesktop({ type: "onAddGroup" })
   }
 
   return (
@@ -319,7 +295,7 @@ export const GridActions = (props: { api?: DockviewApi }) => {
           </Btn>
         </div>
       </Row>
-      {props.api && <EdgeGroupToggles api={props.api} />}
+      {api && <EdgeGroupToggles />}
       <Row>
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
           <Btn onClick={() => onAddPanel()} icon="add">

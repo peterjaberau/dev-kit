@@ -1,4 +1,4 @@
-import { DockviewApi } from "#adaptive-view/react"
+import { useDesktop, useDockview } from "../selectors"
 import * as React from "react"
 import { GridActions } from "../../components/gridActions"
 import { PanelActions } from "../../components/panelActions"
@@ -68,71 +68,68 @@ const KeyboardShortcuts = () => (
   </div>
 )
 
-export interface ControllerDockviewProps {
-  api?: DockviewApi
-  panels: string[]
-  groups: string[]
-  activePanel?: string
-  activeGroup?: string
-  hasCustomWatermark: boolean
-  toggleCustomWatermark: () => void
-  hasCustomGhost: boolean
-  toggleCustomGhost: () => void
-  dndCompass: boolean
-  onToggleDndCompass: () => void
-  smartGuides: boolean
-  onToggleSmartGuides: () => void
-  debug: boolean
-  onToggleDebug: () => void
-  showLogs: boolean
-  onToggleShowLogs: () => void
-  onClearLogs: () => void
-}
-
-export const ControllerDockview = (props: ControllerDockviewProps) => {
+export const ControllerDockview = () => {
+  const { dockviewApi, activePanel, activeGroup, smartGuidesEnabled } = useDockview()
+  const { currentDesktop, sendToDesktop } = useDesktop()
+  const { debug, showLogs, watermark, customGhost, dndCompass } = currentDesktop
   return (
     <>
       <Card title="Grid" icon="grid_view" defaultOpen>
-        <GridActions api={props.api} />
+        <GridActions />
       </Card>
 
-      {props.api && props.activePanel && (
+      {dockviewApi && activePanel && (
         <Card title="Active Panel" icon="web_asset" defaultOpen>
-          <PanelActions api={props.api} panels={[props.activePanel]} activePanel={props.activePanel} />
+          <PanelActions panels={[activePanel.id]} />
         </Card>
       )}
 
-      {props.api && props.activeGroup && (
+      {dockviewApi && activeGroup && (
         <Card title="Active Group" icon="space_dashboard" defaultOpen>
-          <GroupActions api={props.api} groups={[props.activeGroup]} activeGroup={props.activeGroup} />
+          <GroupActions groups={[activeGroup.id]} />
         </Card>
       )}
 
       <Card title="View" icon="visibility" defaultOpen>
-        <Switch label="Debug overlay" icon="engineering" checked={props.debug} onChange={props.onToggleDebug} />
-        <Switch label="Events log" icon="terminal" checked={props.showLogs} onChange={props.onToggleShowLogs} />
+        <Switch
+          label="Debug overlay"
+          icon="engineering"
+          checked={debug}
+          onChange={() => sendToDesktop({ type: "onToggleDebug" })}
+        />
+        <Switch
+          label="Events log"
+          icon="terminal"
+          checked={showLogs}
+          onChange={() => sendToDesktop({ type: "onToggleShowLogs" })}
+        />
         <Switch
           label="Custom watermark"
           icon="branding_watermark"
-          checked={props.hasCustomWatermark}
-          onChange={props.toggleCustomWatermark}
+          checked={watermark}
+          onChange={() => sendToDesktop({ type: "onToggleWatermark" })}
         />
         <Switch
           label="Custom drag ghost"
           icon="drag_indicator"
-          checked={props.hasCustomGhost}
-          onChange={props.toggleCustomGhost}
+          checked={customGhost}
+          onChange={() => sendToDesktop({ type: "onToggleCustomGhost" })}
         />
-        <Switch label="DnD compass" icon="explore" checked={props.dndCompass} onChange={props.onToggleDndCompass} />
+        <Switch
+          label="DnD compass"
+          icon="explore"
+          checked={dndCompass}
+          onChange={() => sendToDesktop({ type: "onToggleDndCompass" })}
+        />
         <Switch
           label="Smart guides"
           icon="straighten"
-          checked={props.smartGuides}
-          onChange={props.onToggleSmartGuides}
+          checked={smartGuidesEnabled}
+          onChange={() => sendToDesktop({ type: "onToggleSmartGuides" })}
         />
-        {props.showLogs && (
+        {showLogs && (
           <div style={{ paddingTop: 6 }}>
-            <Btn onClick={props.onClearLogs} icon="undo">
+            <Btn onClick={() => sendToDesktop({ type: "onClearLogLines" })} icon="undo">
               Clear log
             </Btn>
           </div>
