@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDesktopColors } from "#adaptive-view/sandbox/desktop/providers";
-import { useDesktop } from "../selectors"
+import { useDockview } from "../selectors"
 
 type LogEntry = {
     id: number;
@@ -25,7 +25,7 @@ const categoryColor = (cat: LogEntry['category']) => {
 };
 
 export const EventLogPanel = () => {
-  const { dockviewApi } = useDesktop()
+  const { dockviewApi } = useDockview()
 
   const c = useDesktopColors();
 

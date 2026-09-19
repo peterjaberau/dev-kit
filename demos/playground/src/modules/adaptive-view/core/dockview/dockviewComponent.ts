@@ -504,6 +504,7 @@ export interface IDockviewComponent extends IBaseGrid<DockviewGroupPanel> {
     // smart guides
     readonly smartGuidesEnabled: boolean;
     setSmartGuidesEnabled(enabled: boolean): void;
+    readonly onDidSmartGuidesEnabledChange: Event<boolean>;
     updateSmartGuidesOptions(options: Partial<SmartGuidesOptions>): void;
     readonly onDidSnapFloat: Event<SmartGuidesSnapEvent>;
     readonly onDidSnapTogether: Event<SmartGuidesSnapTogetherEvent>;
@@ -918,6 +919,10 @@ export class DockviewComponent
         return this._moduleRegistry.services.smartGuidesService;
     }
 
+    private readonly _onDidSmartGuidesEnabledChange = new Emitter<boolean>();
+    readonly onDidSmartGuidesEnabledChange =
+        this._onDidSmartGuidesEnabledChange.event;
+
     /** Whether Smart Guides snapping is currently active. */
     get smartGuidesEnabled(): boolean {
         return this._smartGuidesService?.enabled ?? false;
@@ -925,20 +930,28 @@ export class DockviewComponent
 
     /** Toggle Smart Guides snapping at runtime (no-op if the module is absent). */
     setSmartGuidesEnabled(enabled: boolean): void {
+        const previous = this.smartGuidesEnabled;
         assertModule(
             this._smartGuidesService,
             'SmartGuides',
             'api.setSmartGuidesEnabled'
         )?.setEnabled(enabled);
+        if (previous !== this.smartGuidesEnabled) {
+            this._onDidSmartGuidesEnabledChange.fire(this.smartGuidesEnabled);
+        }
     }
 
     /** Merge a partial Smart Guides option override in at runtime. */
     updateSmartGuidesOptions(options: Partial<SmartGuidesOptions>): void {
+        const previous = this.smartGuidesEnabled;
         assertModule(
             this._smartGuidesService,
             'SmartGuides',
             'api.updateSmartGuidesOptions'
         )?.updateOptions(options);
+        if (previous !== this.smartGuidesEnabled) {
+            this._onDidSmartGuidesEnabledChange.fire(this.smartGuidesEnabled);
+        }
     }
 
     /** Fires when a dragged float commits an alignment snap on drop. */
@@ -1682,6 +1695,7 @@ export class DockviewComponent
             this._onDidActiveGroupChange,
             this._onUnhandledDragOver,
             this._onDidMaximizedGroupChange,
+            this._onDidSmartGuidesEnabledChange,
             this._onDidPopoutGroupSizeChange,
             this._onDidPopoutGroupPositionChange,
             this._onDidAddPopoutGroup,
@@ -2966,9 +2980,13 @@ export class DockviewComponent
 
         this._rootDropTargetService?.setOptions(options);
 
+        const previousSmartGuidesEnabled = this.smartGuidesEnabled;
         const oldDisableDnd = this.options.disableDnd;
         const oldDndStrategy = this.options.dndStrategy;
         this._options = { ...this.options, ...options };
+        if (previousSmartGuidesEnabled !== this.smartGuidesEnabled) {
+            this._onDidSmartGuidesEnabledChange.fire(this.smartGuidesEnabled);
+        }
         const newDisableDnd = this.options.disableDnd;
         const newDndStrategy = this.options.dndStrategy;
 

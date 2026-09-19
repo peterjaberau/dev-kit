@@ -1,4 +1,4 @@
-import { useDesktop, useDockview } from "../selectors"
+import { useDesktop, useDockview, useDockviewActive } from "../selectors"
 import * as React from "react"
 import { GridActions } from "../../components/gridActions"
 import { PanelActions } from "../../components/panelActions"
@@ -69,9 +69,10 @@ const KeyboardShortcuts = () => (
 )
 
 export const ControllerDockview = () => {
-  const { dockviewApi, activePanel, activeGroup, smartGuidesEnabled } = useDockview()
+  const { dockviewApi, dndCompass, sendToDockview } = useDockview()
+  const { activePanel, activeGroup, smartGuidesEnabled } = useDockviewActive()
   const { currentDesktop, sendToDesktop } = useDesktop()
-  const { debug, showLogs, watermark, customGhost, dndCompass } = currentDesktop
+  const { debug, showLogs, watermark, customGhost } = currentDesktop
   return (
     <>
       <Card title="Grid" icon="grid_view" defaultOpen>
@@ -119,13 +120,13 @@ export const ControllerDockview = () => {
           label="DnD compass"
           icon="explore"
           checked={dndCompass}
-          onChange={() => sendToDesktop({ type: "onToggleDndCompass" })}
+          onChange={() => sendToDockview({ type: "onToggleDndCompass" })}
         />
         <Switch
           label="Smart guides"
           icon="straighten"
           checked={smartGuidesEnabled}
-          onChange={() => sendToDesktop({ type: "onToggleSmartGuides" })}
+          onChange={() => sendToDockview({ type: "onToggleSmartGuides" })}
         />
         {showLogs && (
           <div style={{ paddingTop: 6 }}>

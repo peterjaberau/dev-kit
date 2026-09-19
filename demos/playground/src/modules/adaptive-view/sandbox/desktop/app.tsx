@@ -1,7 +1,7 @@
 import { DockviewReact, DockviewReadyEvent } from "#adaptive-view/react"
 
 import "#adaptive-view/enterprise"
-import { useDesktop, useDockviewMenus } from "./selectors"
+import { useDesktop, useDockview, useDockviewMenus } from "./selectors"
 import { DESKTOP_DOCKVIEW_COMPONENTS } from "./panels/registry"
 import * as React from "react"
 import Desktop, { type DesktopRenderProps } from "./desktop"
@@ -33,11 +33,13 @@ const SMART_GUIDES_OPTIONS = { snapDistance: 8 }
 
 const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
   const { sendToDesktop, currentDesktop, isReady } = useDesktop()
-  const { logLines, watermark, customGhost, dndCompass, showLogs } = currentDesktop
+  const { logLines, watermark, customGhost, showLogs } = currentDesktop
   const { getTabContextMenuItems, getTabGroupChipContextMenuItems } = useDockviewMenus(MENU_BINDINGS)
 
+  const { sendToDockview } = useDockview()
+
   const onReady = (event: DockviewReadyEvent) => {
-    sendToDesktop({ type: "onReady", params: { api: event.api } })
+    sendToDockview({ type: "onReady", params: { api: event.api } })
   }
 
   const effectiveTheme = props.theme
@@ -86,9 +88,7 @@ const AdvaptiveViewDesktopContent = (props: DesktopRenderProps) => {
             autoHideEdgeGroups
             dockToEdgeGroups
             pinnedTabs={{ enabled: true }}
-            overflow={currentDesktop.overflow}
             floatingGroupDragHandle="titlebar"
-            dndCompass={dndCompass}
             smartGuides={SMART_GUIDES_OPTIONS}
             getTabContextMenuItems={getTabContextMenuItems}
             getTabGroupChipContextMenuItems={getTabGroupChipContextMenuItems}

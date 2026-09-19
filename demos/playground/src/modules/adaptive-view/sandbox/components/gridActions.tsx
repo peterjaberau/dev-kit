@@ -1,6 +1,6 @@
 import { EdgeGroupPosition } from "#adaptive-view/react"
 import * as React from "react"
-import { useDesktop, useDesktopCurrent, useLocalStore, useDockview } from "../desktop/selectors"
+import { useDesktop, useDesktopCurrent, useLocalStore, useDockview, useDockviewEdgeGroups } from "../desktop/selectors"
 import { LM } from "../desktop/designer/theme-utils"
 import { Btn, IconBtn } from "../desktop/designer/designer-kit"
 
@@ -34,9 +34,14 @@ const Row = (props: { label?: string; children: React.ReactNode; style?: React.C
 const EDGE_POSITIONS: EdgeGroupPosition[] = ["top", "bottom", "left", "right"]
 
 const EdgeGroupToggles = () => {
-  const { dockviewApi, sendToDesktop } = useDockview()
-  const active = Object.fromEntries(EDGE_POSITIONS.map((position) => [position, !!dockviewApi?.getEdgeGroup(position)]))
-  const toggle = (position: EdgeGroupPosition) => sendToDesktop({ type: "onToggleEdgeGroup", params: { position } })
+  const { sendToDockview } = useDockview()
+  const { panelCount } = useDesktopCurrent()
+  const edgeGroups = useDockviewEdgeGroups()
+  const active = Object.fromEntries(
+    EDGE_POSITIONS.map((position) => [position, edgeGroups.split(",").includes(position)]),
+  )
+  const toggle = (position: EdgeGroupPosition) =>
+    sendToDockview({ type: "onToggleEdgeGroup", params: { position, panelTitle: `Tab ${panelCount}` } })
 
   return (
     <Row label="Edge groups">
@@ -167,7 +172,7 @@ function usePopover() {
 }
 
 export const GridActions = () => {
-  const { dockviewApi: api } = useDockview()
+  const { dockviewApi: api, sendToDockview } = useDockview()
   const { panelCount } = useDesktopCurrent()
   const { sendToDesktop, desktopContext } = useDesktop()
   const dockviewStore = useLocalStore<unknown>()
@@ -176,7 +181,7 @@ export const GridActions = () => {
   const [loadMenuOpen, setLoadMenuOpen] = React.useState(false)
 
   const onClear = () => {
-    sendToDesktop({ type: "onClearDockview" })
+    sendToDockview({ type: "onClearDockview" })
   }
 
   const onLoad = (profile: any) => {
@@ -213,7 +218,7 @@ export const GridActions = () => {
         return <PanelBuilder done={close} />
       })
     } else {
-      sendToDesktop({
+      sendToDockview({
         type: "onAddPanel",
         params: {
           options: {
@@ -228,7 +233,7 @@ export const GridActions = () => {
   }
 
   const onAddGroup = () => {
-    sendToDesktop({ type: "onAddGroup" })
+    sendToDockview({ type: "onAddGroup" })
   }
 
   return (

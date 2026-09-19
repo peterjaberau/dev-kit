@@ -3,7 +3,7 @@ import * as React from "react"
 
 export const PanelBuilder = (props: { done: () => void }) => {
   const { panelCount } = useDesktopCurrent()
-  const { sendToDesktop } = useDockview()
+  const { sendToDockview } = useDockview()
   const [parameters, setParameters] = React.useState<{
     initialWidth?: number
     initialHeight?: number
@@ -97,7 +97,7 @@ export const PanelBuilder = (props: { done: () => void }) => {
         </button>
         <button
           onClick={() => {
-            sendToDesktop({
+            sendToDockview({
               type: "onAddPanel",
               params: {
                 options: {

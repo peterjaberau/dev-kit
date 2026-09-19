@@ -1090,10 +1090,15 @@ export class DockviewApi implements CommonApi<SerializedDockview> {
     /**
      * Whether Smart Guides snapping is active (the `smartGuides` option is
      * present + enabled and the module is registered). Reactive via
-     * {@link setSmartGuidesEnabled}.
+     * {@link onDidSmartGuidesEnabledChange}.
      */
     get smartGuidesEnabled(): boolean {
         return this.component.smartGuidesEnabled;
+    }
+
+    /** Fires after Smart Guides enabled state changes. */
+    get onDidSmartGuidesEnabledChange(): Event<boolean> {
+        return this.component.onDidSmartGuidesEnabledChange;
     }
 
     /** Toggle Smart Guides snapping at runtime (no-op when the module is absent). */

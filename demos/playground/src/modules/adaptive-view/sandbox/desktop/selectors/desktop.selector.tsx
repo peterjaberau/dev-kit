@@ -12,7 +12,7 @@ export const useDesktop = () => {
     desktopRef: actorRef,
     sendToDesktop: actorRef.send,
     desktopContext: context,
-    dockviewApi: context.dockviewApi,
+    dockviewRef: context.dockviewRef,
     currentDesktop: context.current,
   }
 }

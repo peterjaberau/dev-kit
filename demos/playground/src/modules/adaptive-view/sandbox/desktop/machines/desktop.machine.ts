@@ -1,8 +1,7 @@
-import { setup, assign, enqueueActions, emit, fromCallback } from "xstate"
+import { setup, assign, enqueueActions, sendTo, fromCallback, spawnChild } from "xstate"
 import { themeMachine } from "./theme.machine"
 import { localStoreMachine } from "./local-store.machine"
-import type { DockviewApi } from "#adaptive-view/react"
-import type { TabMenuTemplate, TabGroupMenuTemplate } from "./desktop-menu.types"
+import { dockviewMachine } from "./dockview.machine"
 import type { ActorRefFrom } from "xstate"
 
 const resolveProfile = (context: any, profileId?: string | null) => {
@@ -29,68 +28,56 @@ export const desktopMachine = setup({
   actors: {
     themeMachine,
     localStoreMachine,
-    observeDockview: fromCallback(({ input, sendBack }: { input: DockviewApi; sendBack: (event: any) => void }) => {
-      const disposables = [
-        input.onDidAddPanel((panel) => sendBack({ type: "onDidAddPanel", params: { panelId: panel.id } })),
-        input.onDidRemovePanel((panel) => sendBack({ type: "onDidRemovePanel", params: { panelId: panel.id } })),
-        input.onDidActivePanelChange((event) =>
-          sendBack({ type: "onDidActivePanelChange", params: { panelId: event.panel?.id } }),
-        ),
-        input.onDidAddGroup((group) => sendBack({ type: "onDidAddGroup", params: { groupId: group.id } })),
-        input.onDidRemoveGroup((group) => sendBack({ type: "onDidRemoveGroup", params: { groupId: group.id } })),
-        input.onDidActiveGroupChange((group) =>
-          sendBack({ type: "onDidActiveGroupChange", params: { groupId: group?.id } }),
-        ),
-        input.onDidMovePanel((event) => sendBack({ type: "onDidMovePanel", params: { panelId: event.panel.id } })),
-        input.onDidMaximizedGroupChange((event) =>
-          sendBack({
-            type: "onDidMaximizedGroupChange",
-            params: { groupId: event.group.id, isMaximized: event.isMaximized },
-          }),
-        ),
-      ]
-      return () => disposables.forEach((disposable) => disposable.dispose())
-    }),
+    dockviewMachine,
+    observeDockviewChanges: fromCallback(
+      ({
+        input,
+        sendBack,
+      }: {
+        input: ActorRefFrom<typeof dockviewMachine>
+        sendBack: (event: any) => void
+      }) => {
+        const subscription = input.on("dockview.changed", ({ params }: any) => sendBack(params))
+        // React child effects may queue onReady before the provider starts its
+        // actors. Emissions are not replayed, so reconcile readiness after
+        // subscribing to cover a Dockview actor that has already started.
+        if (input.getSnapshot().matches("ready")) sendBack({ type: "onDockviewReady" })
+        return () => subscription.unsubscribe()
+      },
+    ),
   },
   actions: {
-    initializeTabContextMenu: assign(({ context }) => ({
-      menus: {
-        ...context.menus,
-        tab: [
-          "separator",
-          "close",
-          "closeOthers",
-          "closeAll",
-          "closeLeft",
-          "closeRight",
-          "separator",
-          "maximize",
-          "separator",
-          { kind: "overflow", mode: "dropdown" },
-          { kind: "overflow", mode: "wrap" },
-          "separator",
-          { kind: "docking" },
-          "separator",
-          { kind: "membership", createLabel: "Add to new group", prompt: "Group name:" },
-        ] satisfies TabMenuTemplate[],
-      },
+    spawnDockview: assign(({ spawn }) => ({
+      dockviewRef: spawn("dockviewMachine", { id: "dockview", systemId: "dockview" }),
     })),
-    initializeTabGroupContextMenu: assign(({ context }) => ({
-      menus: {
-        ...context.menus,
-        tabGroup: [
-          "rename",
-          "colorPicker",
-          "collapse",
-          "close",
-          "separator",
-          { kind: "command", label: "Float group", eventType: "onFloatGroup" },
-          { kind: "command", label: "Popout group", eventType: "onPopoutGroup" },
-          "separator",
-          { kind: "command", label: "Dissolve group", eventType: "onDissolveTabGroup" },
-        ] satisfies TabGroupMenuTemplate[],
-      },
-    })),
+    subscribeToDockview: spawnChild("observeDockviewChanges", {
+      id: "dockview-changes",
+      input: ({ context }) => context.dockviewRef!,
+    }),
+    requestLayout: sendTo(
+      ({ context }) => context.dockviewRef!,
+      ({ context }) => ({
+        type: "onLoadLayout",
+        params: {
+          data: context.layout.data,
+          fallback: context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")?.data,
+        },
+      }),
+    ),
+    requestLayoutSnapshot: sendTo(
+      ({ context }) => context.dockviewRef!,
+      ({ context }) => ({
+        type: "onSerializeLayout",
+        params: { id: context.layout.profile.id, title: context.layout.profile.title },
+      }),
+    ),
+    acceptLoadedLayout: assign(({ context, event }) => {
+      if (!event.params.usedFallback) return {}
+      const profile = context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")
+      return {
+        layout: { ...context.layout, profile, data: profile?.data, selectedDockviewProfileId: profile?.id ?? null },
+      }
+    }),
     spawnLocalStore: assign(({ context, spawn }) => ({
       store: {
         ...context.store,
@@ -141,50 +128,12 @@ export const desktopMachine = setup({
         })
       }
     },
-    saveLayout: assign(({ context }) => {
-      const profile = context.layout.profile
-      if (!profile || !context.dockviewApi) return {}
-      const payload = { id: profile.id, title: profile.title, data: context.dockviewApi.toJSON() }
+    saveLayout: assign(({ context, event }) => {
+      const payload = event.params
       const store = context.store.localStoreRef
       store?.send({ type: "SET_ITEM", key: store.getSnapshot().context.settings.storeKey, value: payload })
       return { layout: { ...context.layout, profile: payload, data: payload.data } }
     }),
-    loadLayout: assign(({ context }) => {
-      const api = context.dockviewApi
-      const fallbackProfile = context.presets.dockviewProfiles.find((profile: any) => profile.id === "default")
-      const fallback = fallbackProfile?.data
-      const apply = (data: any) => {
-        if (!data) throw new Error('DesktopProvider requires a dockview profile with id "default" and layout data.')
-        const layout = JSON.parse(JSON.stringify(data))
-        for (const panel of Object.values(layout.panels ?? {}) as any[]) {
-          if (panel.contentComponent === "instance") panel.contentComponent = "view"
-          if (panel.params?.instanceId && !panel.params.viewId) {
-            panel.params.viewId = panel.params.instanceId
-            delete panel.params.instanceId
-          }
-        }
-        api.fromJSON(layout)
-      }
-      let data = context.layout.data
-      try {
-        apply(data)
-      } catch (error) {
-        // Corrupt saved layouts must not prevent the desktop from opening.
-        if (context.layout.data === fallback) throw error
-        apply(fallback)
-        data = fallback
-      }
-      return {
-        layout: {
-          ...context.layout,
-          data,
-          profile: data === context.layout.data ? context.layout.profile : fallbackProfile,
-          selectedDockviewProfileId:
-            data === context.layout.data ? context.layout.selectedDockviewProfileId : (fallbackProfile?.id ?? null),
-        },
-      }
-    }),
-    setDockviewApi: assign(({ event }) => ({ dockviewApi: event.params.api })),
     addPendingLogLine: assign(({ context }, params: { id: string; message: string }) => {
       const { id, message } = params
       context.current.pending = [
@@ -222,84 +171,6 @@ export const desktopMachine = setup({
       current: { ...context.current, panelCount: context.current.panelCount + 1 },
     })),
 
-    addPanelToTabGroup: ({ context, event }) => {
-      context.dockviewApi?.addPanelToTabGroup(event.params)
-    },
-    removePanelFromTabGroup: ({ context, event }) => {
-      context.dockviewApi?.removePanelFromTabGroup(event.params)
-    },
-    createTabGroupForPanel: ({ context, event }) => {
-      const api = context.dockviewApi
-      if (!api) return
-      const { groupId, panelId, label } = event.params
-      const colors = api.tabGroupColors
-      const color = colors[Math.floor(Math.random() * colors.length)]?.id
-      const group = api.createTabGroup({ groupId, label, color })
-      api.addPanelToTabGroup({ groupId, panelId, tabGroupId: group.id })
-    },
-    dissolveTabGroup: ({ context, event }) => {
-      context.dockviewApi?.dissolveTabGroup(event.params)
-    },
-    toggleEdgeGroup: ({ context, event }) => {
-      const api = context.dockviewApi
-      if (!api) return
-      const { position } = event.params
-      if (api.getEdgeGroup(position)) {
-        api.removeEdgeGroup(position)
-      } else {
-        const group = api.addEdgeGroup(position, { id: `edge-${position}`, initialSize: 200, minimumSize: 100 })
-        api.addPanel({
-          id: `edge-panel-${position}-${Date.now()}`,
-          component: "fixedPlaceholder",
-          title: `Tab ${context.current.panelCount}`,
-          position: { referenceGroup: group.id },
-          params: { label: position, position },
-        })
-      }
-    },
-    addPanel: ({ context, event }) => context.dockviewApi?.addPanel(event.params.options),
-    addGroup: ({ context }) => context.dockviewApi?.addGroup(),
-    clearDockview: ({ context }) => context.dockviewApi?.clear(),
-    notifyDockviewChanged: emit({ type: "dockviewChanged" }),
-    setActivePanel: ({ context, event }) => context.dockviewApi?.getPanel(event.params.panelId)?.api.setActive(),
-    setActiveGroup: ({ context, event }) => context.dockviewApi?.getGroup(event.params.groupId)?.api.setActive(),
-    closePanel: ({ context, event }) => context.dockviewApi?.getPanel(event.params.panelId)?.api.close(),
-    closeGroup: ({ context, event }) => context.dockviewApi?.getGroup(event.params.groupId)?.api.close(),
-    floatPanel: ({ context, event }) => {
-      const panel = context.dockviewApi?.getPanel(event.params.panelId)
-      if (panel) context.dockviewApi.addFloatingGroup(panel)
-    },
-    popoutPanel: ({ context, event }) => {
-      const panel = context.dockviewApi?.getPanel(event.params.panelId)
-      if (panel) void context.dockviewApi.addPopoutGroup(panel)
-    },
-    floatGroup: ({ context, event }) => {
-      const group = context.dockviewApi?.getGroup(event.params.groupId)
-      if (group) context.dockviewApi.addFloatingGroup(group, event.params.options)
-    },
-    popoutGroup: ({ context, event }) => {
-      const group = context.dockviewApi?.getGroup(event.params.groupId)
-      if (group) void context.dockviewApi.addPopoutGroup(group)
-    },
-    toggleGroupMaximized: ({ context, event }) => {
-      const api = context.dockviewApi?.getGroup(event.params.groupId)?.api
-      if (api?.isMaximized()) api.exitMaximized()
-      else api?.maximize()
-    },
-    toggleGroupVisible: ({ context, event }) => {
-      const api = context.dockviewApi?.getGroup(event.params.groupId)?.api
-      api?.setVisible(!api.isVisible)
-    },
-    setGroupHeaderPosition: ({ context, event }) => {
-      context.dockviewApi?.getGroup(event.params.groupId)?.api.setHeaderPosition(event.params.position)
-    },
-    toggleSmartGuides: ({ context }) => {
-      const api = context.dockviewApi
-      api?.setSmartGuidesEnabled(!api.smartGuidesEnabled)
-    },
-    toggleDndCompass: assign(({ context }) => {
-      context.current.dndCompass = !context.current.dndCompass
-    }),
     toggleCustomGhost: assign(({ context }) => {
       context.current.customGhost = !context.current.customGhost
     }),
@@ -311,13 +182,6 @@ export const desktopMachine = setup({
     }),
     toggleShowLogs: assign(({ context }) => {
       context.current.showLogs = !context.current.showLogs
-    }),
-    setOverflow: assign(({ context, event }) => {
-      context.current.overflow = {
-        ...context.current.overflow,
-        ...event.params,
-        mode: event.params?.mode === "wrap" ? "wrap" : "dropdown",
-      }
     }),
     selectDockviewProfile: assign(({ context, event }) => {
       const profile = resolveProfile(context, event.params.profileId ?? "default")
@@ -347,8 +211,7 @@ export const desktopMachine = setup({
 
     return {
       input,
-      dockviewApi: null,
-      menus: { tab: [] as TabMenuTemplate[], tabGroup: [] as TabGroupMenuTemplate[] },
+      dockviewRef: null as ActorRefFrom<typeof dockviewMachine> | null,
       store: {
         localStoreRef: null as ActorRefFrom<typeof localStoreMachine> | null,
       },
@@ -371,14 +234,8 @@ export const desktopMachine = setup({
 
         watermark: false,
         customGhost: false,
-        dndCompass: false,
         showLogs: false,
         debug: false,
-        overflow: {
-          mode: "dropdown",
-          mru: false,
-          search: true,
-        },
         panelCount: 0,
       },
 
@@ -405,8 +262,8 @@ export const desktopMachine = setup({
       entry: enqueueActions(({ enqueue }) => {
         enqueue("spawnLocalStore")
         enqueue("spawnThemes")
-        enqueue("initializeTabContextMenu")
-        enqueue("initializeTabGroupContextMenu")
+        enqueue("spawnDockview")
+        enqueue("subscribeToDockview")
         enqueue("resolveInitialLayout")
         enqueue("persistLoadedProfile")
         enqueue.raise({ type: "onCompleteInitiation" })
@@ -418,149 +275,34 @@ export const desktopMachine = setup({
     starting: {
       on: {
         onSelectDockviewProfile: { actions: ["selectDockviewProfile", "persistLoadedProfile"] },
-        onReady: {
-          actions: ["setDockviewApi", "loadLayout", "persistLoadedProfile"],
-          target: "ready",
-        },
+        onDockviewReady: { actions: "requestLayout" },
+        onDockviewLayoutLoaded: { target: "ready", actions: ["acceptLoadedLayout", "persistLoadedProfile"] },
       },
     },
     ready: {
-      invoke: {
-        src: "observeDockview",
-        input: ({ context }) => context.dockviewApi,
-      },
       on: {
-        onAddPanelToTabGroup: { actions: ["addPanelToTabGroup", "notifyDockviewChanged"] },
-        onRemovePanelFromTabGroup: { actions: ["removePanelFromTabGroup", "notifyDockviewChanged"] },
-        onCreateTabGroupForPanel: { actions: ["createTabGroupForPanel", "notifyDockviewChanged"] },
-        onDissolveTabGroup: { actions: ["dissolveTabGroup", "notifyDockviewChanged"] },
-        onToggleEdgeGroup: { actions: ["toggleEdgeGroup", "notifyDockviewChanged"] },
-        onAddPanel: { actions: ["addPanel", "notifyDockviewChanged"] },
-        onAddGroup: { actions: ["addGroup", "notifyDockviewChanged"] },
-        onClearDockview: { actions: ["clearDockview", "notifyDockviewChanged"] },
-        onSetActivePanel: { actions: ["setActivePanel", "notifyDockviewChanged"] },
-        onSetActiveGroup: { actions: ["setActiveGroup", "notifyDockviewChanged"] },
-        onClosePanel: { actions: ["closePanel", "notifyDockviewChanged"] },
-        onCloseGroup: { actions: ["closeGroup", "notifyDockviewChanged"] },
-        onFloatPanel: { actions: ["floatPanel", "notifyDockviewChanged"] },
-        onPopoutPanel: { actions: ["popoutPanel", "notifyDockviewChanged"] },
-        onFloatGroup: { actions: ["floatGroup", "notifyDockviewChanged"] },
-        onPopoutGroup: { actions: ["popoutGroup", "notifyDockviewChanged"] },
-        onToggleGroupMaximized: { actions: ["toggleGroupMaximized", "notifyDockviewChanged"] },
-        onToggleGroupVisible: { actions: ["toggleGroupVisible", "notifyDockviewChanged"] },
-        onSetGroupHeaderPosition: { actions: ["setGroupHeaderPosition", "notifyDockviewChanged"] },
-
-        onSaveLayout: { actions: "saveLayout" },
-
-        onReady: {
-          target: "ready",
-          reenter: true,
-          actions: ["setDockviewApi", "loadLayout", "persistLoadedProfile"],
-        },
-        onDidActivePanelChange: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const panelId = event.params.panelId ?? null
-            enqueue({
-              type: "addPendingLogLine",
-              params: { id: panelId ?? "none", message: "Panel Activated" },
-            })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-
-        onDidAddPanel: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const { panelId } = event.params
-            enqueue("incrementPanelCount")
-            enqueue({ type: "addPendingLogLine", params: { id: panelId, message: "Panel Added" } })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-        onDidRemovePanel: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const { panelId } = event.params
-            enqueue({ type: "addPendingLogLine", params: { id: panelId, message: "Panel Removed" } })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-        onDidMovePanel: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const { panelId } = event.params
-            enqueue({ type: "addPendingLogLine", params: { id: panelId, message: "Panel Moved" } })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-        onDidAddGroup: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const { groupId } = event.params
-            enqueue({ type: "addPendingLogLine", params: { id: groupId, message: "Group Added" } })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-        onDidActiveGroupChange: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const groupId = event.params.groupId ?? null
-            enqueue({
-              type: "addPendingLogLine",
-              params: { id: groupId ?? "none", message: "Group Activated" },
-            })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-        onDidRemoveGroup: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const { groupId } = event.params
-            enqueue({ type: "addPendingLogLine", params: { id: groupId, message: "Group Removed" } })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-        onDidMaximizedGroupChange: {
-          actions: enqueueActions(({ event, enqueue }) => {
-            const { groupId, isMaximized } = event.params
-            enqueue({
-              type: "addPendingLogLine",
-              params: { id: `${groupId} [${isMaximized}]`, message: "Group Maximized Changed" },
-            })
-            enqueue("flushPendingLogLines")
-          }),
-        },
-
-        onClearLogLines: {
-          actions: "clearLogLines",
-        },
-
-        onToggleWatermark: {
-          actions: ["toggleWatermark"],
-        },
-        onToggleCustomGhost: {
-          actions: ["toggleCustomGhost"],
-        },
-        onToggleDndCompass: {
-          actions: ["toggleDndCompass"],
-        },
-        onToggleSmartGuides: {
-          actions: ["toggleSmartGuides", "notifyDockviewChanged"],
-        },
-        onToggleShowLogs: {
-          actions: ["toggleShowLogs"],
-        },
-        onToggleDebug: {
-          actions: ["toggleDebug"],
-        },
-        onUpdateOverflow: {
-          actions: ["setOverflow"],
-        },
-
-        onSelectDockviewProfile: {
-          actions: ["selectDockviewProfile", "loadLayout", "persistLoadedProfile"],
-        },
-        onToggleDesktopDesigner: {
-          actions: ["toggleDesktopDesigner"],
-        },
-        onCloseDesktopDesigner: {
-          actions: ["closeDesktopDesigner"],
-        },
+        onSaveLayout: { actions: "requestLayoutSnapshot" },
+        onDockviewLayoutSerialized: { actions: "saveLayout" },
+        onDockviewReady: { target: "starting", actions: "requestLayout" },
+        onDockviewLayoutLoaded: { actions: ["acceptLoadedLayout", "persistLoadedProfile"] },
+        onClearLogLines: { actions: "clearLogLines" },
+        onToggleWatermark: { actions: "toggleWatermark" },
+        onToggleCustomGhost: { actions: "toggleCustomGhost" },
+        onToggleShowLogs: { actions: "toggleShowLogs" },
+        onToggleDebug: { actions: "toggleDebug" },
+        onSelectDockviewProfile: { actions: ["selectDockviewProfile", "requestLayout", "persistLoadedProfile"] },
+        onToggleDesktopDesigner: { actions: "toggleDesktopDesigner" },
+        onCloseDesktopDesigner: { actions: "closeDesktopDesigner" },
       },
+    },
+  },
+  on: {
+    onDockviewActivity: {
+      actions: enqueueActions(({ event, enqueue }) => {
+        if (event.params.panelAdded) enqueue("incrementPanelCount")
+        enqueue({ type: "addPendingLogLine", params: event.params })
+        enqueue("flushPendingLogLines")
+      }),
     },
   },
 })

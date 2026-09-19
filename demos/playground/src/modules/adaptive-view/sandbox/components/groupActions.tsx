@@ -17,8 +17,8 @@ const selectStyle: React.CSSProperties = {
 }
 
 const GroupAction = ({ groupId }: { groupId: string }) => {
-  const { isActive, isVisible, isMaximized, location, headerPosition, sendToDesktop } = useDockviewGroup(groupId)
-  const onClick = () => sendToDesktop({ type: "onSetActiveGroup", params: { groupId } })
+  const { isActive, isVisible, isMaximized, location, headerPosition, sendToDockview } = useDockviewGroup(groupId)
+  const onClick = () => sendToDockview({ type: "onSetActiveGroup", params: { groupId } })
   return (
     <div style={{ padding: "3px 0" }}>
       <div
@@ -57,7 +57,7 @@ const GroupAction = ({ groupId }: { groupId: string }) => {
             title="Float"
             active={location?.type === "floating"}
             onClick={() =>
-              sendToDesktop({
+              sendToDockview({
                 type: "onFloatGroup",
                 params: {
                   groupId,
@@ -70,23 +70,23 @@ const GroupAction = ({ groupId }: { groupId: string }) => {
             icon="open_in_new"
             title="Popout"
             active={location?.type === "popout"}
-            onClick={() => sendToDesktop({ type: "onPopoutGroup", params: { groupId } })}
+            onClick={() => sendToDockview({ type: "onPopoutGroup", params: { groupId } })}
           />
           <IconBtn
             icon="fullscreen"
             title="Maximize"
             active={isMaximized}
-            onClick={() => sendToDesktop({ type: "onToggleGroupMaximized", params: { groupId } })}
+            onClick={() => sendToDockview({ type: "onToggleGroupMaximized", params: { groupId } })}
           />
           <IconBtn
             icon={isVisible ? "visibility" : "visibility_off"}
             title="Toggle visibility"
-            onClick={() => sendToDesktop({ type: "onToggleGroupVisible", params: { groupId } })}
+            onClick={() => sendToDockview({ type: "onToggleGroupVisible", params: { groupId } })}
           />
           <IconBtn
             icon="close"
             title="Close"
-            onClick={() => sendToDesktop({ type: "onCloseGroup", params: { groupId } })}
+            onClick={() => sendToDockview({ type: "onCloseGroup", params: { groupId } })}
           />
         </div>
       </div>
@@ -113,7 +113,7 @@ const GroupAction = ({ groupId }: { groupId: string }) => {
           style={selectStyle}
           value={headerPosition}
           onChange={(e) =>
-            sendToDesktop({
+            sendToDockview({
               type: "onSetGroupHeaderPosition",
               params: { groupId, position: e.target.value as DockviewHeaderPosition },
             })

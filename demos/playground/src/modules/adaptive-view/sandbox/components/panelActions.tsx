@@ -4,8 +4,8 @@ import { LM } from "../desktop/designer/theme-utils"
 import { IconBtn } from "../desktop/designer/designer-kit"
 
 const PanelAction = ({ panelId }: { panelId: string }) => {
-  const { isActive, isVisible: visible, sendToDesktop } = useDockviewPanel(panelId)
-  const onClick = () => sendToDesktop({ type: "onSetActivePanel", params: { panelId } })
+  const { isActive, isVisible: visible, sendToDockview } = useDockviewPanel(panelId)
+  const onClick = () => sendToDockview({ type: "onSetActivePanel", params: { panelId } })
   return (
     <div
       style={{
@@ -42,17 +42,17 @@ const PanelAction = ({ panelId }: { panelId: string }) => {
         <IconBtn
           icon="ad_group"
           title="Float"
-          onClick={() => sendToDesktop({ type: "onFloatPanel", params: { panelId } })}
+          onClick={() => sendToDockview({ type: "onFloatPanel", params: { panelId } })}
         />
         <IconBtn
           icon="open_in_new"
           title="Popout"
-          onClick={() => sendToDesktop({ type: "onPopoutPanel", params: { panelId } })}
+          onClick={() => sendToDockview({ type: "onPopoutPanel", params: { panelId } })}
         />
         <IconBtn
           icon="close"
           title="Close"
-          onClick={() => sendToDesktop({ type: "onClosePanel", params: { panelId } })}
+          onClick={() => sendToDockview({ type: "onClosePanel", params: { panelId } })}
         />
         <span
           className="material-symbols-outlined"
