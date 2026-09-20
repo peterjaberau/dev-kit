@@ -22,6 +22,7 @@ import {
 import { viewCreateLayoutSnapshot } from "#view/core/state/snapshot"
 import { makeLifecycleEvents } from "#view/react/lifecycle"
 import { initialConfig, PG_PRESETS, PG_THEMES } from "./playground-data"
+import { predefinedLayouts, predefinedThemes, predefinedViewProps, defaultVariables } from "./store"
 
 const STORAGE_KEY = "dock-view-playground-layout"
 
@@ -433,7 +434,84 @@ export const playgroundMachine = setup({
   id: "playground",
   initial: "ready",
   context: ({ input }) => {
+
+    const variables = {
+      layoutId: defaultVariables?.layoutId,
+      themeId: defaultVariables?.themeId,
+      viewPropsId: defaultVariables?.viewPropsId,
+      makeTabPrefix: defaultVariables?.makeTabPrefix,
+    }
+
+    const defaultLayout = predefinedLayouts.find((l) => l.id === variables.layoutId)?.data?.layout ?? {}
+    const defaultViewProps = predefinedViewProps.find((v) => v.id === variables.viewPropsId)?.data?.props ?? {}
+    const defaultTheme = predefinedThemes.find((t) => t.id === variables.themeId)?.data?.style ?? {}
+
+    const store = {
+      resources: [],
+      predefined: {
+        layouts: predefinedLayouts,
+        themes: predefinedThemes,
+        viewProps: predefinedViewProps,
+      },
+      system: {},
+      currentApp: {
+        components: {
+          view: {
+            ...defaultViewProps,
+            initialLayout: defaultLayout,
+          },
+        },
+        script: {
+          variables: {
+            ...variables,
+          },
+          data: {},
+          queries: {},
+          transformers: {},
+          workflows: {}
+        },
+        settings: {
+          general: {},
+          customCss: {},
+          preloadedScripts: {},
+          libraries: {},
+          page: {
+            urlParameters: {},
+          },
+          appTheme: {
+            color: {},
+            typography: {},
+            metrics: {},
+            shadows: {},
+          },
+          notifications: {}
+        },
+        state: {
+          queries: {},
+          transformers: {},
+          variables: {
+            ...variables,
+          },
+          components: {
+            view: {
+              ...defaultViewProps,
+              layout: defaultLayout,
+            },
+          },
+          globals: {
+            currentUser: null,
+            localStorage: {},
+            systemContext: {},
+            theme: defaultTheme,
+          },
+        },
+      },
+    }
+
+
+
     const config = {
+      store,
       ...initialConfig,
       ...input?.config,
       global: { ...initialConfig.global, ...input?.config?.global },

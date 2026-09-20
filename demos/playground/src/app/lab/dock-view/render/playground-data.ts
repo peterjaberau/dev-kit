@@ -411,9 +411,6 @@ const edgeLayout: any = {
   },
 }
 
-// export const PG_DEFAULT_LAYOUT = defaultLayout;
-
-export const PG_DEFAULT_LAYOUT = edgeLayout
 
 export const PG_PRESETS: any[] = [
   { id: "default", label: "Default", layout: defaultLayout },
