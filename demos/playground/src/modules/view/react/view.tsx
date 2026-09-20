@@ -251,6 +251,12 @@ export type ViewProps<TData = unknown> = {
   getTabLabel?: (tab: ViewTab<TData>) => string;
   /** Called after every state change; use it to persist or inspect layout. */
   onChange?: (state: ViewLayoutState) => void;
+  /** Optional external state owner. All interactions dispatch actions to this owner. */
+  stateControl?: {
+    state: ViewLayoutState;
+    onAction: (action: ViewReducerAction) => void;
+  };
+
   /**
    * Fires continuously while a divider, junction, or edge is being resized by
    * pointer or keyboard.
@@ -358,17 +364,33 @@ export const View = forwardRef(function View<TData = unknown>(
     renderActionsButtonIcon,
   } = props;
 
-  const [state, dispatch] = useReducer(
+  const [internalState, internalDispatch] = useReducer(
     viewReducer,
     initialLayout,
     viewCreateInitialState,
   );
+  const state = props.stateControl?.state ?? internalState;
+  const stateControlRef = useRef(props.stateControl);
+  stateControlRef.current = props.stateControl;
   const stateRef = useRef(state);
   stateRef.current = state;
   const resizeStateRef = useRef(state);
   resizeStateRef.current = state;
   const lifecycleStateRef = useRef(state);
   lifecycleStateRef.current = state;
+  const dispatch = useCallback((action: ViewReducerAction) => {
+    const control = stateControlRef.current;
+    if (control) {
+      // Live controller handles must see sequential operations before React renders.
+      const next = viewReducer(stateRef.current, action);
+      stateRef.current = next;
+      resizeStateRef.current = next;
+      lifecycleStateRef.current = next;
+      control.onAction(action);
+    } else {
+      internalDispatch(action);
+    }
+  }, []);
   const lastResizeEventRef = useRef<ViewResizeEvent | null>(null);
   const [activeJunctionResize, setActiveJunctionResize] =
     useState<ActiveJunctionResize | null>(null);

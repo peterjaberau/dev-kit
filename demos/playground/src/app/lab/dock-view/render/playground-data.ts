@@ -137,180 +137,173 @@ export const PG_KIND_LABEL: any = {
 // ---------------------------------------------------------------------------
 
 const defaultLayout: any = {
-  type: 'group',
-  direction: 'horizontal',
+  type: "group",
+  direction: "horizontal",
   children: [
     {
-      type: 'panel',
-      id: 'sidebar',
+      type: "panel",
+      id: "sidebar",
       size: 24,
-      tabs: [{ id: 'files', data: { title: 'Files', kind: 'files' } }],
+      tabs: [{ id: "files", data: { title: "Files", kind: "files" } }],
     },
     {
-      type: 'group',
-      direction: 'vertical',
+      type: "group",
+      direction: "vertical",
       size: 76,
       children: [
         {
-          type: 'panel',
-          id: 'editor',
+          type: "panel",
+          id: "editor",
           size: 68,
-          activeTabId: 'main-ts',
+          activeTabId: "main-ts",
           tabs: [
-            { id: 'main-ts', data: { title: 'main.ts', kind: 'editor' } },
-            { id: 'styles-css', data: { title: 'styles.css', kind: 'editor' } },
+            { id: "main-ts", data: { title: "main.ts", kind: "editor" } },
+            { id: "styles-css", data: { title: "styles.css", kind: "editor" } },
           ],
         },
         {
-          type: 'panel',
-          id: 'terminal',
+          type: "panel",
+          id: "terminal",
           size: 32,
           tabs: [
             {
-              id: 'terminal-tab',
-              data: { title: 'Terminal', kind: 'terminal' },
+              id: "terminal-tab",
+              data: { title: "Terminal", kind: "terminal" },
             },
           ],
         },
       ],
     },
   ],
-};
+}
 
 const ideLayout: any = {
-  type: 'root',
+  type: "root",
   edges: {
     left: {
-      type: 'edgePanel',
-      id: 'edge-explorer',
+      type: "edgePanel",
+      id: "edge-explorer",
       size: 20,
-      tabs: [{ id: 'explorer', data: { title: 'Explorer', kind: 'files' } }],
+      tabs: [{ id: "explorer", data: { title: "Explorer", kind: "files" } }],
     },
     bottom: {
-      type: 'edgePanel',
-      id: 'edge-output',
+      type: "edgePanel",
+      id: "edge-output",
       size: 26,
       tabs: [
-        { id: 'output', data: { title: 'Output', kind: 'output' } },
-        { id: 'ide-terminal', data: { title: 'Terminal', kind: 'terminal' } },
+        { id: "output", data: { title: "Output", kind: "output" } },
+        { id: "ide-terminal", data: { title: "Terminal", kind: "terminal" } },
       ],
     },
   },
   main: {
-    type: 'group',
-    direction: 'horizontal',
+    type: "group",
+    direction: "horizontal",
     children: [
       {
-        type: 'panel',
-        id: 'ide-editor',
+        type: "panel",
+        id: "ide-editor",
         size: 64,
-        activeTabId: 'ide-main',
+        activeTabId: "ide-main",
         tabs: [
-          { id: 'ide-main', data: { title: 'index.tsx', kind: 'editor' } },
-          { id: 'ide-readme', data: { title: 'README.md', kind: 'notes' } },
+          { id: "ide-main", data: { title: "index.tsx", kind: "editor" } },
+          { id: "ide-readme", data: { title: "README.md", kind: "notes" } },
         ],
       },
       {
-        type: 'panel',
-        id: 'ide-preview',
+        type: "panel",
+        id: "ide-preview",
         size: 36,
         tabs: [
           {
-            id: 'ide-preview-tab',
-            data: { title: 'Preview', kind: 'preview' },
+            id: "ide-preview-tab",
+            data: { title: "Preview", kind: "preview" },
           },
         ],
       },
     ],
   },
-};
+}
 
 const dashboardLayout: any = {
-  type: 'group',
-  direction: 'vertical',
+  type: "group",
+  direction: "vertical",
   children: [
     {
-      type: 'group',
-      direction: 'horizontal',
+      type: "group",
+      direction: "horizontal",
       size: 50,
       children: [
         {
-          type: 'panel',
-          id: 'metrics',
+          type: "panel",
+          id: "metrics",
           size: 50,
-          tabs: [
-            { id: 'metrics-tab', data: { title: 'Metrics', kind: 'preview' } },
-          ],
+          tabs: [{ id: "metrics-tab", data: { title: "Metrics", kind: "preview" } }],
         },
         {
-          type: 'panel',
-          id: 'traffic',
+          type: "panel",
+          id: "traffic",
           size: 50,
-          tabs: [
-            { id: 'traffic-tab', data: { title: 'Traffic', kind: 'preview' } },
-          ],
+          tabs: [{ id: "traffic-tab", data: { title: "Traffic", kind: "preview" } }],
         },
       ],
     },
     {
-      type: 'group',
-      direction: 'horizontal',
+      type: "group",
+      direction: "horizontal",
       size: 50,
       children: [
         {
-          type: 'panel',
-          id: 'logs',
+          type: "panel",
+          id: "logs",
           size: 60,
-          tabs: [{ id: 'logs-tab', data: { title: 'Logs', kind: 'output' } }],
+          tabs: [{ id: "logs-tab", data: { title: "Logs", kind: "output" } }],
         },
         {
-          type: 'panel',
-          id: 'activity',
+          type: "panel",
+          id: "activity",
           size: 40,
-          tabs: [
-            { id: 'activity-tab', data: { title: 'Activity', kind: 'notes' } },
-          ],
+          tabs: [{ id: "activity-tab", data: { title: "Activity", kind: "notes" } }],
         },
       ],
     },
   ],
-};
+}
 
 const floatingLayout: any = {
-  type: 'root',
+  type: "root",
   main: {
-    type: 'group',
-    direction: 'horizontal',
+    type: "group",
+    direction: "horizontal",
     children: [
       {
-        type: 'panel',
-        id: 'float-nav',
+        type: "panel",
+        id: "float-nav",
         size: 28,
-        tabs: [{ id: 'float-files', data: { title: 'Files', kind: 'files' } }],
+        tabs: [{ id: "float-files", data: { title: "Files", kind: "files" } }],
       },
       {
-        type: 'panel',
-        id: 'float-editor',
+        type: "panel",
+        id: "float-editor",
         size: 72,
-        tabs: [{ id: 'float-main', data: { title: 'app.ts', kind: 'editor' } }],
+        tabs: [{ id: "float-main", data: { title: "app.ts", kind: "editor" } }],
       },
     ],
   },
   floating: [
     {
-      type: 'floatingPanel',
-      id: 'float-inspector',
+      type: "floatingPanel",
+      id: "float-inspector",
       bounds: { x: 52, y: 14, width: 38, height: 48 },
       tabs: [
         {
-          id: 'float-inspect-tab',
-          data: { title: 'Inspector', kind: 'notes' },
+          id: "float-inspect-tab",
+          data: { title: "Inspector", kind: "notes" },
         },
       ],
     },
   ],
-};
-
+}
 
 const edgeLayout: any = {
   type: "root",
@@ -418,23 +411,20 @@ const edgeLayout: any = {
   },
 }
 
-
 // export const PG_DEFAULT_LAYOUT = defaultLayout;
 
-export const PG_DEFAULT_LAYOUT = edgeLayout;
+export const PG_DEFAULT_LAYOUT = edgeLayout
 
 export const PG_PRESETS: any[] = [
-  { id: 'default', label: 'Default', layout: defaultLayout },
-  { id: 'ide', label: 'IDE + edges', layout: ideLayout },
-  { id: 'dashboard', label: 'Dashboard', layout: dashboardLayout },
-  { id: 'floating', label: 'Floating', layout: floatingLayout },
-];
+  { id: "default", label: "Default", layout: defaultLayout },
+  { id: "ide", label: "IDE + edges", layout: ideLayout },
+  { id: "dashboard", label: "Dashboard", layout: dashboardLayout },
+  { id: "floating", label: "Floating", layout: floatingLayout },
+]
 
 // ---------------------------------------------------------------------------
 // Theme presets (reused from the Themes example; proven --view-* sets)
 // ---------------------------------------------------------------------------
-
-
 
 export const PG_THEMES: any[] = [
   {
@@ -537,112 +527,3 @@ export const PG_THEMES: any[] = [
     },
   },
 ]
-
-// ---------------------------------------------------------------------------
-// Snapshot helpers
-// ---------------------------------------------------------------------------
-
-
-/** Flattened, inspector-friendly view of one panel from a snapshot. */
-
-function isRoot(snapshot: any) {
-  return (snapshot as { type?: string }).type === 'root';
-}
-
-function toEntry(node: any, container: any, kindLabel: string): any {
-  return {
-    id: node.id ?? "",
-    container,
-    kindLabel,
-    resizable: node.resizable,
-    draggable: node.draggable,
-    droppable: node.droppable,
-    fullScreen: node.fullScreen ?? false,
-    poppedOut: container === "floating" && !!node.popout,
-    minSize: node.minSize,
-    maxSize: node.maxSize,
-    tabs: node.tabs
-      .filter((tab: any) => typeof tab.id === "string")
-      .map((tab: any) => ({
-        id: tab.id as string,
-        title: tab.data.title,
-        kind: tab.data.kind,
-        closable: tab.closable,
-        draggable: tab.draggable,
-      })),
-  }
-}
-
-function walkDocked(node: any, out: any[]): void {
-  if (node.type === "panel") {
-    out.push(toEntry(node, "tiled", "Tiled"))
-  } else if (node.type === "group") {
-    for (const child of node.children) walkDocked(child, out)
-  }
-}
-
-/** All panels in a snapshot as flat entries: main tree, then edges, then floating. */
-export function collectPanels(snapshot: any): any[] {
-  const out: any[] = []
-  if (isRoot(snapshot)) {
-    walkDocked(snapshot.main, out)
-    if (snapshot.edges) {
-      for (const side of Object.keys(snapshot.edges) as any[]) {
-        const panel = snapshot.edges[side]
-        if (panel) out.push(toEntry(panel, "edge", `Edge · ${side}`))
-      }
-    }
-    for (const panel of snapshot.floating) {
-      out.push(toEntry(panel, "floating", "Floating"))
-    }
-  } else {
-    walkDocked(snapshot, out)
-  }
-  return out.filter((entry) => entry.id !== "")
-}
-
-function findDocked(node: any, id: string): any | null {
-  if (node.type === "panel") return node.id === id ? node : null
-  if (node.type === "group") {
-    for (const child of node.children) {
-      const found = findDocked(child, id)
-      if (found) return found
-    }
-  }
-  return null
-}
-
-/** Locate a mutable panel node in a snapshot by id (or null). */
-export function findPanelNode(snapshot: any, id: string): any | null {
-  if (isRoot(snapshot)) {
-    const main = findDocked(snapshot.main, id)
-    if (main) return main
-    if (snapshot.edges) {
-      for (const side of Object.keys(snapshot.edges) as any[]) {
-        const panel = snapshot.edges[side]
-        if (panel?.id === id) return panel
-      }
-    }
-    return snapshot.floating.find((panel: any) => panel.id === id) ?? null
-  }
-  return findDocked(snapshot, id)
-}
-
-
-/** Mutate a snapshot in place, patching one panel's behavior/size. Returns true if found. */
-export function patchPanelInSnapshot(snapshot: any, id: string, patch: any): boolean {
-  const node = findPanelNode(snapshot, id)
-  if (!node) return false
-  if (patch.resizable !== undefined) node.resizable = patch.resizable
-  if (patch.draggable !== undefined) node.draggable = patch.draggable
-  if (patch.droppable !== undefined) node.droppable = patch.droppable
-  if (patch.minSize !== undefined) {
-    if (patch.minSize === null) delete node.minSize
-    else node.minSize = patch.minSize
-  }
-  if (patch.maxSize !== undefined) {
-    if (patch.maxSize === null) delete node.maxSize
-    else node.maxSize = patch.maxSize
-  }
-  return true
-}

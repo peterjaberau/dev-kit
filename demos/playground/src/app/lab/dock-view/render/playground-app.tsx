@@ -1,14 +1,9 @@
 "use client"
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
-import { Box, Flex, HStack, Icon as ChakraIcon, Text, ClientOnly } from "@chakra-ui/react"
+import { useMemo } from "react"
+import { Box, Flex, Text, ClientOnly } from "@chakra-ui/react"
 import { View } from "#view/react"
-import { usePointerDrag } from "./use-pointer-drag"
+import type { ViewReducerAction } from "#view/core/internal"
 import { RegistryTree, RegistryViewerWithCard } from "#plugins/registry-manager-plugin/view"
 import { usePlayground } from "./playground-provider"
 
@@ -27,16 +22,21 @@ function renderTabContent(tab: any) {
   )
 }
 
-
 export function PlaygroundApp() {
-  const { sendToPlayground, config, runtime } = usePlayground()
+  const { sendToPlayground, config, runtime, layout } = usePlayground()
 
   const setController = useMemo(
     () => (controllerRef: any) => sendToPlayground({ type: "onSetController", controllerRef }),
     [sendToPlayground],
   )
 
-
+  const callbacks = useMemo(
+    () => ({
+      onNewTab: (panel: { id: string }) => sendToPlayground({ type: "onNewTab", panelId: panel.id }),
+      onAction: (action: ViewReducerAction) => sendToPlayground({ type: "view.action", action }),
+    }),
+    [sendToPlayground],
+  )
 
   return (
     <ClientOnly>
@@ -61,14 +61,8 @@ export function PlaygroundApp() {
               resizeHandleHitSize={config.global.resizeHandleHitSize}
               showActionsButton={config.global.showActionsButton}
               showNewTabButton={config.global.showNewTabButton}
-              onNewTab={(panel: any) => sendToPlayground({ type: "onNewTab", panel })}
-              onChange={(event: any) => sendToPlayground({ type: "onChange", event })}
-              onActiveTabChange={(event: any) => sendToPlayground({ type: "onActiveTabChange", event })}
-              onPanelSplit={(event: any) => sendToPlayground({ type: "onPanelSplit", event })}
-              onTabsMove={(event: any) => sendToPlayground({ type: "onTabsMove", event })}
-              onTabsOpen={(event: any) => sendToPlayground({ type: "onTabsOpen", event })}
-              onTabsClose={(event: any) => sendToPlayground({ type: "onTabsClose", event })}
-              onPanelsClose={(event: any) => sendToPlayground({ type: "onPanelsClose", event })}
+              stateControl={{ state: layout, onAction: callbacks.onAction }}
+              onNewTab={callbacks.onNewTab}
               renderTabHeader={renderTabHeader}
               renderTabContent={renderTabContent}
             />

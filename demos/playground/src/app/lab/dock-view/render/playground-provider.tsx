@@ -1,370 +1,511 @@
 "use client"
+
 import { assign, enqueueActions, setup } from "xstate"
-import { createActorContext, useSelector } from "@xstate/react"
+import { createActorContext } from "@xstate/react"
+import type { ReactNode } from "react"
+import type {
+  ViewController,
+  ViewDirection,
+  ViewTabBehaviorUpdate,
+  ViewLayoutState,
+  ViewLayoutTree,
+  ViewSize,
+  ViewLayoutBehavior,
+} from "#view/core"
+import {
+  viewReducer,
+  viewCreateInitialState,
+  viewAllPanelOrderFromState,
+  viewPanelBehaviorFromState,
+  type ViewReducerAction,
+} from "#view/core/internal"
+import { viewCreateLayoutSnapshot } from "#view/core/state/snapshot"
+import { makeLifecycleEvents } from "#view/react/lifecycle"
+import { initialConfig, PG_PRESETS, PG_THEMES } from "./playground-data"
+
+const STORAGE_KEY = "dock-view-playground-layout"
+
+type InspectorEvent =
+  | {
+      type:
+        | "inspector.selectPanel"
+        | "inspector.selectTab"
+        | "inspector.theme"
+        | "inspector.preset"
+        | "inspector.moveTab"
+      id: string
+    }
+  | { type: "inspector.global" | "inspector.patchPanel"; patch: Record<string, boolean | number | null> }
+  | { type: "inspector.tabBehavior"; patch: ViewTabBehaviorUpdate }
+  | { type: "inspector.splitPanel"; direction: ViewDirection }
+  | { type: "inspector.renameTab"; title: string }
+  | { type: "inspector.exportResult"; error?: string }
+  | {
+      type:
+        | "inspector.mount"
+        | "inspector.clearEvents"
+        | "inspector.addTab"
+        | "inspector.removePanel"
+        | "inspector.reset"
+        | "inspector.save"
+        | "inspector.restore"
+        | "inspector.export"
+        | "inspector.maximizePanel"
+        | "inspector.floatPanel"
+        | "inspector.popoutPanel"
+        | "inspector.focusPanel"
+        | "inspector.floatTab"
+        | "inspector.popoutTab"
+        | "inspector.removeTab"
+    }
+
+type PlaygroundEvent =
+  | InspectorEvent
+  | { type: "view.action"; action: ViewReducerAction }
+  | { type: "onSetController"; controllerRef: ViewController | null }
+  | { type: "onNewTab"; panelId: string }
+  | { type: "operation.failed"; error: string }
+
+type PlaygroundInput = { config?: Partial<typeof initialConfig>; datasets?: { themes?: typeof PG_THEMES } }
+type InspectorPanelEntry = ViewLayoutBehavior & {
+  id: string
+  container: "tiled" | "edge" | "floating"
+  kindLabel: string
+  minSize?: ViewSize
+  maxSize?: ViewSize
+  fullScreen: boolean
+  poppedOut: boolean
+  tabs: { id: string; title: string; kind?: string; closable: boolean; draggable: boolean }[]
+}
+type InspectorState = {
+  panels: InspectorPanelEntry[]
+  selectedPanelId: string | null
+  selectedTabId: string | null
+  presetId: string
+  hasSaved: boolean
+  copied: boolean
+  error: string | null
+  events: { id: number; type: string; detail: string }[]
+  eventId: number
+}
+type PlaygroundState = {
+  datasets: { themes: typeof PG_THEMES; presets: typeof PG_PRESETS }
+  config: typeof initialConfig
+  refs: { controllerRef: ViewController | null }
+  runtime: { theme: any; variables: { id: number; seq: number } }
+  layout: ViewLayoutState
+  inspector: InspectorState
+}
 
 export const playgroundMachine = setup({
+  types: {} as { context: PlaygroundState; events: PlaygroundEvent; input: PlaygroundInput },
   actions: {
-    handleLogEvent: ({ event }) => {
-      console.log({ type: event?.type })
-    },
-
-    handleSetController: assign(({ context, event }: any) => ({
-      refs: {
-        ...context.refs,
-        controllerRef: event.controllerRef,
-      },
-      runtime: {
-        ...context.runtime,
-        variables: {
-          ...context.runtime.variables,
-          snapshot: event.controllerRef?.getLayout() ?? context.runtime.variables.snapshot,
+    setController: assign(({ event }) =>
+      event.type === "onSetController" ? { refs: { controllerRef: event.controllerRef } } : {},
+    ),
+    applyLayoutAction: assign(({ context, event }) => {
+      if (event.type !== "view.action") return {}
+      const layout = viewReducer(context.layout, event.action)
+      const changes = makeLifecycleEvents(context.layout, layout, event.action)
+      const active = changes.activeTabChange?.changes.find((change) => change.tabId)
+      let eventId = context.inspector.eventId
+      const entries = Object.entries(changes)
+        .filter(([, value]) => value)
+        .map(([type, value]) => ({
+          id: ++eventId,
+          type,
+          detail: JSON.stringify(value),
+        }))
+      return {
+        layout,
+        inspector: {
+          ...context.inspector,
+          ...(active ? { selectedPanelId: active.panelId, selectedTabId: active.tabId } : {}),
+          events: [...entries.reverse(), ...context.inspector.events].slice(0, 30),
+          eventId,
+          copied: false,
+          error: null,
         },
+      }
+    }),
+    // Flatten the normalized machine layout only after layout mutations.
+    collectPanels: assign(({ context }) => ({
+      inspector: {
+        ...context.inspector,
+        panels: viewAllPanelOrderFromState(context.layout).map((id) => {
+          const panel = context.layout.panels[id]!
+          return {
+            id,
+            container: panel.kind,
+            kindLabel:
+              panel.kind === "edge" ? `Edge · ${panel.edge.side}` : panel.kind === "floating" ? "Floating" : "Tiled",
+            ...viewPanelBehaviorFromState(context.layout, id),
+            minSize: panel.minSize,
+            maxSize: panel.maxSize,
+            fullScreen: panel.fullScreen ?? false,
+            poppedOut: panel.kind === "floating" && !!panel.floating.popout,
+            tabs: panel.tabs.map((tabId) => {
+              const tab = context.layout.tabs[tabId]!
+              const data = tab.data as { title?: string; kind?: string }
+              return {
+                id: tabId,
+                title: data?.title ?? tabId,
+                kind: data?.kind,
+                closable: tab.closable,
+                draggable: tab.draggable,
+              }
+            }),
+          }
+        }),
       },
     })),
-    handleMount: assign({
-      runtime: ({ context }: any) => ({
-        ...context.runtime,
-        variables: {
-          ...context.runtime.variables,
-          mounted: true,
-        },
-      }),
+    reconcileSelection: assign(({ context }) => {
+      const { inspector, layout } = context
+      // Follow a selected tab when it moves; fall back when its tab/panel disappears.
+      const selectedTab = inspector.selectedTabId ? layout.tabs[inspector.selectedTabId] : undefined
+      const panel =
+        inspector.panels.find((p) => p.id === (selectedTab?.panelId ?? inspector.selectedPanelId)) ??
+        inspector.panels[0]
+      const tab = panel?.tabs.find((t) => t.id === inspector.selectedTabId) ?? panel?.tabs[0]
+      return { inspector: { ...inspector, selectedPanelId: panel?.id ?? null, selectedTabId: tab?.id ?? null } }
     }),
-    handleNewTab: enqueueActions(({ context, event, enqueue }: any) => {
-      const id = context.runtime.variables.id + 1
+    selectPanel: assign(({ context, event }) =>
+      event.type === "inspector.selectPanel"
+        ? {
+            inspector: { ...context.inspector, selectedPanelId: event.id, selectedTabId: null },
+          }
+        : {},
+    ),
+    selectTab: assign(({ context, event }) =>
+      event.type === "inspector.selectTab"
+        ? {
+            inspector: { ...context.inspector, selectedTabId: event.id },
+          }
+        : {},
+    ),
+    updateGlobal: assign(({ context, event }) =>
+      event.type === "inspector.global"
+        ? {
+            config: { ...context.config, global: { ...context.config.global, ...event.patch } },
+          }
+        : {},
+    ),
+    updateTheme: assign(({ context, event }) => {
+      if (event.type !== "inspector.theme") return {}
+      const theme = context.datasets.themes.find((t) => t.id === event.id)
+      return theme
+        ? {
+            config: { ...context.config, options: { ...context.config.options, themeId: theme.id } },
+            runtime: { ...context.runtime, theme: theme.style },
+          }
+        : {}
+    }),
+    patchPanel: assign(({ context, event }) => {
+      if (event.type !== "inspector.patchPanel") return {}
+      const id = context.inspector.selectedPanelId
+      const panel = id ? context.layout.panels[id] : undefined
+      if (!panel || !id) return {}
+      const { patch } = event
+      const behavior = Object.fromEntries(
+        ["resizable", "draggable", "droppable"]
+          .filter((key) => typeof patch[key] === "boolean")
+          .map((key) => [key, patch[key]]),
+      )
+      const updateTree = (node: ViewLayoutTree): ViewLayoutTree =>
+        node.kind === "split"
+          ? { ...node, children: node.children.map(updateTree) }
+          : node.panelId === id
+            ? { ...node, ...behavior }
+            : node
+      const updated = {
+        ...panel,
+        ...(panel.kind !== "tiled" ? { behavior: { ...panel.behavior, ...behavior } } : {}),
+        ...("minSize" in patch ? { minSize: typeof patch.minSize === "number" ? patch.minSize : undefined } : {}),
+        ...("maxSize" in patch ? { maxSize: typeof patch.maxSize === "number" ? patch.maxSize : undefined } : {}),
+      } as typeof panel
+      return {
+        layout: {
+          ...context.layout,
+          panels: { ...context.layout.panels, [id]: updated },
+          layout: context.layout.layout ? updateTree(context.layout.layout) : null,
+        },
+      }
+    }),
+    createTab: enqueueActions(({ context, event, enqueue }) => {
+      const panelId = event.type === "onNewTab" ? event.panelId : context.inspector.selectedPanelId
+      if (!panelId || !context.layout.panels[panelId]) return
+      let id = context.runtime.variables.id
       const seq = context.runtime.variables.seq + 1
       const prefix = context.config.options.makeTabPrefix
-      const tab = {
-        id: `${prefix.id}-${id}`,
-        data: { title: `${prefix.title} ${seq}` },
-      }
-
-      enqueue.assign({
-        runtime: () => ({
-          ...context.runtime,
-          variables: {
-            ...context.runtime.variables,
-            id,
-            seq,
+      let tabId: string
+      do {
+        tabId = `${prefix.id}-${++id}`
+      } while (context.layout.tabs[tabId] || context.layout.panels[tabId])
+      const tab = { id: tabId, data: { title: `${prefix.title} ${seq}` } }
+      enqueue.assign({ runtime: { ...context.runtime, variables: { id, seq } } })
+      if (event.type === "inspector.splitPanel") {
+        let newPanelId: string
+        do {
+          newPanelId = `panel-${++id}`
+        } while (context.layout.panels[newPanelId])
+        enqueue.assign({ runtime: { ...context.runtime, variables: { id, seq } } })
+        enqueue.raise({
+          type: "view.action",
+          action: {
+            type: "PANEL_SPLIT",
+            panelId,
+            direction: event.direction,
+            newPanelId,
+            sizePercent: 50,
+            tabs: [tab],
+            activate: true,
           },
-        }),
-      })
-      enqueue(() => event.panel?.appendTab(tab))
+        })
+      } else enqueue.raise({ type: "view.action", action: { type: "TAB_APPEND", panelId, tab, activate: true } })
     }),
-
+    removePanel: enqueueActions(({ context, enqueue }) => {
+      const panelId = context.inspector.selectedPanelId
+      if (panelId) enqueue.raise({ type: "view.action", action: { type: "PANEL_REMOVE", panelId } })
+    }),
+    maximizePanel: enqueueActions(({ context, enqueue }) => {
+      const panelId = context.inspector.selectedPanelId
+      if (panelId)
+        enqueue.raise({
+          type: "view.action",
+          action: { type: "PANEL_FULLSCREEN_SET", panelId, fullScreen: !context.layout.panels[panelId]?.fullScreen },
+        })
+    }),
+    floatPanel: enqueueActions(({ context, enqueue }) => {
+      const panelId = context.inspector.selectedPanelId
+      if (!panelId) return
+      enqueue.raise({
+        type: "view.action",
+        action:
+          context.layout.panels[panelId]?.kind === "floating"
+            ? { type: "PANEL_DOCK", panelId }
+            : { type: "PANEL_FLOAT", panelId, bounds: { x: 18, y: 18, width: 44, height: 50 } },
+      })
+    }),
+    focusPanel: enqueueActions(({ context, enqueue }) => {
+      const panelId = context.inspector.selectedPanelId
+      if (panelId) enqueue.raise({ type: "view.action", action: { type: "PANEL_FOCUS", panelId } })
+    }),
+    renameTab: enqueueActions(({ context, event, enqueue }) => {
+      const tabId = context.inspector.selectedTabId
+      if (event.type === "inspector.renameTab" && tabId)
+        enqueue.raise({
+          type: "view.action",
+          action: {
+            type: "TAB_DATA_SET",
+            tabId,
+            data: { ...(context.layout.tabs[tabId]?.data as object), title: event.title },
+          },
+        })
+    }),
+    setTabBehavior: enqueueActions(({ context, event, enqueue }) => {
+      const tabId = context.inspector.selectedTabId
+      if (event.type === "inspector.tabBehavior" && tabId)
+        enqueue.raise({ type: "view.action", action: { type: "TAB_BEHAVIOR_SET", tabId, behavior: event.patch } })
+    }),
+    moveTab: enqueueActions(({ context, event, enqueue }) => {
+      const tabId = context.inspector.selectedTabId
+      if (event.type !== "inspector.moveTab" || !tabId) return
+      const target = context.layout.panels[event.id]
+      if (target)
+        enqueue.raise({
+          type: "view.action",
+          action: { type: "TAB_MOVE", tabId, to: { panelId: target.id, index: target.tabs.length } },
+        })
+    }),
+    removeTab: enqueueActions(({ context, enqueue }) => {
+      const tabId = context.inspector.selectedTabId
+      if (tabId) enqueue.raise({ type: "view.action", action: { type: "TAB_REMOVE", tabId } })
+    }),
+    floatTab: enqueueActions(({ context, enqueue }) => {
+      const tabId = context.inspector.selectedTabId
+      if (!tabId) return
+      let id = context.runtime.variables.id
+      let newPanelId: string
+      do {
+        newPanelId = `float-${++id}`
+      } while (context.layout.panels[newPanelId])
+      enqueue.assign({ runtime: { ...context.runtime, variables: { ...context.runtime.variables, id } } })
+      enqueue.raise({
+        type: "view.action",
+        action: { type: "TAB_FLOAT", tabId, newPanelId, bounds: { x: 20, y: 18, width: 38, height: 46 } },
+      })
+    }),
+    // Native windows are a renderer side effect. Its controller dispatches the
+    // resulting layout action back to this machine through stateControl.onAction.
+    popoutPanel: ({ context, self }) => {
+      const id = context.inspector.selectedPanelId
+      if (!id) return
+      try {
+        const panel = context.layout.panels[id]
+        if (panel?.kind === "floating" && panel.floating.popout) context.refs.controllerRef?.returnPanelToFloating(id)
+        else
+          context.refs.controllerRef?.popoutPanel(id, {
+            floatingBounds: { x: 16, y: 16, width: 46, height: 54 },
+            windowBounds: { left: 120, top: 90, width: 760, height: 540 },
+          })
+      } catch (error) {
+        self.send({ type: "operation.failed", error: String(error) })
+      }
+    },
+    popoutTab: ({ context, self }) => {
+      const id = context.inspector.selectedTabId
+      if (!id) return
+      try {
+        context.refs.controllerRef?.getTab(id)?.popout({
+          floatingBounds: { x: 20, y: 18, width: 38, height: 46 },
+          windowBounds: { left: 140, top: 100, width: 680, height: 460 },
+        })
+      } catch (error) {
+        self.send({ type: "operation.failed", error: String(error) })
+      }
+    },
+    resetLayout: enqueueActions(({ context, enqueue }) => {
+      enqueue.assign({ inspector: { ...context.inspector, presetId: "" } })
+      enqueue.raise({
+        type: "view.action",
+        action: { type: "STATE_REPLACE", state: viewCreateInitialState(context.config.layout) },
+      })
+    }),
+    loadPreset: enqueueActions(({ context, event, enqueue }) => {
+      if (event.type !== "inspector.preset") return
+      const preset = context.datasets.presets.find((p) => p.id === event.id)
+      if (!preset) return
+      enqueue.assign({ inspector: { ...context.inspector, presetId: preset.id } })
+      enqueue.raise({
+        type: "view.action",
+        action: { type: "STATE_REPLACE", state: viewCreateInitialState(preset.layout) },
+      })
+    }),
+    checkSavedLayout: enqueueActions(({ context, enqueue }) => {
+      try {
+        enqueue.assign({ inspector: { ...context.inspector, hasSaved: !!localStorage.getItem(STORAGE_KEY) } })
+      } catch (error) {
+        enqueue.raise({ type: "operation.failed", error: String(error) })
+      }
+    }),
+    saveLayout: enqueueActions(({ context, enqueue }) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(viewCreateLayoutSnapshot(context.layout)))
+        enqueue.assign({ inspector: { ...context.inspector, hasSaved: true, error: null } })
+      } catch (error) {
+        enqueue.raise({ type: "operation.failed", error: String(error) })
+      }
+    }),
+    restoreLayout: enqueueActions(({ context, enqueue }) => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY)
+        if (!raw) return
+        const state = viewCreateInitialState(JSON.parse(raw))
+        enqueue.assign({ inspector: { ...context.inspector, presetId: "" } })
+        enqueue.raise({ type: "view.action", action: { type: "STATE_REPLACE", state } })
+      } catch (error) {
+        enqueue.raise({ type: "operation.failed", error: String(error) })
+      }
+    }),
+    exportLayout: ({ context, self }) => {
+      try {
+        if (!navigator.clipboard) throw new Error("Clipboard is unavailable in this browser.")
+        void navigator.clipboard.writeText(JSON.stringify(viewCreateLayoutSnapshot(context.layout), null, 2)).then(
+          () => self.send({ type: "inspector.exportResult" }),
+          () => self.send({ type: "inspector.exportResult", error: "Could not copy the layout to the clipboard." }),
+        )
+      } catch (error) {
+        self.send({ type: "operation.failed", error: String(error) })
+      }
+    },
+    clearCopied: assign(({ context }) => ({ inspector: { ...context.inspector, copied: false } })),
+    exportResult: assign(({ context, event }) =>
+      event.type === "inspector.exportResult"
+        ? { inspector: { ...context.inspector, copied: !event.error, error: event.error ?? null } }
+        : {},
+    ),
+    reportError: assign(({ context, event }) =>
+      event.type === "operation.failed" ? { inspector: { ...context.inspector, error: event.error } } : {},
+    ),
+    clearEvents: assign(({ context }) => ({ inspector: { ...context.inspector, events: [] } })),
   },
-  actors: {},
 }).createMachine({
   id: "playground",
-  initial: "idle",
-  context: ({ input }: any) => {
+  initial: "ready",
+  context: ({ input }) => {
+    const config = {
+      ...initialConfig,
+      ...input?.config,
+      global: { ...initialConfig.global, ...input?.config?.global },
+      options: { ...initialConfig.options, ...input?.config?.options },
+    }
+    const themes = input?.datasets?.themes ?? PG_THEMES
     return {
-      datasets: {
-        themes: [
-          {
-            id: "default",
-            label: "Default",
-            style: {
-              colorScheme: "dark",
-              "--view-accent": "var(--site-workspace-accent)",
-              "--view-drop-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 84%)",
-              "--view-drop-border": "color-mix(in srgb, var(--site-workspace-accent), transparent 42%)",
-              "--view-resize-handle-active-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 40%)",
-            },
-          },
-          {
-            id: "light",
-            label: "Light",
-            style: {
-              colorScheme: "light",
-              "--view-bg": "#f4f6fb",
-              "--view-fg": "#1f2937",
-              "--view-panel-bg": "#ffffff",
-              "--view-panel-border": "#d8dee8",
-              "--view-tabbar-bg": "#edf1f7",
-              "--view-tab-fg": "#667085",
-              "--view-tab-active-bg": "#ffffff",
-              "--view-tab-active-fg": "#111827",
-              "--view-tab-hover-bg": "#e2e8f2",
-              "--view-menu-bg": "#ffffff",
-              "--view-action-hover-bg": "#e5ebf4",
-              "--view-accent": "var(--site-workspace-accent)",
-              "--view-drop-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 84%)",
-              "--view-drop-border": "color-mix(in srgb, var(--site-workspace-accent), transparent 42%)",
-              "--view-resize-handle-active-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 40%)",
-            },
-          },
-          {
-            id: "dracula",
-            label: "Dracula",
-            style: {
-              colorScheme: "dark",
-              "--view-bg": "#191a21",
-              "--view-fg": "#f8f8f2",
-              "--view-panel-bg": "#282a36",
-              "--view-panel-border": "#44475a",
-              "--view-tabbar-bg": "#21222c",
-              "--view-tab-fg": "#bdc0d6",
-              "--view-tab-active-bg": "#343746",
-              "--view-tab-active-fg": "#ffffff",
-              "--view-tab-hover-bg": "#303241",
-              "--view-menu-bg": "#282a36",
-              "--view-action-hover-bg": "#3a3d4f",
-              "--view-accent": "var(--site-workspace-accent)",
-              "--view-drop-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 84%)",
-              "--view-drop-border": "color-mix(in srgb, var(--site-workspace-accent), transparent 42%)",
-              "--view-resize-handle-active-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 40%)",
-            },
-          },
-          {
-            id: "replit",
-            label: "Replit",
-            style: {
-              colorScheme: "dark",
-              "--view-bg": "#0e1525",
-              "--view-fg": "#f5f9fc",
-              "--view-panel-bg": "#1c2333",
-              "--view-panel-border": "#30394f",
-              "--view-tabbar-bg": "#131b2c",
-              "--view-tab-fg": "#a5adba",
-              "--view-tab-active-bg": "#20283a",
-              "--view-tab-active-fg": "#ffffff",
-              "--view-tab-hover-bg": "#26314a",
-              "--view-menu-bg": "#1c2333",
-              "--view-action-hover-bg": "#2a344a",
-              "--view-accent": "var(--site-workspace-accent)",
-              "--view-drop-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 84%)",
-              "--view-drop-border": "color-mix(in srgb, var(--site-workspace-accent), transparent 42%)",
-              "--view-resize-handle-active-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 40%)",
-            },
-          },
-          {
-            id: "abyss",
-            label: "Abyss",
-            style: {
-              colorScheme: "dark",
-              "--view-bg": "#000c18",
-              "--view-fg": "#d7ecff",
-              "--view-panel-bg": "#001b33",
-              "--view-panel-border": "#123a58",
-              "--view-tabbar-bg": "#001426",
-              "--view-tab-fg": "#8db9d6",
-              "--view-tab-active-bg": "#002440",
-              "--view-tab-active-fg": "#f4fbff",
-              "--view-tab-hover-bg": "#052b4a",
-              "--view-menu-bg": "#02243f",
-              "--view-action-hover-bg": "#0b3555",
-              "--view-accent": "var(--site-workspace-accent)",
-              "--view-drop-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 84%)",
-              "--view-drop-border": "color-mix(in srgb, var(--site-workspace-accent), transparent 42%)",
-              "--view-resize-handle-active-bg": "color-mix(in srgb, var(--site-workspace-accent), transparent 40%)",
-            },
-          },
-        ],
-        ...input.datasets,
-      },
-      config: {
-        layout: {
-          type: "root",
-          main: {
-            type: "group",
-            direction: "horizontal",
-            children: [
-              {
-                type: "panel",
-                id: "editor-a",
-                size: 58,
-                tabs: [
-                  { id: "index-ts", data: { title: "index.ts" } },
-                  { id: "router-ts", data: { title: "router.ts" } },
-                ],
-              },
-              {
-                type: "panel",
-                id: "editor-b",
-                size: 42,
-                tabs: [
-                  {
-                    id: "field",
-                    data: {
-                      title: "Field",
-                      inputs: {
-                        componentId: "forms-field",
-                      },
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-          edges: {
-            left: {
-              type: "edgePanel",
-              id: "left-tools",
-              size: 22,
-              minSize: 14,
-              maxSize: 34,
-              tabs: [
-                {
-                  id: "registry",
-                  data: { title: "Registry" },
-                  closable: false,
-                },
-                {
-                  id: "button",
-                  data: {
-                    title: "Button",
-                    inputs: {
-                      componentId: "components-button",
-                    },
-                  },
-                },
-              ],
-            },
-            right: {
-              type: "edgePanel",
-              id: "right-tools",
-              size: 18,
-              minSize: 12,
-              maxSize: 28,
-              tabs: [
-                {
-                  id: "popover",
-                  data: {
-                    title: "Popover",
-                    inputs: {
-                      componentId: "components-popover",
-                    },
-                  },
-                },
-              ],
-            },
-            bottom: {
-              type: "edgePanel",
-              id: "bottom-tools",
-              size: 28,
-              minSize: 18,
-              maxSize: 42,
-              tabs: [
-                {
-                  id: "checkbox",
-                  data: {
-                    title: "Checkbox",
-                    inputs: {
-                      componentId: "forms-checkbox",
-                    },
-                  },
-                  closable: false,
-                },
-                {
-                  id: "slider",
-                  data: {
-                    title: "Slider",
-                    inputs: {
-                      componentId: "forms-slider",
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        },
-        global: {
-          resizable: true,
-          showActionsButton: true,
-          showNewTabButton: true,
-          resizeHandleHitSize: 24,
-          minSize: 10,
-        },
-        options: {
-          themeId: "light",
-          makeTabPrefix: {
-            id: "tab",
-            title: "Tab",
-          },
-        },
-        ...input.config,
-      },
-      refs: {
-        controllerRef: null,
-        ...input.refs,
-      },
+      datasets: { themes, presets: PG_PRESETS },
+      config,
+      refs: { controllerRef: null },
+      layout: viewCreateInitialState(config.layout),
       runtime: {
-        theme: {},
-        variables: {
-          id: 0,
-          seq: 0,
-          snapshot: null,
-          mounted: false,
-        },
+        theme: themes.find((t) => t.id === config.options.themeId)?.style ?? {},
+        variables: { id: 0, seq: 0 },
+      },
+      inspector: {
+        panels: [],
+        selectedPanelId: null,
+        selectedTabId: null,
+        presetId: "",
+        hasSaved: false,
+        copied: false,
+        error: null,
+        events: [],
+        eventId: 0,
       },
     }
   },
-  entry: assign({
-    runtime: ({ context }: any) => {
-      return {
-        ...context.runtime,
-        theme: context.datasets.themes.find((t: any) => t.id === context.config.options.themeId)?.style,
-      }
-    },
-  }),
-  states: {
-    idle: {
-      on: {
-        onSetController: { actions: ["handleSetController"] },
-        onMount: { actions: ["handleMount"] },
-        onNewTab: { actions: ["handleNewTab", "handleLogEvent"] },
-        onChange: { actions: "handleLogEvent" },
-        onActiveTabChange: { actions: "handleLogEvent" },
-        onPanelSplit: { actions: "handleLogEvent" },
-        onTabsMove: { actions: "handleLogEvent" },
-        onTabsOpen: { actions: "handleLogEvent" },
-        onTabsClose: { actions: "handleLogEvent" },
-        onPanelsOpen: { actions: "handleLogEvent" },
-        onPanelsClose: { actions: "handleLogEvent" },
-      },
-    },
+  entry: ["collectPanels", "reconcileSelection"],
+  states: { ready: {} },
+  on: {
+    "view.action": { actions: ["applyLayoutAction", "collectPanels", "reconcileSelection"] },
+    onSetController: { actions: "setController" },
+    onNewTab: { actions: "createTab" },
+    "inspector.selectPanel": { actions: ["selectPanel", "reconcileSelection"] },
+    "inspector.selectTab": { actions: ["selectTab", "reconcileSelection"] },
+    "inspector.global": { actions: "updateGlobal" },
+    "inspector.theme": { actions: "updateTheme" },
+    "inspector.patchPanel": { actions: ["patchPanel", "collectPanels", "reconcileSelection"] },
+    "inspector.addTab": { actions: "createTab" },
+    "inspector.splitPanel": { actions: "createTab" },
+    "inspector.removePanel": { actions: "removePanel" },
+    "inspector.maximizePanel": { actions: "maximizePanel" },
+    "inspector.floatPanel": { actions: "floatPanel" },
+    "inspector.focusPanel": { actions: "focusPanel" },
+    "inspector.popoutPanel": { actions: "popoutPanel" },
+    "inspector.renameTab": { actions: "renameTab" },
+    "inspector.tabBehavior": { actions: "setTabBehavior" },
+    "inspector.moveTab": { actions: "moveTab" },
+    "inspector.removeTab": { actions: "removeTab" },
+    "inspector.floatTab": { actions: "floatTab" },
+    "inspector.popoutTab": { actions: "popoutTab" },
+    "inspector.reset": { actions: "resetLayout" },
+    "inspector.preset": { actions: "loadPreset" },
+    "inspector.mount": { actions: "checkSavedLayout" },
+    "inspector.save": { actions: "saveLayout" },
+    "inspector.restore": { actions: "restoreLayout" },
+    "inspector.export": { actions: ["clearCopied", "exportLayout"] },
+    "inspector.exportResult": { actions: "exportResult" },
+    "inspector.clearEvents": { actions: "clearEvents" },
+    "operation.failed": { actions: "reportError" },
   },
 })
 
-export const PlaygroundContext: any = createActorContext(playgroundMachine)
-
-export const PlaygroundProvider = (props: any) => {
-  const { children, ...rest } = props
-  return (
-    <PlaygroundContext.Provider
-      options={{
-        input: { ...rest },
-      }}
-    >
-      {children}
-    </PlaygroundContext.Provider>
-  )
+export const PlaygroundContext = createActorContext(playgroundMachine)
+export function PlaygroundProvider({ children, ...input }: PlaygroundInput & { children: ReactNode }) {
+  return <PlaygroundContext.Provider options={{ input }}>{children}</PlaygroundContext.Provider>
 }
-
 export function usePlayground() {
   const playgroundRef = PlaygroundContext.useActorRef()
-  const sendToPlayground = playgroundRef.send
-
-  const playgroundContext: any = useSelector(playgroundRef, (state: any) => state.context)
-  const playgroundState = playgroundRef.getSnapshot()
-
-  const playgroundId = playgroundRef?.id
-
-  const datasets = playgroundContext?.datasets || {}
-  const config = playgroundContext?.config || {}
-  const refs = playgroundContext?.refs || {}
-  const runtime = playgroundContext?.runtime || {}
-
-  return {
-    playgroundId,
-    playgroundRef,
-    sendToPlayground,
-    playgroundState,
-    playgroundContext,
-    datasets,
-    config,
-    refs,
-    runtime,
-  }
+  const config = PlaygroundContext.useSelector((state) => state.context.config)
+  const theme = PlaygroundContext.useSelector((state) => state.context.runtime.theme)
+  const layout = PlaygroundContext.useSelector((state) => state.context.layout)
+  return { playgroundRef, sendToPlayground: playgroundRef.send, config, layout, runtime: { theme } }
 }
