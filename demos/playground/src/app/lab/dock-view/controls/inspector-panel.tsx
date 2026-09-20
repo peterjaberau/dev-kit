@@ -27,9 +27,9 @@ export function InspectorPanel() {
         {...floatingPanel.getTriggerProps()}
         position="fixed"
         top="4"
-        right="4"
         zIndex="sticky"
-        size="sm"
+        size="2xs"
+        css={{ left: "50%", transform: "translateX(-50%)" }}
         onClick={() => floatingPanel.setOpen(true)}
       >
         Inspect

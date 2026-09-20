@@ -3,6 +3,7 @@
 import { HStack, List, Stack, Text } from "@chakra-ui/react"
 import { PlaygroundContext } from "../render/playground-provider"
 import { InspectorButton as Button } from "./playground-inspector-controls"
+import JsonView from "react18-json-view"
 
 export function InspectorActivity() {
   const actor = PlaygroundContext.useActorRef()
@@ -35,12 +36,15 @@ export function InspectorActivity() {
               borderBottomWidth="1px"
               borderColor="border.muted"
             >
-              <Text as="span" fontFamily="mono" fontSize="xs" color="colorPalette.fg">
+              <Text as="span" fontFamily="mono" fontSize="xs" fontWeight="bold" color="colorPalette.fg">
                 {event.type}
               </Text>
-              <Text as="span" fontSize="xs" color="fg.muted" wordBreak="break-all">
-                {event.detail}
-              </Text>
+              <JsonView
+                src={JSON.parse(event.detail)}
+                collapsed={1}
+                style={{ fontSize: "12px", fontWeight: "bold" }}
+                theme="github"
+              />
             </List.Item>
           ))}
         </List.Root>

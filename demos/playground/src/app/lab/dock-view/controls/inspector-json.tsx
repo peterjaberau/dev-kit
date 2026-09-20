@@ -13,7 +13,7 @@ export function InspectorJson() {
 
   return (
     <Box p="4" aria-label="Exported layout JSON">
-      <JsonView src={snapshot} collapsed={1} style={{ fontSize: "12px", fontWeight: "bold" }} theme="github" />
+      <JsonView src={snapshot} collapsed={3} style={{ fontSize: "12px", fontWeight: "bold" }} theme="github" />
     </Box>
   )
 }
