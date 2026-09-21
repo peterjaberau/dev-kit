@@ -1,0 +1,8 @@
+i added store.ts inside the render which will be a replacement of playground-data.ts, but store is a bit more organized. by looking now to the playgroundMachine, you will see how i added this store into context. basically inside the store context have the predefined which contains presents for  layouts, themes and viewProps. the Select to choose a layout or theme will come from these predefined,
+
+once a layout or theme choosen, the variables. themeId and layoutId will be set (selected item id), and the store.theme payload will be picked from the predefinedThemes and set. be careful you have to read from the predefinedThemes.data.style to set the store.theme. regarding the layout, under store.view.props, i set the  initialLayout = the predefinedLayouts data.layout. and the defaultViewProps.
+
+basically, the above should replace the context.datasets, context.config, context.layout, context.runtime (as the theme now inside store.theme and the runtime.variables inside store.variables
+
+i want you to modify the machine, and the relevant actions and selectors and the touch point where these are consumed. you will notice now when binding the props into PlaygroundApp View component, you can directly on the context store.view.props as the key are aligned with what the View props expects
+
