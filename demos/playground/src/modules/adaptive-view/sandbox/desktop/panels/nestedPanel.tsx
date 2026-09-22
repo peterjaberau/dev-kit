@@ -21,7 +21,7 @@ export function NestedPanel() {
         })
 
         event.api.onDidRemovePanel((e) => {
-          console.log("remove", e)
+          // console.log("remove", e)
         })
       }}
       theme={theme}

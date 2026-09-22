@@ -86,7 +86,7 @@ type InspectorState = {
   hasSaved: boolean
   copied: boolean
   error: string | null
-  events: { id: number; type: string; detail: string }[]
+  events: { id: number; type: string; detail: string; timestamp: string }[]
   eventId: number
 }
 type PlaygroundState = {
@@ -110,12 +110,14 @@ export const playgroundMachine = setup({
       const changes = makeLifecycleEvents(context.layout, layout, event.action)
       const active = changes.activeTabChange?.changes.find((change) => change.tabId)
       let eventId = context.inspector.eventId
+      const timestamp = new Date().toISOString().slice(0, 19).replace("T", " ")
       const entries = Object.entries(changes)
         .filter(([, value]) => value)
         .map(([type, value]) => ({
           id: ++eventId,
           type,
           detail: JSON.stringify(value),
+          timestamp,
         }))
       return {
         layout,
@@ -434,7 +436,6 @@ export const playgroundMachine = setup({
   id: "playground",
   initial: "ready",
   context: ({ input }) => {
-
     const variables = {
       layoutId: defaultVariables?.layoutId,
       themeId: defaultVariables?.themeId,
@@ -468,7 +469,7 @@ export const playgroundMachine = setup({
           data: {},
           queries: {},
           transformers: {},
-          workflows: {}
+          workflows: {},
         },
         settings: {
           general: {},
@@ -484,7 +485,7 @@ export const playgroundMachine = setup({
             metrics: {},
             shadows: {},
           },
-          notifications: {}
+          notifications: {},
         },
         state: {
           queries: {},
@@ -507,8 +508,6 @@ export const playgroundMachine = setup({
         },
       },
     }
-
-
 
     const config = {
       store,
@@ -576,7 +575,13 @@ export const playgroundMachine = setup({
   },
 })
 
-export const PlaygroundContext = createActorContext(playgroundMachine)
+export const PlaygroundContext = createActorContext(playgroundMachine, {
+  inspect: (event: any) => {
+    console.log(event)
+
+  }
+})
+
 export function PlaygroundProvider({ children, ...input }: PlaygroundInput & { children: ReactNode }) {
   return <PlaygroundContext.Provider options={{ input }}>{children}</PlaygroundContext.Provider>
 }

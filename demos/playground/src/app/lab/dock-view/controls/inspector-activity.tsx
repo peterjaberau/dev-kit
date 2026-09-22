@@ -1,6 +1,6 @@
 "use client"
 
-import { HStack, List, Stack, Text } from "@chakra-ui/react"
+import { Box, HStack, List, Stack, Text } from "@chakra-ui/react"
 import { PlaygroundContext } from "../render/playground-provider"
 import { InspectorButton as Button } from "./playground-inspector-controls"
 import JsonView from "react18-json-view"
@@ -36,9 +36,14 @@ export function InspectorActivity() {
               borderBottomWidth="1px"
               borderColor="border.muted"
             >
-              <Text as="span" fontFamily="mono" fontSize="xs" fontWeight="bold" color="colorPalette.fg">
-                {event.type}
-              </Text>
+              <HStack gap="2" align="baseline">
+                <Text as="span" fontFamily="mono" fontSize="xs" fontWeight="bold" color="colorPalette.fg">
+                  {event.type}
+                </Text>
+                <Box as="span" fontFamily="mono" fontSize="xs" color="fg.muted">
+                  {event.timestamp}
+                </Box>
+              </HStack>
               <JsonView
                 src={JSON.parse(event.detail)}
                 collapsed={1}
