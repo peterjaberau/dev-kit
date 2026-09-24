@@ -577,7 +577,66 @@ export const playgroundMachine = setup({
 
 export const PlaygroundContext = createActorContext(playgroundMachine, {
   inspect: (event: any) => {
-    console.log(event)
+    // if (event?.type === "@xstate.event" && !event.event?.type?.includes("xstate") && event.event?.type !== "onSetController") {
+
+    if (event?.type) {
+
+
+      let log = {}
+
+
+
+      if (event.type === "@xstate.event") {
+
+        log = {
+          _type: event?.type,
+          type: event?.event?.type,
+          event: event?.event,
+          _actorRef: event?.actorRef,
+          _rootId: event?._rootId,
+          _sourceRef: event?.sourceRef,
+        }
+
+
+      } else if (event.type === "@xstate.actor") {
+
+        log = {
+          _type: event?.type,
+          type: event?.event?.type,
+          event: event?.event,
+          _actorRef: event?.actorRef,
+          _rootId: event?.rootId,
+        }
+
+      } else if (event.type === "@xstate.snapshot") {
+
+        log = {
+          _type: event?.type,
+          type: event?.event?.type,
+          event: event?.event,
+          snapshot: event?.snapshot.toJSON(),
+          _actorRef: event?.actorRef,
+          _rootId: event?.rootId,
+        }
+
+      } else if (event.type === "@xstate.microstep") {
+        log = {
+          _type: event?.type,
+          type: event?.event?.type,
+          event: event?.event,
+          snapshot: event?.snapshot.toJSON(),
+          _actorRef: event?.actorRef,
+          _rootId: event?.rootId,
+          _transitions: event?._transitions,
+        }
+      }
+
+
+
+      console.log({
+        ...log,
+      })
+    }
 
   }
 })
